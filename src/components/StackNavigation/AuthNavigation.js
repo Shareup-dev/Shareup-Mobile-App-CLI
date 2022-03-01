@@ -21,8 +21,13 @@ export default function AuthNavigation() {
       <Stack.Navigator
         screenOptions={{
           headerShown: true,
+          gestureEnabled: true,
+          gestureDirection: 'vertical',
+          headerStyle:{
+            backgroundColor: '#fff',
+          }  ,
           contentStyle: {
-            backgroundColor: 'transparent',
+            backgroundColor: '#fff',
           },
           header: props =>
             props.options.title !== 'Login' ? (

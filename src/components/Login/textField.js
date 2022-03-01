@@ -55,7 +55,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderColor: '#cacaca',
-    paddingVertical: Platform.OS === 'ios' ? 15 : 0,
+
+    paddingVertical: Platform.OS === "ios"? 10:0,
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 5,
