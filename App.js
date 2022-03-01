@@ -1,14 +1,12 @@
 import React from 'react';
-import {StyleSheet, Text, SafeAreaView} from 'react-native';
-// import AuthNavigation from './src/components/StackNavigation/AuthNavigation';
-import Login from './src/Screens/Login';
+import {StyleSheet, Text, SafeAreaView, StatusBar} from 'react-native';
+import AuthNavigation from './src/components/StackNavigation/AuthNavigation';
 
 export default function App(props) {
   return (
     <SafeAreaView style={styles.container}>
-      <Login />
-      {/* <AuthNavigation /> */}
-      {/* <Text>Works</Text> */}
+      <StatusBar backgroundColor="#fff" barStyle={'dark-content'} />
+      <AuthNavigation />
     </SafeAreaView>
   );
 }

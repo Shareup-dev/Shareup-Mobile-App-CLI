@@ -1,28 +1,43 @@
 import React from 'react';
-import {View, StyleSheet, Dimensions} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  Text,
+  Touchable,
+  TouchableOpacity,
+} from 'react-native';
+import Icons from '../Icons';
 
 export default function Header(props) {
   const window = Dimensions.get('window');
 
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
-    },
-    head: {
+      // flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
       height: parseInt((window.height / 100) * 8),
-      borderBottomWidth: 0.5,
       borderBottomColor: '#cacaca',
+      borderBottomWidth: 1,
+      paddingHorizontal: 15,
     },
-    body: {
-      flex: 1,
-      marginTop: '5%',
+    HeaderText: {
+      fontSize: 20,
+      fontWeight: '600',
+      color: '#333',
     },
   });
 
   return (
     <View style={styles.container}>
-      <View style={styles.head}></View>
-      <View style={styles.body}>{props.children}</View>
+      <TouchableOpacity onPress={() => props.navigation.goBack()}>
+        <Icons name="arrow-back" color="#333" size={30} />
+      </TouchableOpacity>
+      <View>
+        <Text style={styles.HeaderText}>{props.options.title}</Text>
+      </View>
     </View>
   );
 }

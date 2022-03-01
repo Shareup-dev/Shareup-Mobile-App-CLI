@@ -2,27 +2,27 @@ import React from 'react';
 import {StyleSheet, Text} from 'react-native';
 
 function Title(props) {
-  const {children, style} = props;
+  const {children, style, ...rest} = props;
   return (
-    <Text style={[styles.title, style]} {...props}>
+    <Text style={[styles.title, style]} {...rest}>
       {children}
     </Text>
   );
 }
 function SubTitle(props) {
-  const {children, style} = props;
+  const {children, style, ...rest} = props;
 
   return (
-    <Text style={[styles.subTitle, style]} {...props}>
+    <Text style={[styles.subTitle, style]} {...rest}>
       {children}
     </Text>
   );
 }
 function Content(props) {
-  const {children} = props;
+  const {children, style, ...rest} = props;
 
   return (
-    <Text style={styles.content} {...props}>
+    <Text style={[styles.content, style]} {...rest}>
       {children}
     </Text>
   );

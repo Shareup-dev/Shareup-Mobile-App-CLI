@@ -1,4 +1,3 @@
-import react from 'react';
 import React from 'react';
 import {
   TextInput,
@@ -11,17 +10,15 @@ import {
 import colors from '../../config/colors';
 import Icons from '../Icons';
 
-export default function TextField(props) {
-  console.log(Platform.OS);
-
+export default React.memo(function TextField(props) {
   return (
     <View style={styles.input}>
       <TextInput {...props} />
     </View>
   );
-}
+});
 export function PasswordField(props) {
-  const [secureText, setSecureText] = react.useState(true);
+  const [secureText, setSecureText] = React.useState(true);
   return (
     <View style={styles.inputPassword}>
       <TextInput
@@ -49,7 +46,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 5,
-    paddingVertical: Platform.OS === "ios"? 15:0,
+    paddingVertical: Platform.OS === 'ios' ? 15 : 0,
     fontSize: 16,
     marginVertical: 5,
   },
@@ -58,7 +55,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderColor: '#cacaca',
-    paddingVertical: Platform.OS === "ios"? 15:0,
+    paddingVertical: Platform.OS === 'ios' ? 15 : 0,
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 5,
