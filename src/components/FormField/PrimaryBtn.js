@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, Text} from 'react-native';
 import colors from '../../config/colors';
 
-export default function PrimaryBtn(props) {
+function PrimaryBtn(props) {
   const {text, ...rest} = props;
   return (
     <TouchableOpacity style={styles.btn} activeOpacity={0.8} {...rest}>
@@ -24,3 +24,4 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
 });
+export default React.memo(PrimaryBtn);

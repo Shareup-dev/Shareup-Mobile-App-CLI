@@ -9,8 +9,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import PrimaryBtn from '../../components/Login/PrimaryBtn';
-import TextField from '../../components/Login/textField';
+import PrimaryBtn from '../../components/FormField/PrimaryBtn';
+import TextField from '../../components/FormField/textField';
 import Routes from '../../components/StackNavigation/Routes';
 import {Content, SubTitle, Title} from '../../components/TEXT/Text';
 import colors from '../../config/colors';
@@ -24,10 +24,10 @@ export default function PasswordResetStepTwo(props) {
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <>
           <View style={styles.titleContainer}>
-            <Title style={{textAlign: 'center'}}>
+            <SubTitle style={{textAlign: 'center', fontSize: 20}}>
               Confirm that this is your account
-            </Title>
-            <SubTitle>We have sent an OTP to your email.</SubTitle>
+            </SubTitle>
+            <Content>We have sent an OTP to your email.</Content>
           </View>
           <View style={styles.fieldContainer}>
             <Content>Please confirm the OTP</Content>

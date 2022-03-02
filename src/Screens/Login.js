@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
   View,
   StyleSheet,
@@ -9,14 +9,23 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import TextField, {PasswordField} from '../components/Login/textField';
+import TextField, {PasswordField} from '../components/FormField/textField';
 import Routes from '../components/StackNavigation/Routes';
 import {SubTitle, Title} from '../components/TEXT/Text';
 import colors from '../config/colors';
-import PrimaryBtn from '../components/Login/PrimaryBtn';
+import PrimaryBtn from '../components/FormField/PrimaryBtn';
+import {useDispatch} from 'react-redux';
+import {snackbarActions} from '../redux/snackbar';
+import {AuthContext} from '../components/context';
 
 export default function Login(props) {
+  const dispatch = useDispatch();
+  const AuthActions = useContext(AuthContext);
+
+  // console.log(user);
+
   const {navigation} = props;
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -37,7 +46,10 @@ export default function Login(props) {
             <TextField placeholder="Email or Phone number" />
             <PasswordField placeholder="Password" />
 
-            <PrimaryBtn text={"Let's Shareup"} />
+            <PrimaryBtn
+              onPress={() => AuthActions.login('Lokeesan', 'sdsdsd')}
+              text={"Let's Shareup"}
+            />
 
             <TouchableOpacity
               activeOpacity={0.5}

@@ -9,8 +9,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import PrimaryBtn from '../../components/Login/PrimaryBtn';
-import TextField from '../../components/Login/textField';
+import PrimaryBtn from '../../components/FormField/PrimaryBtn';
+import TextField from '../../components/FormField/textField';
 import Routes from '../../components/StackNavigation/Routes';
 import {Content, SubTitle, Title} from '../../components/TEXT/Text';
 import colors from '../../config/colors';

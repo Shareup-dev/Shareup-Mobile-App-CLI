@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
-import PrimaryBtn from '../../components/Login/PrimaryBtn';
-import {PasswordField} from '../../components/Login/textField';
+import PrimaryBtn from '../../components/FormField/PrimaryBtn';
+import {PasswordField} from '../../components/FormField/textField';
 import Routes from '../../components/StackNavigation/Routes';
 import {Content} from '../../components/TEXT/Text';
 import colors from '../../config/colors';

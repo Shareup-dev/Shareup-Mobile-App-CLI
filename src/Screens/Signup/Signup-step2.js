@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import DatePicker from 'react-native-date-picker';
-import PrimaryBtn from '../../components/Login/PrimaryBtn';
+import PrimaryBtn from '../../components/FormField/PrimaryBtn';
 import Routes from '../../components/StackNavigation/Routes';
 import {Content} from '../../components/TEXT/Text';
 import colors from '../../config/colors';

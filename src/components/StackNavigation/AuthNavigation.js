@@ -23,9 +23,7 @@ export default function AuthNavigation() {
           headerShown: true,
           gestureEnabled: true,
           gestureDirection: 'vertical',
-          headerStyle:{
-            backgroundColor: '#fff',
-          }  ,
+
           contentStyle: {
             backgroundColor: '#fff',
           },

@@ -13,6 +13,8 @@ import Icons from '../Icons';
 export default React.memo(function TextField(props) {
   return (
     <View style={styles.input}>
+      {props.icon ? props.icon : null}
+
       <TextInput {...props} />
     </View>
   );
@@ -21,6 +23,7 @@ export function PasswordField(props) {
   const [secureText, setSecureText] = React.useState(true);
   return (
     <View style={styles.inputPassword}>
+      {props.icon ? props.icon : null}
       <TextInput
         style={{width: '80%'}}
         {...props}
@@ -42,6 +45,8 @@ export function PasswordField(props) {
 
 const styles = StyleSheet.create({
   input: {
+    flexDirection: 'row',
+    alignItems: 'center',
     borderColor: '#cacaca',
     borderWidth: 1,
     borderRadius: 10,
@@ -56,7 +61,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderColor: '#cacaca',
 
-    paddingVertical: Platform.OS === "ios"? 10:0,
+    paddingVertical: Platform.OS === 'ios' ? 10 : 0,
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 5,

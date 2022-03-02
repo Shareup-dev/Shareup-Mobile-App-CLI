@@ -18,14 +18,15 @@ export default function Header(props) {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
+      backgroundColor: '#fff',
       height: parseInt((window.height / 100) * 8),
       borderBottomColor: '#cacaca',
       borderBottomWidth: 1,
       paddingHorizontal: 15,
     },
     HeaderText: {
-      fontSize: 20,
-      fontWeight: '600',
+      fontSize: 19,
+      fontWeight: '500',
       color: '#333',
     },
   });
