@@ -5,18 +5,18 @@ import {
   StatusBar,
   ActivityIndicator,
   View,
+  TouchableOpacity,
+  Text,
 } from 'react-native';
 
-import {Provider, useDispatch} from 'react-redux';
-// import {Provider} from 'react-redux';
+import {Provider} from 'react-redux';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {AuthContext} from './src/components/context';
 import Snackbar from './src/components/Snackbar';
 import AuthNavigation from './src/components/StackNavigation/AuthNavigation';
-import HomeNavigation from './src/components/StackNavigation/HomeNavigation';
+// import HomeNavigation from './src/components/StackNavigation/HomeNavigation';
 import colors from './src/config/colors';
-import EncryptedStorage from 'react-native-encrypted-storage';
-
 import store from './src/redux/store';
 
 export default function App(props) {
@@ -132,8 +132,19 @@ export default function App(props) {
       <AuthContext.Provider value={userContext}>
         <Provider store={store}>
           <SafeAreaView style={styles.container}>
-            <StatusBar backgroundColor="#fff" barStyle={'dark-content'} />
-            {loginState.userToken ? <HomeNavigation /> : <AuthNavigation />}
+            <StatusBar
+              backgroundColor={colors.statusbarBackground}
+              barStyle={colors.statusbarContent}
+            />
+            {loginState.userToken ? (
+              <>
+                <TouchableOpacity onPress={() => userContext.logout()}>
+                  <Text>Logout</Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <AuthNavigation />
+            )}
           </SafeAreaView>
           <Snackbar />
         </Provider>

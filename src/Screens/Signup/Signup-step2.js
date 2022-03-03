@@ -17,7 +17,7 @@ export default function SignupStepTwo({navigation}) {
         <Content style={{marginVertical: 10}}>When is your birthday?</Content>
         <DatePicker
           mode="date"
-          fadeToColor="#fff"
+          fadeToColor={colors.primaryBackground}
           date={date}
           onDateChange={setDate}
           maximumDate={maxDate}

@@ -3,26 +3,33 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
-  Text,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import TextField, {PasswordField} from '../components/FormField/textField';
+import {PasswordField, TextField} from '../components/FormField/FormikControls';
 import Routes from '../components/StackNavigation/Routes';
 import {SubTitle, Title} from '../components/TEXT/Text';
 import colors from '../config/colors';
 import PrimaryBtn from '../components/FormField/PrimaryBtn';
 import {useDispatch} from 'react-redux';
-import {snackbarActions} from '../redux/snackbar';
 import {AuthContext} from '../components/context';
+import {Formik} from 'formik';
+import * as yup from 'yup';
 
 export default function Login(props) {
   const dispatch = useDispatch();
   const AuthActions = useContext(AuthContext);
+  const initValue = {
+    username: '',
+    password: '',
+  };
 
-  // console.log(user);
+  const validation = yup.object().shape({
+    username: yup.string().email('Invalid email').required('Required'),
+    password: yup.string().min(6, 'Invalid password').required('Required'),
+  });
 
   const {navigation} = props;
 
@@ -43,13 +50,29 @@ export default function Login(props) {
             </TouchableOpacity>
           </View>
           <View style={styles.fieldContainer}>
-            <TextField placeholder="Email or Phone number" />
-            <PasswordField placeholder="Password" />
-
-            <PrimaryBtn
-              onPress={() => AuthActions.login('Lokeesan', 'sdsdsd')}
-              text={"Let's Shareup"}
-            />
+            <Formik
+              initialValues={initValue}
+              validationSchema={validation}
+              onSubmit={values => console.log(values)}>
+              {({handleBlur, handleSubmit, values, handleChange, errors}) => (
+                <>
+                  <TextField
+                    placeholder="Email"
+                    value={values.username}
+                    onChangeText={handleChange('username')}
+                    onBlur={handleBlur('username')}
+                    error={errors['username']}
+                  />
+                  <PasswordField
+                    placeholder="Password"
+                    value={values.password}
+                    onChangeText={handleChange('password')}
+                    onBlur={handleBlur('password')}
+                  />
+                  <PrimaryBtn onPress={handleSubmit} text={"Let's Shareup"} />
+                </>
+              )}
+            </Formik>
 
             <TouchableOpacity
               activeOpacity={0.5}
@@ -69,7 +92,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.primaryBackground,
   },
   subtitle: {
     marginTop: 5,

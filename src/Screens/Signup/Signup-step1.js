@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
-  Text,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,

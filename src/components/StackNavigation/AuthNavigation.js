@@ -12,6 +12,7 @@ import SignupStepFour from '../../Screens/Signup/Signup-step4';
 import PasswordResetStepOne from '../../Screens/PasswordReset/PasswordReset-step1';
 import PasswordResetStepTwo from '../../Screens/PasswordReset/PasswordReset-step2';
 import PasswordResetStepThree from '../../Screens/PasswordReset/PasswordReset-step3';
+import colors from '../../config/colors';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,7 +26,7 @@ export default function AuthNavigation() {
           gestureDirection: 'vertical',
 
           contentStyle: {
-            backgroundColor: '#fff',
+            backgroundColor: colors.navigationScreen,
           },
           header: props =>
             props.options.title !== 'Login' ? (

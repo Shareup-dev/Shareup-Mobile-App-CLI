@@ -2,19 +2,19 @@ import React, { useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
 
-import AddPostButton from "./AddPostButton";
+import AddPostButton from "../../navigation/AddPostButton";
 import AddPostScreen from "../screens/AddPostScreen";
 import AccountScreen from "../screens/AccountScreen";
 import Button from "../components/buttons/LinkButton";
 import IconButton from "../components/buttons/IconButton";
 import Icon from "../components/Icon";
-import Drawer from "./Drawer";
-import constants from "../config/constants";
-import routes from "./routes";
-import colors from "../config/colors";
-import ActivityNavigator from "./ActivityNavigator";
-import NewsFeedNavigator from "./NewsFeedNavigator";
-import GroupNavigator from "./GroupNavigator";
+import Drawer from "../../navigation/Drawer";
+import constants from "../../config/constants";
+import routes from "../../navigation/routes";
+import colors from "../../config/colors";
+import ActivityNavigator from "../../navigation/ActivityNavigator";
+import NewsFeedNavigator from "../../navigation/NewsFeedNavigator";
+import GroupNavigator from "../../navigation/GroupNavigator";
 import { useSelector } from "react-redux";
 
 // import { NewsFeedNavigator } from "../navigation";
