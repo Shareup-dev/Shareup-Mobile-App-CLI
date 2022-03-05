@@ -1,162 +1,94 @@
-import React, {useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
-  SafeAreaView,
-  StatusBar,
   ActivityIndicator,
-  View,
-  TouchableOpacity,
   Text,
+  View,
+  Dimensions,
 } from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import store from './app/redux/store';
+import {Provider, useDispatch} from 'react-redux';
 
-import {Provider} from 'react-redux';
+import {AppNavigator, AuthNavigator} from './app/navigation';
+import UserContext from './app/UserContext';
+import colors from './app/config/colors';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import {loggedInUserActions} from './app/redux/loggedInUser';
+import OfflineNotice from './app/components/OfflineNotice';
+import Toast from 'react-native-toast-message';
+import TestScreen from './app/screens/TestScreen';
+import HomeNavigator from './app/navigation/HomeNavigator';
 
-import {AuthContext} from './src/components/context';
-import Snackbar from './src/components/Snackbar';
-import AuthNavigation from './src/components/StackNavigation/AuthNavigation';
-// import HomeNavigation from './src/components/StackNavigation/HomeNavigation';
-import colors from './src/config/colors';
-import store from './src/redux/store';
-
-export default function App(props) {
-  const initValue = {
-    username: null,
-    isLoading: true,
-    userToken: null,
-  };
-
-  const authReducer = (prevState, action) => {
-    switch (action.type) {
-      case 'RETRIEVE_TOKEN':
-        return {
-          ...prevState,
-          userToken: action.userToken,
-          isLoading: false,
-        };
-      case 'LOGIN':
-        return {
-          ...prevState,
-          username: action.username,
-          userToken: action.userToken,
-          isLoading: false,
-        };
-      case 'SIGNUP':
-        return {
-          ...prevState,
-          username: action.username,
-          userToken: action.userToken,
-          isLoading: false,
-        };
-      case 'LOGOUT':
-        return {
-          ...prevState,
-          username: null,
-          userToken: null,
-          isLoading: false,
-        };
-
-      default:
-        return initValue;
-    }
-  };
-  const [loginState, dispatch] = React.useReducer(authReducer, initValue);
-
-  // checking if the token available
+export default function App() {
+  const [authChecking, setauthChecking] = useState(true);
+  const [loadingIndicator, setloadingIndicator] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const retrieveToken = async () => {
-      try {
-        const userToken = await EncryptedStorage.getItem('auth_session');
-        dispatch({type: 'RETRIEVE_TOKEN', userToken});
-      } catch (error) {
-        console.log(error);
+    EncryptedStorage.getItem('user').then(user => {
+      if (user) {
+        setUser(JSON.parse(user));
+        store.dispatch(loggedInUserActions.setUser(JSON.parse(user)));
       }
-    };
-    retrieveToken();
+      setauthChecking(false);
+    });
   }, []);
 
-  const userContext = React.useMemo(
-    () => ({
-      // Login
-      login: async (username, userToken) => {
-        dispatch({type: 'LOGIN', username, userToken});
-        try {
-          await EncryptedStorage.setItem(
-            'auth_session',
-            JSON.stringify({
-              userToken,
-              username,
-            }),
-          );
-        } catch (error) {
-          console.log(error);
-        }
-      },
-      // logout
-      logout: async () => {
-        dispatch({type: 'LOGOUT'});
-        try {
-          await EncryptedStorage.removeItem('auth_session');
-        } catch (error) {
-          console.log(error);
-        }
-      },
-      // signup
-      signup: async (username, userToken) => {
-        dispatch({type: 'SIGNUP', username, userToken});
-        try {
-          await EncryptedStorage.setItem(
-            'auth_session',
-            JSON.stringify({
-              userToken,
-              username,
-            }),
-          );
-        } catch (error) {
-          console.log(error);
-        }
-      },
-    }),
-    [],
-  );
-
-  if (loginState.isLoading)
+  if (authChecking) {
+    return <ActivityIndicator />;
+  } else {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator color={colors.primary} size={'large'} />
-      </View>
-    );
-  else
-    return (
-      <AuthContext.Provider value={userContext}>
+      // <TestScreen />
+      <UserContext.Provider
+        value={{user, setUser, setloadingIndicator, loadingIndicator}}>
         <Provider store={store}>
-          <SafeAreaView style={styles.container}>
-            <StatusBar
-              backgroundColor={colors.statusbarBackground}
-              barStyle={colors.statusbarContent}
-            />
-            {loginState.userToken ? (
-              <>
-                <TouchableOpacity onPress={() => userContext.logout()}>
-                  <Text>Logout</Text>
-                </TouchableOpacity>
-              </>
-            ) : (
-              <AuthNavigation />
+          <OfflineNotice />
+          <NavigationContainer>
+            {loadingIndicator && (
+              <View style={styles.loadingOverlay}>
+                <ActivityIndicator
+                  style={styles.gobalLoadingIndicator}
+                  size="large"
+                  color="#044566"
+                />
+              </View>
             )}
-          </SafeAreaView>
-          <Snackbar />
+            {user ? <HomeNavigator /> : <AuthNavigator />}
+          </NavigationContainer>
+          <Toast ref={ref => Toast.setRef(ref)} />
         </Provider>
-      </AuthContext.Provider>
+      </UserContext.Provider>
     );
+  }
 }
 
 const styles = StyleSheet.create({
-  container: {flex: 1},
-  loadingContainer: {
+  loadingOverlay: {
     flex: 1,
+    position: 'absolute',
+    zIndex: 1,
+    elevation: 1,
+    // backgroundColor: 'coral',
+    opacity: 1,
+    height: Dimensions.get('screen').height,
+    width: Dimensions.get('screen').width,
+    alignContent: 'center',
     justifyContent: 'center',
-    alignItems: 'center',
+  },
+  listItem: {
+    borderRadius: 10,
+    backgroundColor: colors.white,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 6,
   },
 });
+
+// Testing branch protections

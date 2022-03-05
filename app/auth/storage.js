@@ -1,21 +1,21 @@
-import * as SecureStore from "expo-secure-store";
+import EncryptedStorage from 'react-native-encrypted-storage';
 
-import JwtDecode from "jwt-decode";
+import JwtDecode from 'jwt-decode';
 
-const key = "authToken";
-const storeToken = async (authToken) => {
+const key = 'authToken';
+const storeToken = async authToken => {
   try {
-    await SecureStore.setItemAsync(key, authToken);
+    await EncryptedStorage.setItem(key, authToken);
   } catch (error) {
-    console.log("Error storing the auth token", error);
+    console.log('Error storing the auth token', error);
   }
 };
 
 const getToken = async () => {
   try {
-    return await SecureStore.getItemAsync(key);
+    return await EncryptedStorage.getItem(key);
   } catch (error) {
-    console.log("Error getting the auth token", error);
+    console.log('Error getting the auth token', error);
   }
 };
 
@@ -26,9 +26,9 @@ const getUser = async () => {
 
 const removeToken = async () => {
   try {
-    await SecureStore.deleteItemAsync(key);
+    await EncryptedStorage.removeItem(key);
   } catch (error) {
-    console.log("Error removing the auth token", error);
+    console.log('Error removing the auth token', error);
   }
 };
 

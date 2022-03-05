@@ -1,5 +1,3 @@
-import Constants from "expo-constants";
-
 // http://167.71.237.231:8081
 // http://195.110.59.203:8081
 // http://192.168.100.239:8080
@@ -7,13 +5,13 @@ import Constants from "expo-constants";
 
 const settings = {
   dev: {
-    apiUrl: "http://192.168.100.239:8080",
+    apiUrl: 'http://192.168.100.239:8080',
   },
   staging: {
-    apiUrl: "http://192.168.100.2:8080",
+    apiUrl: 'http://192.168.100.2:8080',
   },
   prod: {
-    apiUrl: "https://shareup.digital/backend",
+    apiUrl: 'https://shareup.digital/backend',
   },
 };
 
@@ -23,7 +21,7 @@ const getCurrentSettings = () => {
   // if (__DEV__) return settings.dev;
   // if (__DEV__) return settings.prod;
 
-  if (Constants.manifest.releaseChannel === "staging") return settings.staging;
+  // if (Constants.manifest.releaseChannel === 'staging') return settings.staging;
   return settings.prod;
 };
 

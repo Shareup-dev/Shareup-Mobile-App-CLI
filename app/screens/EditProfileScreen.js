@@ -1,46 +1,46 @@
-import { StyleSheet, Text, Platform, View, TextInput } from "react-native";
+import {StyleSheet, Text, Platform, View, TextInput} from 'react-native';
 
-import Screen from "../components/Screen";
-import { Header, HeaderButton, HeaderTitle } from "../components/headers";
-import Separator from "../components/Separator";
-import React, { useContext, useState } from "react";
-import colors from "../config/colors";
-import UserContext from "../UserContext";
-import LinkButton from "../components/buttons/LinkButton";
-import Section from "../components/Section";
-import UserProfilePicture from "../components/UserProfilePicture";
-import TextField from "../components/TextField";
-import { ScrollView } from "react-native-gesture-handler";
-import UserService from "../services/UserService";
-import authApi from "../api/auth";
-import * as SecureStore from "expo-secure-store";
-import { loggedInUserActions } from "../redux/loggedInUser";
+import Screen from '../components/Screen';
+import {Header, HeaderButton, HeaderTitle} from '../components/headers';
+import Separator from '../components/Separator';
+import React, {useContext, useState} from 'react';
+import colors from '../config/colors';
+import UserContext from '../UserContext';
+import LinkButton from '../components/buttons/LinkButton';
+import Section from '../components/Section';
+import UserProfilePicture from '../components/UserProfilePicture';
+import TextField from '../components/TextField';
+import {ScrollView} from 'react-native-gesture-handler';
+import UserService from '../services/UserService';
+import authApi from '../api/auth';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import {loggedInUserActions} from '../redux/loggedInUser';
 import {
   ToastAndroid,
   Button,
   StatusBar,
   TouchableOpacity,
   Image,
-} from "react-native";
-import useImagePicker from "../hooks/useImagePicker";
-import * as ImagePicker from "expo-image-picker";
-import settings from "../config/settings";
+} from 'react-native';
+import useImagePicker from '../hooks/useImagePicker';
+import * as ImagePicker from 'expo-image-picker';
+import settings from '../config/settings';
 
-export default function EditProfileScreen({ navigation }) {
-  const { user, setUser } = useContext(UserContext);
-  const { file, pickImage, clearFile } = useImagePicker();
+export default function EditProfileScreen({navigation}) {
+  const {user, setUser} = useContext(UserContext);
+  const {file, pickImage, clearFile} = useImagePicker();
   const [displayImage, setDisplayImage] = useState(false);
   const [enteredBio, setEnteredBio] = useState(user.aboutme);
   const [enteredCurrenttown, setEnteredCurrenttown] = useState(
-    user.currenttown
+    user.currenttown,
   );
   const [enteredhometown, setEnteredhometown] = useState(user.hometown);
   const [enteredRelation, setEnteredRelation] = useState(
-    user.relationshipstatus
+    user.relationshipstatus,
   );
   const [enteredinterests, setEnteredinterests] = useState(user.interests);
   const [imageVal, setImage] = useState(
-    settings.apiUrl + user.profilePicturePath
+    settings.apiUrl + user.profilePicturePath,
   );
   const [imageFile, setSelectedImageFile] = useState(null);
 
@@ -60,44 +60,44 @@ export default function EditProfileScreen({ navigation }) {
     console.log(user.email);
 
     const formData = new FormData();
-    formData.append("profilePicture", {
-      name: "profilePicture2",
-      type: "image/jpg",
+    formData.append('profilePicture', {
+      name: 'profilePicture2',
+      type: 'image/jpg',
       uri: imageFile.uri,
     });
 
     console.log(formData);
     await UserService.uploadProfilePicture(user.email, formData).then(
-      async (res) => {
+      async res => {
         console.log(res.data);
         if (res.data) {
           setUser(res.data);
-          await SecureStore.setItemAsync("user", JSON.stringify(res.data));
+          await EncryptedStorage.setItem('user', JSON.stringify(res.data));
           showToast();
         }
-      }
+      },
     );
   }
   async function EditUser() {
     let storedUser2 = await UserService.editProfile(user.email, user).then(
-      async (res) => {
+      async res => {
         console.log(res.data);
         if (res.data) {
           setUser(res.data);
-          await SecureStore.setItemAsync("user", JSON.stringify(res.data));
+          await EncryptedStorage.setItem('user', JSON.stringify(res.data));
           showToast();
         }
-      }
+      },
     );
   }
 
   const showToast = () => {
     ToastAndroid.showWithGravityAndOffset(
-      "Profile Edit Successfully",
+      'Profile Edit Successfully',
       ToastAndroid.LONG,
       ToastAndroid.BOTTOM,
       25,
-      50
+      50,
     );
   };
   // getUser();
@@ -143,14 +143,13 @@ export default function EditProfileScreen({ navigation }) {
             onAdd={() => {
               user.profilePicturePath = imageVal;
               EditProfileImagw();
-              console.log("Edit Profile ");
-            }}
-          >
+              console.log('Edit Profile ');
+            }}>
             <TouchableOpacity onPress={callFun}>
               <Image
-                source={{ uri: imageVal }}
+                source={{uri: imageVal}}
                 style={[
-                  { width: 100, height: 100, borderRadius: 100 / 2 },
+                  {width: 100, height: 100, borderRadius: 100 / 2},
                   styles.userProfilePicture,
                 ]}
               />
@@ -164,15 +163,14 @@ export default function EditProfileScreen({ navigation }) {
             onAdd={() => {
               user.aboutme = enteredBio;
               EditUser();
-            }}
-          >
+            }}>
             <TextInput
               placeholder="Describe yourself..."
               textAlign="center"
               multiline
               placeholderTextColor={colors.mediumGray}
               value={enteredBio}
-              onChangeText={(text) => setEnteredBio(text)}
+              onChangeText={text => setEnteredBio(text)}
             />
           </Section>
 
@@ -185,30 +183,29 @@ export default function EditProfileScreen({ navigation }) {
               user.hometown = enteredhometown;
               user.relationshipstatus = enteredRelation;
               EditUser();
-              console.log("Details ");
-            }}
-          >
+              console.log('Details ');
+            }}>
             <TextField
               placeholder="Current town / city"
-              iconImage={require("../assets/icons/home-icon.png")}
+              iconImage={require('../assets/icons/home-icon.png')}
               backgroundColor={colors.white}
               value={enteredCurrenttown}
-              onChangeText={(text) => setEnteredCurrenttown(text)}
+              onChangeText={text => setEnteredCurrenttown(text)}
             />
 
             <TextField
               placeholder="Home town"
-              iconImage={require("../assets/icons/location-icon.png")}
+              iconImage={require('../assets/icons/location-icon.png')}
               backgroundColor={colors.white}
               value={enteredhometown}
-              onChangeText={(text) => setEnteredhometown(text)}
+              onChangeText={text => setEnteredhometown(text)}
             />
             <TextField
               placeholder="Relationship status"
-              iconImage={require("../assets/icons/double-heart-icon.png")}
+              iconImage={require('../assets/icons/double-heart-icon.png')}
               backgroundColor={colors.white}
               value={enteredRelation}
-              onChangeText={(text) => setEnteredRelation(text)}
+              onChangeText={text => setEnteredRelation(text)}
             />
           </Section>
 
@@ -219,16 +216,15 @@ export default function EditProfileScreen({ navigation }) {
             onAdd={() => {
               user.interests = enteredinterests;
               EditUser();
-              console.log("Hobbies ");
-            }}
-          >
+              console.log('Hobbies ');
+            }}>
             <TextInput
               placeholder="Add your hobbies..."
               textAlign="center"
               multiline
               placeholderTextColor={colors.mediumGray}
               value={enteredinterests}
-              onChangeText={(text) => setEnteredinterests(text)}
+              onChangeText={text => setEnteredinterests(text)}
             />
           </Section>
 
@@ -257,11 +253,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    alignItems: "flex-end",
+    alignItems: 'flex-end',
   },
   headerTitle: {
     fontSize: 25,
-    fontWeight: Platform.OS == "ios" ? "500" : "bold",
+    fontWeight: Platform.OS == 'ios' ? '500' : 'bold',
   },
   leftAndRight: {
     marginBottom: 2,
@@ -270,12 +266,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textField: {
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   linkButtons: {
     margin: 10,
   },
   userProfilePicture: {
-    alignSelf: "center",
+    alignSelf: 'center',
   },
 });

@@ -1,53 +1,48 @@
-import React, { useState, useContext } from "react";
-import * as Yup from "yup";
-import {
-  ErrorMessage,
-  Form,
-  FormField,
-  SubmitButton,
-} from "../components/forms";
-import { useSelector } from "react-redux";
-import Toast from "react-native-toast-message";
-import * as SecureStore from "expo-secure-store";
+import React, {useState, useContext} from 'react';
+import * as Yup from 'yup';
+import {ErrorMessage, Form, FormField, SubmitButton} from '../components/forms';
+import {useSelector} from 'react-redux';
+import Toast from 'react-native-toast-message';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
-import { StyleSheet, TouchableOpacity, View } from "react-native";
-import Text from "../components/Text";
-import UserService from "../services/UserService";
-import AuthServer from "../services/auth.services";
-import Icon from "../components/Icon";
-import FormRadio from "../components/forms/FormRadio";
-import UserContext from "../UserContext";
-import settings from "../config/settings";
-import useIsReachable from "../hooks/useIsReachable";
-import RegistrationContainer from "../components/forms/RegistrationContainer";
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import Text from '../components/Text';
+import UserService from '../services/UserService';
+import AuthServer from '../services/auth.services';
+import Icon from '../components/Icon';
+import FormRadio from '../components/forms/FormRadio';
+import UserContext from '../UserContext';
+import settings from '../config/settings';
+import useIsReachable from '../hooks/useIsReachable';
+import RegistrationContainer from '../components/forms/RegistrationContainer';
 
-const SignupStepTwo = ({ navigation }) => {
+const SignupStepTwo = ({navigation}) => {
   const [agreed, setagreed] = useState(false);
   const [registerFailed, setRegisterFailed] = useState(false);
-  const [registerError, setRegisterError] = useState("");
+  const [registerError, setRegisterError] = useState('');
 
-  const { setloadingIndicator, setUser } = useContext(UserContext);
+  const {setloadingIndicator, setUser} = useContext(UserContext);
 
-  const { isReachable, checkIfReachable } = useIsReachable();
+  const {isReachable, checkIfReachable} = useIsReachable();
 
-  let stepOnceFromValues = useSelector((state) => state.registationSlice);
+  let stepOnceFromValues = useSelector(state => state.registationSlice);
 
   const validationSchema = Yup.object().shape({
-    password: Yup.string().required().min(3).label("Password"),
+    password: Yup.string().required().min(3).label('Password'),
     gender: Yup.string().required(),
     confirmPassword: Yup.string()
       .required()
-      .label("Re-Enter Password")
-      .when("password", {
-        is: (val) => (val && val.length > 0 ? true : false),
+      .label('Re-Enter Password')
+      .when('password', {
+        is: val => (val && val.length > 0 ? true : false),
         then: Yup.string().oneOf(
-          [Yup.ref("password")],
-          "Both password need to be the same"
+          [Yup.ref('password')],
+          'Both password need to be the same',
         ),
       }),
   });
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async values => {
     setloadingIndicator(true);
     const isReachable = await checkIfReachable(settings.apiUrl);
 
@@ -59,41 +54,41 @@ const SignupStepTwo = ({ navigation }) => {
 
     if (!agreed) {
       Toast.show({
-        position: "bottom",
+        position: 'bottom',
         visibilityTime: 5000,
-        type: "error",
-        text1: "Error",
-        text2: "Please agree to the terms 👋",
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please agree to the terms 👋',
       });
       setloadingIndicator(false);
       return;
     }
 
-    const userCompleteData = { ...stepOnceFromValues, ...values };
+    const userCompleteData = {...stepOnceFromValues, ...values};
 
     UserService.createUser(userCompleteData)
-      .then((res) => {
+      .then(res => {
         Toast.show({
-          position: "bottom",
+          position: 'bottom',
           visibilityTime: 5000,
-          type: "success",
-          text1: "Success",
-          text2: "Registered Successfully 👋",
+          type: 'success',
+          text1: 'Success',
+          text2: 'Registered Successfully 👋',
         });
 
         AuthServer.login(
           userCompleteData.email,
-          userCompleteData.password
-        ).then(async (res) => {
+          userCompleteData.password,
+        ).then(async res => {
           UserService.getUserByEmail(userCompleteData.email);
           setUser(res.data);
-          await SecureStore.setItemAsync("user", JSON.stringify(res.data));
+          await EncryptedStorage.setItem('user', JSON.stringify(res.data));
         });
       })
-      .catch((error) => {
-        console.log("Error occurred while registering: ", error);
+      .catch(error => {
+        console.log('Error occurred while registering: ', error);
         setRegisterFailed(true);
-        setRegisterError("User Already Exist");
+        setRegisterError('User Already Exist');
       });
     setloadingIndicator(false);
   };
@@ -106,13 +101,12 @@ const SignupStepTwo = ({ navigation }) => {
 
       <Form
         initialValues={{
-          password: "",
-          confirmPassword: "",
-          gender: "",
+          password: '',
+          confirmPassword: '',
+          gender: '',
         }}
         validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
+        onSubmit={handleSubmit}>
         <FormRadio name="gender" style={[styles.formField, styles.formRadio]} />
 
         <FormField
@@ -135,16 +129,15 @@ const SignupStepTwo = ({ navigation }) => {
 
         <TouchableOpacity
           style={styles.agree}
-          onPress={() => setagreed(!agreed)}
-        >
+          onPress={() => setagreed(!agreed)}>
           <Icon
-            name={agreed ? "check-box" : "check-box-outline-blank"}
-            type={"MaterialIcons"}
+            name={agreed ? 'check-box' : 'check-box-outline-blank'}
+            type={'MaterialIcons'}
             size={30}
             backgroundSizeRatio={0.9}
             style={styles.checkIcon}
           />
-          <Text>{"Agree to terms & conditions"}</Text>
+          <Text>{'Agree to terms & conditions'}</Text>
         </TouchableOpacity>
 
         <SubmitButton title="Register" style={styles.submitButton} />
@@ -155,25 +148,25 @@ const SignupStepTwo = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   submitButton: {
-    alignSelf: "center",
-    width: "60%",
-    justifyContent: "center",
+    alignSelf: 'center',
+    width: '60%',
+    justifyContent: 'center',
     marginVertical: 20,
   },
   agree: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginTop: 10,
   },
   checkIcon: {
     paddingRight: 5,
   },
   registerError: {
-    alignItems: "center",
+    alignItems: 'center',
   },
   formField: {
-    width: "90%",
+    width: '90%',
     marginBottom: 5,
   },
   formRadio: {

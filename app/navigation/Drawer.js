@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, {useContext} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,91 +7,90 @@ import {
   TouchableWithoutFeedback,
   Platform,
   PixelRatio,
-} from "react-native";
-import Modal from "react-native-modal";
+} from 'react-native';
+import Modal from 'react-native-modal';
 
-import UserContext from "../UserContext";
-import Icon from "../components/Icon";
-import colors from "../config/colors";
-import defaultStyles from "../config/styles";
-import DrawerButtons from "./DrawerButtons";
-import LinkButton from "../components/buttons/LinkButton";
-import Constants from "expo-constants";
-import * as SecureStore from "expo-secure-store";
-import routes from "./routes";
-import { useNavigation } from "@react-navigation/native";
-import { ScrollView } from "react-native-gesture-handler";
+import UserContext from '../UserContext';
+import Icon from '../components/Icon';
+import colors from '../config/colors';
+import defaultStyles from '../config/styles';
+import DrawerButtons from './DrawerButtons';
+import LinkButton from '../components/buttons/LinkButton';
+
+import EncryptedStorage from 'react-native-encrypted-storage';
+import routes from './routes';
+import {useNavigation} from '@react-navigation/native';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const listItems = [
   {
-    title: "Share Feed",
-    icon: require("../assets/icons/share-feed-icon.png"),
+    title: 'Share Feed',
+    icon: require('../assets/icons/share-feed-icon.png'),
   },
   {
-    title: "Swap Point",
-    icon: require("../assets/icons/swap-point-icon.png"),
+    title: 'Swap Point',
+    icon: require('../assets/icons/swap-point-icon.png'),
   },
   {
-    title: "Share Time",
-    icon: require("../assets/icons/share-time-icon.png"),
+    title: 'Share Time',
+    icon: require('../assets/icons/share-time-icon.png'),
   },
   {
-    title: "Share Point",
-    icon: require("../assets/icons/share-point-icon.png"),
+    title: 'Share Point',
+    icon: require('../assets/icons/share-point-icon.png'),
   },
   {
-    title: "Share Friends",
-    icon: require("../assets/icons/share-feed-icon.png"),
+    title: 'Share Friends',
+    icon: require('../assets/icons/share-feed-icon.png'),
   },
   {
-    title: "Add Friends",
-    icon: require("../assets/icons/add-friends-icon.png"),
+    title: 'Add Friends',
+    icon: require('../assets/icons/add-friends-icon.png'),
   },
   {
-    title: "Share Groups",
-    icon: require("../assets/icons/foundation_social-skillshare.png"),
+    title: 'Share Groups',
+    icon: require('../assets/icons/foundation_social-skillshare.png'),
   },
   {
-    title: "Message",
-    icon: require("../assets/icons/message.png"),
+    title: 'Message',
+    icon: require('../assets/icons/message.png'),
   },
 
   {
-    title: "Reels",
-    icon: require("../assets/icons/reels-colored-icon.png"),
+    title: 'Reels',
+    icon: require('../assets/icons/reels-colored-icon.png'),
   },
   {
-    title: "Saved Posts",
-    icon: require("../assets/post-options-icons/save-post-icon.png"),
+    title: 'Saved Posts',
+    icon: require('../assets/post-options-icons/save-post-icon.png'),
   },
   {
-    title: "Discover",
-    icon: require("../assets/icons/search-icon-colored2.png"),
+    title: 'Discover',
+    icon: require('../assets/icons/search-icon-colored2.png'),
   },
   {
-    title: "Saved Swaps",
-    icon: require("../assets/icons/saved-swap-colored-icon.png"),
+    title: 'Saved Swaps',
+    icon: require('../assets/icons/saved-swap-colored-icon.png'),
   },
 ];
 
-export default function Drawer({ isVisible, setIsVisible }) {
-  const { user, setUser } = useContext(UserContext);
+export default function Drawer({isVisible, setIsVisible}) {
+  const {user, setUser} = useContext(UserContext);
   const navigation = useNavigation();
   return (
     <Modal
       isVisible={isVisible}
-      swipeDirection={["right"]}
+      swipeDirection={['right']}
       coverScreen={true}
       onSwipeComplete={() => setIsVisible(false)}
       onBackdropPress={() => setIsVisible(false)}
       animationIn="slideInRight"
-      animationOut="slideOutRight"
-    >
+      animationOut="slideOutRight">
       <View style={styles.container}>
         <View style={styles.header}>
           <Icon
             backgroundSizeRatio={1}
-            image={require("../assets/tab-navigation-icons/user-icon.png")}
+            image={require('../assets/tab-navigation-icons/user-icon.png')}
           />
           <Text style={styles.userName}>{user.firstName}</Text>
         </View>
@@ -102,9 +101,9 @@ export default function Drawer({ isVisible, setIsVisible }) {
             <FlatList
               data={listItems}
               contentContainerStyle={styles.flatList}
-              keyExtractor={(item) => item.title}
+              keyExtractor={item => item.title}
               numColumns={2}
-              renderItem={({ item }) => (
+              renderItem={({item}) => (
                 <DrawerButtons title={item.title} iconImage={item.icon} />
               )}
             />
@@ -114,7 +113,7 @@ export default function Drawer({ isVisible, setIsVisible }) {
             <View style={styles.separator} />
             <View style={styles.LinkButtonWrapper}>
               <Icon
-                image={require("../assets/icons/help-circle-icon.png")}
+                image={require('../assets/icons/help-circle-icon.png')}
                 color={colors.LightGray}
                 backgroundColor="#EAEAEA"
                 backgroundSizeRatio={0.7}
@@ -122,7 +121,7 @@ export default function Drawer({ isVisible, setIsVisible }) {
               />
               <View style={styles.center}>
                 <LinkButton
-                  title={"Help & Support"}
+                  title={'Help & Support'}
                   style={styles.linkButton}
                 />
               </View>
@@ -138,12 +137,12 @@ export default function Drawer({ isVisible, setIsVisible }) {
               />
               <View style={styles.center}>
                 <LinkButton
-                  title={"Settings & Privacy"}
+                  title={'Settings & Privacy'}
                   style={styles.linkButton}
                   onPress={() => {
                     setIsVisible(false);
                     //SettingPrivacy
-                    navigation.navigate("SettingPrivacy");
+                    navigation.navigate('SettingPrivacy');
                   }}
                 />
               </View>
@@ -151,8 +150,8 @@ export default function Drawer({ isVisible, setIsVisible }) {
             <View style={styles.separator} />
             <LogoutButton
               onPress={() => {
-                console.log("logged out in Drawer");
-                SecureStore.deleteItemAsync("user");
+                console.log('logged out in Drawer');
+                EncryptedStorage.removeItem('user');
                 setUser(null);
               }}
             />
@@ -163,7 +162,7 @@ export default function Drawer({ isVisible, setIsVisible }) {
   );
 }
 
-function LogoutButton({ onPress }) {
+function LogoutButton({onPress}) {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={styles.logoutButton}>
@@ -176,20 +175,20 @@ function LogoutButton({ onPress }) {
 const styles = StyleSheet.create({
   container: {
     borderRadius: 20,
-    alignSelf: "flex-end",
-    overflow: "hidden",
+    alignSelf: 'flex-end',
+    overflow: 'hidden',
     padding: 10,
     backgroundColor: colors.white,
-    height: PixelRatio.get() < 3 ? "100%" : "90%",
+    height: PixelRatio.get() < 3 ? '100%' : '90%',
   },
   userName: {
     fontSize: 23,
     color: colors.iondigoDye,
-    fontWeight: "500",
+    fontWeight: '500',
   },
   header: {
-    flexDirection: "row",
-    alignItems: "flex-end",
+    flexDirection: 'row',
+    alignItems: 'flex-end',
     paddingHorizontal: 10,
   },
   separator: {
@@ -202,23 +201,23 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 30,
     borderRadius: 20,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
   },
   tab: {
     marginHorizontal: 0,
   },
   flatList: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 5,
-    width: "100%",
+    width: '100%',
   },
   footer: {
     margin: 5,
   },
   LinkButtonWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     margin: PixelRatio.get() < 3 ? 3 : 10,
   },
   linkButton: {
@@ -227,12 +226,12 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   center: {
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   logoutButton: {
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#C4C4C4",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#C4C4C4',
     height: 35,
     borderRadius: 5,
     margin: 5,

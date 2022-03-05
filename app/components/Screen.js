@@ -1,24 +1,22 @@
-import React from "react";
-import Constants from "expo-constants";
+import React from 'react';
+
 import {
   StyleSheet,
-  SafeAreaView,
-  View,
+  StatusBar,
   KeyboardAvoidingView,
   Platform,
-} from "react-native";
-import colors from "../config/colors";
+} from 'react-native';
+import colors from '../config/colors';
 
-export default function Screen({ children, style, statusPadding = true }) {
+export default function Screen({children, style, statusPadding = true}) {
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : null}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
       style={[
         styles.view,
-        { paddingTop: statusPadding ? Constants.statusBarHeight : 0 },
+        {paddingTop: statusPadding ? StatusBar.currentHeight : 0},
         style,
-      ]}
-    >
+      ]}>
       {children}
     </KeyboardAvoidingView>
   );
@@ -27,7 +25,7 @@ export default function Screen({ children, style, statusPadding = true }) {
 const styles = StyleSheet.create({
   screen: {
     padding: 0,
-    // paddingTop: Constants.statusBarHeight,
+    // paddingTop: StatusBar.currentHeight,
     // to add a top padding same as the hight of the statusbar hight of any device
     // and it will not add extra padding with SafeAreaView in ios
     flex: 1,

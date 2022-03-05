@@ -1,22 +1,22 @@
-import React, { useState } from "react";
-import { Text, View, StyleSheet } from "react-native";
-import Constants from "expo-constants";
-import { ImageBrowser } from "expo-image-picker-multiple";
-import Modal from "react-native-modal";
+import React, {useState} from 'react';
+import {Text, View, StyleSheet, StatusBar} from 'react-native';
 
-import { Header, HeaderButton, HeaderTitle } from "./headers";
-import colors from "../config/colors";
+import {ImageBrowser} from 'expo-image-picker-multiple';
+import Modal from 'react-native-modal';
 
-export default function MultiImagePicker({ isVisible, setIsVisible }) {
+import {Header, HeaderButton, HeaderTitle} from './headers';
+import colors from '../config/colors';
+
+export default function MultiImagePicker({isVisible, setIsVisible}) {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [hasCameraRollPermission, setHasCameraRollPermission] = useState(null);
 
-  const imagesCallback = (callback) => {
+  const imagesCallback = callback => {
     callback
-      .then((photos) => {
+      .then(photos => {
         console.log(photos);
       })
-      .catch((e) => console.log(e));
+      .catch(e => console.log(e));
   };
 
   const updateHandler = (count, onSubmit) => {
@@ -26,7 +26,7 @@ export default function MultiImagePicker({ isVisible, setIsVisible }) {
     // });
   };
 
-  const renderSelectedComponent = (number) => (
+  const renderSelectedComponent = number => (
     <View style={styles.countBadge}>
       <Text style={styles.countBadgeText}>{number}</Text>
     </View>
@@ -40,8 +40,7 @@ export default function MultiImagePicker({ isVisible, setIsVisible }) {
     <Modal
       isVisible={isVisible}
       setIsVisible={setIsVisible}
-      style={styles.modal}
-    >
+      style={styles.modal}>
       <View style={styles.container}>
         <Header
           left={<HeaderButton title="Cancel" isActive={true} />}
@@ -67,8 +66,8 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 0,
     margin: 0,
-    height: "100%",
-    paddingTop: Constants.platform.ios ? Constants.statusBarHeight : 0,
+    height: '100%',
+    paddingTop: Constants.platform.ios ? StatusBar.currentHeight : 0,
   },
   container: {
     flex: 1,
@@ -78,22 +77,22 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   emptyStay: {
-    textAlign: "center",
+    textAlign: 'center',
   },
   countBadge: {
     paddingHorizontal: 8.6,
     paddingVertical: 5,
     borderRadius: 50,
-    position: "absolute",
+    position: 'absolute',
     right: 3,
     bottom: 3,
-    justifyContent: "center",
-    backgroundColor: "#0580FF",
+    justifyContent: 'center',
+    backgroundColor: '#0580FF',
   },
   countBadgeText: {
-    fontWeight: "bold",
-    alignSelf: "center",
-    padding: "auto",
-    color: "#ffffff",
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    padding: 'auto',
+    color: '#ffffff',
   },
 });

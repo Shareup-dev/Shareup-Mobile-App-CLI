@@ -1,43 +1,43 @@
-import React, { useContext } from "react";
-import { View, StyleSheet } from "react-native";
-import IconButton from "../components/buttons/IconButton";
-import Icon from "../components/Icon";
-import colors from "../config/colors";
-import Constants from "expo-constants";
-import routes from "./routes";
-import UserContext from "../UserContext";
+import React, {useContext} from 'react';
+import {View, StyleSheet, StatusBar} from 'react-native';
+import IconButton from '../components/buttons/IconButton';
+import Icon from '../components/Icon';
+import colors from '../config/colors';
 
-export default function CustomHeaderBar({ navigation }) {
-  const { user } = useContext(UserContext);
+import routes from './routes';
+import UserContext from '../UserContext';
+
+export default function CustomHeaderBar({navigation}) {
+  const {user} = useContext(UserContext);
 
   const size = 30;
   return (
     <View style={styles.container}>
       <View style={styles.headerLeft}>
         <Icon
-          image={require("../assets/main-logo.png")}
+          image={require('../assets/main-logo.png')}
           backgroundSizeRatio={1}
         />
       </View>
       <View style={styles.headerRight}>
         <IconButton
           style={styles.iconButton}
-          image={require("../assets/tab-navigation-icons/aperture-icon.png")}
+          image={require('../assets/tab-navigation-icons/aperture-icon.png')}
           size={size}
           onPress={() => navigation.navigate(routes.MY_REELS)}
         />
         <IconButton
           style={styles.iconButton}
-          image={require("../assets/tab-navigation-icons/share-icon.png")}
+          image={require('../assets/tab-navigation-icons/share-icon.png')}
           size={size}
           onPress={() => navigation.navigate(routes.MESSAGES_NAVIGATOR)}
         />
         <IconButton
           style={styles.iconButton}
-          image={require("../assets/tab-navigation-icons/user-icon.png")}
+          image={require('../assets/tab-navigation-icons/user-icon.png')}
           size={size}
           onPress={() =>
-            navigation.navigate(routes.USER_PROFILE, { userEmail: user.email })
+            navigation.navigate(routes.USER_PROFILE, {userEmail: user.email})
           }
         />
       </View>
@@ -48,13 +48,13 @@ export default function CustomHeaderBar({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.white,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingTop: Constants.statusBarHeight + 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: StatusBar.currentHeight + 10,
     padding: 15,
     elevation: 6,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 1,
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2.22,
   },
   headerRight: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   iconButton: {
     marginLeft: 10,

@@ -1,8 +1,8 @@
-import React from "react";
-import Constants from "expo-constants";
-import { Camera } from "expo-camera";
-import { StyleSheet, Dimensions } from "react-native";
-import CameraHeader from "./headers/CameraHeader";
+import React from 'react';
+
+import {Camera} from 'expo-camera';
+import {StyleSheet, Dimensions, StatusBar} from 'react-native';
+import CameraHeader from './headers/CameraHeader';
 
 export default function AppCamera({
   children,
@@ -13,16 +13,15 @@ export default function AppCamera({
 }) {
   return (
     <Camera
-      ratio={"16:9"}
+      ratio={'16:9'}
       ref={forwardRef}
       type={type}
-      behavior={Platform.OS === "ios" ? "height" : "height"}
+      behavior={Platform.OS === 'ios' ? 'height' : 'height'}
       style={[
         styles.camera,
-        { paddingTop: statusPadding ? Constants.statusBarHeight : 0 },
+        {paddingTop: statusPadding ? StatusBar.currentHeight : 0},
         style,
-      ]}
-    >
+      ]}>
       <CameraHeader title="Story " />
       {children}
     </Camera>
@@ -32,7 +31,7 @@ export default function AppCamera({
 const styles = StyleSheet.create({
   screen: {
     padding: 0,
-    // paddingTop: Constants.statusBarHeight,
+    // paddingTop: StatusBar.currentHeight,
     // to add a top padding same as the hight of the statusbar hight of any device
     // and it will not add extra padding with SafeAreaView in ios
     flex: 1,
@@ -40,7 +39,7 @@ const styles = StyleSheet.create({
   camera: {
     padding: 0,
     flex: 1,
-    height: Dimensions.get("screen").height,
-    width: Dimensions.get("screen").width,
+    height: Dimensions.get('screen').height,
+    width: Dimensions.get('screen').width,
   },
 });

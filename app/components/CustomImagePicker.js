@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useRef } from "react";
-import { View, StyleSheet, TouchableWithoutFeedback } from "react-native";
-import Constants from "expo-constants";
-import Modal from "react-native-modal";
-import { AssetsSelector } from "expo-images-picker";
-import { Entypo, Ionicons, Feather } from "@expo/vector-icons";
+import React from 'react';
+import {View, StyleSheet, StatusBar} from 'react-native';
 
-import { Header, HeaderButton, HeaderTitle } from "./headers";
-import colors from "../config/colors";
+import Modal from 'react-native-modal';
+import {AssetsSelector} from 'expo-images-picker';
+import {Ionicons, Feather} from '@expo/vector-icons';
 
-export default function CustomImagePicker({ onCancel }) {
+import {Header, HeaderButton, HeaderTitle} from './headers';
+import colors from '../config/colors';
+
+export default function CustomImagePicker({onCancel}) {
   return (
     <Modal isVisible={true} style={styles.modal}>
       <View style={styles.container}>
@@ -22,7 +22,7 @@ export default function CustomImagePicker({ onCancel }) {
         />
         <AssetsSelector
           Settings={{
-            assetsType: ["photo", "unknown"],
+            assetsType: ['photo', 'unknown'],
             maxSelection: 4,
             minSelection: 1,
             initialLoad: 50,
@@ -37,13 +37,13 @@ export default function CustomImagePicker({ onCancel }) {
             spinnerColor: colors.iondigoDye,
             videoIcon: {
               Component: Ionicons,
-              iconName: "ios-videocam",
+              iconName: 'ios-videocam',
               color: colors.iondigoDye,
               size: 20,
             },
             selectedIcon: {
               Component: Feather,
-              iconName: "check-circle",
+              iconName: 'check-circle',
               color: colors.white,
               bg: colors.whiteWithOpacity,
               size: 26,
@@ -51,7 +51,7 @@ export default function CustomImagePicker({ onCancel }) {
           }}
           Errors={{
             errorTextColor: colors.red,
-            errorMessages: "Error",
+            errorMessages: 'Error',
           }}
         />
       </View>
@@ -64,8 +64,8 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 0,
     margin: 0,
-    height: "100%",
-    paddingTop: Constants.platform.ios ? Constants.statusBarHeight : 0,
+    height: '100%',
+    paddingTop: Constants.platform.ios ? StatusBar.currentHeight : 0,
   },
   container: {
     flex: 1,

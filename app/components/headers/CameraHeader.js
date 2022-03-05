@@ -1,19 +1,19 @@
-import React from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-import Constants from "expo-constants";
+import React from 'react';
+import {
+  StatusBar,
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
+import {AntDesign} from '@expo/vector-icons';
 
-import colors from "../../config/colors";
+import colors from '../../config/colors';
 
-export default function CameraHeader({ title, style, onClosePress }) {
+export default function CameraHeader({title, style, onClosePress}) {
   return (
     <View
-      style={[
-        styles.container,
-        { paddingTop: Constants.statusBarHeight },
-        style,
-      ]}
-    >
+      style={[styles.container, {paddingTop: StatusBar.currentHeight}, style]}>
       <Text style={styles.title}>{title}</Text>
       <TouchableOpacity onPress={onClosePress}>
         <AntDesign
@@ -29,10 +29,10 @@ export default function CameraHeader({ title, style, onClosePress }) {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "space-between",
-    flexDirection: "row",
-    position: "absolute",
-    width: "100%",
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    position: 'absolute',
+    width: '100%',
     borderBottomWidth: 2,
     borderColor: colors.white,
     paddingHorizontal: 20,
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    fontWeight: "500",
+    fontWeight: '500',
     color: colors.white,
   },
   icon: {

@@ -1,13 +1,13 @@
-import AuthContext from "./context";
-import JwtDecode from "jwt-decode";
-import authStorage from "./storage";
-import { useContext } from "react";
-import * as SecureStore from "expo-secure-store";
+import AuthContext from './context';
+import JwtDecode from 'jwt-decode';
+import authStorage from './storage';
+import {useContext} from 'react';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 export default useAuth = () => {
-  const { user, setUser } = useContext(AuthContext);
+  const {user, setUser} = useContext(AuthContext);
 
-  const logIn = (authToken) => {
+  const logIn = authToken => {
     const user = JwtDecode(authToken);
     setUser(user);
     authStorage.storeToken(authToken);
@@ -16,9 +16,9 @@ export default useAuth = () => {
   const logOut = () => {
     setUser(null);
     authStorage.removeToken();
-    console.log("logged out in useAuth");
-    SecureStore.deleteItemAsync("user");
+    console.log('logged out in useAuth');
+    EncryptedStorage.removeItem('user');
   };
 
-  return { user, logIn, logOut };
+  return {user, logIn, logOut};
 };
