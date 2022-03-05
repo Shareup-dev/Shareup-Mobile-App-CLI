@@ -1,9 +1,10 @@
 import {Field} from 'formik';
 import React from 'react';
 import {View, StyleSheet, TextInput, Text} from 'react-native';
+import ErrorMessage from './ErrorMessage';
 
-export default function TextField(props) {
-  const {icon, error, ...rest} = props;
+export default React.memo(function TextField(props) {
+  const {icon, error, noErrorTag, ...rest} = props;
 
   const styles = StyleSheet.create({
     input: {
@@ -18,12 +19,6 @@ export default function TextField(props) {
       fontSize: 16,
       marginVertical: 5,
     },
-    error: {
-      color: 'crimson',
-      fontSize: 12,
-      fontWeight: '500',
-      marginLeft: 10,
-    },
   });
 
   return (
@@ -33,7 +28,7 @@ export default function TextField(props) {
 
         <TextInput style={{width: '100%'}} {...rest} />
       </View>
-      {error && <Text style={styles.error}>{error}</Text>}
+      {noErrorTag ? null : error && <ErrorMessage>{error}</ErrorMessage>}
     </View>
   );
-}
+});
