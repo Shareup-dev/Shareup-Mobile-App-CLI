@@ -10,14 +10,15 @@ import {NavigationContainer} from '@react-navigation/native';
 import store from './app/redux/store';
 import {Provider, useDispatch} from 'react-redux';
 
-import {AppNavigator, AuthNavigator} from './app/navigation';
+// import {AppNavigator, AuthNavigator} from './app/navigation';
+import {AuthNavigator} from './app/navigation';
 import UserContext from './app/UserContext';
 import colors from './app/config/colors';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {loggedInUserActions} from './app/redux/loggedInUser';
 import OfflineNotice from './app/components/OfflineNotice';
 import Toast from 'react-native-toast-message';
-import TestScreen from './app/screens/TestScreen';
+// import TestScreen from './app/screens/TestScreen';
 import HomeNavigator from './app/navigation/HomeNavigator';
 
 export default function App() {

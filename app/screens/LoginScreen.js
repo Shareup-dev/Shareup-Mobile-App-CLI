@@ -18,7 +18,7 @@ import settings from '../config/settings';
 import defaultStyles from '../config/styles';
 import LoginContainer from '../components/forms/LoginContainer';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import AuthContext from '../authContext';
+// import AuthContext from '../authContext';
 
 // determine all the rules for validating our form
 const validationSchema = Yup.object().shape({
@@ -27,7 +27,7 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function LoginScreen({navigation}) {
-  const {authActions} = useContext(AuthContext);
+  // const {authActions} = useContext(AuthContext);
 
   const [loginFailed, setLoginFailed] = useState(false);
   const [error, setError] = useState('');

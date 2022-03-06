@@ -1,18 +1,18 @@
-import React from "react";
-import { View, TextInput } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import defaultStyles from "../config/styles.js";
-import colors from "../config/colors.js";
+import React from 'react';
+import {View, TextInput} from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import defaultStyles from '../config/styles.js';
+import colors from '../config/colors.js';
 
 export default function AppTextInput({
   icon,
-  width = "100%",
+  width = '100%',
   centerText = false,
   backgroundColor = colors.lighterGray,
   ...otherProps
 }) {
   return (
-    <View style={[defaultStyles.inputContainer, { width, backgroundColor }]}>
+    <View style={[defaultStyles.inputContainer, {width, backgroundColor}]}>
       {icon && (
         <MaterialCommunityIcons
           name={icon}
@@ -26,8 +26,8 @@ export default function AppTextInput({
         style={[
           defaultStyles.text,
           {
-            width: "100%",
-            textAlign: centerText ? "center" : "auto",
+            width: '100%',
+            textAlign: centerText ? 'center' : 'auto',
             height: 50,
             fontSize: 16,
           },

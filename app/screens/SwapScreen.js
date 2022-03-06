@@ -1,38 +1,37 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
-import * as ImagePicker from "expo-image-picker";
+import React, {useState} from 'react';
+import {StyleSheet, Text, View, Image} from 'react-native';
 
-import { Header, HeaderTitle, HeaderCloseIcon } from "../components/headers";
-import Tab from "../components/buttons/Tab";
-import Separator from "../components/Separator";
-import LinkButton from "../components/buttons/LinkButton";
-import colors from "../config/colors";
-import routes from "../navigation/routes";
-import Screen from "../components/Screen";
+import {Header, HeaderTitle, HeaderCloseIcon} from '../components/headers';
+import Tab from '../components/buttons/Tab';
+import Separator from '../components/Separator';
+import LinkButton from '../components/buttons/LinkButton';
+import colors from '../config/colors';
+import routes from '../navigation/routes';
+import Screen from '../components/Screen';
 
-export default function SwapScreen({ navigation, route }) {
-  const [imageUri, setImageUri] = useState("");
+export default function SwapScreen({navigation, route}) {
+  const [imageUri, setImageUri] = useState('');
   const [file, setFile] = useState({});
-  const imagePickHandler = async () => {
-    try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        quality: 0.5,
-      });
-      setImageUri(result.uri);
-      setFile(result);
-      if (!result.uri) {
-        return;
-      }
-      navigation.navigate(routes.SWAP_DISPLAY, {
-        swapImage: result.uri,
-        returnSwap: route.params?.returnSwap ? route.params.returnSwap : false,
-        swapPostId: route.params?.swapPostId,
-      });
-    } catch (error) {
-      console.log("Error reading an image", error);
-    }
-  };
+  // const imagePickHandler = async () => {
+  //   try {
+  //     const result = await ImagePicker.launchImageLibraryAsync({
+  //       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  //       quality: 0.5,
+  //     });
+  //     setImageUri(result.uri);
+  //     setFile(result);
+  //     if (!result.uri) {
+  //       return;
+  //     }
+  //     navigation.navigate(routes.SWAP_DISPLAY, {
+  //       swapImage: result.uri,
+  //       returnSwap: route.params?.returnSwap ? route.params.returnSwap : false,
+  //       swapPostId: route.params?.swapPostId,
+  //     });
+  //   } catch (error) {
+  //     console.log("Error reading an image", error);
+  //   }
+  // };
   return (
     <Screen>
       {/** Header */}
@@ -49,32 +48,32 @@ export default function SwapScreen({ navigation, route }) {
           </Text>
 
           <Image
-            source={require("../assets/icons/swap-square-dashed.png")}
+            source={require('../assets/icons/swap-square-dashed.png')}
             style={styles.image}
           />
         </View>
 
         <View style={styles.lowerContainer}>
-          <Tab
+          {/* <Tab
             title="Let's take picture"
             color={colors.iondigoDye}
             style={styles.button}
             titleStyle={styles.buttonTitleStyle}
             onPress={imagePickHandler}
-          />
+          /> */}
           <Separator text="or" style={styles.separator} />
           <LinkButton
             title="Already have image?"
             fontSize={14}
             style={styles.linkButton}
           />
-          <Tab
+          {/* <Tab
             title="Continue"
             color={colors.iondigoDye}
             style={styles.button}
             titleStyle={styles.buttonTitleStyle}
             onPress={imagePickHandler}
-          />
+          /> */}
         </View>
         {/* <Tab
           title="Proceed"
@@ -95,16 +94,16 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     marginTop: 50,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
   },
   text: {
     fontSize: 18,
-    textAlign: "center",
+    textAlign: 'center',
   },
   image: {
     width: 100,
     height: 100,
-    alignSelf: "center",
+    alignSelf: 'center',
     marginTop: 40,
   },
   lowerContainer: {
@@ -115,11 +114,11 @@ const styles = StyleSheet.create({
     height: 40,
   },
   buttonTitleStyle: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: colors.white,
   },
   linkButton: {
-    alignSelf: "center",
+    alignSelf: 'center',
     marginBottom: 20,
   },
   separator: {

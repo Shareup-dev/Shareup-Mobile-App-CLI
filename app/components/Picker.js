@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -6,14 +6,14 @@ import {
   Modal,
   Button,
   FlatList,
-} from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+} from 'react-native';
+import {MaterialCommunityIcons} from 'react-native-vector-icons';
 
-import defaultStyles from "../config/styles";
-import Text from "./Text";
-import Screen from "./Screen";
-import PickerItem from "./PickerItem";
-import colors from "../config/colors";
+import defaultStyles from '../config/styles';
+import Text from './Text';
+import Screen from './Screen';
+import PickerItem from './PickerItem';
+import colors from '../config/colors';
 
 export default function AppPicker({
   icon,
@@ -23,14 +23,14 @@ export default function AppPicker({
   PickerItemComponent = PickerItem,
   placeholder,
   selectedItem,
-  width = "100%",
+  width = '100%',
 }) {
   const [modelVisible, setModelVisible] = useState(false);
 
   return (
     <>
       <TouchableWithoutFeedback onPress={() => setModelVisible(true)}>
-        <View style={[defaultStyles.inputContainer, { width }]}>
+        <View style={[defaultStyles.inputContainer, {width}]}>
           {icon && (
             <MaterialCommunityIcons
               name={icon}
@@ -56,12 +56,16 @@ export default function AppPicker({
 
       <Modal visible={modelVisible} animationType="slide">
         <Screen>
-          <Button title="Close" onPress={() => setModelVisible(false)} color={colors.primary}/>
+          <Button
+            title="Close"
+            onPress={() => setModelVisible(false)}
+            color={colors.primary}
+          />
           <FlatList
             data={items}
-            keyExtractor={(item) => item.value.toString()}
+            keyExtractor={item => item.value.toString()}
             numColumns={numberOfColumns}
-            renderItem={({ item }) => (
+            renderItem={({item}) => (
               <PickerItemComponent
                 item={item}
                 label={item.label}

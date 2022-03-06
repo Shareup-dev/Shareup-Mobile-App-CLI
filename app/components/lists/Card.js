@@ -1,22 +1,16 @@
-import React, { useState, useEffect, useCallback } from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableWithoutFeedback,
-  Alert,
-} from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
-import { SliderBox } from "react-native-image-slider-box";
-// import { Image } from "react-native-expo-image-cache"; // an image component that can be cached
+import React, {useState, useEffect, useCallback} from 'react';
+import {StyleSheet, View, TouchableWithoutFeedback, Alert} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
+import {SliderBox} from 'react-native-image-slider-box';
 
-import colors from "../../config/colors";
-import defaultStyles from "../../config/styles";
-import UserService from "../../services/UserService";
-import PostService from "../../services/PostService";
-import PostOptionDrawer from "../drawers/PostOptionsDrawer";
-import fileStorage from "../../config/fileStorage";
-import ImageView from "react-native-image-viewing";
-import PostActions from "../PostActions";
+import colors from '../../config/colors';
+import defaultStyles from '../../config/styles';
+import UserService from '../../services/UserService';
+import PostService from '../../services/PostService';
+import PostOptionDrawer from '../drawers/PostOptionsDrawer';
+import fileStorage from '../../config/fileStorage';
+import ImageView from 'react-native-image-viewing';
+import PostActions from '../PostActions';
 export default function Card({
   postId,
   userId,
@@ -38,61 +32,61 @@ export default function Card({
 }) {
   const options = [
     {
-      title: "Save post",
+      title: 'Save post',
       icon: {
-        image: require("../../assets/post-options-icons/save-post-icon.png"),
+        image: require('../../assets/post-options-icons/save-post-icon.png'),
       },
       onPress: () => {
-        alert("Save post");
+        alert('Save post');
       },
     },
     {
-      title: "Hide my profile",
+      title: 'Hide my profile',
       icon: {
-        image: require("../../assets/post-options-icons/hide-profile-icon.png"),
+        image: require('../../assets/post-options-icons/hide-profile-icon.png'),
       },
       onPress: () => {
-        alert("Save post");
+        alert('Save post');
       },
     },
     {
-      title: "Swap",
-      icon: { image: require("../../assets/post-options-icons/swap-icon.png") },
+      title: 'Swap',
+      icon: {image: require('../../assets/post-options-icons/swap-icon.png')},
       onPress: () => {
-        alert("Swap");
+        alert('Swap');
       },
     },
     {
-      title: "Share friends",
+      title: 'Share friends',
       icon: {
-        image: require("../../assets/post-options-icons/share-friends-icon.png"),
+        image: require('../../assets/post-options-icons/share-friends-icon.png'),
       },
       onPress: () => {
-        alert("Share friends");
+        alert('Share friends');
       },
     },
     {
-      title: "Unfollow",
+      title: 'Unfollow',
       icon: {
-        image: require("../../assets/post-options-icons/unfollow-icon.png"),
+        image: require('../../assets/post-options-icons/unfollow-icon.png'),
       },
       onPress: () => {
-        alert("Unfollow");
+        alert('Unfollow');
       },
     },
     {
-      title: "Report",
+      title: 'Report',
       icon: {
-        image: require("../../assets/post-options-icons/report-icon.png"),
+        image: require('../../assets/post-options-icons/report-icon.png'),
       },
       onPress: () => {
-        alert("Report");
+        alert('Report');
       },
     },
     {
-      title: "Delete Post",
+      title: 'Delete Post',
       icon: {
-        image: require("../../assets/post-options-icons/delete-red-icon.png"),
+        image: require('../../assets/post-options-icons/delete-red-icon.png'),
       },
       onPress: () => {
         showDeleteAlert();
@@ -101,16 +95,16 @@ export default function Card({
   ];
 
   const [formattedDate, setFormattedDate] = useState({
-    day: "",
-    month: "",
-    year: "",
-    time: "",
+    day: '',
+    month: '',
+    year: '',
+    time: '',
   });
   function randomno() {
     return Math.floor(Math.random() * (100000 - 0 + 1) + 0);
   }
   const formateDate = () => {
-    const arrDate = date.split(" ");
+    const arrDate = date.split(' ');
     const monthShort = arrDate[1].slice(0, 3);
     setFormattedDate({
       day: arrDate[0],
@@ -119,10 +113,10 @@ export default function Card({
       time: arrDate[3],
     });
   };
-  const formateNumber = (number) => {
+  const formateNumber = number => {
     if (number > 1000) {
       number = Math.floor(number / 1000);
-      return number + "k ";
+      return number + 'k ';
     } else return number;
   };
 
@@ -135,7 +129,7 @@ export default function Card({
   useFocusEffect(
     useCallback(() => {
       reloadPost();
-    }, [postId])
+    }, [postId]),
   );
 
   const [numberOfReactions, setNumberOfReactions] = useState(reactions.length);
@@ -149,14 +143,12 @@ export default function Card({
 
   const loadImages = () => {
     if (postImages.length !== 0) {
-      setImages(
-        postImages.map((image) => fileStorage.baseUrl + image.mediaPath)
-      );
+      setImages(postImages.map(image => fileStorage.baseUrl + image.mediaPath));
     }
   };
 
   const checkIfLiked = () => {
-    const result = reactions.filter((reaction) => reaction.user.id == userId);
+    const result = reactions.filter(reaction => reaction.user.id == userId);
     if (result.length > 0) {
       return setIsUserLiked(true);
     }
@@ -176,28 +168,28 @@ export default function Card({
   };
 
   const showDeleteAlert = () =>
-    Alert.alert("Delete", "Are you sure to delete this post", [
+    Alert.alert('Delete', 'Are you sure to delete this post', [
       {
-        text: "Yes",
+        text: 'Yes',
         onPress: deletePost,
-        style: "cancel",
+        style: 'cancel',
       },
       {
-        text: "No",
-        style: "cancel",
+        text: 'No',
+        style: 'cancel',
       },
     ]);
 
   const deletePost = async () => {
-    console.log("data before delete: " + response.data);
+    console.log('data before delete: ' + response.data);
     const response = await PostService.deletePost(postId);
-    console.log("data after delete: " + response.data);
+    console.log('data after delete: ' + response.data);
     reloadPosts();
   };
 
   const actionsTabSizeRatio = 0.5;
 
-  const onLayout = (e) => {
+  const onLayout = e => {
     setSliderWidth(e.nativeEvent.layout.width);
   };
 
@@ -205,12 +197,11 @@ export default function Card({
     <TouchableWithoutFeedback onPress={onPress}>
       <View
         style={[styles.card, defaultStyles.cardBorder, style]}
-        onLayout={onLayout}
-      >
+        onLayout={onLayout}>
         {currentImage && (
           <ImageView
             visible={imageViewerVisible}
-            images={[{ uri: currentImage }]}
+            images={[{uri: currentImage}]}
             imageIndex={0}
             onRequestClose={() => {
               setImageViewerVisible(false);
@@ -226,7 +217,7 @@ export default function Card({
             ImageComponentStyle={styles.image}
             imageLoadingColor={colors.iondigoDye}
             // parentWidth={sliderWidth / 1.04}
-            onCurrentImagePressed={(index) => {
+            onCurrentImagePressed={index => {
               setCurrentImage(images[index]);
               setImageViewerVisible(true);
             }}
@@ -254,7 +245,7 @@ export default function Card({
         />
 
         <PostOptionDrawer
-          source={"card"}
+          source={'card'}
           postId={postId}
           postText={postText}
           options={options}
@@ -272,16 +263,16 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     marginHorizontal: 15,
     marginTop: 10,
-    overflow: "hidden",
+    overflow: 'hidden',
     // padding: 7,
     // paddingHorizontal: 6,
   },
   image: {
-    width: "100%",
+    width: '100%',
     height: 250,
     borderTopLeftRadius: borderRadius,
     borderTopRightRadius: borderRadius,
-    resizeMode: "cover",
+    resizeMode: 'cover',
   },
   profilePicture: {
     borderRadius: 15,
@@ -290,11 +281,11 @@ const styles = StyleSheet.create({
     height: 50,
   },
   userInfo: {
-    display: "flex",
-    flexDirection: "row",
+    display: 'flex',
+    flexDirection: 'row',
   },
   content: {
-    justifyContent: "center",
+    justifyContent: 'center',
     padding: 10,
   },
   postDate: {
@@ -309,15 +300,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   userName: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   userNameContainer: {
-    width: "40%",
+    width: '40%',
   },
   actionsContainer: {
-    flexDirection: "row",
-    width: "42%",
-    justifyContent: "flex-end",
+    flexDirection: 'row',
+    width: '42%',
+    justifyContent: 'flex-end',
     marginRight: 10,
   },
   actionTab: {
@@ -325,20 +316,20 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   actionsBar: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginTop: 4,
   },
   commentsShares: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   likes: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   actionsText: {
     fontSize: 12,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   star: {
     marginRight: 5,
@@ -347,12 +338,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   optionsIcon: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     top: 8,
   },
   menuButton: {
     padding: 3,
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     width: 60,
     marginTop: -5,
   },

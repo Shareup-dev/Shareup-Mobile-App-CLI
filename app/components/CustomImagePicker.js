@@ -2,8 +2,7 @@ import React from 'react';
 import {View, StyleSheet, StatusBar} from 'react-native';
 
 import Modal from 'react-native-modal';
-import {AssetsSelector} from 'expo-images-picker';
-import {Ionicons, Feather} from '@expo/vector-icons';
+import {Ionicons, Feather} from 'react-native-vector-icons';
 
 import {Header, HeaderButton, HeaderTitle} from './headers';
 import colors from '../config/colors';
@@ -20,7 +19,7 @@ export default function CustomImagePicker({onCancel}) {
           right={<HeaderButton title="Done" isActive={true} />}
           headerContainerStyle={styles.header}
         />
-        <AssetsSelector
+        {/* <AssetsSelector
           Settings={{
             assetsType: ['photo', 'unknown'],
             maxSelection: 4,
@@ -53,7 +52,7 @@ export default function CustomImagePicker({onCancel}) {
             errorTextColor: colors.red,
             errorMessages: 'Error',
           }}
-        />
+        /> */}
       </View>
     </Modal>
   );

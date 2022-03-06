@@ -1,29 +1,27 @@
-import React, { Fragment } from "react";
-import { View, Image } from "react-native";
-import {
-  MaterialCommunityIcons,
-  AntDesign,
-  Entypo,
-  EvilIcons,
-  Feather,
-  FontAwesome,
-  FontAwesome5,
-  Fontisto,
-  Foundation,
-  MaterialIcons,
-  Octicons,
-  SimpleLineIcons,
-  Zocial,
-  Ionicons,
-} from "@expo/vector-icons";
+import React, {Fragment} from 'react';
+import {View, Image} from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Entypo from 'react-native-vector-icons/Entypo';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import Feather from 'react-native-vector-icons/Feather';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+import Foundation from 'react-native-vector-icons/Foundation';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Octicons from 'react-native-vector-icons/Octicons';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import Zocial from 'react-native-vector-icons/Zocial';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function Icon({
   image,
   name,
   size = 40,
-  backgroundColor = "#fff",
-  color = "#000",
-  type = "MaterialCommunityIcons",
+  backgroundColor = '#fff',
+  color = '#000',
+  type = 'MaterialCommunityIcons',
   backgroundSizeRatio = 0.5,
   style,
   noBackground = false,
@@ -37,14 +35,14 @@ export default function Icon({
           style={{
             width: size * backgroundSizeRatio,
             height: size * backgroundSizeRatio,
-            resizeMode: "contain",
+            resizeMode: 'contain',
           }}
         />
       );
     else
       return (
         <>
-          {type === "MaterialCommunityIcons" && (
+          {type === 'MaterialCommunityIcons' && (
             <MaterialCommunityIcons
               size={size * backgroundSizeRatio}
               name={name}
@@ -52,7 +50,7 @@ export default function Icon({
               {...otherProps}
             />
           )}
-          {type === "AntDesign" && (
+          {type === 'AntDesign' && (
             <AntDesign
               size={size * backgroundSizeRatio}
               name={name}
@@ -60,7 +58,7 @@ export default function Icon({
               {...otherProps}
             />
           )}
-          {type === "Entypo" && (
+          {type === 'Entypo' && (
             <Entypo
               size={size * backgroundSizeRatio}
               name={name}
@@ -68,7 +66,7 @@ export default function Icon({
               {...otherProps}
             />
           )}
-          {type === "EvilIcons" && (
+          {type === 'EvilIcons' && (
             <EvilIcons
               size={size * backgroundSizeRatio}
               name={name}
@@ -76,7 +74,7 @@ export default function Icon({
               {...otherProps}
             />
           )}
-          {type === "Feather" && (
+          {type === 'Feather' && (
             <Feather
               size={size * backgroundSizeRatio}
               name={name}
@@ -84,7 +82,7 @@ export default function Icon({
               {...otherProps}
             />
           )}
-          {type === "FontAwesome" && (
+          {type === 'FontAwesome' && (
             <FontAwesome
               size={size * backgroundSizeRatio}
               name={name}
@@ -92,7 +90,7 @@ export default function Icon({
               {...otherProps}
             />
           )}
-          {type === "FontAwesome5" && (
+          {type === 'FontAwesome5' && (
             <FontAwesome5
               size={size * backgroundSizeRatio}
               name={name}
@@ -100,7 +98,7 @@ export default function Icon({
               {...otherProps}
             />
           )}
-          {type === "Fontisto" && (
+          {type === 'Fontisto' && (
             <Fontisto
               size={size * backgroundSizeRatio}
               name={name}
@@ -108,7 +106,7 @@ export default function Icon({
               {...otherProps}
             />
           )}
-          {type === "Foundation" && (
+          {type === 'Foundation' && (
             <Foundation
               size={size * backgroundSizeRatio}
               name={name}
@@ -116,7 +114,7 @@ export default function Icon({
               {...otherProps}
             />
           )}
-          {type === "MaterialIcons" && (
+          {type === 'MaterialIcons' && (
             <MaterialIcons
               size={size * backgroundSizeRatio}
               name={name}
@@ -124,7 +122,7 @@ export default function Icon({
               {...otherProps}
             />
           )}
-          {type === "Octicons" && (
+          {type === 'Octicons' && (
             <Octicons
               size={size * backgroundSizeRatio}
               name={name}
@@ -132,7 +130,7 @@ export default function Icon({
               {...otherProps}
             />
           )}
-          {type === "SimpleLineIcons" && (
+          {type === 'SimpleLineIcons' && (
             <SimpleLineIcons
               size={size * backgroundSizeRatio}
               name={name}
@@ -140,7 +138,7 @@ export default function Icon({
               {...otherProps}
             />
           )}
-          {type === "Zocial" && (
+          {type === 'Zocial' && (
             <Zocial
               size={size * backgroundSizeRatio}
               name={name}
@@ -148,7 +146,7 @@ export default function Icon({
               {...otherProps}
             />
           )}
-          {type === "Ionicons" && (
+          {type === 'Ionicons' && (
             <Ionicons
               size={size * backgroundSizeRatio}
               name={name}
@@ -167,12 +165,11 @@ export default function Icon({
           height: size,
           borderRadius: size / 2,
           backgroundColor: noBackground ? null : backgroundColor,
-          justifyContent: "center",
-          alignItems: "center",
+          justifyContent: 'center',
+          alignItems: 'center',
         },
         style,
-      ]}
-    >
+      ]}>
       {renderImageOrIcon()}
     </View>
   );

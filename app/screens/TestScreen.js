@@ -1,8 +1,7 @@
-import { Camera } from "expo-camera";
-import React from "react";
-import { StyleSheet, Text } from "react-native";
-import AppCamera from "../components/Camera";
-import Screen from "../components/Screen";
+import React from 'react';
+import {StyleSheet, Text} from 'react-native';
+import AppCamera from '../components/Camera';
+import Screen from '../components/Screen';
 
 export default function TestScreen(props) {
   return (

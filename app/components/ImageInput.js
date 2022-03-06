@@ -1,53 +1,53 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from 'react';
 import {
   StyleSheet,
   View,
   Image,
   TouchableWithoutFeedback,
   Alert,
-} from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+} from 'react-native';
 
-import colors from "../config/colors";
-import Icon from "./Icon";
+import {MaterialCommunityIcons} from 'react-native-vector-icons';
 
-export default function ImageInput({ imageUri, onChangeImage, isSwap }) {
+import colors from '../config/colors';
+import Icon from './Icon';
+
+export default function ImageInput({imageUri, onChangeImage, isSwap}) {
   useEffect(() => {
     requestPermission();
   }, []);
 
-  const requestPermission = async () => {
-    const { granted } = await ImagePicker.requestCameraPermissionsAsync();
-    if (!granted) alert("You need to enable permission to access the library");
-  };
+  // const requestPermission = async () => {
+  //   const {granted} = await ImagePicker.requestCameraPermissionsAsync();
+  //   if (!granted) alert('You need to enable permission to access the library');
+  // };
 
-  const onPress = () => {
-    if (!imageUri) selectImage();
-    else
-      Alert.alert("Delete", "Are you sure you want to delete this image?", [
-        { text: "Yes", onPress: () => onChangeImage(null) },
-        { text: "No" },
-      ]);
-  };
+  // const onPress = () => {
+  //   if (!imageUri) selectImage();
+  //   else
+  //     Alert.alert('Delete', 'Are you sure you want to delete this image?', [
+  //       {text: 'Yes', onPress: () => onChangeImage(null)},
+  //       {text: 'No'},
+  //     ]);
+  // };
 
-  const selectImage = async () => {
-    try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        allowsMultipleSelection: true,
-        quality: 0.5,
-      });
-      if (!result.cancelled) onChangeImage(result.uri);
-    } catch (error) {
-      console.log("Error reading an image", error);
-    }
-  };
+  // const selectImage = async () => {
+  //   try {
+  //     const result = await ImagePicker.launchImageLibraryAsync({
+  //       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  //       allowsEditing: true,
+  //       allowsMultipleSelection: true,
+  //       quality: 0.5,
+  //     });
+  //     if (!result.cancelled) onChangeImage(result.uri);
+  //   } catch (error) {
+  //     console.log('Error reading an image', error);
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
-      {imageUri ? (
+      {/* {imageUri ? (
         <>
           <Icon
             name="close"
@@ -59,39 +59,39 @@ export default function ImageInput({ imageUri, onChangeImage, isSwap }) {
             size={25}
             onPress={onPress}
           />
-          <Image source={{ uri: imageUri }} style={styles.Image} />
+          <Image source={{uri: imageUri}} style={styles.Image} />
         </>
       ) : (
         isSwap && (
           <TouchableWithoutFeedback onPress={onPress}>
             <Image
-              source={require("../assets/icons/swap-square-dashed.png")}
+              source={require('../assets/icons/swap-square-dashed.png')}
               style={styles.swapIcon}
             />
           </TouchableWithoutFeedback>
         )
-      )}
+      )} */}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "center",
+    alignItems: 'center',
     height: 250,
-    justifyContent: "center",
-    width: "100%",
+    justifyContent: 'center',
+    width: '100%',
   },
   Image: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
   },
   swapIcon: {
     width: 100,
     height: 100,
   },
   closeIcon: {
-    position: "absolute",
+    position: 'absolute',
     top: 5,
     right: 5,
     zIndex: 1,

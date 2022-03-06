@@ -1,14 +1,13 @@
-import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
+import React, {useState} from 'react';
+import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 
-import colors from "../../config/colors";
+import colors from '../../config/colors';
 
 export default function Tab({
   text,
   onPress,
   tabbed,
-  activeUnderLineColor = "#4485F2",
+  activeUnderLineColor = '#4485F2',
   fontSize = 20,
   underLineWidth = 35,
   underLineHight = 4,
@@ -20,11 +19,10 @@ export default function Tab({
           style={[
             tabbed ? styles.active : styles.inactive,
             {
-              fontWeight: "500",
+              fontWeight: '500',
               fontSize: fontSize,
             },
-          ]}
-        >
+          ]}>
           {text}
         </Text>
 
@@ -57,7 +55,7 @@ const styles = StyleSheet.create({
   },
 
   underLine: {
-    alignSelf: "center",
+    alignSelf: 'center',
     borderRadius: 15,
     marginTop: 3,
   },

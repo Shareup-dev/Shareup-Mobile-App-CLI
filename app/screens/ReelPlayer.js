@@ -1,18 +1,17 @@
-import React, { useState } from "react";
-import { View, ActivityIndicator, StyleSheet } from "react-native";
-import { Video } from "expo-av";
+import React, {useState} from 'react';
+import {View, ActivityIndicator, StyleSheet} from 'react-native';
 
-import Screen from "../components/Screen";
-import fileStorage from "../config/fileStorage";
-import colors from "../config/colors";
+import Screen from '../components/Screen';
+import fileStorage from '../config/fileStorage';
+import colors from '../config/colors';
 
-const ReelPlayer = ({ route }) => {
+const ReelPlayer = ({route}) => {
   const reelVideo = route.params.reel.reelMedia[0].mediaPath;
   const videoRef = React.useRef(null);
 
   const [activityIndicator, setActivityIndicator] = useState(true);
 
-  console.log("video", fileStorage.baseUrl + reelVideo);
+  console.log('video', fileStorage.baseUrl + reelVideo);
 
   return (
     <Screen>
@@ -24,7 +23,7 @@ const ReelPlayer = ({ route }) => {
             style={styles.activityIndicator}
           />
         )}
-        <Video
+        {/* <Video
           onReadyForDisplay={() => {
             videoRef.current.playAsync();
             setActivityIndicator(false);
@@ -35,10 +34,10 @@ const ReelPlayer = ({ route }) => {
           source={{
             uri: fileStorage.baseUrl + reelVideo,
           }}
-          resizeMode={"contain"}
-          style={{ height: "100%", width: "100%", backgroundColor: "black" }}
+          resizeMode={'contain'}
+          style={{height: '100%', width: '100%', backgroundColor: 'black'}}
           // shouldRasterizeIOS={true}
-        />
+        /> */}
       </View>
     </Screen>
   );
@@ -46,12 +45,12 @@ const ReelPlayer = ({ route }) => {
 
 const styles = StyleSheet.create({
   activityIndicator: {
-    position: "absolute",
+    position: 'absolute',
     zIndex: 2,
-    top: "50%",
-    bottom: "50%",
-    left: "50%",
-    right: "50%",
+    top: '50%',
+    bottom: '50%',
+    left: '50%',
+    right: '50%',
   },
 });
 

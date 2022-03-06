@@ -5,112 +5,112 @@ import React, {
   useEffect,
   useMemo,
   createContext,
-} from "react";
-import { StyleSheet, View, Image, TextInput, Touchable } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
-import { StackActions } from "@react-navigation/routers";
+} from 'react';
+import {StyleSheet, View, Image, TextInput, Touchable} from 'react-native';
+import {MaterialCommunityIcons} from 'react-native-vector-icons';
+import {MaterialIcons} from 'react-native-vector-icons';
+import {StackActions} from '@react-navigation/routers';
 
-import { groupPostsActions } from "../redux/groupPosts";
-import EnhancedOptionsDrawer from "../components/drawers/EnhancedOptionsDrawer";
-import Icon from "../components/Icon";
-import IconButton from "../components/buttons/IconButton";
-import Text from "../components/Text";
-import Screen from "../components/Screen";
-import UserContext from "../UserContext";
-import PostService from "../services/PostService";
-import routes from "../navigation/routes";
-import { useImagePicker } from "../hooks";
-import Header from "../components/headers/Header";
-import constants from "../config/constants";
-import defaultStyles from "../config/styles";
-import colors from "../config/colors";
+import {groupPostsActions} from '../redux/groupPosts';
+import EnhancedOptionsDrawer from '../components/drawers/EnhancedOptionsDrawer';
+import Icon from '../components/Icon';
+import IconButton from '../components/buttons/IconButton';
+import Text from '../components/Text';
+import Screen from '../components/Screen';
+import UserContext from '../UserContext';
+import PostService from '../services/PostService';
+import routes from '../navigation/routes';
+import {useImagePicker} from '../hooks';
+import Header from '../components/headers/Header';
+import constants from '../config/constants';
+import defaultStyles from '../config/styles';
+import colors from '../config/colors';
 import {
   HeaderCloseIcon,
   HeaderTitle,
   HeaderButton,
   SpecialHeaderButton,
-} from "../components/headers";
-import OptionsDrawer from "../components/drawers/OptionsDrawer";
-import store from "../redux/store";
-import ImageInputList from "../components/ImageInputList";
-import { feedPostsAction } from "../redux/feedPostsSlice";
-import RadioOptionDrawer from "../components/drawers/RadioOptionDrawer";
-import OptionBox from "../components/posts/OptionBox";
-import { useDispatch, useSelector } from "react-redux";
-import { postFeelingsActions } from "../redux/postFeelings";
-import { TouchableOpacity } from "react-native-gesture-handler";
+} from '../components/headers';
+import OptionsDrawer from '../components/drawers/OptionsDrawer';
+import store from '../redux/store';
+import ImageInputList from '../components/ImageInputList';
+import {feedPostsAction} from '../redux/feedPostsSlice';
+import RadioOptionDrawer from '../components/drawers/RadioOptionDrawer';
+import OptionBox from '../components/posts/OptionBox';
+import {useDispatch, useSelector} from 'react-redux';
+import {postFeelingsActions} from '../redux/postFeelings';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
-export default function AddPostScreen({ navigation, route }) {
-  const { user, setUser, loadingIndicator, setloadingIndicator } =
+export default function AddPostScreen({navigation, route}) {
+  const {user, setUser, loadingIndicator, setloadingIndicator} =
     useContext(UserContext);
   const dispatch = useDispatch();
-  const postFeel = useSelector((state) => state.postFeel);
+  const postFeel = useSelector(state => state.postFeel);
 
-  const { postTypes } = constants;
-  const { postType } = route.params;
-  const { groupPost } = route.params;
-  const { groupId } = route.params;
-  const { swapImage } = route.params;
+  const {postTypes} = constants;
+  const {postType} = route.params;
+  const {groupPost} = route.params;
+  const {groupId} = route.params;
+  const {swapImage} = route.params;
 
-  const SWAP_DEFAULT_TEXT = "Hi all \nI want to Swap ...";
+  const SWAP_DEFAULT_TEXT = 'Hi all \nI want to Swap ...';
 
   const textInputRef = useRef();
   const createPostDrawerRef = useRef(null); // reference for the enhanced drawer.
 
   const createPostOptions = [
     {
-      title: "Photos",
+      title: 'Photos',
       icon: {
-        image: require("../assets/add-post-options-icons/photo-gradient-icon.png"),
+        image: require('../assets/add-post-options-icons/photo-gradient-icon.png'),
       },
       onPress: () => {
         handelPickImage();
       },
     },
     {
-      title: "Tag People",
+      title: 'Tag People',
       icon: {
-        image: require("../assets/add-post-options-icons/tag-people-gradient-icon.png"),
+        image: require('../assets/add-post-options-icons/tag-people-gradient-icon.png'),
       },
       onPress: () => {
         navigation.navigate(routes.TAG_PEOPLE);
       },
     },
     {
-      title: "Sell and Share",
+      title: 'Sell and Share',
       icon: {
-        image: require("../assets/add-post-options-icons/sell-and-share-gradient-icon.png"),
+        image: require('../assets/add-post-options-icons/sell-and-share-gradient-icon.png'),
       },
       onPress: () => {
-        alert("Sell and Share");
+        alert('Sell and Share');
       },
     },
     {
-      title: "Feeling/Activity",
+      title: 'Feeling/Activity',
       icon: {
-        image: require("../assets/add-post-options-icons/feeling-gradient-icon.png"),
+        image: require('../assets/add-post-options-icons/feeling-gradient-icon.png'),
       },
       onPress: () => {
         navigation.navigate(routes.FEELING_ACTIVITY);
       },
     },
     {
-      title: "Location",
+      title: 'Location',
       icon: {
-        image: require("../assets/add-post-options-icons/location-gradient-icon.png"),
+        image: require('../assets/add-post-options-icons/location-gradient-icon.png'),
       },
       onPress: () => {
-        alert("Location");
+        alert('Location');
       },
     },
     {
-      title: "Live",
+      title: 'Live',
       icon: {
-        image: require("../assets/add-post-options-icons/live-gradient-icon.png"),
+        image: require('../assets/add-post-options-icons/live-gradient-icon.png'),
       },
       onPress: () => {
-        alert("Live");
+        alert('Live');
       },
     },
   ];
@@ -118,86 +118,86 @@ export default function AddPostScreen({ navigation, route }) {
   const shareUpOptions = useMemo(
     () => [
       {
-        title: "Share Feed",
-        icon: { image: require("../assets/icons/gray-feed-icon.png") },
+        title: 'Share Feed',
+        icon: {image: require('../assets/icons/gray-feed-icon.png')},
         onPress: () => {
-          alert("Share Feed");
+          alert('Share Feed');
         },
       },
       {
-        title: "Share time",
-        icon: { image: require("../assets/icons/gray-share-time-icon.png") },
+        title: 'Share time',
+        icon: {image: require('../assets/icons/gray-share-time-icon.png')},
         onPress: () => {
-          alert("Share time");
+          alert('Share time');
         },
       },
       {
-        title: "Share Friends",
-        icon: { image: require("../assets/icons/gray-share-friends-icon.png") },
+        title: 'Share Friends',
+        icon: {image: require('../assets/icons/gray-share-friends-icon.png')},
         onPress: () => {
-          alert("Share Friends");
+          alert('Share Friends');
         },
       },
       {
-        title: "Share Point",
-        icon: { image: require("../assets/icons/gray-share-point-icon.png") },
+        title: 'Share Point',
+        icon: {image: require('../assets/icons/gray-share-point-icon.png')},
         onPress: () => {
-          alert("Share Point");
+          alert('Share Point');
         },
       },
       {
-        title: "Share Groups",
-        icon: { image: require("../assets/icons/gray-share-groups-icon.png") },
+        title: 'Share Groups',
+        icon: {image: require('../assets/icons/gray-share-groups-icon.png')},
         onPress: () => {
-          alert("Share Groups");
+          alert('Share Groups');
         },
       },
       {
-        title: "Sell and Share",
+        title: 'Sell and Share',
         icon: {
-          image: require("../assets/icons/gray-sell-and-share-icon.png"),
+          image: require('../assets/icons/gray-sell-and-share-icon.png'),
         },
         onPress: () => {
-          alert("Sell and Share");
+          alert('Sell and Share');
         },
       },
     ],
-    []
+    [],
   );
 
   const privacyOptions = useMemo(
     () => [
       {
-        icon: require("../assets/post-privacy-options-icons/public-icon.png"),
-        label: "Public",
-        value: "Public",
-        description: "Anyone on or off Shareup",
+        icon: require('../assets/post-privacy-options-icons/public-icon.png'),
+        label: 'Public',
+        value: 'Public',
+        description: 'Anyone on or off Shareup',
       },
       {
-        icon: require("../assets/post-privacy-options-icons/friends-icon.png"),
-        label: "Friends",
-        value: "Friends",
-        description: "Your friends on Shareup",
+        icon: require('../assets/post-privacy-options-icons/friends-icon.png'),
+        label: 'Friends',
+        value: 'Friends',
+        description: 'Your friends on Shareup',
       },
       {
-        icon: require("../assets/post-privacy-options-icons/friends-except-icon.png"),
-        label: "Friends except...",
-        value: "Friends except...",
+        icon: require('../assets/post-privacy-options-icons/friends-except-icon.png'),
+        label: 'Friends except...',
+        value: 'Friends except...',
         description: "Don't show to some friends",
       },
       {
-        icon: require("../assets/post-privacy-options-icons/specific-friends-icon.png"),
-        label: "Specific friends",
-        value: "Specific friends",
-        description: "Only show to some friends",
+        icon: require('../assets/post-privacy-options-icons/specific-friends-icon.png'),
+        label: 'Specific friends',
+        value: 'Specific friends',
+        description: 'Only show to some friends',
       },
     ],
-    []
+    [],
   );
 
-  const [error, setError] = useState("");
-  const [text, setText] = useState("");
-  const { file, pickImage, clearFile } = useImagePicker();
+  const [error, setError] = useState('');
+  const [text, setText] = useState('');
+  const {file, pickImage, clearFile} = useImagePicker();
 
   const [displayImage, setDisplayImage] = useState(false);
   const [isButtonActive, setIsButtonActive] = useState(false);
@@ -218,15 +218,15 @@ export default function AddPostScreen({ navigation, route }) {
     return () => clearFields();
   }, [swapImage]);
 
-  const handleOnChangeText = (text) => {
+  const handleOnChangeText = text => {
     setText(text);
     handleButtonActivation(text, images);
   };
 
   const handleButtonActivation = (text, images) => {
-    if (text !== "" || text !== undefined) setIsButtonActive(true);
+    if (text !== '' || text !== undefined) setIsButtonActive(true);
     if (images.length > 0) setIsButtonActive(true);
-    if (images.length === 0 && text === "") setIsButtonActive(false);
+    if (images.length === 0 && text === '') setIsButtonActive(false);
     if (images.length === 0 && text === undefined) setIsButtonActive(false);
   };
 
@@ -237,13 +237,13 @@ export default function AddPostScreen({ navigation, route }) {
     } catch (error) {}
   };
 
-  const onAddImage = (uri) => {
+  const onAddImage = uri => {
     setImages([...images, uri]);
     handleButtonActivation(text, [...images, uri]);
   };
 
-  const onRemoveImage = (uri) => {
-    const updatedImages = images.filter((images) => images !== uri);
+  const onRemoveImage = uri => {
+    const updatedImages = images.filter(images => images !== uri);
     setImages(updatedImages);
     handleButtonActivation(text, updatedImages);
   };
@@ -262,11 +262,11 @@ export default function AddPostScreen({ navigation, route }) {
       }
       if (postFeel.feeling) postContent.feeling = postFeel.feeling;
 
-      PostService.createPost(user.id, postContent).then((resp) => {
+      PostService.createPost(user.id, postContent).then(resp => {
         let existingPosts = store.getState().groupPosts;
         setloadingIndicator(false);
         store.dispatch(
-          groupPostsActions.setPosts([resp.data, ...existingPosts])
+          groupPostsActions.setPosts([resp.data, ...existingPosts]),
         );
 
         store.dispatch(feedPostsAction.addFeedPost(resp.data));
@@ -277,17 +277,17 @@ export default function AddPostScreen({ navigation, route }) {
     } else {
       if (postType === postTypes.SWAP) {
         const swapContent = {
-          text: text === "" ? SWAP_DEFAULT_TEXT : text,
+          text: text === '' ? SWAP_DEFAULT_TEXT : text,
           images: images,
         };
 
-        PostService.createSwapPost(user.id, swapContent).then((resp) => {
+        PostService.createSwapPost(user.id, swapContent).then(resp => {
           store.dispatch(feedPostsAction.addFeedPost(resp.data));
           setloadingIndicator(false);
           navigation.navigate(routes.FEED);
         });
       } else {
-        if (text === "" && Object.keys(file).length === 0) {
+        if (text === '' && Object.keys(file).length === 0) {
           setError("Can't Create empty post");
         } else {
           const postContent = {
@@ -296,7 +296,7 @@ export default function AddPostScreen({ navigation, route }) {
             feeling: postFeel.feeling ? postFeel.feeling : null,
           };
 
-          PostService.createPost(user.id, postContent).then((resp) => {
+          PostService.createPost(user.id, postContent).then(resp => {
             store.dispatch(feedPostsAction.addFeedPost(resp.data));
             setloadingIndicator(false);
             dispatch(postFeelingsActions.setDefault());
@@ -323,7 +323,7 @@ export default function AddPostScreen({ navigation, route }) {
   };
 
   const clearFields = () => {
-    setText("");
+    setText('');
     clearFile();
     setDisplayImage(false);
     setImages([]);
@@ -331,8 +331,8 @@ export default function AddPostScreen({ navigation, route }) {
     textInputRef.current.clear();
   };
 
-  const handelPrivacySetting = (value) => {
-    const index = privacyOptions.map((item) => item.value).indexOf(value);
+  const handelPrivacySetting = value => {
+    const index = privacyOptions.map(item => item.value).indexOf(value);
     const option = privacyOptions[index];
     setPostPrivacyOption(option);
     setIsPrivacyOptionsVisible(!isPrivacyOptionsVisible);
@@ -368,7 +368,7 @@ export default function AddPostScreen({ navigation, route }) {
           left={<HeaderCloseIcon onPress={handleCancel} />}
           middle={
             <HeaderTitle>
-              {postType === postTypes.SWAP && "Swap"}
+              {postType === postTypes.SWAP && 'Swap'}
               {postType === postTypes.CREATE_POST && postTypes.CREATE_POST}
               {postType === postTypes.SHARE_UP && postTypes.SHARE_UP}
             </HeaderTitle>
@@ -391,7 +391,7 @@ export default function AddPostScreen({ navigation, route }) {
         {/** User */}
         <View style={styles.row}>
           <Image
-            source={require("../assets/default-profile-picture.png")}
+            source={require('../assets/default-profile-picture.png')}
             style={defaultStyles.circledProfilePicture}
           />
           <View style={styles.column}>
@@ -432,7 +432,7 @@ export default function AddPostScreen({ navigation, route }) {
               onPress={() => setIsOptionsVisible(!isOptionsVisible)}
               IconComponent={
                 <Icon
-                  image={require("../assets/icons/squared-add-icon.png")}
+                  image={require('../assets/icons/squared-add-icon.png')}
                   color={colors.iondigoDye}
                   backgroundSizeRatio={0.8}
                 />
@@ -446,28 +446,26 @@ export default function AddPostScreen({ navigation, route }) {
         {postFeel.feeling ? (
           <TouchableOpacity
             activeOpacity={0.5}
-            onPress={() => navigation.navigate(routes.FEELING_ACTIVITY)}
-          >
+            onPress={() => navigation.navigate(routes.FEELING_ACTIVITY)}>
             <View style={styles.feelingContainer}>
               {postFeel.img ? (
                 <Image source={postFeel.img} style={styles.feelImg} />
               ) : (
                 <Icon name={postFeel.icon} color={postFeel.color} />
               )}
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text
                   style={
-                    (styles.postFeelText, { fontWeight: "700", fontSize: 14 })
-                  }
-                >
+                    (styles.postFeelText, {fontWeight: '700', fontSize: 14})
+                  }>
                   {postFeel.feeling}
                 </Text>
-                {postFeel.type === "activity" && (
+                {postFeel.type === 'activity' && (
                   <>
-                    <Text>{" - "}</Text>
+                    <Text>{' - '}</Text>
                     <TextInput
                       placeholder={
-                        (postFeel.feeling !== "Travelling to"
+                        (postFeel.feeling !== 'Travelling to'
                           ? `What do you `
                           : `Where do you `) + postFeel.feeling
                       }
@@ -482,7 +480,7 @@ export default function AddPostScreen({ navigation, route }) {
           placeholder={
             postType === postTypes.SWAP
               ? SWAP_DEFAULT_TEXT
-              : "We Share, Do you?"
+              : 'We Share, Do you?'
           }
           placeholderTextColor={colors.dimGray}
           style={styles.textInput}
@@ -544,22 +542,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   column: {
-    display: "flex",
-    flexDirection: "column",
-    width: "70%",
+    display: 'flex',
+    flexDirection: 'column',
+    width: '70%',
   },
   row: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   userName: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   headerTab: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderWidth: 1,
     borderColor: colors.dimGray,
     margin: 5,
@@ -572,14 +570,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   modal: {
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
     margin: 0,
   },
   modalView: {
     height: 100,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "white",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
     flex: 0.5,
     borderTopStartRadius: 15,
     borderTopEndRadius: 15,
@@ -587,7 +585,7 @@ const styles = StyleSheet.create({
   tempModal: {
     marginTop: 10,
     flex: 0.4,
-    height: "100%",
+    height: '100%',
     backgroundColor: colors.white,
     shadowColor: colors.dark,
     shadowOffset: {
@@ -602,27 +600,27 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
-  textInput: { height: "10%", textAlignVertical: "top", marginTop: 10 },
+  textInput: {height: '10%', textAlignVertical: 'top', marginTop: 10},
   image: {
-    width: "100%",
+    width: '100%',
     height: 250,
-    resizeMode: "contain",
+    resizeMode: 'contain',
   },
   hangShareHeaderTitle: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 12,
   },
   fancyAddButton: {
     marginLeft: 10,
   },
   postFeelText: {
-    color: "#333333",
+    color: '#333333',
     fontSize: 14,
     marginTop: 10,
   },
   feelingContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   feelImg: {
     width: 30,

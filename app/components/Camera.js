@@ -1,6 +1,5 @@
 import React from 'react';
 
-import {Camera} from 'expo-camera';
 import {StyleSheet, Dimensions, StatusBar} from 'react-native';
 import CameraHeader from './headers/CameraHeader';
 
@@ -11,21 +10,22 @@ export default function AppCamera({
   statusPadding = true,
   forwardRef,
 }) {
-  return (
-    <Camera
-      ratio={'16:9'}
-      ref={forwardRef}
-      type={type}
-      behavior={Platform.OS === 'ios' ? 'height' : 'height'}
-      style={[
-        styles.camera,
-        {paddingTop: statusPadding ? StatusBar.currentHeight : 0},
-        style,
-      ]}>
-      <CameraHeader title="Story " />
-      {children}
-    </Camera>
-  );
+  // return (
+  //   <Camera
+  //     ratio={'16:9'}
+  //     ref={forwardRef}
+  //     type={type}
+  //     behavior={Platform.OS === 'ios' ? 'height' : 'height'}
+  //     style={[
+  //       styles.camera,
+  //       {paddingTop: statusPadding ? StatusBar.currentHeight : 0},
+  //       style,
+  //     ]}>
+  //     <CameraHeader title="Story " />
+  //     {children}
+  //   </Camera>
+  // );
+  return <></>;
 }
 
 const styles = StyleSheet.create({

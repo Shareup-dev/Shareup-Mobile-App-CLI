@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {Text, View, StyleSheet, StatusBar} from 'react-native';
 
-import {ImageBrowser} from 'expo-image-picker-multiple';
 import Modal from 'react-native-modal';
 
 import {Header, HeaderButton, HeaderTitle} from './headers';
@@ -48,14 +47,14 @@ export default function MultiImagePicker({isVisible, setIsVisible}) {
           right={<HeaderButton title="Done" isActive={true} />}
           headerContainerStyle={styles.header}
         />
-        <ImageBrowser
+        {/* <ImageBrowser
           max={4}
           onChange={updateHandler}
           callback={imagesCallback}
           renderSelectedComponent={renderSelectedComponent}
           emptyStayComponent={emptyStayComponent}
           noCameraPermissionComponent={noCameraPermissionComponent}
-        />
+        /> */}
       </View>
     </Modal>
   );

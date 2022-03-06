@@ -6,7 +6,7 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-import {AntDesign} from '@expo/vector-icons';
+import {AntDesign} from 'react-native-vector-icons';
 
 import colors from '../../config/colors';
 

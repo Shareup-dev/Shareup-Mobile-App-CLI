@@ -1,14 +1,14 @@
-import React, { useEffect } from "react";
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
+import React, {useEffect} from 'react';
+import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import {FontAwesome5} from 'react-native-vector-icons';
+import {MaterialIcons} from 'react-native-vector-icons';
 
-import colors from "../../config/colors";
-import Icon from "../Icon";
+import colors from '../../config/colors';
+import Icon from '../Icon';
 
-export default function OptionBox({ currentOption, onPress }) {
+export default function OptionBox({currentOption, onPress}) {
   useEffect(() => {
-    console.log("Current Option:", currentOption);
+    console.log('Current Option:', currentOption);
   }, [currentOption]);
 
   return (
@@ -34,9 +34,9 @@ export default function OptionBox({ currentOption, onPress }) {
 
 const styles = StyleSheet.create({
   container: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
     borderWidth: 1,
     borderColor: colors.dimGray,
     margin: 5,

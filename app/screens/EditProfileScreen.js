@@ -23,7 +23,6 @@ import {
   Image,
 } from 'react-native';
 import useImagePicker from '../hooks/useImagePicker';
-import * as ImagePicker from 'expo-image-picker';
 import settings from '../config/settings';
 
 export default function EditProfileScreen({navigation}) {
@@ -44,17 +43,17 @@ export default function EditProfileScreen({navigation}) {
   );
   const [imageFile, setSelectedImageFile] = useState(null);
 
-  const addImage = async () => {
-    const _image = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 0.5,
-    });
+  // const addImage = async () => {
+  //   const _image = await ImagePicker.launchImageLibraryAsync({
+  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  //     quality: 0.5,
+  //   });
 
-    if (!_image.cancelled) {
-      setImage(_image.uri);
-      setSelectedImageFile(_image);
-    }
-  };
+  //   if (!_image.cancelled) {
+  //     setImage(_image.uri);
+  //     setSelectedImageFile(_image);
+  //   }
+  // };
 
   async function EditProfileImagw() {
     console.log(user.email);
@@ -106,7 +105,7 @@ export default function EditProfileScreen({navigation}) {
     console.log(enteredBio);
   }
   function callFun() {
-    addImage();
+    // addImage();
   }
   return (
     <Screen style={styles.container}>

@@ -1,25 +1,23 @@
-import React from "react";
-import { Text, View, StyleSheet } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
-import MaskedView from "@react-native-masked-view/masked-view";
-import colors from "../config/colors";
+import React from 'react';
+import {Text, View, StyleSheet} from 'react-native';
+import {MaterialCommunityIcons} from 'react-native-vector-icons';
+import MaskedView from '@react-native-masked-view/masked-view';
+import colors from '../config/colors';
 
 const size = 40;
 
-export function GradientColorsIcon({ ...rest }) {
+export function GradientColorsIcon({...rest}) {
   return (
-    <View style={{ width: size }} {...rest}>
+    <View style={{width: size}} {...rest}>
       <MaskedView
-        style={{ flex: 1, flexDirection: "row", height: size }}
+        style={{flex: 1, flexDirection: 'row', height: size}}
         maskElement={
           <View
             style={{
-              backgroundColor: "transparent",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+              backgroundColor: 'transparent',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
             <MaterialCommunityIcons
               name="power"
               size={size}
@@ -27,12 +25,11 @@ export function GradientColorsIcon({ ...rest }) {
               style={styles.shadow}
             />
           </View>
-        }
-      >
-        <LinearGradient
+        }>
+        {/* <LinearGradient
           colors={[colors.linearGradientIndex0, colors.linearGradientIndex1]}
-          style={{ flex: 1, width: size, height: size }}
-        />
+          style={{flex: 1, width: size, height: size}}
+        /> */}
       </MaskedView>
     </View>
   );
@@ -40,7 +37,7 @@ export function GradientColorsIcon({ ...rest }) {
 
 const styles = StyleSheet.create({
   shadow: {
-    shadowColor: "black",
+    shadowColor: 'black',
     shadowOpacity: 0.5,
     shadowRadius: 5,
     shadowOffset: {
