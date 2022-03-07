@@ -11,57 +11,148 @@ import {NavigationContainer} from '@react-navigation/native';
 import store from './app/redux/store';
 import {Provider, useDispatch} from 'react-redux';
 
-// import {AppNavigator, AuthNavigator} from './app/navigation';
+import AuthContext from './app/authContext';
+
 import {AuthNavigator} from './app/navigation';
-import UserContext from './app/UserContext';
 import colors from './app/config/colors';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import {loggedInUserActions} from './app/redux/loggedInUser';
+
 import OfflineNotice from './app/components/OfflineNotice';
 import Toast from 'react-native-toast-message';
-// import TestScreen from './app/screens/TestScreen';
 import HomeNavigator from './app/navigation/HomeNavigator';
 
 export default function App() {
-  const [authChecking, setauthChecking] = useState(true);
-  const [loadingIndicator, setloadingIndicator] = useState(false);
-  const [user, setUser] = useState(null);
+  const initState = {
+    username: null,
+    isLoading: true,
+    userToken: null,
+  };
+  const actions = {
+    RETRIEVE_TOKEN: 'RETRIEVE_TOKEN',
+    LOGIN: 'LOGIN',
+    SIGNUP: 'SIGNUP',
+    LOGOUT: 'LOGOUT',
+  };
 
+  // ------------------ handle user auth data with Reducer ------------------
+  const authReducer = (prevState, action) => {
+    switch (action.type) {
+      case actions.RETRIEVE_TOKEN:
+        return {
+          ...prevState,
+          userToken: action.userToken,
+          isLoading: false,
+        };
+      case actions.LOGIN:
+        return {
+          ...prevState,
+          username: action.username,
+          userToken: action.userToken,
+          isLoading: false,
+        };
+      case actions.SIGNUP:
+        return {
+          ...prevState,
+          username: action.username,
+          userToken: action.userToken,
+          isLoading: false,
+        };
+      case actions.LOGOUT:
+        return {
+          ...prevState,
+          username: null,
+          userToken: null,
+          isLoading: false,
+        };
+
+      default:
+        return initState;
+    }
+  };
+  const [userState, dispatch] = React.useReducer(authReducer, initState);
+
+  // ------------------ Based on the action change the auth data  ------------------
+  const authActions = React.useMemo(
+    () => ({
+      //   retrieving Token from the secure
+      retrieveToken: async () => {
+        try {
+          const userToken = await EncryptedStorage.getItem('auth_session');
+          dispatch({type: actions.RETRIEVE_TOKEN, userToken});
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      // Login
+      login: async (username, userToken) => {
+        dispatch({type: actions.LOGIN, username, userToken});
+        try {
+          await EncryptedStorage.setItem(
+            'auth_session',
+            JSON.stringify({
+              userToken,
+              username,
+            }),
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      // logout
+      logout: async () => {
+        dispatch({type: actions.LOGOUT});
+        try {
+          await EncryptedStorage.removeItem('auth_session');
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      // signup
+      signup: async (username, userToken) => {
+        dispatch({type: actions.SIGNUP, username, userToken});
+        try {
+          await EncryptedStorage.setItem(
+            'auth_session',
+            JSON.stringify({
+              userToken,
+              username,
+            }),
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      },
+    }),
+    [],
+  );
+
+  // initial check if token exist
   useEffect(() => {
-    EncryptedStorage.getItem('user').then(user => {
-      if (user) {
-        setUser(JSON.parse(user));
-        store.dispatch(loggedInUserActions.setUser(JSON.parse(user)));
-      }
-      setauthChecking(false);
-    });
+    authActions.retrieveToken();
   }, []);
 
-  if (authChecking) {
-    return <ActivityIndicator />;
+  if (userState.isLoading) {
+    return (
+      <View style={styles.loadingOverlay}>
+        <ActivityIndicator
+          style={styles.gobalLoadingIndicator}
+          size="large"
+          color="#044566"
+        />
+      </View>
+    );
   } else {
     return (
-      // <TestScreen />
-      <UserContext.Provider
-        value={{user, setUser, setloadingIndicator, loadingIndicator}}>
+      <AuthContext.Provider value={{authActions, userState}}>
         <Provider store={store}>
           <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'} />
           <OfflineNotice />
           <NavigationContainer>
-            {loadingIndicator && (
-              <View style={styles.loadingOverlay}>
-                <ActivityIndicator
-                  style={styles.gobalLoadingIndicator}
-                  size="large"
-                  color="#044566"
-                />
-              </View>
-            )}
-            {user ? <HomeNavigator /> : <AuthNavigator />}
+            {userState.userToken ? <HomeNavigator /> : <AuthNavigator />}
           </NavigationContainer>
           <Toast ref={ref => Toast.setRef(ref)} />
         </Provider>
-      </UserContext.Provider>
+      </AuthContext.Provider>
     );
   }
 }
