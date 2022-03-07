@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   ActivityIndicator,
+  StatusBar,
   Text,
   View,
   Dimensions,
@@ -44,6 +45,7 @@ export default function App() {
       <UserContext.Provider
         value={{user, setUser, setloadingIndicator, loadingIndicator}}>
         <Provider store={store}>
+          <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'} />
           <OfflineNotice />
           <NavigationContainer>
             {loadingIndicator && (
