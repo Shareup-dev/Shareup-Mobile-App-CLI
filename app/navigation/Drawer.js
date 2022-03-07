@@ -10,14 +10,13 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 
-import UserContext from '../UserContext';
+import authContext from '../authContext';
 import Icon from '../components/Icon';
 import colors from '../config/colors';
 import defaultStyles from '../config/styles';
 import DrawerButtons from './DrawerButtons';
 import LinkButton from '../components/buttons/LinkButton';
 
-import EncryptedStorage from 'react-native-encrypted-storage';
 import routes from './routes';
 import {useNavigation} from '@react-navigation/native';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -75,7 +74,7 @@ const listItems = [
 ];
 
 export default function Drawer({isVisible, setIsVisible}) {
-  const {user, setUser} = useContext(UserContext);
+  const {user, setUser, authActions} = useContext(authContext);
   const navigation = useNavigation();
   return (
     <Modal
@@ -151,8 +150,8 @@ export default function Drawer({isVisible, setIsVisible}) {
             <LogoutButton
               onPress={() => {
                 console.log('logged out in Drawer');
-                EncryptedStorage.removeItem('user');
                 setUser(null);
+                authActions.logout();
               }}
             />
           </View>

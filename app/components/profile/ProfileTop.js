@@ -1,15 +1,15 @@
-import React, { useContext } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import React, {useContext} from 'react';
+import {View, StyleSheet, Text} from 'react-native';
 
-import colors from "../../config/colors";
-import Icon from "../Icon";
-import UserProfilePicture from "../UserProfilePicture";
-import Tab from "../buttons/Tab";
-import IconBar from "../tab-bar/IconBar";
-import routes from "../../navigation/routes";
-import UserContext from "../../UserContext";
-import Posts from "./Posts";
-import StoriesList from "../lists/StoriesList";
+import colors from '../../config/colors';
+import Icon from '../Icon';
+import UserProfilePicture from '../UserProfilePicture';
+import Tab from '../buttons/Tab';
+import IconBar from '../tab-bar/IconBar';
+import routes from '../../navigation/routes';
+import authContext from '../../authContext';
+import Posts from './Posts';
+import StoriesList from '../lists/StoriesList';
 
 const profilePictureSize = 80;
 
@@ -20,7 +20,7 @@ export default function ProfileTop({
   tabs,
   numberOfPosts,
 }) {
-  const { user } = useContext(UserContext);
+  const {user} = useContext(authContext);
 
   return (
     <View style={styles.container}>
@@ -71,7 +71,7 @@ export default function ProfileTop({
 
       <IconBar tabs={tabs} currentTab={currentTab} onTab={onIconBarTab} />
 
-      {currentTab === "posts" && <Posts navigation={navigation} />}
+      {currentTab === 'posts' && <Posts navigation={navigation} />}
     </View>
   );
 }
@@ -84,8 +84,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   row1: {
-    flexDirection: "row",
-    alignItems: "flex-end",
+    flexDirection: 'row',
+    alignItems: 'flex-end',
   },
   profilePicture: {
     width: profilePictureSize,
@@ -93,13 +93,13 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   addProfilePictureIcon: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
     right: 0,
   },
   counterWrapper: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginHorizontal: 10,
   },
   row2: {
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   },
   username: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   editProfileButton: {
     marginTop: 20,
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   },
   editProfileButtonTitle: {
     fontSize: 14,
-    fontWeight: "500",
+    fontWeight: '500',
   },
   storyCard: {
     marginVertical: 10,

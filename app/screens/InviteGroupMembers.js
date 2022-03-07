@@ -1,51 +1,46 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {useContext, useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
   FlatList,
   TouchableWithoutFeedback,
-} from "react-native";
+} from 'react-native';
 
-import Screen from "../components/Screen";
-import TextField from "../components/TextField";
-import Tab from "../components/buttons/Tab";
-import Separator from "../components/Separator";
-import ListItem from "../components/lists/ListItem";
-import defaultStyles from "../config/styles";
-import ListHeader from "../components/lists/ListHeader";
-import colors from "../config/colors";
-import { HeaderWithBackArrow } from "../components/headers";
-import UserProfilePicture from "../components/UserProfilePicture";
-import routes from "../navigation/routes";
-import UserContext from "../UserContext";
-import UserService from "../services/UserService";
-import FriendService from "../services/FriendService";
-import GroupService from "../services/GroupService";
-import Icon from "../components/Icon";
-import AppButton from "../components/buttons/Button";
-import { Header, HeaderTitle } from "../components/headers";
+import Screen from '../components/Screen';
+import TextField from '../components/TextField';
+import Tab from '../components/buttons/Tab';
+import Separator from '../components/Separator';
+import ListItem from '../components/lists/ListItem';
+import defaultStyles from '../config/styles';
+import ListHeader from '../components/lists/ListHeader';
+import colors from '../config/colors';
+import {HeaderWithBackArrow} from '../components/headers';
+import UserProfilePicture from '../components/UserProfilePicture';
+import routes from '../navigation/routes';
+import authContext from '../authContext';
+import UserService from '../services/UserService';
+import FriendService from '../services/FriendService';
+import GroupService from '../services/GroupService';
+import Icon from '../components/Icon';
+import AppButton from '../components/buttons/Button';
+import {Header, HeaderTitle} from '../components/headers';
 
-const InviteGroupMembers = ({ navigation, route }) => {
+const InviteGroupMembers = ({navigation, route}) => {
   const [users, setusers] = useState([]);
   const [invitedTo, setinvitedTo] = useState([]);
-  const { user: loggedInUser } = useContext(UserContext);
+  const {user: loggedInUser} = useContext(authContext);
   useEffect(() => {
-    UserService.getUsers().then((resp) => {
-      let allUsers = resp.data.filter(
-        (person) => person.id !== loggedInUser.id
-      );
+    UserService.getUsers().then(resp => {
+      let allUsers = resp.data.filter(person => person.id !== loggedInUser.id);
       setusers(allUsers);
     });
   }, []);
-  const onAddMember = (member) => {
-    if (
-      invitedTo.filter((invitedMember) => member.id === invitedMember.id)[0]
-    ) {
+  const onAddMember = member => {
+    if (invitedTo.filter(invitedMember => member.id === invitedMember.id)[0]) {
       return;
     }
-    GroupService.joinGroup(member.id, route.params.groupId).then((resp) => {
-    });
-    setinvitedTo((previouslyInvited) => {
+    GroupService.joinGroup(member.id, route.params.groupId).then(resp => {});
+    setinvitedTo(previouslyInvited => {
       return [...previouslyInvited, member];
     });
   };
@@ -72,8 +67,8 @@ const InviteGroupMembers = ({ navigation, route }) => {
           <ListHeader
             containerStyle={{
               // backgroundColor: 'coral',
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
+              justifyContent: 'flex-start',
+              alignItems: 'flex-start',
               paddingHorizontal: 40,
               marginTop: -10,
             }}
@@ -81,24 +76,24 @@ const InviteGroupMembers = ({ navigation, route }) => {
           />
         )}
         data={users}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
+        keyExtractor={item => item.id.toString()}
+        renderItem={({item}) => (
           <ListItem
             user={item}
             image={item.profilePicturePath}
             title={item.firstName}
             tabTitle={
-              invitedTo.filter((user) => user.email === item.email)[0]
-                ? "Added"
-                : "Add"
+              invitedTo.filter(user => user.email === item.email)[0]
+                ? 'Added'
+                : 'Add'
             }
             color={
-              invitedTo.filter((user) => user.email === item.email)[0]
+              invitedTo.filter(user => user.email === item.email)[0]
                 ? colors.iondigoDye
                 : colors.lighterGray
             }
             fontColor={
-              invitedTo.filter((user) => user.email === item.email)[0]
+              invitedTo.filter(user => user.email === item.email)[0]
                 ? colors.white
                 : colors.dark
             }
@@ -109,7 +104,7 @@ const InviteGroupMembers = ({ navigation, route }) => {
           />
         )}
       />
-      <View style={[defaultStyles.row, { justifyContent: "center" }]}>
+      <View style={[defaultStyles.row, {justifyContent: 'center'}]}>
         {route.params.newGroup && (
           <AppButton
             onPress={() => {
@@ -121,8 +116,8 @@ const InviteGroupMembers = ({ navigation, route }) => {
                 image: route.params.groupCoverPath,
               });
             }}
-            title={"Finish"}
-            width={"50%"}
+            title={'Finish'}
+            width={'50%'}
           />
         )}
       </View>
@@ -138,22 +133,22 @@ const styles = StyleSheet.create({
   },
   tabs: {
     marginVertical: 5,
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   searchbar: {
     marginBottom: 10,
   },
   tab: {
     marginRight: 10,
-    width: "30%",
+    width: '30%',
     height: 30,
   },
   separator: {
     backgroundColor: colors.LightGray,
     marginTop: 20,
   },
-  groupsList: { paddingTop: 20 },
+  groupsList: {paddingTop: 20},
   listItem: {
     marginBottom: 13,
     marginHorizontal: 28,
@@ -162,7 +157,7 @@ const styles = StyleSheet.create({
   },
   noFriendsContainer: {
     marginTop: 125,
-    alignItems: "center",
+    alignItems: 'center',
   },
   noFriendsText: {
     fontSize: 25,
@@ -176,45 +171,45 @@ const styles = StyleSheet.create({
   },
 
   emptyText: {
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: 150,
     fontSize: 18,
   },
   shadowBox: {
-    backgroundColor: "coral",
+    backgroundColor: 'coral',
     height: 50,
-    shadowColor: "red",
+    shadowColor: 'red',
   },
   container: {
     flex: 1,
     padding: 15,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   title: {
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: '700',
   },
   subTitle: {
     fontSize: 12,
   },
   friendCard: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginVertical: 10,
     borderWidth: 0,
-    alignItems: "center",
+    alignItems: 'center',
     paddingVertical: 20,
     paddingHorizontal: 20,
     borderRadius: 12,
   },
   left: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     flex: 1,
   },
   recommendation: {
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
   },
   dp: {
     height: 56,
@@ -224,19 +219,19 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     color: colors.dark,
-    fontWeight: "700",
+    fontWeight: '700',
   },
   actions: {
-    flexDirection: "row",
+    flexDirection: 'row',
     flex: 1,
-    alignItems: "center",
-    justifyContent: "space-around",
+    alignItems: 'center',
+    justifyContent: 'space-around',
   },
   requestBtn: {
     paddingHorizontal: 1,
     padding: 1,
     borderRadius: 6,
-    shadowColor: "red",
+    shadowColor: 'red',
     elevation: 0,
     height: 35,
   },

@@ -15,7 +15,7 @@ import {StackActions} from '@react-navigation/native';
 import defaultStyles from '../config/styles';
 import colors from '../config/colors';
 import Icon from '../components/Icon';
-import UserContext from '../UserContext';
+import authContext from '../authContext';
 import {storiesAction} from '../redux/stories';
 import store from '../redux/store';
 import {useImagePicker} from '../hooks';
@@ -57,7 +57,7 @@ export default function AddNewReel({navigation}) {
     user: loggedInUser,
     setloadingIndicator,
     loadingIndicator,
-  } = useContext(UserContext);
+  } = useContext(authContext);
   useEffect(() => {
     (async () => {
       const {status} = await Camera.requestPermissionsAsync();

@@ -17,7 +17,7 @@ import Icon from '../components/Icon';
 import IconButton from '../components/buttons/IconButton';
 import Text from '../components/Text';
 import Screen from '../components/Screen';
-import UserContext from '../UserContext';
+import authContext from '../authContext';
 import PostService from '../services/PostService';
 import routes from '../navigation/routes';
 import {useImagePicker} from '../hooks';
@@ -43,7 +43,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export default function AddPostScreen({navigation, route}) {
   const {user, setUser, loadingIndicator, setloadingIndicator} =
-    useContext(UserContext);
+    useContext(authContext);
   const dispatch = useDispatch();
   const postFeel = useSelector(state => state.postFeel);
 

@@ -6,6 +6,7 @@ import {
   Text,
   View,
   Dimensions,
+  SafeAreaView,
 } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import store from './app/redux/store';
@@ -20,8 +21,11 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import OfflineNotice from './app/components/OfflineNotice';
 import Toast from 'react-native-toast-message';
 import HomeNavigator from './app/navigation/HomeNavigator';
+import UserService from './app/services/UserService';
 
 export default function App() {
+  const [user, setUser] = useState({});
+
   const initState = {
     username: null,
     isLoading: true,
@@ -79,6 +83,12 @@ export default function App() {
         try {
           const userToken = await EncryptedStorage.getItem('auth_session');
           dispatch({type: actions.RETRIEVE_TOKEN, userToken});
+          if (userToken) {
+            const email = JSON.parse(userToken).username;
+            await UserService.getUserByEmail(email).then(res => {
+              setUser(res.data);
+            });
+          }
         } catch (error) {
           console.log(error);
         }
@@ -143,12 +153,13 @@ export default function App() {
     );
   } else {
     return (
-      <AuthContext.Provider value={{authActions, userState}}>
+      <AuthContext.Provider value={{authActions, userState, user, setUser}}>
         <Provider store={store}>
           <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'} />
           <OfflineNotice />
           <NavigationContainer>
             {userState.userToken ? <HomeNavigator /> : <AuthNavigator />}
+            {/* {userState.userToken ? <AuthNavigator /> : <AuthNavigator />} */}
           </NavigationContainer>
           <Toast ref={ref => Toast.setRef(ref)} />
         </Provider>
@@ -163,7 +174,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 1,
     elevation: 1,
-    // backgroundColor: 'coral',
     opacity: 1,
     height: Dimensions.get('screen').height,
     width: Dimensions.get('screen').width,
@@ -184,5 +194,3 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
 });
-
-// Testing branch protections

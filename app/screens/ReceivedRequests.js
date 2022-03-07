@@ -1,70 +1,70 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
   FlatList,
   StyleSheet,
   TouchableWithoutFeedback,
-} from "react-native";
+} from 'react-native';
 
-import Screen from "../components/Screen";
-import { Header, HeaderTitle } from "../components/headers";
-import Icon from "../components/Icon";
-import UserService from "../services/UserService";
+import Screen from '../components/Screen';
+import {Header, HeaderTitle} from '../components/headers';
+import Icon from '../components/Icon';
+import UserService from '../services/UserService';
 
-import UserContext from "../UserContext";
-import defaultStyles from "../config/styles";
-import FriendService from "../services/FriendService";
-import ListHeader from "../components/lists/ListHeader";
-import ListItem from "../components/lists/ListItem";
-import colors from "../config/colors";
+import authContext from '../authContext';
+import defaultStyles from '../config/styles';
+import FriendService from '../services/FriendService';
+import ListHeader from '../components/lists/ListHeader';
+import ListItem from '../components/lists/ListItem';
+import colors from '../config/colors';
 
-export default function ReceivedRequests({ navigation }) {
-  const { user } = useContext(UserContext);
+export default function ReceivedRequests({navigation}) {
+  const {user} = useContext(authContext);
   const [requests, setRequests] = useState([]);
   const [acceptedFrom, setAcceptedFrom] = useState([]);
   const [rejectedFrom, setRejectedFrom] = useState([]);
 
   useEffect(() => {
-    UserService.getFriendRequestRecieved(user.email).then((resp) => {
+    UserService.getFriendRequestRecieved(user.email).then(resp => {
       setRequests(resp.data);
-      requests.forEach((request) => {
-        console.log("Received Request from: ", request.firstName);
+      requests.forEach(request => {
+        console.log('Received Request from: ', request.firstName);
       });
     });
   }, []);
 
-  const acceptFriendRequest = (friend) => {
-    console.log("Accepting friend request from : ", friend.email);
-    FriendService.acceptRequest(user.id, friend.id).then((resp) => {
-      console.log("accept request resp: ", resp);
+  const acceptFriendRequest = friend => {
+    console.log('Accepting friend request from : ', friend.email);
+    FriendService.acceptRequest(user.id, friend.id).then(resp => {
+      console.log('accept request resp: ', resp);
     });
 
-    setAcceptedFrom((previousState) => {
+    setAcceptedFrom(previousState => {
       return [...previousState, friend];
     });
   };
 
-  const rejectFriendRequest = (friend) => {
-    console.log("Rejecting friend request from : ", friend.email);
-    FriendService.declineRequest(user.id, friend.id).then((resp) => {
-      console.log("friend request declined: ", resp.data);
+  const rejectFriendRequest = friend => {
+    console.log('Rejecting friend request from : ', friend.email);
+    FriendService.declineRequest(user.id, friend.id).then(resp => {
+      console.log('friend request declined: ', resp.data);
     });
 
-    setRejectedFrom((previousState) => {
+    setRejectedFrom(previousState => {
       return [...previousState, friend];
     });
   };
 
-  const getTabTitle = (friend) => {
-    if (acceptedFrom.filter((user) => friend.email === user.email)[0]) {
-      return "Accepted";
+  const getTabTitle = friend => {
+    if (acceptedFrom.filter(user => friend.email === user.email)[0]) {
+      return 'Accepted';
     }
 
-    if (rejectedFrom.filter((user) => friend.email === user.email)[0]) {
-      return "Rejected";
+    if (rejectedFrom.filter(user => friend.email === user.email)[0]) {
+      return 'Rejected';
     }
-    return "Reject";
+    return 'Reject';
   };
 
   const renderRequestsList = () => {
@@ -85,36 +85,36 @@ export default function ReceivedRequests({ navigation }) {
               <ListHeader subtitle="Add new friends to know more about them" />
             )}
             data={requests}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
+            keyExtractor={item => item.id.toString()}
+            renderItem={({item}) => (
               <ListItem
                 user={item}
                 image={item.profilePicturePath}
                 title={item.firstName}
-                secondBtnTitle={"Accept"}
+                secondBtnTitle={'Accept'}
                 secondBtn={
-                  acceptedFrom.filter((user) => user.email === item.email)[0] ||
-                  rejectedFrom.filter((user) => user.email === item.email)[0]
+                  acceptedFrom.filter(user => user.email === item.email)[0] ||
+                  rejectedFrom.filter(user => user.email === item.email)[0]
                     ? false
                     : true
                 }
                 secondBtnAction={acceptFriendRequest}
                 tabTitle={getTabTitle(item)}
                 color={
-                  acceptedFrom.filter((user) => user.email === item.email)[0]
+                  acceptedFrom.filter(user => user.email === item.email)[0]
                     ? colors.iondigoDye
                     : colors.lighterGray
                 }
                 fontColor={
-                  acceptedFrom.filter((user) => user.email === item.email)[0]
+                  acceptedFrom.filter(user => user.email === item.email)[0]
                     ? colors.white
                     : colors.dark
                 }
                 onPress={rejectFriendRequest}
                 style={[defaultStyles.listItemStyle, defaultStyles.lightShadow]}
                 fullWidth={
-                  acceptedFrom.filter((user) => user.email === item.email)[0] ||
-                  rejectedFrom.filter((user) => user.email === item.email)[0]
+                  acceptedFrom.filter(user => user.email === item.email)[0] ||
+                  rejectedFrom.filter(user => user.email === item.email)[0]
                     ? true
                     : false
                 }
@@ -151,41 +151,41 @@ export default function ReceivedRequests({ navigation }) {
 
 const styles = StyleSheet.create({
   emptyText: {
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: 150,
     fontSize: 18,
   },
   container: {
     flex: 1,
     paddingTop: 30,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   title: {
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: '700',
   },
   subTitle: {
     fontSize: 12,
   },
   friendCard: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginVertical: 10,
     borderWidth: 0,
-    alignItems: "center",
+    alignItems: 'center',
     paddingVertical: 20,
     paddingHorizontal: 20,
     borderRadius: 12,
   },
   info: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     flex: 1,
   },
   actions: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
     flex: 1,
   },
   dp: {
@@ -196,13 +196,13 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     color: colors.dark,
-    fontWeight: "700",
+    fontWeight: '700',
   },
   requestBtn: {
     paddingHorizontal: 1,
     padding: 1,
     borderRadius: 6,
-    shadowColor: "red",
+    shadowColor: 'red',
     elevation: 0,
     height: 35,
   },

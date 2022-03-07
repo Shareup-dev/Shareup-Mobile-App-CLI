@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, {useContext} from 'react';
 import {
   View,
   Text,
@@ -6,44 +6,44 @@ import {
   StyleSheet,
   Alert,
   TouchableWithoutFeedback,
-} from "react-native";
-import { useSelector } from "react-redux";
+} from 'react-native';
+import {useSelector} from 'react-redux';
 
-import Screen from "../components/Screen";
-import { Header, HeaderTitle } from "../components/headers";
-import Icon from "../components/Icon";
-import UserContext from "../UserContext";
-import ListItem from "../components/lists/ListItem";
-import FriendService from "../services/FriendService";
-import store from "../redux/store";
-import { sentRequestsActions } from "../redux/sentRequests";
-import colors from "../config/colors";
-import defaultStyles from "../config/styles";
+import Screen from '../components/Screen';
+import {Header, HeaderTitle} from '../components/headers';
+import Icon from '../components/Icon';
+import authContext from '../authContext';
+import ListItem from '../components/lists/ListItem';
+import FriendService from '../services/FriendService';
+import store from '../redux/store';
+import {sentRequestsActions} from '../redux/sentRequests';
+import colors from '../config/colors';
+import defaultStyles from '../config/styles';
 
-export default function SentRequests({ navigation }) {
-  const { user: loggedInUser } = useContext(UserContext);
-  let sentto = useSelector((state) => state.sentRequests);
+export default function SentRequests({navigation}) {
+  const {user: loggedInUser} = useContext(authContext);
+  let sentto = useSelector(state => state.sentRequests);
 
-  const onCancelRequest = (friend) => {
+  const onCancelRequest = friend => {
     return Alert.alert(
-      "Confirm",
+      'Confirm',
       `Are you sure you want to cancel the friend request sent to ${friend.firstName} ?`,
       [
         {
-          text: "Yes",
+          text: 'Yes',
           onPress: () => {
-            sentto = sentto.filter((dost) => dost.email !== friend.email);
+            sentto = sentto.filter(dost => dost.email !== friend.email);
             store.dispatch(sentRequestsActions.setList(sentto));
 
             FriendService.unsendRequest(loggedInUser.id, friend.id).then(
-              (resp) => {
-                console.log("unsend resp: ", resp.data);
-              }
+              resp => {
+                console.log('unsend resp: ', resp.data);
+              },
             );
           },
         },
-        { text: "No" },
-      ]
+        {text: 'No'},
+      ],
     );
   };
 
@@ -62,24 +62,24 @@ export default function SentRequests({ navigation }) {
           <FlatList
             contentContainerStyle={styles.groupsList}
             data={sentto}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
+            keyExtractor={item => item.id.toString()}
+            renderItem={({item}) => (
               <ListItem
                 user={item}
                 image={item.profilePicturePath}
                 title={item.firstName}
                 tabTitle={
-                  sentto.filter((user) => user.email === item.email)[0]
-                    ? "Request Sent"
-                    : "Cancelled"
+                  sentto.filter(user => user.email === item.email)[0]
+                    ? 'Request Sent'
+                    : 'Cancelled'
                 }
                 color={
-                  sentto.filter((user) => user.email === item.email)[0]
+                  sentto.filter(user => user.email === item.email)[0]
                     ? colors.iondigoDye
                     : colors.lighterGray
                 }
                 fontColor={
-                  sentto.filter((user) => user.email === item.email)[0]
+                  sentto.filter(user => user.email === item.email)[0]
                     ? colors.white
                     : colors.dark
                 }
@@ -118,62 +118,62 @@ export default function SentRequests({ navigation }) {
 
 const styles = StyleSheet.create({
   emptyText: {
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: 150,
     fontSize: 18,
   },
   shadowBox: {
-    backgroundColor: "coral",
+    backgroundColor: 'coral',
     height: 50,
-    shadowColor: "red",
+    shadowColor: 'red',
   },
   container: {
     flex: 1,
     paddingTop: 30,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   title: {
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: '700',
   },
   subTitle: {
     fontSize: 12,
   },
   friendCard: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginVertical: 10,
     borderWidth: 0,
-    alignItems: "center",
+    alignItems: 'center',
     paddingVertical: 20,
     paddingHorizontal: 20,
     borderRadius: 12,
   },
   left: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     flex: 1,
   },
   recommendation: {
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
   },
   name: {
     fontSize: 16,
     color: colors.dark,
-    fontWeight: "700",
+    fontWeight: '700',
   },
   actions: {
-    flexDirection: "row",
+    flexDirection: 'row',
     flex: 1,
-    alignItems: "center",
-    justifyContent: "space-around",
+    alignItems: 'center',
+    justifyContent: 'space-around',
   },
   requestBtn: {
     paddingHorizontal: 1,
     padding: 1,
     borderRadius: 6,
-    shadowColor: "red",
+    shadowColor: 'red',
     elevation: 0,
     height: 35,
   },

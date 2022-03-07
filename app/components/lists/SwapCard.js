@@ -1,40 +1,40 @@
-import React, { useEffect, useState, useContext } from "react";
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
-import { useSelector } from "react-redux";
-import ImageView from "react-native-image-viewing";
-import { SliderBox } from "react-native-image-slider-box";
+import React, {useEffect, useState, useContext} from 'react';
+import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import {useSelector} from 'react-redux';
+import ImageView from 'react-native-image-viewing';
+import {SliderBox} from 'react-native-image-slider-box';
 
-import colors from "../../config/colors";
-import fileStorage from "../../config/fileStorage";
-import PostOptionDrawer from "../drawers/PostOptionsDrawer";
-import PostActions from "../PostActions";
-import defaultStyles from "../../config/styles";
-import SwapActionContainer from "../posts/SwapActionContainer";
-import UserContext from "../../UserContext";
+import colors from '../../config/colors';
+import fileStorage from '../../config/fileStorage';
+import PostOptionDrawer from '../drawers/PostOptionsDrawer';
+import PostActions from '../PostActions';
+import defaultStyles from '../../config/styles';
+import SwapActionContainer from '../posts/SwapActionContainer';
+import AuthContext from '../../authContext';
 
 const imageSize = 160;
-const SwapCard = React.memo(({ item, navigation, userId, style }) => {
+const SwapCard = React.memo(({item, navigation, userId, style}) => {
   const actionsTabSizeRatio = 0.5;
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [numberOfComments, setNumberOfComments] = useState(
-    item.comments.length
+    item.comments.length,
   );
 
   const [sliderWidth, setSliderWidth] = useState();
   const [currentImage, setCurrentImage] = useState();
   const [images, setImages] = useState([]);
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
-  const swapedPosts = useSelector((state) => state.swapedImages);
+  const swapedPosts = useSelector(state => state.swapedImages);
 
-  const { user } = useContext(UserContext);
+  const {user} = useContext(AuthContext);
 
-  const getSwapedImage = (swapId) => {
-    let foundSwap = swapedPosts.filter((swap) => swap.swapPostId === swapId)[0];
+  const getSwapedImage = swapId => {
+    let foundSwap = swapedPosts.filter(swap => swap.swapPostId === swapId)[0];
     if (foundSwap) {
-      return { imagePath: foundSwap.swapImage, found: true };
+      return {imagePath: foundSwap.swapImage, found: true};
     } else {
       let image = {
-        imagePath: "../assets/icons/swap-square-dashed.png",
+        imagePath: '../assets/icons/swap-square-dashed.png',
         found: false,
       };
       return image;
@@ -47,69 +47,67 @@ const SwapCard = React.memo(({ item, navigation, userId, style }) => {
 
   const loadImages = () => {
     if (item.media.length !== 0) {
-      setImages(
-        item.media.map((image) => fileStorage.baseUrl + image.mediaPath)
-      );
+      setImages(item.media.map(image => fileStorage.baseUrl + image.mediaPath));
     }
   };
 
   const options = [
     {
-      title: "Save post",
+      title: 'Save post',
       icon: {
-        image: require("../../assets/post-options-icons/save-post-icon.png"),
+        image: require('../../assets/post-options-icons/save-post-icon.png'),
       },
       onPress: () => {
-        alert("Save post");
+        alert('Save post');
       },
     },
     {
-      title: "Hide my profile",
+      title: 'Hide my profile',
       icon: {
-        image: require("../../assets/post-options-icons/hide-profile-icon.png"),
+        image: require('../../assets/post-options-icons/hide-profile-icon.png'),
       },
       onPress: () => {
-        alert("Save post");
+        alert('Save post');
       },
     },
     {
-      title: "Swap",
-      icon: { image: require("../../assets/post-options-icons/swap-icon.png") },
+      title: 'Swap',
+      icon: {image: require('../../assets/post-options-icons/swap-icon.png')},
       onPress: () => {
-        alert("Swap");
+        alert('Swap');
       },
     },
     {
-      title: "Share friends",
+      title: 'Share friends',
       icon: {
-        image: require("../../assets/post-options-icons/share-friends-icon.png"),
+        image: require('../../assets/post-options-icons/share-friends-icon.png'),
       },
       onPress: () => {
-        alert("Share friends");
+        alert('Share friends');
       },
     },
     {
-      title: "Unfollow",
+      title: 'Unfollow',
       icon: {
-        image: require("../../assets/post-options-icons/unfollow-icon.png"),
+        image: require('../../assets/post-options-icons/unfollow-icon.png'),
       },
       onPress: () => {
-        alert("Unfollow");
+        alert('Unfollow');
       },
     },
     {
-      title: "Report",
+      title: 'Report',
       icon: {
-        image: require("../../assets/post-options-icons/report-icon.png"),
+        image: require('../../assets/post-options-icons/report-icon.png'),
       },
       onPress: () => {
-        alert("Report");
+        alert('Report');
       },
     },
     {
-      title: "Delete Post",
+      title: 'Delete Post',
       icon: {
-        image: require("../../assets/post-options-icons/delete-red-icon.png"),
+        image: require('../../assets/post-options-icons/delete-red-icon.png'),
       },
       onPress: () => {
         showDeleteAlert();
@@ -117,7 +115,7 @@ const SwapCard = React.memo(({ item, navigation, userId, style }) => {
     },
   ];
 
-  const onLayout = (e) => {
+  const onLayout = e => {
     setSliderWidth(e.nativeEvent.layout.width);
   };
 
@@ -126,7 +124,7 @@ const SwapCard = React.memo(({ item, navigation, userId, style }) => {
       {currentImage && (
         <ImageView
           visible={imageViewerVisible}
-          images={[{ uri: currentImage }]}
+          images={[{uri: currentImage}]}
           imageIndex={0}
           onRequestClose={() => {
             setImageViewerVisible(false);
@@ -142,7 +140,7 @@ const SwapCard = React.memo(({ item, navigation, userId, style }) => {
             ImageComponentStyle={styles.image}
             imageLoadingColor={colors.iondigoDye}
             parentWidth={sliderWidth}
-            onCurrentImagePressed={(index) => {
+            onCurrentImagePressed={index => {
               setCurrentImage(images[index]);
               setImageViewerVisible(true);
             }}
@@ -171,19 +169,18 @@ const SwapCard = React.memo(({ item, navigation, userId, style }) => {
         profileImage={item.user.profilePicturePath}
         userId={userId}
         setIsOptionsVisible={setIsOptionsVisible}
-        postType={"swapPost"}
+        postType={'swapPost'}
       />
 
-      <View style={{ flexDirection: "row" }}>
+      <View style={{flexDirection: 'row'}}>
         <TouchableOpacity
           style={styles.menuButton}
           onPress={() => {
             setIsOptionsVisible(true);
-          }}
-        ></TouchableOpacity>
+          }}></TouchableOpacity>
 
         <PostOptionDrawer
-          source={"newfeed"}
+          source={'newfeed'}
           options={options}
           isVisible={isOptionsVisible}
           setIsVisible={setIsOptionsVisible}
@@ -205,7 +202,7 @@ const styles = StyleSheet.create({
   },
   swapButton: {
     backgroundColor: colors.iondigoDye,
-    alignSelf: "center",
+    alignSelf: 'center',
     borderRadius: 10,
     marginVertical: 10,
   },
@@ -213,33 +210,33 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     marginHorizontal: 15,
     marginTop: 10,
-    overflow: "hidden",
+    overflow: 'hidden',
   },
   menuButton: {
     padding: 3,
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     width: 60,
     marginTop: -5,
   },
   imagesWrapper: {
     marginHorizontal: 15,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   image: {
-    width: "100%",
+    width: '100%',
     height: 250,
     borderTopLeftRadius: borderRadius,
     borderTopRightRadius: borderRadius,
-    resizeMode: "cover",
+    resizeMode: 'cover',
     backgroundColor: colors.lighterGray,
   },
   extraActionsContainer: {
     backgroundColor: colors.lighterGray,
   },
   imageContainer: {
-    width: "100%",
+    width: '100%',
   },
   categoryDescription: {
     fontSize: 12,

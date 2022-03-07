@@ -12,7 +12,7 @@ import colors from '../config/colors';
 import Icon from '../components/Icon';
 import {StackActions} from '@react-navigation/native';
 import StoryService from '../services/StoryService';
-import UserContext from '../UserContext';
+import authContext from '../authContext';
 import {storiesAction} from '../redux/stories';
 import store from '../redux/store';
 import {useImagePicker} from '../hooks';
@@ -36,7 +36,7 @@ export default function AddStoryScreen({navigation}) {
     user: loggedInUser,
     setloadingIndicator,
     loadingIndicator,
-  } = useContext(UserContext);
+  } = useContext(authContext);
 
   // useEffect(() => {
   //   (async () => {

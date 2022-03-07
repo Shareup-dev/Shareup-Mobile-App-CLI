@@ -1,10 +1,10 @@
-import React, { useContext, useState } from "react";
-import { Image, View, StyleSheet } from "react-native";
+import React, {useContext, useState} from 'react';
+import {Image, View, StyleSheet} from 'react-native';
 
-import UserContext from "../UserContext";
-import fileStorage from "../config/fileStorage";
-import Icon from "./Icon";
-import colors from "../config/colors";
+import AuthContext from '../authContext';
+import fileStorage from '../config/fileStorage';
+import Icon from './Icon';
+import colors from '../config/colors';
 
 export default function UserProfilePicture({
   size = 100,
@@ -14,9 +14,9 @@ export default function UserProfilePicture({
   bottomOffsite = 3,
   rightOffsite = -5,
 }) {
-  const { user } = useContext(UserContext);
+  const {user} = useContext(AuthContext);
   const [picture, setPicture] = useState(
-    profilePicture ? profilePicture : user.profilePicturePath
+    profilePicture ? profilePicture : user.profilePicturePath,
   );
   return (
     <View>
@@ -24,7 +24,7 @@ export default function UserProfilePicture({
         source={{
           uri: fileStorage.baseUrl + picture,
         }}
-        style={[{ width: size, height: size, borderRadius: size / 2 }, style]}
+        style={[{width: size, height: size, borderRadius: size / 2}, style]}
       />
 
       {showActiveStatus && (
@@ -34,7 +34,7 @@ export default function UserProfilePicture({
           color={colors.activeGreen}
           style={[
             styles.activeIcon,
-            { bottom: bottomOffsite, right: rightOffsite },
+            {bottom: bottomOffsite, right: rightOffsite},
           ]}
           size={15}
           backgroundSizeRatio={0.9}
@@ -46,6 +46,6 @@ export default function UserProfilePicture({
 
 const styles = StyleSheet.create({
   activeIcon: {
-    position: "absolute",
+    position: 'absolute',
   },
 });

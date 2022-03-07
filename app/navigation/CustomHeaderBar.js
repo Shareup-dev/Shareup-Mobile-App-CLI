@@ -5,10 +5,10 @@ import Icon from '../components/Icon';
 import colors from '../config/colors';
 
 import routes from './routes';
-import UserContext from '../UserContext';
+import authContext from '../authContext';
 
 export default function CustomHeaderBar({navigation}) {
-  const {user} = useContext(UserContext);
+  const {user} = useContext(authContext);
 
   const size = 30;
   return (

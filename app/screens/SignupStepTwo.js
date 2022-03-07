@@ -11,7 +11,7 @@ import UserService from '../services/UserService';
 import AuthServer from '../services/auth.services';
 import Icon from '../components/Icon';
 import FormRadio from '../components/forms/FormRadio';
-import UserContext from '../UserContext';
+import authContext from '../authContext';
 import settings from '../config/settings';
 import useIsReachable from '../hooks/useIsReachable';
 import RegistrationContainer from '../components/forms/RegistrationContainer';
@@ -21,7 +21,7 @@ const SignupStepTwo = ({navigation}) => {
   const [registerFailed, setRegisterFailed] = useState(false);
   const [registerError, setRegisterError] = useState('');
 
-  const {setloadingIndicator, setUser} = useContext(UserContext);
+  const {setloadingIndicator, setUser} = useContext(authContext);
 
   const {isReachable, checkIfReachable} = useIsReachable();
 

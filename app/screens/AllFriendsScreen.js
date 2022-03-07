@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -7,58 +7,58 @@ import {
   Alert,
   TouchableOpacity,
   TouchableWithoutFeedback,
-} from "react-native";
+} from 'react-native';
 
-import { Header, HeaderTitle } from "../components/headers";
-import UserContext from "../UserContext";
-import UserService from "../services/UserService";
-import defaultStyles from "../config/styles";
-import FriendService from "../services/FriendService";
-import ListItem from "../components/lists/ListItem";
-import Icon from "../components/Icon";
-import Screen from "../components/Screen";
-import colors from "../../app/config/colors";
-import routes from "../navigation/routes";
+import {Header, HeaderTitle} from '../components/headers';
+import authContext from '../authContext';
+import UserService from '../services/UserService';
+import defaultStyles from '../config/styles';
+import FriendService from '../services/FriendService';
+import ListItem from '../components/lists/ListItem';
+import Icon from '../components/Icon';
+import Screen from '../components/Screen';
+import colors from '../../app/config/colors';
+import routes from '../navigation/routes';
 
-export default function AllFriendsScreen({ navigation }) {
+export default function AllFriendsScreen({navigation}) {
   const [friends, setFriends] = useState([]);
   const [removed, setremoved] = useState([]);
-  const { user: loggedInUser } = useContext(UserContext);
+  const {user: loggedInUser} = useContext(authContext);
 
   useEffect(() => {
-    UserService.getFriends(loggedInUser.email).then((resp) => {
-      resp.data.forEach((dost) => {
-        console.log("dost: ", dost.email);
+    UserService.getFriends(loggedInUser.email).then(resp => {
+      resp.data.forEach(dost => {
+        console.log('dost: ', dost.email);
       });
       setFriends(resp.data);
     });
   }, []);
 
-  const UnfriendConfirmationDialog = (friend) => {
+  const UnfriendConfirmationDialog = friend => {
     return Alert.alert(
-      "Confirm",
+      'Confirm',
       `Are you sure you want to Unfriend ${friend.firstName} ?`,
       [
         {
-          text: "Yes",
+          text: 'Yes',
           onPress: () => {
             // setremoved((previousState) => {
             //   return [...previousState, friend];
             // })
             FriendService.removeFriends(loggedInUser.id, friend.id).then(
-              (removeResp) => {
+              removeResp => {
                 // console.log("Friend removed: ", removeResp);
-                setFriends((previousFriends) => {
+                setFriends(previousFriends => {
                   return previousFriends.filter(
-                    (dost) => dost.email !== friend.email
+                    dost => dost.email !== friend.email,
                   );
                 });
-              }
+              },
             );
           },
         },
-        { text: "No", onPress: () => console.log("OK Pressed") },
-      ]
+        {text: 'No', onPress: () => console.log('OK Pressed')},
+      ],
     );
   };
   const onClickAddFriends = () => {
@@ -75,8 +75,7 @@ export default function AllFriendsScreen({ navigation }) {
             color={colors.LightGray}
             onPress={() => {
               navigation.navigate(routes.Add_NEW_FRIEND);
-            }}
-          >
+            }}>
             <Text>Add Friends</Text>
           </TouchableOpacity>
         </View>
@@ -87,13 +86,13 @@ export default function AllFriendsScreen({ navigation }) {
         <FlatList
           data={friends}
           ListHeaderComponent={() => <></>}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
+          keyExtractor={item => item.id.toString()}
+          renderItem={({item}) => (
             <ListItem
               user={item}
               image={item.profilePicturePath}
               title={item.firstName}
-              tabTitle={"Friend"}
+              tabTitle={'Friend'}
               color={colors.lighterGray}
               fontColor={colors.dark}
               subTitle="Connected"
@@ -131,9 +130,9 @@ export default function AllFriendsScreen({ navigation }) {
 const styles = StyleSheet.create({
   noFriendsContainer: {
     paddingTop: 125,
-    alignItems: "center",
+    alignItems: 'center',
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   noFriendsText: {
     fontSize: 25,
@@ -147,45 +146,45 @@ const styles = StyleSheet.create({
   },
 
   emptyText: {
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: 150,
     fontSize: 18,
   },
   shadowBox: {
-    backgroundColor: "coral",
+    backgroundColor: 'coral',
     height: 50,
-    shadowColor: "red",
+    shadowColor: 'red',
   },
   container: {
     flex: 1,
     paddingTop: 30,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   title: {
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: '700',
   },
   subTitle: {
     fontSize: 12,
   },
   friendCard: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginVertical: 10,
     borderWidth: 0,
-    alignItems: "center",
+    alignItems: 'center',
     paddingVertical: 20,
     paddingHorizontal: 20,
     borderRadius: 12,
   },
   left: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     flex: 1,
   },
   recommendation: {
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
   },
   dp: {
     height: 56,
@@ -195,19 +194,19 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     color: colors.dark,
-    fontWeight: "700",
+    fontWeight: '700',
   },
   actions: {
-    flexDirection: "row",
+    flexDirection: 'row',
     flex: 1,
-    alignItems: "center",
-    justifyContent: "space-around",
+    alignItems: 'center',
+    justifyContent: 'space-around',
   },
   requestBtn: {
     paddingHorizontal: 1,
     padding: 1,
     borderRadius: 6,
-    shadowColor: "red",
+    shadowColor: 'red',
     elevation: 0,
     height: 35,
   },

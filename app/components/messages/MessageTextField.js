@@ -1,9 +1,9 @@
-import React, { useState, useContext, useRef } from "react";
-import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import React, {useState, useContext, useRef} from 'react';
+import {View, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
 
-import UserContext from "../../UserContext";
-import colors from "../../config/colors";
-import Icon from "../Icon";
+import authContext from '../../authContext';
+import colors from '../../config/colors';
+import Icon from '../Icon';
 
 export default function MessageTextField({
   style,
@@ -12,20 +12,20 @@ export default function MessageTextField({
   onSend,
   ...otherProps
 }) {
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
 
-  const { user } = useContext(UserContext);
+  const {user} = useContext(authContext);
 
   const textInputRed = useRef();
 
-  const onChangeText = (text) => {
+  const onChangeText = text => {
     setMessage(text);
     console.log(message);
   };
 
   const handelSendMessage = async () => {
     //Clear.
-    setMessage("");
+    setMessage('');
     textInputRed.current.clear();
 
     onSend(message, user.id, contactId);
@@ -42,7 +42,7 @@ export default function MessageTextField({
         {...otherProps}
       />
 
-      {message === "" ? (
+      {message === '' ? (
         <>
           <TouchableOpacity>
             <Icon
@@ -94,11 +94,11 @@ export default function MessageTextField({
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
-    flexDirection: "row",
+    width: '100%',
+    flexDirection: 'row',
     backgroundColor: colors.lighterGray,
     height: 45,
-    alignItems: "center",
+    alignItems: 'center',
     paddingLeft: 15,
     paddingRight: 6,
     borderRadius: 20,
