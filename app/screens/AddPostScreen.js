@@ -18,7 +18,7 @@ import IconButton from '../components/buttons/IconButton';
 import Text from '../components/Text';
 import Screen from '../components/Screen';
 import authContext from '../authContext';
-import PostService from '../services/PostService';
+import PostService from '../services/old/PostService';
 import routes from '../navigation/routes';
 import {useImagePicker} from '../hooks';
 import Header from '../components/headers/Header';

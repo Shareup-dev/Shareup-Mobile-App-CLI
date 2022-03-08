@@ -1,4 +1,4 @@
-import AuthService from './auth.services';
+import AuthService from './old/auth.services';
 import axios from 'axios';
 import settings from '../config/settings';
 

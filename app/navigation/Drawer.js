@@ -74,7 +74,8 @@ const listItems = [
 ];
 
 export default function Drawer({isVisible, setIsVisible}) {
-  const {user, setUser, authActions} = useContext(authContext);
+  const {userState, authActions} = useContext(authContext);
+
   const navigation = useNavigation();
   return (
     <Modal
@@ -91,7 +92,7 @@ export default function Drawer({isVisible, setIsVisible}) {
             backgroundSizeRatio={1}
             image={require('../assets/tab-navigation-icons/user-icon.png')}
           />
-          <Text style={styles.userName}>{user.firstName}</Text>
+          <Text style={styles.userName}>{userState?.userData?.firstName}</Text>
         </View>
         <View style={styles.separator} />
 
@@ -149,8 +150,6 @@ export default function Drawer({isVisible, setIsVisible}) {
             <View style={styles.separator} />
             <LogoutButton
               onPress={() => {
-                console.log('logged out in Drawer');
-                setUser(null);
                 authActions.logout();
               }}
             />

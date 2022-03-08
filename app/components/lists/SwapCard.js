@@ -26,7 +26,7 @@ const SwapCard = React.memo(({item, navigation, userId, style}) => {
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const swapedPosts = useSelector(state => state.swapedImages);
 
-  const {user} = useContext(AuthContext);
+  const {userState} = useContext(AuthContext);
 
   const getSwapedImage = swapId => {
     let foundSwap = swapedPosts.filter(swap => swap.swapPostId === swapId)[0];
@@ -152,7 +152,7 @@ const SwapCard = React.memo(({item, navigation, userId, style}) => {
           />
         )}
 
-        {user.id !== userId && <SwapActionContainer />}
+        {userState?.userData.id !== userId && <SwapActionContainer />}
       </View>
 
       <PostActions

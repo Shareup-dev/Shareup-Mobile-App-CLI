@@ -67,7 +67,7 @@ export default function AppNavigator() {
           }}
         />
 
-        <Tab.Screen
+        {/* <Tab.Screen
           name={routes.GROUP_NAVIGATOR}
           component={GroupNavigator}
           options={{
@@ -80,9 +80,9 @@ export default function AppNavigator() {
               />
             ),
           }}
-        />
+        /> */}
 
-        <Tab.Screen
+        {/* <Tab.Screen
           name={routes.ADD_POST}
           component={AddPostScreen}
           options={({navigation}) => ({
@@ -121,9 +121,9 @@ export default function AppNavigator() {
               />
             ),
           })}
-        />
+        /> */}
 
-        <Tab.Screen
+        {/* <Tab.Screen
           name={routes.ACTIVITY_NAVIGATOR}
           component={ActivityNavigator}
           options={{
@@ -136,12 +136,12 @@ export default function AppNavigator() {
               />
             ),
           }}
-        />
+        /> */}
 
         {/** This Tab screen spurious  */}
         {/** Instead tab icon to control the menu drawer  */}
         {/** Side Drawer Navigator */}
-        <Tab.Screen
+        {/* <Tab.Screen
           name="Account"
           component={AccountScreen}
           options={{
@@ -159,7 +159,7 @@ export default function AppNavigator() {
               </TouchableWithoutFeedback>
             ),
           }}
-        />
+        /> */}
       </Tab.Navigator>
 
       <Drawer isVisible={isVisible} setIsVisible={setIsVisible} />

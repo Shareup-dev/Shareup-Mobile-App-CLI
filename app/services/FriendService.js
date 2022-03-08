@@ -1,5 +1,5 @@
 import axios from 'axios';
-import AuthService from './auth.services';
+import AuthService from './old/auth.services';
 import settings from '../config/settings';
 
 const baseURL = `${settings.apiUrl}/api/v1/`;

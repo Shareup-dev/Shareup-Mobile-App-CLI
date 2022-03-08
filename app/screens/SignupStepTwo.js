@@ -8,7 +8,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import Text from '../components/Text';
 import UserService from '../services/UserService';
-import AuthServer from '../services/auth.services';
+import AuthServer from '../services/old/auth.services';
 import Icon from '../components/Icon';
 import FormRadio from '../components/forms/FormRadio';
 import authContext from '../authContext';

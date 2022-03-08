@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import {useSelector} from 'react-redux';
 
-import PostService from '../services/PostService';
+import PostService from '../services/post.service';
 import authContext from '../authContext';
 import Screen from '../components/Screen';
 import Card from '../components/lists/Card';
@@ -22,7 +22,7 @@ import {feedPostsAction} from '../redux/feedPostsSlice';
 import TrendingComponent from '../components/trending/TrendingComponent';
 
 export default function NewsFeedScreen({navigation, route}) {
-  const {user} = useContext(authContext);
+  const {userState} = useContext(authContext);
   const [posts, setPosts] = useState([]);
 
   const [activityIndicator, setActivityIndicator] = useState(true);
@@ -100,19 +100,24 @@ export default function NewsFeedScreen({navigation, route}) {
     // return setActivityIndicator(false);
   }, []);
 
-  const loadStories = () => {
-    StoryService.getStories().then(resp => {
-      store.dispatch(storiesAction.setStories(resp.data));
-    });
-  };
+  // const loadStories = () => {
+  //   StoryService.getStories().then(resp => {
+  //     store.dispatch(storiesAction.setStories(resp.data));
+  //   });
+  // };
 
   const loadNews = async () => {
-    PostService.getNewsFeed(user.email)
-      .then(res => {
-        store.dispatch(feedPostsAction.setFeedPosts(res.data));
-        if (feedPosts.length === 0) hideActivityIndicator();
-      })
-      .catch(err => console.log(err));
+    try {
+      const result = await PostService.getNewsFeed(userState.username);
+      setPosts(result.data);
+    } catch (e) {
+      console.log(e);
+    }
+    // .then(res => {
+    //   store.dispatch(feedPostsAction.setFeedPosts(res.data));
+    //   if (feedPosts.length === 0) hideActivityIndicator();
+    // })
+    // .catch(err => console.log(err));
   };
 
   const renderItem = ({item}) => {
@@ -173,7 +178,7 @@ export default function NewsFeedScreen({navigation, route}) {
     <Screen style={styles.container} statusPadding={false}>
       <FlatList
         initialNumToRender={10}
-        data={feedPosts}
+        data={posts}
         ListHeaderComponent={ListHeader}
         ListFooterComponent={ActivityIndicatorComponent}
         keyExtractor={post => post.id.toString()}

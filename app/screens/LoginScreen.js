@@ -5,11 +5,10 @@ import Toast from 'react-native-toast-message';
 
 import {ErrorMessage, Form, FormField, SubmitButton} from '../components/forms';
 import AlternativeRegistrationContainer from '../components/AlternativeRegistrationContainer';
-import AuthService from '../services/auth.services';
+import AuthService from '../services/auth.service';
 import LinkButton from '../components/buttons/LinkButton';
 import Separator from '../components/Separator';
 import authContext from '../authContext';
-import UserService from '../services/UserService';
 import colors from '../config/colors';
 import routes from '../navigation/routes';
 
@@ -17,7 +16,6 @@ import useIsReachable from '../hooks/useIsReachable';
 import settings from '../config/settings';
 import defaultStyles from '../config/styles';
 import LoginContainer from '../components/forms/LoginContainer';
-import EncryptedStorage from 'react-native-encrypted-storage';
 import Loading from '../components/Loading';
 
 const validationSchema = Yup.object().shape({
@@ -26,17 +24,17 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function LoginScreen({navigation}) {
-  const [loading, setLoading] = useState(false);
-
-  const [loginFailed, setLoginFailed] = useState(false);
-  const [error, setError] = useState('');
+  const {setUser, authActions} = useContext(authContext);
   const {isReachable, checkIfReachable} = useIsReachable();
 
-  const {setUser, authActions} = useContext(authContext);
+  const [loading, setLoading] = useState(false);
+  const [loginFailed, setLoginFailed] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = async ({email, password}) => {
     setLoading(true);
 
+    // checking if the server is reachable
     const isReachable = await checkIfReachable(settings.apiUrl);
 
     if (isReachable === false) {
@@ -45,6 +43,7 @@ export default function LoginScreen({navigation}) {
       return setLoginFailed(true);
     }
 
+    // --------- login ----------
     const result = await AuthService.login(email, password);
 
     if (result.status !== 200) {
@@ -61,21 +60,14 @@ export default function LoginScreen({navigation}) {
       text1: 'Success',
       text2: 'Logged in Successfully 👋',
     });
+
     if (result.ok) return setLoginFailed(true);
+
+    // storing the token into secure store
     authActions.login(result.data.username, result.data.jwt);
+
     setLoginFailed(false);
-    getUser(result.data.username);
     setLoading(false);
-  };
-
-  const getUser = async email => {
-    try {
-      const res = await UserService.getUserByEmail(email);
-
-      setUser(res.data);
-    } catch (e) {
-      console.log(e.message);
-    }
   };
 
   // ToDO: Fix the layout

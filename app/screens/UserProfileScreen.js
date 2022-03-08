@@ -6,7 +6,7 @@ import Icon from '../components/Icon';
 import Screen from '../components/Screen';
 import colors from '../config/colors';
 import authContext from '../authContext';
-import PostService from '../services/PostService';
+import PostService from '../services/old/PostService';
 import Card from '../components/lists/Card';
 
 import {
