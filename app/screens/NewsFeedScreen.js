@@ -6,7 +6,6 @@ import {
   ActivityIndicator,
   View,
 } from 'react-native';
-import {useSelector} from 'react-redux';
 
 import PostService from '../services/post.service';
 import authContext from '../authContext';
@@ -15,10 +14,7 @@ import Card from '../components/lists/Card';
 import FeedTop from '../components/FeedTop';
 import colors from '../config/colors';
 import SwapCard from '../components/lists/SwapCard';
-import StoryService from '../services/StoryService';
-import store from '../redux/store';
-import {storiesAction} from '../redux/stories';
-import {feedPostsAction} from '../redux/feedPostsSlice';
+
 import TrendingComponent from '../components/trending/TrendingComponent';
 
 export default function NewsFeedScreen({navigation, route}) {
@@ -26,8 +22,6 @@ export default function NewsFeedScreen({navigation, route}) {
   const [posts, setPosts] = useState([]);
 
   const [activityIndicator, setActivityIndicator] = useState(true);
-
-  const feedPosts = useSelector(state => state.feedPosts);
 
   const options = [
     {
@@ -100,12 +94,6 @@ export default function NewsFeedScreen({navigation, route}) {
     // return setActivityIndicator(false);
   }, []);
 
-  // const loadStories = () => {
-  //   StoryService.getStories().then(resp => {
-  //     store.dispatch(storiesAction.setStories(resp.data));
-  //   });
-  // };
-
   const loadNews = async () => {
     try {
       const result = await PostService.getNewsFeed(userState.username);
@@ -113,11 +101,6 @@ export default function NewsFeedScreen({navigation, route}) {
     } catch (e) {
       console.log(e);
     }
-    // .then(res => {
-    //   store.dispatch(feedPostsAction.setFeedPosts(res.data));
-    //   if (feedPosts.length === 0) hideActivityIndicator();
-    // })
-    // .catch(err => console.log(err));
   };
 
   const renderItem = ({item}) => {

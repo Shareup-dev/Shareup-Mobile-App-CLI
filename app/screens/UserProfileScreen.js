@@ -28,7 +28,7 @@ const tabs = [
 
 export default function UserProfileScreen({navigation, route}) {
   const [currentTab, setCurrentTab] = useState(POSTS);
-  const {user} = useContext(authContext);
+  const {userState} = useContext(authContext);
   const [posts, setPosts] = useState([]);
   const [imagesAndVideos, setImagesAndVideos] = useState([]);
   const [tags, setTags] = useState([]);
@@ -96,7 +96,7 @@ export default function UserProfileScreen({navigation, route}) {
   return (
     <Screen style={styles.container}>
       <HeaderWithBackArrow
-        title={user.firstName}
+        title={userState?.userData?.firstName}
         onBackButton={() => navigation.goBack()}
         leftComponent={
           <Icon

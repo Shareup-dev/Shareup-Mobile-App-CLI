@@ -8,7 +8,7 @@ import routes from './routes';
 import authContext from '../authContext';
 
 export default function CustomHeaderBar({navigation}) {
-  const {user} = useContext(authContext);
+  const {userData} = useContext(authContext).userState;
 
   const size = 30;
   return (
@@ -37,7 +37,9 @@ export default function CustomHeaderBar({navigation}) {
           image={require('../assets/tab-navigation-icons/user-icon.png')}
           size={size}
           onPress={() =>
-            navigation.navigate(routes.USER_PROFILE, {userEmail: user.email})
+            navigation.navigate(routes.USER_PROFILE, {
+              userEmail: userData.email,
+            })
           }
         />
       </View>

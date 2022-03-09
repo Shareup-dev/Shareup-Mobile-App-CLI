@@ -20,7 +20,7 @@ export default function ProfileTop({
   tabs,
   numberOfPosts,
 }) {
-  const {user} = useContext(authContext);
+  const {userData} = useContext(authContext)?.userState;
 
   return (
     <View style={styles.container}>
@@ -53,7 +53,7 @@ export default function ProfileTop({
 
         {/** Row 2 */}
         <View style={styles.row2}>
-          <Text style={styles.username}>{user.firstName}</Text>
+          <Text style={styles.username}>{userData.firstName}</Text>
           <Text>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Varius
             tellus placerat leo mi quis.
