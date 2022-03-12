@@ -12,7 +12,7 @@ import store from './app/redux/store';
 import {Provider, useDispatch} from 'react-redux';
 
 import AuthContext from './app/authContext';
-import {SafeAreaProvider, SafeAreaView } from 'react-native';
+import {SafeAreaProvider, SafeAreaView} from 'react-native';
 import {AuthNavigator} from './app/navigation';
 import colors from './app/config/colors';
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -166,16 +166,15 @@ export default function App() {
     );
   } else {
     return (
-
       <AuthContext.Provider value={{authActions, userState}}>
         <Provider store={store}>
           <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'} />
           <OfflineNotice />
-          <SafeAreaView style={{flex: 1}}> 
-          <NavigationContainer>
-            {userState.userToken ? <HomeNavigator /> : <AuthNavigator />}
-          </NavigationContainer>
-           </SafeAreaView> 
+          <SafeAreaView style={{flex: 1}}>
+            <NavigationContainer>
+              {userState.userToken ? <HomeNavigator /> : <AuthNavigator />}
+            </NavigationContainer>
+          </SafeAreaView>
           <Toast ref={ref => Toast.setRef(ref)} />
         </Provider>
       </AuthContext.Provider>

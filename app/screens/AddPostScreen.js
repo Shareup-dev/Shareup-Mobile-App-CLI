@@ -4,7 +4,7 @@ import React, {
   useRef,
   useEffect,
   useMemo,
-  Component
+  Component,
 } from 'react';
 import {StyleSheet, View, Image, TextInput} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -40,15 +40,15 @@ import OptionBox from '../components/posts/OptionBox';
 import {useDispatch, useSelector} from 'react-redux';
 import {postFeelingsActions} from '../redux/postFeelings';
 import TouchableOpacity from 'react-native-gesture-handler';
-import {PanGestureHandler,
+import {
+  PanGestureHandler,
   TapGestureHandler,
-  State as GestureState,} from "react-native-gesture-handler";
-  
+  State as GestureState,
+} from 'react-native-gesture-handler';
 
 export default function AddPostScreen({navigation, route}) {
-
-  const {user, setUser, loadingIndicator, setloadingIndicator} =
-    useContext(authContext);
+  const [loading, setLoading] = useState(false);
+  const {userData: user} = useContext(authContext)?.userState;
 
   const dispatch = useDispatch();
   const postFeel = useSelector(state => state.postFeel);
@@ -56,7 +56,7 @@ export default function AddPostScreen({navigation, route}) {
   const {postTypes} = constants;
   const {postType} = route.params;
   const {groupPost} = route.params;
-  const {groupId} = route.params; 
+  const {groupId} = route.params;
   const {swapImage} = route.params;
 
   const SWAP_DEFAULT_TEXT = 'Hi all \nI want to Swap ...';
@@ -239,29 +239,28 @@ export default function AddPostScreen({navigation, route}) {
     try {
       const result = await pickImage();
       //const uris = set.map((set) => (set.uri));
-      console.log("RESULT",uris)
-      
+      console.log('RESULT', uris);
+
       //#sreelakshmi -need to check ,why uri list is not passing in onAddImage function
       if (!result.cancelled) onAddImage(result.assets.uri);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
   const onAddImage = uri => {
-    setImages(prev => [...prev,{uri:uri}])
-   // setImages([...images, uri]);
-    handleButtonActivation(text, [...images,uri]);
+    setImages(prev => [...prev, {uri: uri}]);
+    // setImages([...images, uri]);
+    handleButtonActivation(text, [...images, uri]);
   };
   const onRemoveImage = uri => {
-   
     const updatedImages = images.filter(images => images !== uri);
     setImages(updatedImages);
     handleButtonActivation(text, updatedImages);
   };
 
   const handleAddPost = async () => {
-    setloadingIndicator(true);
+    setLoading(true);
 
     if (groupPost) {
       const postContent = {
@@ -276,7 +275,7 @@ export default function AddPostScreen({navigation, route}) {
 
       PostService.createPost(user.id, postContent).then(resp => {
         let existingPosts = store.getState().groupPosts;
-        setloadingIndicator(false);
+        setLoading(false);
         store.dispatch(
           groupPostsActions.setPosts([resp.data, ...existingPosts]),
         );
@@ -295,7 +294,7 @@ export default function AddPostScreen({navigation, route}) {
 
         PostService.createSwapPost(user.id, swapContent).then(resp => {
           store.dispatch(feedPostsAction.addFeedPost(resp.data));
-          setloadingIndicator(false);
+          setLoading(false);
           navigation.navigate(routes.FEED);
         });
       } else {
@@ -310,7 +309,7 @@ export default function AddPostScreen({navigation, route}) {
 
           PostService.createPost(user.id, postContent).then(resp => {
             store.dispatch(feedPostsAction.addFeedPost(resp.data));
-            setloadingIndicator(false);
+            setLoading(false);
             dispatch(postFeelingsActions.setDefault());
 
             navigation.navigate(routes.FEED);
@@ -340,7 +339,7 @@ export default function AddPostScreen({navigation, route}) {
     setDisplayImage(false);
     setImages([]);
     setIsButtonActive(false);
-   textInputRef.current.clear();
+    textInputRef.current.clear();
   };
 
   const handelPrivacySetting = value => {
@@ -353,7 +352,6 @@ export default function AddPostScreen({navigation, route}) {
   useEffect(() => {}, [postPrivacyOption]);
 
   const renderHeader = () => {
-    
     if (postType === postTypes.HANG_SHARE)
       return (
         <Header
@@ -503,14 +501,13 @@ export default function AddPostScreen({navigation, route}) {
           ref={textInputRef}
           onTouchEnd={handleCreatePostDrawerPosition}
         />
-        
-        <ImageInputList 
+
+        <ImageInputList
           imageUris={images}
           onAddImage={onAddImage}
           isSwap={postType === postTypes.SWAP ? true : false}
           onRemoveImage={onRemoveImage}
         />
-      
       </View>
 
       {postType === postTypes.CREATE_POST && (

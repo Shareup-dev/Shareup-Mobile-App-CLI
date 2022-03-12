@@ -1,22 +1,12 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  StyleSheet,
-  StatusBar,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
+import {StyleSheet, KeyboardAvoidingView, Platform} from 'react-native';
 import colors from '../config/colors';
 
-export default function Screen({children, style, statusPadding = true}) {
+export default function Screen({children, style}) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : null}
-      style={[
-        styles.view,
-        {paddingTop: statusPadding ? StatusBar.currentHeight : 0},
-        style,
-      ]}>
+      style={[styles.view, style]}>
       {children}
     </KeyboardAvoidingView>
   );

@@ -6,39 +6,45 @@ import {
   StyleSheet,
   ImageBackground,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   Dimensions,
+  Animated,
 } from 'react-native';
 
 import Icon from '../components/Icon';
 import colors from '../config/colors';
 import fileStorage from '../config/fileStorage';
-import {ProgressBar} from 'react-native-paper';
 
 const StoryViewScreen = ({navigation, route}) => {
-  const progress = useRef();
+  const scale = useRef(new Animated.Value(0)).current;
+  const windowWidth = Dimensions.get('screen').width;
 
-  let interval = useRef(null);
-  // const [process, setProcess] = useState(0);
-  const [hold, setHold] = useState(false);
+  const [duration, setDuration] = useState(6000);
 
-  const startTimer = async (duration = 0) => {
-    interval.current = setInterval(() => {
-      if (duration <= 100) {
-        progress.current.setNativeProps({
-          style: {width: duration + '%'},
-        });
-        duration = duration + 5;
-      } else {
-        clearInterval(interval.current);
-        navigation.popToTop();
-      }
-    }, 1);
+  let startTime;
+  let pauseTime;
+
+  const startProgress = () => {
+    startTime = new Date().valueOf();
+    Animated.timing(scale, {
+      toValue: windowWidth * 1.7,
+      useNativeDriver: true,
+      duration: duration,
+    }).start(({finished}) => {
+      if (finished) navigation.popToTop();
+    });
   };
+
+  const pauseProgress = () => {
+    pauseTime = new Date().valueOf();
+    setDuration(prev => prev - (pauseTime - startTime));
+
+    Animated.timing(scale).stop();
+  };
+
   useEffect(() => {
-    startTimer();
+    startProgress();
     return () => {
-      clearInterval(interval.current);
+      pauseProgress();
     };
   }, []);
 
@@ -46,55 +52,58 @@ const StoryViewScreen = ({navigation, route}) => {
     <TouchableOpacity
       activeOpacity={1}
       onPressIn={() => {
-        clearInterval(interval.current);
-        setHold(true);
+        pauseProgress();
       }}
       onPressOut={() => {
-        // startTimer(process * 100);
-        setHold(false);
+        startProgress();
       }}>
       <ImageBackground
         style={{width: '100%', height: '100%'}}
         source={{uri: fileStorage.baseUrl + route.params.image}}>
-        {/* <View ref={borderLineRef} style={[styles.borderLine]}></View> */}
-        {!hold ? (
-          <>
-            <View
-              ref={progress}
+        <>
+          <View
+            style={{
+              backgroundColor: '#CACACA',
+            }}>
+            <Animated.View
               style={{
                 backgroundColor: '#333',
-                width: 0,
-                height: 8,
-                borderRadius: 3,
+                transform: [
+                  {
+                    scaleX: scale,
+                  },
+                ],
+                width: 1,
+                height: 5,
               }}
             />
-            <View style={styles.container}>
-              <View style={styles.profileContainer}>
-                <View style={styles.profileImg}>
-                  <Image
-                    source={require('../assets/icons/user-icon.png')}
-                    resizeMode={'center'}
-                    style={styles.userProfileImg}
-                  />
-                </View>
-                <Text style={styles.userName}>{route.params.userName}</Text>
-              </View>
-              <TouchableOpacity
-                style={styles.closeIcon}
-                onPress={() => {
-                  navigation.popToTop();
-                }}>
-                <Icon
-                  name={'close'}
-                  type={'AntDesign'}
-                  size={54}
-                  backgroundColor={'unset'}
-                  noBackground={true}
+          </View>
+          <View style={styles.container}>
+            <View style={styles.profileContainer}>
+              <View style={styles.profileImg}>
+                <Image
+                  source={require('../assets/icons/user-icon.png')}
+                  resizeMode={'center'}
+                  style={styles.userProfileImg}
                 />
-              </TouchableOpacity>
+              </View>
+              <Text style={styles.userName}>{route.params.userName}</Text>
             </View>
-          </>
-        ) : null}
+            <TouchableOpacity
+              style={styles.closeIcon}
+              onPress={() => {
+                navigation.popToTop();
+              }}>
+              <Icon
+                name={'close'}
+                type={'AntDesign'}
+                size={54}
+                backgroundColor={'unset'}
+                noBackground={true}
+              />
+            </TouchableOpacity>
+          </View>
+        </>
       </ImageBackground>
     </TouchableOpacity>
   );

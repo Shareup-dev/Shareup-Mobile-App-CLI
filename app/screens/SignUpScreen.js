@@ -1,51 +1,38 @@
-import React, { useState } from "react";
-import { StyleSheet } from "react-native";
-import * as Yup from "yup";
+import React from 'react';
+import {StyleSheet} from 'react-native';
+import * as Yup from 'yup';
 
-import { Form, FormField, SubmitButton } from "../components/forms";
-import AlternativeRegistrationContainer from "../components/AlternativeRegistrationContainer";
-import Separator from "../components/Separator";
-import routes from "../navigation/routes";
-import store from "../redux/store";
-import registrationSlice from "../redux/accountRegistration";
-import defaultStyles from "../config/styles";
-import RegistrationContainer from "../components/forms/RegistrationContainer";
+import {Form, FormField, SubmitButton} from '../components/forms';
+import AlternativeRegistrationContainer from '../components/AlternativeRegistrationContainer';
+import Separator from '../components/Separator';
+import routes from '../navigation/routes';
+
+import defaultStyles from '../config/styles';
+import RegistrationContainer from '../components/forms/RegistrationContainer';
 
 const validationSchema = Yup.object().shape({
-  firstName: Yup.string().required().label("First Name"),
-  lastName: Yup.string().required().label("Last Name"),
-  email: Yup.string().required().email().label("Email"),
+  firstName: Yup.string().required().label('First Name'),
+  lastName: Yup.string().required().label('Last Name'),
+  email: Yup.string().required().email().label('Email'),
 });
 
-export default function SignUpScreen({ navigation }) {
-  const [error, setError] = useState();
-
-  const [isLogoVisible, setIsLogoVisible] = useState(true);
-
-  const handleSubmit = async (userInfo) => {
-    console.log(
-      "register " +
-        userInfo.email +
-        " " +
-        userInfo.firstName +
-        " " +
-        userInfo.lastName
-    );
-    store.dispatch(registrationSlice.actions.appendFields(userInfo));
-    navigation.navigate(routes.SIGNUP_STEP2);
+export default function SignUpScreen({navigation}) {
+  const handleSubmit = async values => {
+    navigation.navigate(routes.SIGNUP_STEP2, {
+      ...values,
+    });
   };
 
   return (
     <RegistrationContainer>
       <Form
         initialValues={{
-          firstName: "",
-          lastName: "",
-          email: "",
+          firstName: '',
+          lastName: '',
+          email: '',
         }}
         onSubmit={handleSubmit}
-        validationSchema={validationSchema}
-      >
+        validationSchema={validationSchema}>
         <FormField
           autoCorrect={false}
           name="firstName"
@@ -85,8 +72,8 @@ const styles = StyleSheet.create({
     paddingTop: 50,
   },
   submitButton: {
-    alignSelf: "center",
-    width: "60%",
-    paddingTop: "10%",
+    alignSelf: 'center',
+    width: '60%',
+    paddingTop: '10%',
   },
 });

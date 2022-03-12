@@ -30,7 +30,7 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function LoginScreen({navigation}) {
-  const {setUser, authActions} = useContext(authContext);
+  const {authActions} = useContext(authContext);
   const {isReachable, checkIfReachable} = useIsReachable();
 
   const [loading, setLoading] = useState(false);
@@ -49,30 +49,37 @@ export default function LoginScreen({navigation}) {
       return setLoginFailed(true);
     }
 
-    // --------- login ----------
-    const result = await AuthService.login(email, password);
+    try {
+      // --------- login ----------
+      const result = await AuthService.login(email, password);
 
-    if (result.status !== 200) {
+      if (result.status !== 200) {
+        setLoading(false);
+        setError('Invalid email and/or password.');
+        return setLoginFailed(true);
+      }
+
       setLoading(false);
-      setError('Invalid email and/or password.');
-      return setLoginFailed(true);
+      Toast.show({
+        position: 'bottom',
+        visibilityTime: 5000,
+        type: 'success',
+        text1: 'Success',
+        text2: 'Logged in Successfully 👋',
+      });
+
+      if (result.ok) {
+        setLoading(false);
+        return setLoginFailed(true);
+      }
+
+      // storing the token into secure store
+      await authActions.login(result.data.username, result.data.jwt);
+
+      setLoginFailed(false);
+    } catch (e) {
+      console.log(e.message);
     }
-
-    setLoading(false);
-    Toast.show({
-      position: 'bottom',
-      visibilityTime: 5000,
-      type: 'success',
-      text1: 'Success',
-      text2: 'Logged in Successfully 👋',
-    });
-
-    if (result.ok) return setLoginFailed(true);
-
-    // storing the token into secure store
-    await authActions.login(result.data.username, result.data.jwt);
-
-    setLoginFailed(false);
     setLoading(false);
   };
 

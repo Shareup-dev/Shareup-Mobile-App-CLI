@@ -7,25 +7,26 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import Text from '../components/Text';
-import UserService from '../services/UserService';
-import AuthServer from '../services/old/auth.services';
+import AuthService from '../services/auth.service';
 import Icon from '../components/Icon';
 import FormRadio from '../components/forms/FormRadio';
 import authContext from '../authContext';
 import settings from '../config/settings';
 import useIsReachable from '../hooks/useIsReachable';
 import RegistrationContainer from '../components/forms/RegistrationContainer';
+import Loading from '../components/Loading';
 
-const SignupStepTwo = ({navigation}) => {
+const SignupStepTwo = ({navigation, route}) => {
+  const prevStepValues = route?.params;
+
   const [agreed, setagreed] = useState(false);
   const [registerFailed, setRegisterFailed] = useState(false);
   const [registerError, setRegisterError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const {setloadingIndicator, setUser} = useContext(authContext);
+  const {authActions} = useContext(authContext);
 
   const {isReachable, checkIfReachable} = useIsReachable();
-
-  let stepOnceFromValues = useSelector(state => state.registationSlice);
 
   const validationSchema = Yup.object().shape({
     password: Yup.string().required().min(3).label('Password'),
@@ -37,17 +38,17 @@ const SignupStepTwo = ({navigation}) => {
         is: val => (val && val.length > 0 ? true : false),
         then: Yup.string().oneOf(
           [Yup.ref('password')],
-          'Both password need to be the same',
+          'Password not matched.',
         ),
       }),
   });
 
   const handleSubmit = async values => {
-    setloadingIndicator(true);
+    setLoading(true);
     const isReachable = await checkIfReachable(settings.apiUrl);
 
     if (isReachable === false) {
-      setloadingIndicator(false);
+      setLoading(false);
       setRegisterError("Can't reach server please try later");
       return setRegisterFailed(true);
     }
@@ -60,89 +61,106 @@ const SignupStepTwo = ({navigation}) => {
         text1: 'Error',
         text2: 'Please agree to the terms 👋',
       });
-      setloadingIndicator(false);
+      setLoading(false);
       return;
     }
 
-    const userCompleteData = {...stepOnceFromValues, ...values};
+    const userCompleteData = {...prevStepValues, ...values};
 
-    UserService.createUser(userCompleteData)
-      .then(res => {
-        Toast.show({
-          position: 'bottom',
-          visibilityTime: 5000,
-          type: 'success',
-          text1: 'Success',
-          text2: 'Registered Successfully 👋',
-        });
-
-        AuthServer.login(
-          userCompleteData.email,
-          userCompleteData.password,
-        ).then(async res => {
-          UserService.getUserByEmail(userCompleteData.email);
-          setUser(res.data);
-          await EncryptedStorage.setItem('user', JSON.stringify(res.data));
-        });
-      })
-      .catch(error => {
-        console.log('Error occurred while registering: ', error);
-        setRegisterFailed(true);
-        setRegisterError('User Already Exist');
+    try {
+      const result = await AuthService.signup(userCompleteData);
+      console.log(result);
+    } catch (e) {
+      Toast.show({
+        position: 'bottom',
+        visibilityTime: 5000,
+        type: 'error',
+        text1: 'Error',
+        text2: e.message,
       });
-    setloadingIndicator(false);
+    }
+    setLoading(false);
+
+    // UserService.createUser(userCompleteData)
+    //   .then(res => {
+    //     AuthServer.login(
+    //       userCompleteData.email,
+    //       userCompleteData.password,
+    //     ).then(async res => {
+    //       UserService.getUserByEmail(userCompleteData.email);
+    //       setUser(res.data);
+    //       await EncryptedStorage.setItem('user', JSON.stringify(res.data));
+    //     });
+    //   })
+    //   .catch(error => {
+    //     console.log('Error occurred while registering: ', error);
+    //     setRegisterFailed(true);
+    //     // setRegisterError('User Already Exist');
+    //   });
   };
 
   return (
-    <RegistrationContainer>
-      <View style={styles.registerError}>
-        <ErrorMessage error={registerError} visible={registerFailed} />
-      </View>
+    <>
+      {loading ? (
+        <Loading text="Signing up..." />
+      ) : (
+        <RegistrationContainer>
+          <View style={styles.registerError}>
+            <ErrorMessage error={registerError} visible={registerFailed} />
+          </View>
 
-      <Form
-        initialValues={{
-          password: '',
-          confirmPassword: '',
-          gender: '',
-        }}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}>
-        <FormRadio name="gender" style={[styles.formField, styles.formRadio]} />
+          <Form
+            initialValues={{
+              password: '',
+              confirmPassword: '',
+              gender: '',
+            }}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}>
+            <FormRadio
+              name="gender"
+              style={[styles.formField, styles.formRadio]}
+            />
 
-        <FormField
-          autoCorrect={false}
-          name="password"
-          placeholder="Password"
-          secureTextEntry
-          textContentType="password" // Only for ios
-          style={styles.formField}
-        />
+            <FormField
+              autoCorrect={false}
+              name="password"
+              placeholder="Password"
+              secureTextEntry
+              textContentType="password" // Only for ios
+              style={styles.formField}
+            />
 
-        <FormField
-          autoCorrect={false}
-          name="confirmPassword"
-          placeholder="Re-Enter Password"
-          secureTextEntry
-          textContentType="password" // Only for ios
-          style={styles.formField}
-        />
+            <FormField
+              autoCorrect={false}
+              name="confirmPassword"
+              placeholder="Re-Enter Password"
+              secureTextEntry
+              textContentType="password" // Only for ios
+              style={styles.formField}
+            />
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <TouchableOpacity
+                style={styles.agree}
+                onPress={() => setagreed(!agreed)}>
+                <Icon
+                  name={agreed ? 'check-box' : 'check-box-outline-blank'}
+                  type={'MaterialIcons'}
+                  size={30}
+                  backgroundSizeRatio={0.9}
+                  style={styles.checkIcon}
+                />
+              </TouchableOpacity>
+              <Text style={{marginLeft: 10}}>
+                {'Agree to terms & conditions'}
+              </Text>
+            </View>
 
-        <TouchableOpacity
-          style={styles.agree}
-          onPress={() => setagreed(!agreed)}>
-          <Icon
-            name={agreed ? 'check-box' : 'check-box-outline-blank'}
-            type={'MaterialIcons'}
-            size={30}
-            backgroundSizeRatio={0.9}
-            style={styles.checkIcon}
-          />
-          <Text>{'Agree to terms & conditions'}</Text>
-        </TouchableOpacity>
-
-        <SubmitButton title="Register" style={styles.submitButton} />
-      </Form>
-    </RegistrationContainer>
+            <SubmitButton title="Register" style={styles.submitButton} />
+          </Form>
+        </RegistrationContainer>
+      )}
+    </>
   );
 };
 
@@ -159,9 +177,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 10,
   },
-  checkIcon: {
-    paddingRight: 5,
-  },
+
   registerError: {
     alignItems: 'center',
   },
