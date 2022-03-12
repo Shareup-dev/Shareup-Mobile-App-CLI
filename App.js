@@ -10,7 +10,7 @@ import {
 import {NavigationContainer} from '@react-navigation/native';
 import store from './app/redux/store';
 import {Provider, useDispatch} from 'react-redux';
-
+import {SafeAreaProvider, SafeAreaView } from 'react-native';
 // import {AppNavigator, AuthNavigator} from './app/navigation';
 import {AuthNavigator} from './app/navigation';
 import UserContext from './app/UserContext';
@@ -41,12 +41,12 @@ export default function App() {
     return <ActivityIndicator />;
   } else {
     return (
-      // <TestScreen />
       <UserContext.Provider
         value={{user, setUser, setloadingIndicator, loadingIndicator}}>
         <Provider store={store}>
           <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'} />
           <OfflineNotice />
+          <SafeAreaView style={{flex: 1}}> 
           <NavigationContainer>
             {loadingIndicator && (
               <View style={styles.loadingOverlay}>
@@ -59,6 +59,7 @@ export default function App() {
             )}
             {user ? <HomeNavigator /> : <AuthNavigator />}
           </NavigationContainer>
+           </SafeAreaView> 
           <Toast ref={ref => Toast.setRef(ref)} />
         </Provider>
       </UserContext.Provider>

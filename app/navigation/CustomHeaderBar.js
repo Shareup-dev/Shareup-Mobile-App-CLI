@@ -6,6 +6,7 @@ import colors from '../config/colors';
 
 import routes from './routes';
 import UserContext from '../UserContext';
+import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 
 export default function CustomHeaderBar({navigation}) {
   const {user} = useContext(UserContext);
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: StatusBar.currentHeight + 10,
+    //paddingTop: StatusBar.currentHeight + 10,
     padding: 15,
     elevation: 6,
     shadowColor: '#000',
@@ -64,8 +65,10 @@ const styles = StyleSheet.create({
   },
   headerRight: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   iconButton: {
     marginLeft: 10,
+    
   },
 });

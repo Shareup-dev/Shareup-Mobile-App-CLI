@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { View, StyleSheet, ScrollView, Image } from "react-native";
+import { View, StyleSheet, ScrollView, Image, FlatList } from "react-native";
 import Icon from "./Icon";
 import ImageInput from "./ImageInput";
 
@@ -10,13 +10,35 @@ export default function ImageInputList({
   isSwap,
 }) {
   const scrollView = useRef();
-
+  
+  //const imageUrisSet = imageUris.map((imageUris) => imageUris.replace('file:', ''));
+  //console.log("IMAGES12",imageUrisSet)
   return (
     <View style={styles.container}>
-      <ScrollView
+      <FlatList
         ref={scrollView}
         // horizontal
-        onContentSizeChange={() => scrollView.current.scrollToEnd()}
+       // onContentSizeChange={() => scrollView.current.scrollToEnd()}
+       horizontal={true} 
+       showsHorizontalScrollIndicator={false} 
+       data={imageUris}
+       renderItem={ ({ item, index }) => {
+        console.log(item) 
+        return(
+         
+         <Image source={item} /* Use item to set the image source */
+           key={index} /* Important to set a key for list items,
+                          but it's wrong to use indexes as keys, see below */
+           style={{
+             width:260,
+             height:300,
+             borderWidth:2,
+             borderColor:'#d35647',
+             resizeMode:'contain',
+             margin:8
+           }}
+         />
+       )}}
       >
         {imageUris.map((uri) => (
           <View key={uri} style={isSwap ? null : styles.imagePadding}>
@@ -41,7 +63,7 @@ export default function ImageInputList({
             isSwap={isSwap}
           />
         )}
-      </ScrollView>
+      </FlatList>
     </View>
   );
 }

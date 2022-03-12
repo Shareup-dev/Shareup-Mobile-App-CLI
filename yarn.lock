@@ -7193,6 +7193,11 @@
   dependencies:
     "react-native-codegen" "*"
 
+"react-native-image-picker@^4.7.3":
+  "integrity" "sha512-eRKm4wlsmZHmsWFyv77kYc2F+ZyEVqe0m7mqhsMzWk6TQT4FBDtEDxmRDDFq+ivCu/1QD+EPhmYcAIpeGr7Ekg=="
+  "resolved" "https://registry.npmjs.org/react-native-image-picker/-/react-native-image-picker-4.7.3.tgz"
+  "version" "4.7.3"
+
 "react-native-image-slider-box@^1.1.19":
   "integrity" "sha512-ABPpqJpnHkqGlCc75UIUjNqO4GeE0a4Sf48Ksu3zQYpBFbcu8/XFZFQ30yA8ocS7OdJzUenoCR+ZJ7G+PqLvQw=="
   "resolved" "https://registry.npmjs.org/react-native-image-slider-box/-/react-native-image-slider-box-1.1.19.tgz"

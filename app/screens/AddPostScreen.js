@@ -4,12 +4,12 @@ import React, {
   useRef,
   useEffect,
   useMemo,
-  createContext,
+  Component
 } from 'react';
-import {StyleSheet, View, Image, TextInput, Touchable} from 'react-native';
-import {MaterialCommunityIcons} from 'react-native-vector-icons';
-import {MaterialIcons} from 'react-native-vector-icons';
-import {StackActions} from '@react-navigation/routers';
+import {StyleSheet, View, Image, TextInput} from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import StackActions from '@react-navigation/routers';
 
 import {groupPostsActions} from '../redux/groupPosts';
 import EnhancedOptionsDrawer from '../components/drawers/EnhancedOptionsDrawer';
@@ -39,10 +39,16 @@ import RadioOptionDrawer from '../components/drawers/RadioOptionDrawer';
 import OptionBox from '../components/posts/OptionBox';
 import {useDispatch, useSelector} from 'react-redux';
 import {postFeelingsActions} from '../redux/postFeelings';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import TouchableOpacity from 'react-native-gesture-handler';
+import {PanGestureHandler,
+  TapGestureHandler,
+  State as GestureState,} from "react-native-gesture-handler";
+  
 
 export default function AddPostScreen({navigation, route}) {
-  const {user, setUser, loadingIndicator, setloadingIndicator} =
+ 
+  let bottomSheetRef = React.createRef
+  const {user,setUser} =
     useContext(UserContext);
   const dispatch = useDispatch();
   const postFeel = useSelector(state => state.postFeel);
@@ -50,14 +56,13 @@ export default function AddPostScreen({navigation, route}) {
   const {postTypes} = constants;
   const {postType} = route.params;
   const {groupPost} = route.params;
-  const {groupId} = route.params;
+  const {groupId} = route.params; 
   const {swapImage} = route.params;
 
   const SWAP_DEFAULT_TEXT = 'Hi all \nI want to Swap ...';
 
   const textInputRef = useRef();
   const createPostDrawerRef = useRef(null); // reference for the enhanced drawer.
-
   const createPostOptions = [
     {
       title: 'Photos',
@@ -233,16 +238,23 @@ export default function AddPostScreen({navigation, route}) {
   const handelPickImage = async () => {
     try {
       const result = await pickImage();
-      if (!result.cancelled) onAddImage(result.uri);
-    } catch (error) {}
+      //const uris = set.map((set) => (set.uri));
+      console.log("RESULT",uris)
+      
+      //#sreelakshmi -need to check ,why uri list is not passing in onAddImage function
+      if (!result.cancelled) onAddImage(result.assets.uri);
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   const onAddImage = uri => {
-    setImages([...images, uri]);
-    handleButtonActivation(text, [...images, uri]);
+    setImages(prev => [...prev,{uri:uri}])
+   // setImages([...images, uri]);
+    handleButtonActivation(text, [...images,uri]);
   };
-
   const onRemoveImage = uri => {
+   
     const updatedImages = images.filter(images => images !== uri);
     setImages(updatedImages);
     handleButtonActivation(text, updatedImages);
@@ -328,7 +340,7 @@ export default function AddPostScreen({navigation, route}) {
     setDisplayImage(false);
     setImages([]);
     setIsButtonActive(false);
-    textInputRef.current.clear();
+   textInputRef.current.clear();
   };
 
   const handelPrivacySetting = value => {
@@ -341,6 +353,7 @@ export default function AddPostScreen({navigation, route}) {
   useEffect(() => {}, [postPrivacyOption]);
 
   const renderHeader = () => {
+    
     if (postType === postTypes.HANG_SHARE)
       return (
         <Header
@@ -400,12 +413,12 @@ export default function AddPostScreen({navigation, route}) {
             </Text>
             <View style={styles.row}>
               {/**Friends */}
-              <OptionBox
+              {/* <OptionBox
                 currentOption={postPrivacyOption}
                 onPress={() =>
                   setIsPrivacyOptionsVisible(!isPrivacyOptionsVisible)
                 }
-              />
+              /> */}
 
               {postType === postTypes.CREATE_POST && (
                 <View style={[styles.headerTab, styles.row]}>
@@ -490,13 +503,14 @@ export default function AddPostScreen({navigation, route}) {
           ref={textInputRef}
           onTouchEnd={handleCreatePostDrawerPosition}
         />
-
-        <ImageInputList
+        
+        <ImageInputList 
           imageUris={images}
           onAddImage={onAddImage}
           isSwap={postType === postTypes.SWAP ? true : false}
           onRemoveImage={onRemoveImage}
         />
+      
       </View>
 
       {postType === postTypes.CREATE_POST && (
