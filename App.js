@@ -175,7 +175,7 @@ export default function App() {
               {userState.userToken ? <HomeNavigator /> : <AuthNavigator />}
             </NavigationContainer>
           </SafeAreaView>
-          <Toast ref={ref => Toast.setRef(ref)} />
+          <Toast />
         </Provider>
       </AuthContext.Provider>
     );

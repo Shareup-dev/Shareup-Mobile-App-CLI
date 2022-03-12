@@ -11,7 +11,7 @@ import {
 
 import {Header, HeaderTitle} from '../components/headers';
 import authContext from '../authContext';
-import UserService from '../services/UserService';
+import UserService from '../services/user.service';
 import defaultStyles from '../config/styles';
 import FriendService from '../services/FriendService';
 import ListItem from '../components/lists/ListItem';

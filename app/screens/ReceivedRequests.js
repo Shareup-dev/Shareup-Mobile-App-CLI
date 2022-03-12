@@ -10,7 +10,7 @@ import {
 import Screen from '../components/Screen';
 import {Header, HeaderTitle} from '../components/headers';
 import Icon from '../components/Icon';
-import UserService from '../services/UserService';
+import UserService from '../services/user.service';
 
 import authContext from '../authContext';
 import defaultStyles from '../config/styles';

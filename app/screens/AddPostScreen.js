@@ -6,14 +6,18 @@ import React, {
   useMemo,
   Component,
 } from 'react';
-import {StyleSheet, View, Image, TextInput} from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {
+  StyleSheet,
+  View,
+  Image,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
+import Icon from '../components/Icon';
 import StackActions from '@react-navigation/routers';
 
 import {groupPostsActions} from '../redux/groupPosts';
 import EnhancedOptionsDrawer from '../components/drawers/EnhancedOptionsDrawer';
-import Icon from '../components/Icon';
 import IconButton from '../components/buttons/IconButton';
 import Text from '../components/Text';
 import Screen from '../components/Screen';
@@ -39,12 +43,6 @@ import RadioOptionDrawer from '../components/drawers/RadioOptionDrawer';
 import OptionBox from '../components/posts/OptionBox';
 import {useDispatch, useSelector} from 'react-redux';
 import {postFeelingsActions} from '../redux/postFeelings';
-import TouchableOpacity from 'react-native-gesture-handler';
-import {
-  PanGestureHandler,
-  TapGestureHandler,
-  State as GestureState,
-} from 'react-native-gesture-handler';
 
 export default function AddPostScreen({navigation, route}) {
   const [loading, setLoading] = useState(false);
@@ -420,17 +418,19 @@ export default function AddPostScreen({navigation, route}) {
 
               {postType === postTypes.CREATE_POST && (
                 <View style={[styles.headerTab, styles.row]}>
-                  <MaterialCommunityIcons
+                  <Icon
+                    type="MaterialCommunityIcons"
                     name="plus"
                     size={15}
                     color={colors.dimGray}
                   />
                   <Text style={styles.headerTabText}>Albums</Text>
-                  <MaterialIcons
+                  {/* <Icon
+                    type="MaterialCommunityIcons"
                     name="keyboard-arrow-down"
                     size={15}
                     color={colors.dimGray}
-                  />
+                  /> */}
                 </View>
               )}
               {/*** // Todo: Create swap category! */}
@@ -639,3 +639,18 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
 });
+
+// import React from 'react';
+// import {View, StyleSheet, Text} from 'react-native';
+
+// export default function AddPostScreen(props) {
+//   return (
+//     <View style={styles.container}>
+//       <Text>works</Text>
+//     </View>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   container: {},
+// });

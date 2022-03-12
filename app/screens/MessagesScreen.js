@@ -10,7 +10,7 @@ import TextField from '../components/TextField';
 import Bar from '../components/tab-bar/Bar';
 import FancyAddButton from '../components/buttons/FancyAddButton';
 import colors from '../config/colors';
-import UserService from '../services/UserService';
+import UserService from '../services/user.service';
 import ChatsList from '../components/messages/ChatsList';
 import conversation from '../backendless/conversation';
 import FriendsList from '../components/messages/FriendsList';

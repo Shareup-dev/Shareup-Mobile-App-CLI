@@ -11,7 +11,7 @@ import Section from '../components/Section';
 import UserProfilePicture from '../components/UserProfilePicture';
 import TextField from '../components/TextField';
 import {ScrollView} from 'react-native-gesture-handler';
-import UserService from '../services/UserService';
+import UserService from '../services/user.service';
 import authApi from '../api/auth';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {loggedInUserActions} from '../redux/loggedInUser';

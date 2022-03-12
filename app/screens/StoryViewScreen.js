@@ -26,7 +26,7 @@ const StoryViewScreen = ({navigation, route}) => {
   const startProgress = () => {
     startTime = new Date().valueOf();
     Animated.timing(scale, {
-      toValue: windowWidth * 1.7,
+      toValue: windowWidth / 2,
       useNativeDriver: true,
       duration: duration,
     }).start(({finished}) => {
@@ -67,14 +67,14 @@ const StoryViewScreen = ({navigation, route}) => {
             }}>
             <Animated.View
               style={{
-                backgroundColor: '#333',
+                backgroundColor: '#242424',
                 transform: [
                   {
                     scaleX: scale,
                   },
                 ],
-                width: 1,
-                height: 5,
+                width: 4,
+                height: 4,
               }}
             />
           </View>
