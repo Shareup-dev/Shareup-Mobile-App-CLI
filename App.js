@@ -1,86 +1,95 @@
-import React, {useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
-  SafeAreaView,
-  StatusBar,
   ActivityIndicator,
+  StatusBar,
   View,
-  TouchableOpacity,
-  Text,
+  Dimensions,
 } from 'react-native';
-
+import {NavigationContainer} from '@react-navigation/native';
+import store from './app/redux/store';
 import {Provider} from 'react-redux';
+
+import AuthContext from './app/authContext';
+
+import {AuthNavigator} from './app/navigation';
+import colors from './app/config/colors';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
-import {AuthContext} from './src/components/context';
-import Snackbar from './src/components/Snackbar';
-import AuthNavigation from './src/components/StackNavigation/AuthNavigation';
-// import HomeNavigation from './src/components/StackNavigation/HomeNavigation';
-import colors from './src/config/colors';
-import store from './src/redux/store';
+import OfflineNotice from './app/components/OfflineNotice';
+import Toast from 'react-native-toast-message';
+import HomeNavigator from './app/navigation/HomeNavigator';
+import UserService from './app/services/user.service';
+import {removeAxiosToken, setTokenForAxios} from './app/services/authHeader';
 
-export default function App(props) {
-  const initValue = {
+export default function App() {
+  const initState = {
     username: null,
+    userData: {},
     isLoading: true,
     userToken: null,
   };
+  const actions = {
+    SET_STATE: 'SET_STATE',
+    CLEAR_STATE: 'CLEAR_STATE',
+  };
 
+  // ------------------ handle user auth data with Reducer ------------------
   const authReducer = (prevState, action) => {
     switch (action.type) {
-      case 'RETRIEVE_TOKEN':
-        return {
-          ...prevState,
-          userToken: action.userToken,
-          isLoading: false,
-        };
-      case 'LOGIN':
+      case actions.SET_STATE:
         return {
           ...prevState,
           username: action.username,
           userToken: action.userToken,
+          userData: action.userData,
           isLoading: false,
         };
-      case 'SIGNUP':
+
+      case actions.CLEAR_STATE:
         return {
-          ...prevState,
-          username: action.username,
-          userToken: action.userToken,
-          isLoading: false,
-        };
-      case 'LOGOUT':
-        return {
-          ...prevState,
-          username: null,
-          userToken: null,
+          ...initState,
           isLoading: false,
         };
 
       default:
-        return initValue;
+        return {
+          ...initState,
+          isLoading: false,
+        };
     }
   };
-  const [loginState, dispatch] = React.useReducer(authReducer, initValue);
+  const [userState, dispatch] = React.useReducer(authReducer, initState);
 
-  // checking if the token available
-
-  useEffect(() => {
-    const retrieveToken = async () => {
-      try {
-        const userToken = await EncryptedStorage.getItem('auth_session');
-        dispatch({type: 'RETRIEVE_TOKEN', userToken});
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    retrieveToken();
-  }, []);
-
-  const userContext = React.useMemo(
+  // ------------------ Based on the action change the auth STATE  ------------------
+  const authActions = React.useMemo(
     () => ({
+      //   retrieving Token from the secure
+      retrieveToken: async () => {
+        try {
+          const session = await EncryptedStorage.getItem('auth_session');
+          if (session) {
+            const {username, userToken} = JSON.parse(session);
+            setTokenForAxios(userToken);
+
+            // getting user information
+            const user = await UserService.getUserByEmail(username);
+
+            dispatch({
+              type: actions.SET_STATE,
+              username,
+              userToken,
+              userData: user.data,
+            });
+          } else {
+            dispatch({type: actions.CLEAR_STATE});
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+      },
       // Login
       login: async (username, userToken) => {
-        dispatch({type: 'LOGIN', username, userToken});
         try {
           await EncryptedStorage.setItem(
             'auth_session',
@@ -89,22 +98,32 @@ export default function App(props) {
               username,
             }),
           );
+          setTokenForAxios(userToken);
+          // getting user information
+          const user = await UserService.getUserByEmail(username);
+
+          dispatch({
+            type: actions.SET_STATE,
+            username,
+            userToken,
+            userData: user.data,
+          });
         } catch (error) {
           console.log(error);
         }
       },
       // logout
       logout: async () => {
-        dispatch({type: 'LOGOUT'});
         try {
           await EncryptedStorage.removeItem('auth_session');
+          removeAxiosToken();
+          dispatch({type: actions.CLEAR_STATE});
         } catch (error) {
           console.log(error);
         }
       },
       // signup
       signup: async (username, userToken) => {
-        dispatch({type: 'SIGNUP', username, userToken});
         try {
           await EncryptedStorage.setItem(
             'auth_session',
@@ -113,6 +132,15 @@ export default function App(props) {
               username,
             }),
           );
+          setTokenForAxios(userToken);
+          // getting user information
+          const user = await UserService.getUserByEmail(username);
+          dispatch({
+            type: actions.SET_STATE,
+            username,
+            userToken,
+            userData: user.data,
+          });
         } catch (error) {
           console.log(error);
         }
@@ -120,43 +148,60 @@ export default function App(props) {
     }),
     [],
   );
+  // initial check if token exist
+  useEffect(() => {
+    authActions.retrieveToken();
+  }, []);
 
-  if (loginState.isLoading)
+  if (userState.isLoading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator color={colors.primary} size={'large'} />
+      <View style={styles.loadingOverlay}>
+        <ActivityIndicator
+          style={styles.gobalLoadingIndicator}
+          size="large"
+          color="#044566"
+        />
       </View>
     );
-  else
+  } else {
     return (
-      <AuthContext.Provider value={userContext}>
+      <AuthContext.Provider value={{authActions, userState}}>
         <Provider store={store}>
-          <SafeAreaView style={styles.container}>
-            <StatusBar
-              backgroundColor={colors.statusbarBackground}
-              barStyle={colors.statusbarContent}
-            />
-            {loginState.userToken ? (
-              <>
-                <TouchableOpacity onPress={() => userContext.logout()}>
-                  <Text>Logout</Text>
-                </TouchableOpacity>
-              </>
-            ) : (
-              <AuthNavigation />
-            )}
-          </SafeAreaView>
-          <Snackbar />
+          <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'} />
+          <OfflineNotice />
+          <NavigationContainer>
+            {userState.userToken ? <HomeNavigator /> : <AuthNavigator />}
+          </NavigationContainer>
+          <Toast ref={ref => Toast.setRef(ref)} />
         </Provider>
       </AuthContext.Provider>
     );
+  }
 }
 
 const styles = StyleSheet.create({
-  container: {flex: 1},
-  loadingContainer: {
+  loadingOverlay: {
     flex: 1,
+    position: 'absolute',
+    zIndex: 1,
+    elevation: 1,
+    opacity: 1,
+    height: Dimensions.get('screen').height,
+    width: Dimensions.get('screen').width,
+    alignContent: 'center',
     justifyContent: 'center',
-    alignItems: 'center',
+  },
+  listItem: {
+    borderRadius: 10,
+    backgroundColor: colors.white,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 6,
   },
 });
