@@ -46,6 +46,7 @@ export default function AppNavigator() {
   };
   return (
     <>
+    
       <Tab.Navigator
         screenOptions={{
           tabBarShowLabel: false,

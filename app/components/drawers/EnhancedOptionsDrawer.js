@@ -1,20 +1,23 @@
 import React, { useEffect } from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
+import { View, StyleSheet, Dimensions ,Button} from "react-native";
 import BottomSheet from "reanimated-bottom-sheet";
-
+import Animated from 'react-native-reanimated';
 import DrawerList from "./DrawerList";
 import defaultStyle from "../../config/styles";
 import colors from "../../config/colors";
+import TouchableWithoutFeedback from "react-native-gesture-handler";
 
 const height = Dimensions.get("window").height;
+
 
 export default function EnhancedOptionsDrawer({ options, forwardedRef }) {
   const renderHeader = () => (
     <View style={[styles.header]}>
-      <View style={defaultStyle.tip} />
+      <View style={defaultStyle.tip} /> 
     </View>
   );
 
+  
   const renderContent = () => (
     <View style={styles.container}>
       <DrawerList options={options} />
@@ -25,13 +28,14 @@ export default function EnhancedOptionsDrawer({ options, forwardedRef }) {
     <BottomSheet
       ref={forwardedRef}
       initialSnap={2}
-      snapPoints={[55, 100, 200, 320]}
+      snapPoints={[140, 100, 200, 320]}
       enabledGestureInteraction={true}
+      enabledHeaderGestureInteraction = {true}
       enabledContentGestureInteraction={false}
       enabledBottomClamp={true}
       renderHeader={renderHeader}
       renderContent={renderContent}
-    />
+    />   
   );
 }
 
