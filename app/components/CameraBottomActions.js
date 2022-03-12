@@ -1,8 +1,8 @@
-import React from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import React from 'react';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 
-import Icon from "./Icon";
-import colors from "../config/colors";
+import Icon from './Icon';
+import colors from '../config/colors';
 
 /**
  * @param {*} onPickFile: required
@@ -17,16 +17,15 @@ export default function CameraBottomActions({
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onPickFile} style={styles.bottomBtn}>
-        <Icon type={"FontAwesome"} name={"file-photo-o"} size={64} />
+        <Icon type={'FontAwesome'} name={'file-photo-o'} size={64} />
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.captureButton}
-        onPress={onCapture}
-      ></TouchableOpacity>
+        onPress={onCapture}></TouchableOpacity>
 
       <TouchableOpacity onPress={onRevertCamera} style={styles.bottomBtn}>
-        <Icon type={"Ionicons"} name={"camera-reverse-outline"} size={64} />
+        <Icon type={'Ionicons'} name={'camera-reverse-outline'} size={64} />
       </TouchableOpacity>
     </View>
   );
@@ -34,11 +33,11 @@ export default function CameraBottomActions({
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    position: "absolute",
-    bottom: 50,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    position: 'absolute',
+    bottom: 10,
     zIndex: 1,
     paddingHorizontal: 20,
     height: 120,

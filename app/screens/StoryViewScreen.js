@@ -5,8 +5,8 @@ import {
   Image,
   StyleSheet,
   ImageBackground,
-  TouchableWithoutFeedback,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Dimensions,
 } from 'react-native';
 
@@ -16,22 +16,25 @@ import fileStorage from '../config/fileStorage';
 import {ProgressBar} from 'react-native-paper';
 
 const StoryViewScreen = ({navigation, route}) => {
+  const progress = useRef();
+
   let interval = useRef(null);
-  const [process, setProcess] = useState(0);
+  // const [process, setProcess] = useState(0);
   const [hold, setHold] = useState(false);
 
-  const startTimer = (duration = 0) => {
+  const startTimer = async (duration = 0) => {
     interval.current = setInterval(() => {
       if (duration <= 100) {
-        setProcess(duration / 100);
+        progress.current.setNativeProps({
+          style: {width: duration + '%'},
+        });
         duration = duration + 5;
       } else {
         clearInterval(interval.current);
         navigation.popToTop();
       }
-    });
+    }, 1);
   };
-
   useEffect(() => {
     startTimer();
     return () => {
@@ -47,7 +50,7 @@ const StoryViewScreen = ({navigation, route}) => {
         setHold(true);
       }}
       onPressOut={() => {
-        startTimer(process * 100);
+        // startTimer(process * 100);
         setHold(false);
       }}>
       <ImageBackground
@@ -56,13 +59,14 @@ const StoryViewScreen = ({navigation, route}) => {
         {/* <View ref={borderLineRef} style={[styles.borderLine]}></View> */}
         {!hold ? (
           <>
-            <ProgressBar
-              progress={process}
+            <View
+              ref={progress}
               style={{
-                height: 5,
-                backgroundColor: '#cacaca',
+                backgroundColor: '#333',
+                width: 0,
+                height: 8,
+                borderRadius: 3,
               }}
-              color={'#242424'}
             />
             <View style={styles.container}>
               <View style={styles.profileContainer}>

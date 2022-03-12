@@ -1,6 +1,12 @@
 import * as Yup from 'yup';
 import React, {useContext, useState} from 'react';
-import {StyleSheet, View, PixelRatio} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  PixelRatio,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import Toast from 'react-native-toast-message';
 
 import {ErrorMessage, Form, FormField, SubmitButton} from '../components/forms';
@@ -64,7 +70,7 @@ export default function LoginScreen({navigation}) {
     if (result.ok) return setLoginFailed(true);
 
     // storing the token into secure store
-    authActions.login(result.data.username, result.data.jwt);
+    await authActions.login(result.data.username, result.data.jwt);
 
     setLoginFailed(false);
     setLoading(false);
@@ -103,6 +109,9 @@ export default function LoginScreen({navigation}) {
               textContentType="password" // Only for ios
               style={defaultStyles.formField}
             />
+            <TouchableOpacity activeOpacity={0.6}>
+              <Text style={styles.forgotPassword}>Forgot Password</Text>
+            </TouchableOpacity>
 
             <SubmitButton title="Share in" style={styles.submitButton} />
             <AlternativeRegistrationContainer />
@@ -126,6 +135,10 @@ export default function LoginScreen({navigation}) {
 }
 
 const styles = StyleSheet.create({
+  forgotPassword: {
+    color: colors.iondigoDye,
+    fontWeight: '600',
+  },
   thirdContainer: {
     padding: PixelRatio.get() < 2.5 ? 0 : 20,
     alignItems: 'center',
