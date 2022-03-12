@@ -1,92 +1,85 @@
-import React, { useContext, useState, useCallback, useEffect } from "react";
+import React, {useContext, useState, useCallback, useEffect} from 'react';
 import {
   StyleSheet,
   FlatList,
   Dimensions,
   ActivityIndicator,
   View,
-} from "react-native";
-import { useSelector } from "react-redux";
+} from 'react-native';
 
-import PostService from "../services/PostService";
-import UserContext from "../UserContext";
-import Screen from "../components/Screen";
-import Card from "../components/lists/Card";
-import FeedTop from "../components/FeedTop";
-import colors from "../config/colors";
-import SwapCard from "../components/lists/SwapCard";
-import StoryService from "../services/StoryService";
-import store from "../redux/store";
-import { storiesAction } from "../redux/stories";
-import { feedPostsAction } from "../redux/feedPostsSlice";
-import TrendingComponent from "../components/trending/TrendingComponent";
+import PostService from '../services/post.service';
+import authContext from '../authContext';
+import Screen from '../components/Screen';
+import Card from '../components/lists/Card';
+import FeedTop from '../components/FeedTop';
+import colors from '../config/colors';
+import SwapCard from '../components/lists/SwapCard';
 
-export default function NewsFeedScreen({ navigation, route }) {
-  const { user, setloadingIndicator, loadingIndicator } =
-    useContext(UserContext);
+import TrendingComponent from '../components/trending/TrendingComponent';
+
+export default function NewsFeedScreen({navigation, route}) {
+  const {userState} = useContext(authContext);
   const [posts, setPosts] = useState([]);
 
   const [activityIndicator, setActivityIndicator] = useState(true);
 
-  const feedPosts = useSelector((state) => state.feedPosts);
-
   const options = [
     {
-      title: "Save post",
+      title: 'Save post',
       icon: {
-        image: require("../assets/post-options-icons/save-post-icon.png"),
+        image: require('../assets/post-options-icons/save-post-icon.png'),
       },
       onPress: () => {
-        alert("Save post");
+        alert('Save post');
       },
     },
     {
-      title: "Hide my profile",
+      title: 'Hide my profile',
       icon: {
-        image: require("../assets/post-options-icons/hide-profile-icon.png"),
+        image: require('../assets/post-options-icons/hide-profile-icon.png'),
       },
       onPress: () => {
-        alert("Save post");
+        alert('Save post');
       },
     },
     {
-      title: "Swap",
-      icon: { image: require("../assets/post-options-icons/swap-icon.png") },
+      title: 'Swap',
+      icon: {image: require('../assets/post-options-icons/swap-icon.png')},
       onPress: () => {
-        alert("Swap");
+        alert('Swap');
       },
     },
     {
-      title: "Share friends",
+      title: 'Share friends',
       icon: {
-        image: require("../assets/post-options-icons/share-friends-icon.png"),
+        image: require('../assets/post-options-icons/share-friends-icon.png'),
       },
       onPress: () => {
-        alert("Share friends");
+        alert('Share friends');
       },
     },
     {
-      title: "Unfollow",
+      title: 'Unfollow',
       icon: {
-        image: require("../assets/post-options-icons/unfollow-icon.png"),
+        image: require('../assets/post-options-icons/unfollow-icon.png'),
       },
       onPress: () => {
-        alert("Unfollow");
+        alert('Unfollow');
       },
     },
     {
-      title: "Report",
+      title: 'Report',
       icon: {
-        image: require("../assets/post-options-icons/report-icon.png"),
+        image: require('../assets/post-options-icons/report-icon.png'),
       },
       onPress: () => {
-        alert("Report");
+        alert('Report');
       },
     },
     {
-      title: "Delete Post",
+      title: 'Delete Post',
       icon: {
-        image: require("../assets/post-options-icons/delete-red-icon.png"),
+        image: require('../assets/post-options-icons/delete-red-icon.png'),
       },
       onPress: () => {
         showDeleteAlert();
@@ -96,42 +89,22 @@ export default function NewsFeedScreen({ navigation, route }) {
 
   useEffect(() => {
     loadNews();
-    loadStories();
+    // loadStories();
 
     // return setActivityIndicator(false);
   }, []);
 
-  const loadStories = () => {
-    StoryService.getStories().then((resp) => {
-      store.dispatch(storiesAction.setStories(resp.data));
-    });
-  };
-
   const loadNews = async () => {
-    // setloadingIndicator(true);
-    // setActivityIndicator(true);
-
-    PostService.getNewsFeed(user.email)
-      .then((res) => {
-        // console.log("response>>", res);
-        store.dispatch(feedPostsAction.setFeedPosts(res.data));
-        if (feedPosts.length === 0) hideActivityIndicator();
-      })
-      .catch((err) => console.log(err));
-
-    // setActivityIndicator(false);
-    // console.log("posts", response.data);
-    // setloadingIndicator(false);
-    // if (!response.ok) setPosts(response.data.sort((a, b) => b.id - a.id));
-    // else if (response.ok) console.log("Failed to load posts");
+    try {
+      const result = await PostService.getNewsFeed(userState.username);
+      setPosts(result.data);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
-  // const getItem =  (data, index) => ({
-
-  // })
-
-  const renderItem = ({ item }) => {
-    return item.hasOwnProperty("swaped") ? (
+  const renderItem = ({item}) => {
+    return item.hasOwnProperty('swaped') ? (
       /**
        * The Swap Should from backend as instance of post
        */
@@ -158,7 +131,7 @@ export default function NewsFeedScreen({ navigation, route }) {
         comments={item.comments}
         navigation={navigation}
         reloadPosts={loadNews}
-        postType={item.hasOwnProperty("swaped") ? "swap" : "regularPost"}
+        postType={item.hasOwnProperty('swaped') ? 'swap' : 'regularPost'}
       />
     );
   };
@@ -188,10 +161,10 @@ export default function NewsFeedScreen({ navigation, route }) {
     <Screen style={styles.container} statusPadding={false}>
       <FlatList
         initialNumToRender={10}
-        data={feedPosts}
+        data={posts}
         ListHeaderComponent={ListHeader}
         ListFooterComponent={ActivityIndicatorComponent}
-        keyExtractor={(post) => post.id.toString()}
+        keyExtractor={post => post.id.toString()}
         showsVerticalScrollIndicator={false}
         renderItem={renderItem}
         onEndReached={hideActivityIndicator}
@@ -205,9 +178,9 @@ export default function NewsFeedScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
   container: {
-    display: "flex",
+    display: 'flex',
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   profilePicture: {
     borderRadius: 15,
@@ -216,12 +189,12 @@ const styles = StyleSheet.create({
     height: 50,
   },
   username: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginHorizontal: 10,
   },
   postedBy: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   postedDate: {
     marginHorizontal: 10,
@@ -233,7 +206,7 @@ const styles = StyleSheet.create({
   },
   swapButton: {
     backgroundColor: colors.primaryGreen,
-    marginHorizontal: "10%",
+    marginHorizontal: '10%',
     borderRadius: 10,
   },
   swapContainer: {
@@ -241,30 +214,30 @@ const styles = StyleSheet.create({
     borderColor: colors.lighterGray,
     marginVertical: 10,
     paddingVertical: 10,
-    width: Dimensions.get("screen").width - 30,
+    width: Dimensions.get('screen').width - 30,
     marginHorizontal: 15,
     borderRadius: 5,
   },
   menuButton: {
     padding: 3,
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     width: 60,
     marginTop: -5,
   },
   optionsIcon: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     top: 8,
   },
   card: {
     backgroundColor: colors.white,
     marginHorizontal: 15,
     marginTop: 10,
-    overflow: "hidden",
+    overflow: 'hidden',
     padding: 7,
     paddingHorizontal: 6,
   },
   image: {
-    width: "100%",
+    width: '100%',
     height: 250,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
@@ -276,11 +249,11 @@ const styles = StyleSheet.create({
     height: 50,
   },
   userInfo: {
-    display: "flex",
-    flexDirection: "row",
+    display: 'flex',
+    flexDirection: 'row',
   },
   content: {
-    justifyContent: "center",
+    justifyContent: 'center',
     padding: 10,
   },
   postDate: {
@@ -295,15 +268,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   userName: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   userNameContainer: {
-    width: "40%",
+    width: '40%',
   },
   actionsContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     // width: "42%",
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
     marginRight: 10,
   },
   actionTab: {
@@ -311,20 +284,20 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   actionsBar: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginTop: 4,
   },
   commentsShares: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   likes: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   actionsText: {
     fontSize: 12,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   star: {
     marginRight: 5,
@@ -333,12 +306,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   optionsIcon: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     top: 8,
   },
   menuButton: {
     padding: 3,
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     width: 60,
     marginTop: -5,
   },

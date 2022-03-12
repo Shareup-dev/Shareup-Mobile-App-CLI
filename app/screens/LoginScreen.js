@@ -1,15 +1,20 @@
 import * as Yup from 'yup';
 import React, {useContext, useState} from 'react';
-import {StyleSheet, View, PixelRatio} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  PixelRatio,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import Toast from 'react-native-toast-message';
 
 import {ErrorMessage, Form, FormField, SubmitButton} from '../components/forms';
 import AlternativeRegistrationContainer from '../components/AlternativeRegistrationContainer';
-import AuthService from '../services/auth.services';
+import AuthService from '../services/auth.service';
 import LinkButton from '../components/buttons/LinkButton';
 import Separator from '../components/Separator';
-import UserContext from '../UserContext';
-import UserService from '../services/UserService';
+import authContext from '../authContext';
 import colors from '../config/colors';
 import routes from '../navigation/routes';
 
@@ -17,46 +22,43 @@ import useIsReachable from '../hooks/useIsReachable';
 import settings from '../config/settings';
 import defaultStyles from '../config/styles';
 import LoginContainer from '../components/forms/LoginContainer';
-import EncryptedStorage from 'react-native-encrypted-storage';
-// import AuthContext from '../authContext';
+import Loading from '../components/Loading';
 
-// determine all the rules for validating our form
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label('Email'),
   password: Yup.string().required().min(3).label('Password'),
 });
 
 export default function LoginScreen({navigation}) {
-  // const {authActions} = useContext(AuthContext);
-
-  const [loginFailed, setLoginFailed] = useState(false);
-  const [error, setError] = useState('');
+  const {setUser, authActions} = useContext(authContext);
   const {isReachable, checkIfReachable} = useIsReachable();
 
-  console.log('Is Reachable: ', isReachable);
-
-  const {user, setUser, setloadingIndicator} = useContext(UserContext);
+  const [loading, setLoading] = useState(false);
+  const [loginFailed, setLoginFailed] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = async ({email, password}) => {
-    setloadingIndicator(true);
+    setLoading(true);
 
+    // checking if the server is reachable
     const isReachable = await checkIfReachable(settings.apiUrl);
 
     if (isReachable === false) {
-      setloadingIndicator(false);
+      setLoading(false);
       setError("Can't reach server please try later");
       return setLoginFailed(true);
     }
 
+    // --------- login ----------
     const result = await AuthService.login(email, password);
 
     if (result.status !== 200) {
-      setloadingIndicator(false);
+      setLoading(false);
       setError('Invalid email and/or password.');
       return setLoginFailed(true);
     }
 
-    setloadingIndicator(false);
+    setLoading(false);
     Toast.show({
       position: 'bottom',
       visibilityTime: 5000,
@@ -64,70 +66,79 @@ export default function LoginScreen({navigation}) {
       text1: 'Success',
       text2: 'Logged in Successfully 👋',
     });
-    if (result.ok) return setLoginFailed(true);
-    setLoginFailed(false);
-    getUser(result.data.username);
-    setloadingIndicator(false);
-  };
 
-  const getUser = async email => {
-    await UserService.getUserByEmail(email).then(async res => {
-      setUser(res.data);
-      await EncryptedStorage.setItem('user', JSON.stringify(res.data));
-    });
-    // console.log("end getUser")
+    if (result.ok) return setLoginFailed(true);
+
+    // storing the token into secure store
+    await authActions.login(result.data.username, result.data.jwt);
+
+    setLoginFailed(false);
+    setLoading(false);
   };
 
   // ToDO: Fix the layout
   return (
-    <LoginContainer>
-      <Form
-        initialValues={{email: '', password: ''}}
-        onSubmit={handleSubmit}
-        validationSchema={validationSchema}>
-        <ErrorMessage error={error} visible={loginFailed} />
-        <FormField
-          autoCapitalize="none"
-          autoCorrect={false}
-          icon="email"
-          keyboardType="email-address"
-          name="email"
-          placeholder="Email Address"
-          textContentType="emailAddress" // Only for ios
-          style={defaultStyles.formField}
-        />
+    <>
+      {loading ? (
+        <Loading text="Logging in..." />
+      ) : (
+        <LoginContainer>
+          <Form
+            initialValues={{email: '', password: ''}}
+            onSubmit={handleSubmit}
+            validationSchema={validationSchema}>
+            <ErrorMessage error={error} visible={loginFailed} />
+            <FormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="email"
+              keyboardType="email-address"
+              name="email"
+              placeholder="Email Address"
+              textContentType="emailAddress" // Only for ios
+              style={defaultStyles.formField}
+            />
 
-        <FormField
-          autoCapitalize="none"
-          autoCorrect={false}
-          icon="lock"
-          name="password"
-          placeholder="Password"
-          secureTextEntry
-          textContentType="password" // Only for ios
-          style={defaultStyles.formField}
-        />
+            <FormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="lock"
+              name="password"
+              placeholder="Password"
+              secureTextEntry
+              textContentType="password" // Only for ios
+              style={defaultStyles.formField}
+            />
+            <TouchableOpacity activeOpacity={0.6}>
+              <Text style={styles.forgotPassword}>Forgot Password</Text>
+            </TouchableOpacity>
 
-        <SubmitButton title="Share in" style={styles.submitButton} />
-        <AlternativeRegistrationContainer />
+            <SubmitButton title="Share in" style={styles.submitButton} />
+            <AlternativeRegistrationContainer />
 
-        <Separator text="or" style={styles.separator} />
-        {/* added a comment here */}
-        <View style={styles.thirdContainer}>
-          <LinkButton
-            title="Create new account?"
-            style={styles.linkedButton}
-            onPress={() => {
-              navigation.navigate(routes.SIGNUP);
-            }}
-          />
-        </View>
-      </Form>
-    </LoginContainer>
+            <Separator text="or" style={styles.separator} />
+            {/* added a comment here */}
+            <View style={styles.thirdContainer}>
+              <LinkButton
+                title="Create new account?"
+                style={styles.linkedButton}
+                onPress={() => {
+                  navigation.navigate(routes.SIGNUP);
+                }}
+              />
+            </View>
+          </Form>
+        </LoginContainer>
+      )}
+    </>
   );
 }
 
 const styles = StyleSheet.create({
+  forgotPassword: {
+    color: colors.iondigoDye,
+    fontWeight: '600',
+  },
   thirdContainer: {
     padding: PixelRatio.get() < 2.5 ? 0 : 20,
     alignItems: 'center',

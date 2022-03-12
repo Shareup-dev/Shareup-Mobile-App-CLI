@@ -26,9 +26,13 @@ export default function HomeNavigator(props) {
         headerShown: false,
       }}>
       <Stack.Screen name={routes.APP_NAVIGATOR} component={AppNavigator} />
+      <Stack.Screen
+        name={routes.STORY_VIEW_SCREEN}
+        component={StoryViewScreen}
+      />
+      <Stack.Screen name={routes.ADDS_STORY} component={AddStoryScreen} />
       <Stack.Screen name={routes.TAG_PEOPLE} component={TagPeople} />
       <Stack.Screen name={routes.COMMENTS} component={CommentsScreen} />
-      <Stack.Screen name={routes.ADDS_STORY} component={AddStoryScreen} />
       <Stack.Screen name={routes.ADD_NEW_REEL} component={AddNewReel} />
       <Stack.Screen name={routes.ADD_POST} component={AddPostScreen} />
       <Stack.Screen
@@ -38,10 +42,6 @@ export default function HomeNavigator(props) {
       <Stack.Screen
         name={routes.MESSAGES_NAVIGATOR}
         component={MessagesNavigator}
-      />
-      <Stack.Screen
-        name={routes.STORY_VIEW_SCREEN}
-        component={StoryViewScreen}
       />
 
       <Stack.Screen name={routes.REEL_PLAYER} component={ReelPlayer} />

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, {useContext, useEffect, useRef} from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,27 +6,27 @@ import {
   FlatList,
   Dimensions,
   ActivityIndicator,
-} from "react-native";
-import { useSelector } from "react-redux";
+} from 'react-native';
+import {useSelector} from 'react-redux';
 
-import { useMessages } from "../backendless";
-import Screen from "../components/Screen";
-import { ChatRoomHeader } from "../components/headers";
-import MessageTextField from "../components/messages/MessageTextField";
-import Tab from "../components/buttons/Tab";
-import colors from "../config/colors";
-import defaultStyles from "../config/styles";
-import MessageItem from "../components/messages/MessageItem";
-import store from "../redux/store";
-import { messagesAction } from "../redux/messagesSlice";
-import UserContext from "../UserContext";
+import {useMessages} from '../backendless';
+import Screen from '../components/Screen';
+import {ChatRoomHeader} from '../components/headers';
+import MessageTextField from '../components/messages/MessageTextField';
+import Tab from '../components/buttons/Tab';
+import colors from '../config/colors';
+import defaultStyles from '../config/styles';
+import MessageItem from '../components/messages/MessageItem';
+import store from '../redux/store';
+import {messagesAction} from '../redux/messagesSlice';
+import authContext from '../authContext';
 
-export default function ChatRoomScreen({ navigation, route }) {
-  const { user } = useContext(UserContext);
+export default function ChatRoomScreen({navigation, route}) {
+  const {user} = useContext(authContext);
 
-  const { contact, conversationId } = route.params;
+  const {contact, conversationId} = route.params;
 
-  const messages = useSelector((state) => state.messages);
+  const messages = useSelector(state => state.messages);
 
   const messagesListRef = useRef();
 
@@ -54,7 +54,7 @@ export default function ChatRoomScreen({ navigation, route }) {
     <View style={styles.emptyMessagesContainer}>
       0
       <Text style={[defaultStyles.fontWeightMedium, styles.emptyMarginBottom]}>
-        {contact.firstName + " " + contact.lastName}
+        {contact.firstName + ' ' + contact.lastName}
       </Text>
       <Text style={[styles.emptyText, styles.emptyMarginBottom]}>
         You Both Follow Each Other and have 20 mutual Friends.
@@ -66,7 +66,7 @@ export default function ChatRoomScreen({ navigation, route }) {
   return (
     <Screen>
       <ChatRoomHeader
-        title={contact.firstName + " " + contact.lastName}
+        title={contact.firstName + ' ' + contact.lastName}
         profilePicture={contact.profilePicturePath}
         navigation={navigation}
       />
@@ -82,13 +82,13 @@ export default function ChatRoomScreen({ navigation, route }) {
 
       <FlatList
         data={messages}
-        renderItem={({ item }) => (
+        renderItem={({item}) => (
           <MessageItem
             item={item}
             profilePicture={contact.profilePicturePath}
           />
         )}
-        keyExtractor={(message) => message.objectId}
+        keyExtractor={message => message.objectId}
         onEndReached={() => updateStoredMessages(conversationId)}
         onEndReachedThreshold={0.5}
         inverted={true}
@@ -119,30 +119,30 @@ const styles = StyleSheet.create({
   separator: {
     marginTop: 7,
     backgroundColor: colors.lighterGray,
-    width: "100%",
+    width: '100%',
     height: 7,
   },
   messageTextFieldContainer: {
     marginHorizontal: 20,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 20,
-    width: "91%",
+    width: '91%',
   },
   emptyMessagesContainer: {
     flex: 1,
-    height: Dimensions.get("window").height / 1.3,
-    justifyContent: "center",
-    alignItems: "center",
+    height: Dimensions.get('window').height / 1.3,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   emptyMarginBottom: {
     marginBottom: 10,
   },
   emptyText: {
     color: colors.mediumGray,
-    width: "80%",
-    textAlign: "center",
+    width: '80%',
+    textAlign: 'center',
   },
   viewProfileTab: {
     height: 30,
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.LightGray,
   },
   plusIcon: {
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   activityIndicator: {
     marginVertical: 10,

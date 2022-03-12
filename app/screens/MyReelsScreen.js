@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -6,99 +6,99 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-} from "react-native";
+} from 'react-native';
 
-import Screen from "../components/Screen";
-import HeaderWithBackArrow from "../components/headers/HeaderWithBackArrow";
-import TabBar from "../components/tab-bar/Bar";
-import LongCard from "../components/lists/LongCard";
+import Screen from '../components/Screen';
+import HeaderWithBackArrow from '../components/headers/HeaderWithBackArrow';
+import TabBar from '../components/tab-bar/Bar';
+import LongCard from '../components/lists/LongCard';
 
-import colors from "../config/colors";
-import defaultStyle from "../config/styles";
-import fileStorage from "../config/fileStorage";
-import store from "../redux/store";
-import reelScreenDetector from "../redux/reelScreenDetector";
-import ReelService from "../services/ReelService";
-import routes from "../navigation/routes";
-import UserContext from "../UserContext";
-const width = Dimensions.get("window").width / 2 - 15;
-const height = Dimensions.get("window").height / 3;
+import colors from '../config/colors';
+import defaultStyle from '../config/styles';
+import fileStorage from '../config/fileStorage';
+import store from '../redux/store';
+import reelScreenDetector from '../redux/reelScreenDetector';
+import ReelService from '../services/ReelService';
+import routes from '../navigation/routes';
+import authContext from '../authContext';
+const width = Dimensions.get('window').width / 2 - 15;
+const height = Dimensions.get('window').height / 3;
 
-const tabes = [{ name: "My Reels" }, { name: "Followed" }, { name: "Explore" }];
+const tabes = [{name: 'My Reels'}, {name: 'Followed'}, {name: 'Explore'}];
 const dummyThumbnails = [
-  require("../assets/images/reel1.png"),
-  require("../assets/images/2.jpg"),
-  require("../assets/images/3.jpg"),
-  require("../assets/images/4.jpg"),
-  require("../assets/images/5.jpg"),
-  require("../assets/images/6.jpg"),
-  require("../assets/images/7.jpg"),
-  require("../assets/images/8.jpg"),
-  require("../assets/images/9.jpg"),
-  require("../assets/images/10.jpg"),
-  require("../assets/images/11.jpg"),
-  require("../assets/images/12.jpg"),
-  require("../assets/images/13.jpg"),
-  require("../assets/images/14.jpg"),
-  require("../assets/images/15.jpg"),
+  require('../assets/images/reel1.png'),
+  require('../assets/images/2.jpg'),
+  require('../assets/images/3.jpg'),
+  require('../assets/images/4.jpg'),
+  require('../assets/images/5.jpg'),
+  require('../assets/images/6.jpg'),
+  require('../assets/images/7.jpg'),
+  require('../assets/images/8.jpg'),
+  require('../assets/images/9.jpg'),
+  require('../assets/images/10.jpg'),
+  require('../assets/images/11.jpg'),
+  require('../assets/images/12.jpg'),
+  require('../assets/images/13.jpg'),
+  require('../assets/images/14.jpg'),
+  require('../assets/images/15.jpg'),
 ];
 const reels = [
   {
     id: 1,
-    name: "Jane",
-    time: "23 hrs",
-    image: require("../assets/images/reel1.png"),
+    name: 'Jane',
+    time: '23 hrs',
+    image: require('../assets/images/reel1.png'),
   },
   {
     id: 2,
-    name: "Jane",
-    time: "23 hrs",
-    image: require("../assets/images/2.jpg"),
+    name: 'Jane',
+    time: '23 hrs',
+    image: require('../assets/images/2.jpg'),
   },
   {
     id: 3,
-    name: "Jane",
-    time: "23 hrs",
-    image: require("../assets/images/3.jpg"),
+    name: 'Jane',
+    time: '23 hrs',
+    image: require('../assets/images/3.jpg'),
   },
   {
     id: 4,
-    name: "Jane",
-    time: "23 hrs",
-    image: require("../assets/images/4.jpg"),
+    name: 'Jane',
+    time: '23 hrs',
+    image: require('../assets/images/4.jpg'),
   },
   {
     id: 5,
-    name: "Jane",
-    time: "23 hrs",
-    image: require("../assets/images/5.jpg"),
+    name: 'Jane',
+    time: '23 hrs',
+    image: require('../assets/images/5.jpg'),
   },
   {
     id: 6,
-    name: "Jane",
-    time: "23 hrs",
-    image: require("../assets/images/6.jpg"),
+    name: 'Jane',
+    time: '23 hrs',
+    image: require('../assets/images/6.jpg'),
   },
   {
     id: 7,
-    name: "Jane",
-    time: "23 hrs",
-    image: require("../assets/images/7.jpg"),
+    name: 'Jane',
+    time: '23 hrs',
+    image: require('../assets/images/7.jpg'),
   },
   {
     id: 8,
-    name: "Jane",
-    time: "23 hrs",
-    image: require("../assets/images/8.jpg"),
+    name: 'Jane',
+    time: '23 hrs',
+    image: require('../assets/images/8.jpg'),
   },
 ];
 
 const followed = [
   {
     id: 1,
-    name: "Jane",
-    time: "23 hrs",
-    image: fileStorage.baseUrl + "/data/assets/images/reel2.png",
+    name: 'Jane',
+    time: '23 hrs',
+    image: fileStorage.baseUrl + '/data/assets/images/reel2.png',
   },
   {
     id: 2,
@@ -119,9 +119,9 @@ const followed = [
 const explore = [
   {
     id: 1,
-    name: "Jane",
-    time: "23 hrs",
-    image: fileStorage.baseUrl + "/data/assets/images/",
+    name: 'Jane',
+    time: '23 hrs',
+    image: fileStorage.baseUrl + '/data/assets/images/',
   },
   {
     id: 2,
@@ -140,18 +140,18 @@ const explore = [
   },
 ];
 3;
-export default function SwapScreen({ navigation }) {
+export default function SwapScreen({navigation}) {
   const [allReels, setAllReels] = useState([]);
-  const { loadingIndicator, setloadingIndicator } = useContext(UserContext);
+  const {loadingIndicator, setloadingIndicator} = useContext(authContext);
   const [currentTab, setCurrentTab] = useState(tabes[0].name);
-  const handleTabbed = (name) => {
+  const handleTabbed = name => {
     setCurrentTab(name);
   };
   useEffect(() => {
     store.dispatch(reelScreenDetector.actions.setReelScreen());
 
     return () => {
-      navigation.addListener("blur", () => {
+      navigation.addListener('blur', () => {
         store.dispatch(reelScreenDetector.actions.unSetReelScreen());
       });
     };
@@ -159,8 +159,8 @@ export default function SwapScreen({ navigation }) {
 
   useEffect(() => {
     // console.log("getting reels");
-    ReelService.getReels().then((reelsResp) => {
-      reelsResp.data.forEach((reel) => {
+    ReelService.getReels().then(reelsResp => {
+      reelsResp.data.forEach(reel => {
         reel.thumbnail =
           dummyThumbnails[Math.floor(Math.random() * dummyThumbnails.length)];
       });
@@ -200,16 +200,15 @@ export default function SwapScreen({ navigation }) {
         ]}
         data={renderList()}
         numColumns={2}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
+        keyExtractor={item => item.id.toString()}
+        renderItem={({item}) => (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate(routes.REEL_PLAYER, { reel: item });
-            }}
-          >
+              navigation.navigate(routes.REEL_PLAYER, {reel: item});
+            }}>
             <View style={[styles.container]}>
               <Image
-                source={{ uri: fileStorage.baseUrl + "/" + item.thumbnail_url }}
+                source={{uri: fileStorage.baseUrl + '/' + item.thumbnail_url}}
                 style={styles.image}
               />
             </View>
@@ -222,8 +221,8 @@ export default function SwapScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   tabBar: {
-    justifyContent: "flex-end",
-    alignItems: "flex-end",
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
     flex: 1,
   },
   list: {
@@ -239,7 +238,7 @@ const styles = StyleSheet.create({
   image: {
     width: width,
     height: height,
-    resizeMode: "cover",
+    resizeMode: 'cover',
     borderRadius: 10,
     backgroundColor: colors.LightGray,
   },
@@ -247,12 +246,12 @@ const styles = StyleSheet.create({
     zIndex: 1,
     bottom: 1,
     margin: 7,
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   title: {
     color: colors.dark,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 18,
     marginTop: -3,
   },
@@ -262,6 +261,6 @@ const styles = StyleSheet.create({
   },
   privacyBadge: {
     marginTop: 10,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
 });

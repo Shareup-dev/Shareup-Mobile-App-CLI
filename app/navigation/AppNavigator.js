@@ -1,28 +1,28 @@
-import React, { useState } from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
+import React, {useState} from 'react';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
 
-import AddPostButton from "./AddPostButton";
-import AddPostScreen from "../screens/AddPostScreen";
-import AccountScreen from "../screens/AccountScreen";
-import Button from "../components/buttons/LinkButton";
-import IconButton from "../components/buttons/IconButton";
-import Icon from "../components/Icon";
-import Drawer from "./Drawer";
-import constants from "../config/constants";
-import routes from "./routes";
-import colors from "../config/colors";
-import ActivityNavigator from "./ActivityNavigator";
-import NewsFeedNavigator from "./NewsFeedNavigator";
-import GroupNavigator from "./GroupNavigator";
-import { useSelector } from "react-redux";
+import AddPostButton from './AddPostButton';
+import AddPostScreen from '../screens/AddPostScreen';
+import AccountScreen from '../screens/AccountScreen';
+import Button from '../components/buttons/LinkButton';
+import IconButton from '../components/buttons/IconButton';
+import Icon from '../components/Icon';
+import Drawer from './Drawer';
+import constants from '../config/constants';
+import routes from './routes';
+import colors from '../config/colors';
+import ActivityNavigator from './ActivityNavigator';
+import NewsFeedNavigator from './NewsFeedNavigator';
+import GroupNavigator from './GroupNavigator';
+import {useSelector} from 'react-redux';
 
 // import { NewsFeedNavigator } from "../navigation";
 
-const { postTypes } = constants;
+const {postTypes} = constants;
 
 const config = {
-  animation: "spring",
+  animation: 'spring',
   config: {
     stiffness: 1000,
     damping: 500,
@@ -37,12 +37,12 @@ const Tab = createBottomTabNavigator();
 
 export default function AppNavigator() {
   // useNotifications();
-  let isReelScreen = useSelector((state) => state.reelScreenDetector);
+  let isReelScreen = useSelector(state => state.reelScreenDetector);
 
   const [isVisible, setIsVisible] = useState(false);
 
   const handleAddPost = () => {
-    alert("This is add post button!");
+    alert('This is add post button!');
   };
   return (
     <>
@@ -51,17 +51,16 @@ export default function AppNavigator() {
         screenOptions={{
           tabBarShowLabel: false,
           tabBarHideOnKeyboard: true,
-        }}
-      >
+        }}>
         <Tab.Screen
           name="NewsFeedNavigator"
           component={NewsFeedNavigator}
           options={{
             headerShown: false,
             // header: () => <CustomHeaderBar />,
-            tabBarIcon: ({ size, color }) => (
+            tabBarIcon: ({size, color}) => (
               <Icon
-                image={require("../assets/tab-navigation-icons/home-icon.png")}
+                image={require('../assets/tab-navigation-icons/home-icon.png')}
                 backgroundSizeRatio={1}
                 size={size}
               />
@@ -74,9 +73,9 @@ export default function AppNavigator() {
           component={GroupNavigator}
           options={{
             headerShown: false,
-            tabBarIcon: ({ size, color }) => (
+            tabBarIcon: ({size, color}) => (
               <Icon
-                image={require("../assets/tab-navigation-icons/groups-icon.png")}
+                image={require('../assets/tab-navigation-icons/groups-icon.png')}
                 backgroundSizeRatio={1}
                 size={30}
               />
@@ -87,7 +86,7 @@ export default function AppNavigator() {
         <Tab.Screen
           name={routes.ADD_POST}
           component={AddPostScreen}
-          options={({ navigation }) => ({
+          options={({navigation}) => ({
             transitionSpec: {
               open: config,
               close: config,
@@ -106,7 +105,7 @@ export default function AppNavigator() {
                 }}
               />
             ),
-            headerLeft: ({ navigation }) => (
+            headerLeft: ({navigation}) => (
               <IconButton
                 style={styles.button}
                 onPress={() => navigation.navigate(routes.FEED)}
@@ -130,9 +129,9 @@ export default function AppNavigator() {
           component={ActivityNavigator}
           options={{
             headerShown: false,
-            tabBarIcon: ({ size, color }) => (
+            tabBarIcon: ({size, color}) => (
               <Icon
-                image={require("../assets/tab-navigation-icons/bell-icon.png")}
+                image={require('../assets/tab-navigation-icons/bell-icon.png')}
                 backgroundSizeRatio={1}
                 size={size}
               />
@@ -147,7 +146,7 @@ export default function AppNavigator() {
           name="Account"
           component={AccountScreen}
           options={{
-            tabBarIcon: ({ size, color }) => (
+            tabBarIcon: ({size, color}) => (
               <TouchableWithoutFeedback onPress={() => setIsVisible(true)}>
                 <View style={styles.menu}>
                   <Icon
@@ -184,9 +183,9 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   menu: {
-    width: "100%",
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

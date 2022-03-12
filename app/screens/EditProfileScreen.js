@@ -5,7 +5,7 @@ import {Header, HeaderButton, HeaderTitle} from '../components/headers';
 import Separator from '../components/Separator';
 import React, {useContext, useState} from 'react';
 import colors from '../config/colors';
-import UserContext from '../UserContext';
+import authContext from '../authContext';
 import LinkButton from '../components/buttons/LinkButton';
 import Section from '../components/Section';
 import UserProfilePicture from '../components/UserProfilePicture';
@@ -26,7 +26,7 @@ import useImagePicker from '../hooks/useImagePicker';
 import settings from '../config/settings';
 
 export default function EditProfileScreen({navigation}) {
-  const {user, setUser} = useContext(UserContext);
+  const {user, setUser} = useContext(authContext);
   const {file, pickImage, clearFile} = useImagePicker();
   const [displayImage, setDisplayImage] = useState(false);
   const [enteredBio, setEnteredBio] = useState(user.aboutme);

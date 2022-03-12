@@ -1,10 +1,10 @@
-import { createContext } from "react";
+import {createContext} from 'react';
 
-const UserContext = createContext({
+const authContext = createContext({
   user: null,
-  setUser: (user) => {
-    console.log('storinguser in userCtx: ',user);
+  setUser: user => {
+    console.log('storinguser in userCtx: ', user);
   },
 });
 
-export default UserContext;
+export default authContext;

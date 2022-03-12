@@ -1,24 +1,24 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, {useState, useEffect, useContext} from 'react';
 import {
   View,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
   Animated,
-} from "react-native";
-import moment from "moment";
-import colors from "../../config/colors";
-import UserContext from "../../UserContext";
-import UserProfilePicture from "../UserProfilePicture";
+} from 'react-native';
+import moment from 'moment';
+import colors from '../../config/colors';
+import AuthContext from '../../authContext';
+import UserProfilePicture from '../UserProfilePicture';
 
-export default function MessageItem({ item, profilePicture }) {
+export default function MessageItem({item, profilePicture}) {
   const [time, setTime] = useState();
   const [showTime, setShowTime] = useState(false);
 
-  const { user } = useContext(UserContext);
+  const {user} = useContext(AuthContext);
 
   useEffect(() => {
-    const messageTime = moment().format("llll");
+    const messageTime = moment().format('llll');
     setTime(messageTime);
   }, [time]);
 
@@ -39,14 +39,13 @@ export default function MessageItem({ item, profilePicture }) {
               opacity: showTime ? 0.8 : 1,
             },
             styles.sentStyle,
-          ]}
-        >
+          ]}>
           <Text style={[styles.text, styles.sentText]}>{item.messageData}</Text>
         </View>
       </TouchableWithoutFeedback>
 
       {showTime && (
-        <Animated.Text style={[styles.time, { alignSelf: "flex-end" }]}>
+        <Animated.Text style={[styles.time, {alignSelf: 'flex-end'}]}>
           {time}
         </Animated.Text>
       )}
@@ -54,7 +53,7 @@ export default function MessageItem({ item, profilePicture }) {
   );
 
   const renderReceivedMessage = () => (
-    <View style={[styles.container, { flexDirection: "row" }]}>
+    <View style={[styles.container, {flexDirection: 'row'}]}>
       <UserProfilePicture
         size={35}
         profilePicture={profilePicture}
@@ -70,8 +69,7 @@ export default function MessageItem({ item, profilePicture }) {
                 opacity: showTime ? 0.5 : 1,
               },
               styles.receivedStyle,
-            ]}
-          >
+            ]}>
             <Text style={[styles.text, styles.receivedText]}>
               {item.messageData}
             </Text>
@@ -79,7 +77,7 @@ export default function MessageItem({ item, profilePicture }) {
         </TouchableWithoutFeedback>
 
         {showTime && (
-          <Animated.Text style={[styles.time, { alignSelf: "flex-start" }]}>
+          <Animated.Text style={[styles.time, {alignSelf: 'flex-start'}]}>
             {time}
           </Animated.Text>
         )}
@@ -102,15 +100,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 50,
-    alignSelf: "flex-end",
-    flexDirection: "column",
+    alignSelf: 'flex-end',
+    flexDirection: 'column',
   },
   sentStyle: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     backgroundColor: colors.iondigoDye,
   },
   receivedStyle: {
-    alignSelf: "flex-start",
+    alignSelf: 'flex-start',
     backgroundColor: colors.lighterGray,
   },
   text: {

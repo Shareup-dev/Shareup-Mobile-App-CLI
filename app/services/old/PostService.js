@@ -1,27 +1,27 @@
-import axios from "axios";
-import settings from "../config/settings";
-import AuthService from "./auth.services";
+import axios from 'axios';
+import settings from '../../config/settings';
+import AuthService from './auth.services';
 
-const servers_api = "http://192.168.100.2:8080";
-const my_api = "http://192.168.100.239:8080";
+const servers_api = 'http://192.168.100.2:8080';
+const my_api = 'http://192.168.100.239:8080';
 const baseURL = `${settings.apiUrl}`;
 let authAxios = null;
 
 const authenticate = async () => {
   await AuthService.getCurrentUser().then(
-    (res) => {
+    res => {
       // console.log(res.jwt + "  jwt recieved in authenticate")
       authAxios = axios.create({
         baseURL: `${baseURL}/api/v1/`,
         headers: {
-          Authorization: `Bearer ${res.jwt}`,
-          "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${res.userToken}`,
+          'Access-Control-Allow-Origin': '*',
         },
       });
     },
-    (error) => {
+    error => {
       console.log(error);
-    }
+    },
   );
 };
 authenticate();
@@ -29,40 +29,40 @@ authenticate();
 class PostService {
   getPosts = async () => {
     authenticate();
-    const result = await authAxios.get("posts/");
+    const result = await authAxios.get('posts/');
     return result;
   };
 
-  getNewsFeed = async (email) => {
+  getNewsFeed = async email => {
     authenticate();
     try {
-      const result = await authAxios.get("newsFeed/" + email);
+      const result = await authAxios.get('newsFeed/' + email);
       return result;
     } catch (error) {
-      console.log("error occurred while getting newsfeed: ", error);
+      console.log('error occurred while getting newsfeed: ', error);
       return error;
     }
   };
 
-  getPostsForUser = async (email) => {
+  getPostsForUser = async email => {
     authenticate();
     try {
-      const result = await authAxios.get("/posts/email/" + email);
+      const result = await authAxios.get('/posts/email/' + email);
       return result;
     } catch (error) {
-      console.log("error occurred while getting posts for user: ", error);
+      console.log('error occurred while getting posts for user: ', error);
       return error;
     }
   };
 
   //ToDO: Create a api to get a post by id.
-  getPostById = async (postId) => {
+  getPostById = async postId => {
     authenticate();
     const result = await authAxios.get(`posts/post-by-id/${postId}`);
     return result;
   };
 
-  getSavedPostForUser = async (email) => {
+  getSavedPostForUser = async email => {
     authenticate();
     const result = await authAxios.get(`posts/${email}/saved_posts`);
     return result;
@@ -80,7 +80,7 @@ class PostService {
     return result;
   };
 
-  deletePost = async (postid) => {
+  deletePost = async postid => {
     const result = await authAxios.delete(`posts/${postid}`);
     return result;
   };
@@ -89,20 +89,20 @@ class PostService {
     let newComment = {
       content: comment.content,
     };
-    console.log("Adding this comment: ", newComment);
+    console.log('Adding this comment: ', newComment);
 
     try {
       const result = await authAxios.post(
         `comment/${userid}/${postid}`,
-        newComment
+        newComment,
       );
       return result;
     } catch (error) {
-      console.log("Error occurred while posting comment: ", error);
+      console.log('Error occurred while posting comment: ', error);
     }
   };
 
-  deleteComment = async (commentid) => {
+  deleteComment = async commentid => {
     const result = await authAxios.delete(`comment/${commentid}`);
     return result;
   };
@@ -113,50 +113,50 @@ class PostService {
     const result = await authAxios.post(`swaps/${userId}`, formData);
     return result;
   };
-  getSwapComment = async (swapId) => {
+  getSwapComment = async swapId => {
     const result = await authAxios.get(`/comment/swap/${swapId}`);
     return result;
   };
   addSwapComment = async (userId, swapId, commentText) => {
-    console.log("Comment: ", commentText);
-    console.log("swapId: ", swapId);
-    console.log("userId: ", userId);
+    console.log('Comment: ', commentText);
+    console.log('swapId: ', swapId);
+    console.log('userId: ', userId);
     let commentData = new FormData();
-    commentData.append("commentText", commentText);
+    commentData.append('commentText', commentText);
     const result = await authAxios.post(
       `/comment/swap/${userId}/${swapId}`,
-      commentData
+      commentData,
     );
     return result;
   };
-  getSwapById = async (swapId) => {
+  getSwapById = async swapId => {
     const result = await authAxios.get(`/swap/${swapId}`);
     return result;
   };
 
-  createPostFormData = (content) => {
+  createPostFormData = content => {
     const formData = new FormData();
 
-    formData.append("content", content.text);
+    formData.append('content', content.text);
 
     if (content.images.length !== 0) {
-      console.log("Post Images", content.images);
+      console.log('Post Images', content.images);
 
-      content.images.forEach((image) => {
-        const splitPathArr = image.split("/");
+      content.images.forEach(image => {
+        const splitPathArr = image.split('/');
 
         formData.append(`files`, {
           name: splitPathArr.slice(-1).pop(),
-          type: "image/jpg",
+          type: 'image/jpg',
           uri: image,
         });
       });
     }
 
     if (content.groupId) {
-      formData.append("groupid", content.groupId);
+      formData.append('groupid', content.groupId);
     }
-    console.log("Creating post: ", formData);
+    console.log('Creating post: ', formData);
 
     return formData;
   };

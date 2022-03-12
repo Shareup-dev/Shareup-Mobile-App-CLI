@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, {useContext, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -6,14 +6,14 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
-} from "react-native";
-import Tab from "../buttons/Tab";
-import colors from "../../config/colors";
-import defaultStyle from "../../config/styles";
-import routes from "../../navigation/routes";
-import fileStorage from "../../config/fileStorage";
-import GroupService from "../../services/GroupService";
-import UserContext from "../../UserContext";
+} from 'react-native';
+import Tab from '../buttons/Tab';
+import colors from '../../config/colors';
+import defaultStyle from '../../config/styles';
+import routes from '../../navigation/routes';
+import fileStorage from '../../config/fileStorage';
+import GroupService from '../../services/GroupService';
+import AuthContext from '../../authContext';
 
 const resizeRatio = 0.7;
 export default function GroupJoinCard({
@@ -27,26 +27,26 @@ export default function GroupJoinCard({
 }) {
   // console.log("Navigation in joinGroupCard: ", navigation);
   const [joinBackGroundColor, setJoinBackGroundColor] = useState(
-    colors.iondigoDye
+    colors.iondigoDye,
   );
-  const { user: loggedInUser } = useContext(UserContext);
+  const {user: loggedInUser} = useContext(AuthContext);
 
-  const [joinTitle, setJoinTitle] = useState("Join");
+  const [joinTitle, setJoinTitle] = useState('Join');
   const [joinTitleColor, setJoinTitleColor] = useState(colors.white);
 
   const handleJoin = () => {
-    console.log("Join this group with id: ", groupId);
-    GroupService.joinGroup(loggedInUser.id, groupId).then((resp) => {
-      console.log("Join group resp: ", resp.data);
+    console.log('Join this group with id: ', groupId);
+    GroupService.joinGroup(loggedInUser.id, groupId).then(resp => {
+      console.log('Join group resp: ', resp.data);
     });
-    if (joinTitle == "Join") {
+    if (joinTitle == 'Join') {
       setJoinBackGroundColor(colors.lighterGray);
-      setJoinTitle("Leave");
-      setJoinTitleColor("#DD482E");
+      setJoinTitle('Leave');
+      setJoinTitleColor('#DD482E');
     }
-    if (joinTitle == "Leave") {
+    if (joinTitle == 'Leave') {
       setJoinBackGroundColor(colors.iondigoDye);
-      setJoinTitle("Join");
+      setJoinTitle('Join');
       setJoinTitleColor(colors.white);
     }
   };
@@ -54,10 +54,10 @@ export default function GroupJoinCard({
   return (
     <View style={[styles.container, defaultStyle.cardBorder]}>
       {image ? (
-        <Image source={{ uri: image }} style={styles.image} />
+        <Image source={{uri: image}} style={styles.image} />
       ) : (
         <Image
-          source={require("../../assets/images/group-texture.png")}
+          source={require('../../assets/images/group-texture.png')}
           style={styles.image}
         />
       )}
@@ -71,8 +71,7 @@ export default function GroupJoinCard({
             privacy,
             groupId,
           });
-        }}
-      >
+        }}>
         <Text numberOfLines={1} style={styles.title}>
           {title}
         </Text>
@@ -116,20 +115,20 @@ export default function GroupJoinCard({
 
 const styles = StyleSheet.create({
   container: {
-    width: Dimensions.get("window").width / 3.4,
+    width: Dimensions.get('window').width / 3.4,
     height: 190,
-    overflow: "hidden",
+    overflow: 'hidden',
     marginRight: 7,
     marginTop: 10,
   },
   image: {
-    width: "100%",
-    height: "55%",
+    width: '100%',
+    height: '55%',
     // borderRadius: 10,
   },
   tabsContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
     top: 15,
   },
   tab: {
@@ -147,9 +146,8 @@ const styles = StyleSheet.create({
   subTitle: {
     fontSize: 10,
     color: colors.mediumGray,
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     marginHorizontal: 5,
-    overflow: "hidden",
+    overflow: 'hidden',
   },
-
 });

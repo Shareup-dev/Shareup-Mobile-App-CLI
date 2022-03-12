@@ -1,6 +1,6 @@
-import axios from "axios";
-import AuthService from "./auth.services";
-import settings from "../config/settings";
+import axios from 'axios';
+import AuthService from './old/auth.services';
+import settings from '../config/settings';
 
 const baseURL = `${settings.apiUrl}/api/v1/`;
 let authAxios = null;
@@ -22,28 +22,28 @@ let authAxios = null;
 // };
 const authenticate = async () => {
   await AuthService.getCurrentUser().then(
-    (res) => {
+    res => {
       // console.log(res.jwt + "  jwt recieved in authenticate")
       authAxios = axios.create({
         baseURL: baseURL,
         headers: {
-          Authorization: `Bearer ${res.jwt}`,
-          "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${res.userToken}`,
+          'Access-Control-Allow-Origin': '*',
         },
       });
     },
-    (error) => {
+    error => {
       console.log(error);
-    }
+    },
   );
 };
 authenticate();
 
 class FriendService {
-  getFriends = async (email) => {
+  getFriends = async email => {
     try {
       authenticate();
-      const result = await authAxios.get("/friends/" + email);
+      const result = await authAxios.get('/friends/' + email);
       return result;
     } catch (error) {
       console.log(error);
@@ -72,14 +72,14 @@ class FriendService {
 
   declineRequest = async (uid, fid) => {
     const result = await authAxios.post(
-      `/${uid}/decline_friend_request/${fid}`
+      `/${uid}/decline_friend_request/${fid}`,
     );
     return result;
   };
 
   unsendRequest = async (uid, fid) => {
     const result = await authAxios.post(
-      `/${uid}/decline_friend_request/${fid}`
+      `/${uid}/decline_friend_request/${fid}`,
     );
     return result;
   };

@@ -1,18 +1,18 @@
-import React, { useContext, useState } from "react";
-import { FlatList } from "react-native";
+import React, {useContext, useState} from 'react';
+import {FlatList} from 'react-native';
 
-import routes from "../../navigation/routes";
-import defaultStyles from "../../config/styles";
-import ListItem from "../lists/ListItem";
-import EmptyNotice from "./EmptyNotice";
-import ListWrapper from "./ListWrapper";
-import conversation from "../../backendless/conversation";
-import UserContext from "../../UserContext";
+import routes from '../../navigation/routes';
+import defaultStyles from '../../config/styles';
+import ListItem from '../lists/ListItem';
+import EmptyNotice from './EmptyNotice';
+import ListWrapper from './ListWrapper';
+import conversation from '../../backendless/conversation';
+import AuthContext from '../../authContext';
 
-export default function FriendsList({ navigation, friends, loading, refresh }) {
+export default function FriendsList({navigation, friends, loading, refresh}) {
   const [refreshing, setRefreshing] = useState(false);
 
-  const { user } = useContext(UserContext);
+  const {user} = useContext(AuthContext);
 
   const handelRefresh = () => {
     setRefreshing(true);
@@ -20,22 +20,22 @@ export default function FriendsList({ navigation, friends, loading, refresh }) {
     setRefreshing(false);
   };
 
-  const directToChatRoom = async (item) => {
+  const directToChatRoom = async item => {
     let currentConversation = await conversation.findConversation(
       user.id,
-      item.id
+      item.id,
     );
 
     if (currentConversation === null) {
       currentConversation = await conversation.createConversation(
         user.id,
-        item.id
+        item.id,
       );
 
-      console.log("Created Conversation");
+      console.log('Created Conversation');
     }
 
-    console.log("CurrentConversation: ", currentConversation);
+    console.log('CurrentConversation: ', currentConversation);
 
     navigation.navigate(routes.CHAT_ROOM, {
       contact: item,
@@ -47,11 +47,11 @@ export default function FriendsList({ navigation, friends, loading, refresh }) {
     <ListWrapper loading={loading}>
       <FlatList
         data={friends}
-        keyExtractor={(friend) => friend.id.toString()}
+        keyExtractor={friend => friend.id.toString()}
         refreshing={refreshing}
         onRefresh={handelRefresh}
         ListEmptyComponent={<EmptyNotice navigation={navigation} />}
-        renderItem={({ item }) => (
+        renderItem={({item}) => (
           <ListItem
             style={[defaultStyles.listItemStyle, defaultStyles.lightShadow]}
             title={item.firstName}

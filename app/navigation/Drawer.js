@@ -10,14 +10,13 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 
-import UserContext from '../UserContext';
+import authContext from '../authContext';
 import Icon from '../components/Icon';
 import colors from '../config/colors';
 import defaultStyles from '../config/styles';
 import DrawerButtons from './DrawerButtons';
 import LinkButton from '../components/buttons/LinkButton';
 
-import EncryptedStorage from 'react-native-encrypted-storage';
 import routes from './routes';
 import {useNavigation} from '@react-navigation/native';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -75,7 +74,8 @@ const listItems = [
 ];
 
 export default function Drawer({isVisible, setIsVisible}) {
-  const {user, setUser} = useContext(UserContext);
+  const {userState, authActions} = useContext(authContext);
+
   const navigation = useNavigation();
   return (
     <Modal
@@ -92,7 +92,7 @@ export default function Drawer({isVisible, setIsVisible}) {
             backgroundSizeRatio={1}
             image={require('../assets/tab-navigation-icons/user-icon.png')}
           />
-          <Text style={styles.userName}>{user.firstName}</Text>
+          <Text style={styles.userName}>{userState?.userData?.firstName}</Text>
         </View>
         <View style={styles.separator} />
 
@@ -150,9 +150,7 @@ export default function Drawer({isVisible, setIsVisible}) {
             <View style={styles.separator} />
             <LogoutButton
               onPress={() => {
-                console.log('logged out in Drawer');
-                EncryptedStorage.removeItem('user');
-                setUser(null);
+                authActions.logout();
               }}
             />
           </View>
