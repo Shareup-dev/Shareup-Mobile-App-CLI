@@ -9,7 +9,7 @@ class Story {
       });
 
   getStories = () =>
-    AuthAxios.get(`/Stories`)
+    AuthAxios.get(`/stories`)
       .then(res => res)
       .catch(e => {
         throw e;

@@ -15,10 +15,10 @@ import CameraBottomActions from '../components/CameraBottomActions';
 import CameraHeader from '../components/headers/CameraHeader';
 import Icon from '../components/Icon';
 import {launchImageLibrary} from 'react-native-image-picker';
-import StoryService from '../services/story.service';
 import AuthContext from '../authContext';
 import store from '../redux/store';
 import {storiesAction} from '../redux/stories';
+import storyService from '../services/story.service';
 
 export default function AddStoryScreen({navigation}) {
   let cameraRef;
@@ -32,32 +32,18 @@ export default function AddStoryScreen({navigation}) {
   const [storyPhoto, setstoryPhoto] = useState({});
 
   async function captureImage() {
-    let editedResult;
     let photo = await cameraRef.takePictureAsync({
       skipProcessing: true,
+      quality: 0.5,
     });
     setCameraImg(true);
-    console.log('Captured photo: ', photo.uri);
-    try {
-      // editedResult = await ImageManipulator.manipulateAsync(
-      //   photo.uri,
-      //   [{resize: {width: 960}}],
-      //   {compress: 0.5},
-      // );
-    } catch (error) {
-      console.log('Edited error: ', error);
-    }
-    // console.log("cameraimg: ", cameraImg);
+
     setMode('view');
     setstoryPhoto(photo);
   }
 
   const imagePickHandler = async () => {
     try {
-      // const result = await ImagePicker.launchImageLibraryAsync({
-      //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      //   quality: 0.5,
-      // });
       const result = await launchImageLibrary({
         quality: 0.5,
         mediaType: 'photo',
@@ -65,9 +51,6 @@ export default function AddStoryScreen({navigation}) {
       setstoryPhoto(result.assets[0]);
       setCameraImg(false);
       setMode('view');
-      if (!result.uri) {
-        return;
-      }
     } catch (error) {
       console.log('Error reading an image', error);
     }
@@ -79,7 +62,9 @@ export default function AddStoryScreen({navigation}) {
 
   const addStoryHandler = async () => {
     setIsUploading(true);
-
+    if (isUploading) {
+      return;
+    }
     let storyData = new FormData();
 
     storyData.append('stryfiles', {
@@ -88,16 +73,26 @@ export default function AddStoryScreen({navigation}) {
       uri: storyPhoto.uri,
     });
 
-    try {
-      // const result = await StoryService.addStory(userData.id, storyData);
+    console.log(storyData);
 
-      console.log('Story add resp: ', storyData);
-      // store.dispatch(storiesAction.addNewStory(result.data));
-      setIsUploading(false);
-      // navigation.popToTop();
+    try {
+      const res = await storyService.addStory(userData.id, storyData);
+      console.log(res);
     } catch (e) {
-      console.log('Error occurred while posting story');
+      console.log(e.message);
     }
+
+    // storyService
+
+    //   .then(resp => {
+    //     console.log('Story add resp: ', resp.data);
+    //     store.dispatch(storiesAction.addNewStory(resp.data));
+    //     navigation.popToTop();
+    //   })
+    //   .catch(error => {
+    //     console.log('Error occurred while posting story');
+    //     setIsUploading(false);
+    //   });
   };
 
   return (

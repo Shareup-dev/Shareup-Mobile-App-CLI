@@ -149,7 +149,10 @@ const styles = StyleSheet.create({
   },
   userName: {
     color: '#fdfdfd',
-    borderColor: '#585858',
+    textShadowColor: 'black',
+    textShadowOffset: {width: 0, height: 0},
+    textShadowRadius: 8,
+    fontWeight: '800',
     marginLeft: 20,
     fontSize: 18,
     fontWeight: '600',

@@ -1,5 +1,6 @@
-import React, {useEffect} from 'react';
-import {View, StyleSheet, Dimensions, Button} from 'react-native';
+import React from 'react';
+import {View, StyleSheet, Dimensions, Text} from 'react-native';
+
 import BottomSheet from 'reanimated-bottom-sheet';
 import DrawerList from './DrawerList';
 import defaultStyle from '../../config/styles';
@@ -23,16 +24,14 @@ export default function EnhancedOptionsDrawer({options, forwardedRef}) {
   return (
     <BottomSheet
       ref={forwardedRef}
-      initialSnap={2}
       snapPoints={[140, 100, 200, 320]}
-      enabledGestureInteraction={true}
-      enabledHeaderGestureInteraction={true}
-      enabledContentGestureInteraction={false}
-      enabledBottomClamp={true}
+      enabledBottomClamp
+      enabledBottomInitialAnimation
       renderHeader={renderHeader}
       renderContent={renderContent}
     />
   );
+  // return <Text>works</Text>;
 }
 
 const styles = StyleSheet.create({

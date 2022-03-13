@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import {useSelector} from 'react-redux';
-import storiesService from '../../services/stories.service';
+import storiesService from '../../services/story.service';
 import CreateStoryCard from './CreateStoryCard';
 import StoryCard from './StoryCard';
 

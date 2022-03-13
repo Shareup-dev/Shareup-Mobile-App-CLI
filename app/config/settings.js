@@ -22,7 +22,7 @@ const getCurrentSettings = () => {
   // if (__DEV__) return settings.prod;
 
   // if (Constants.manifest.releaseChannel === 'staging') return settings.staging;
-  return settings.prod;
+  return settings.staging;
 };
 
 export default getCurrentSettings();

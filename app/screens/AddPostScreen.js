@@ -425,12 +425,12 @@ export default function AddPostScreen({navigation, route}) {
                     color={colors.dimGray}
                   />
                   <Text style={styles.headerTabText}>Albums</Text>
-                  {/* <Icon
-                    type="MaterialCommunityIcons"
+                  <Icon
+                    type="MaterialIcons"
                     name="keyboard-arrow-down"
                     size={15}
                     color={colors.dimGray}
-                  /> */}
+                  />
                 </View>
               )}
               {/*** // Todo: Create swap category! */}
@@ -639,18 +639,3 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
 });
-
-// import React from 'react';
-// import {View, StyleSheet, Text} from 'react-native';
-
-// export default function AddPostScreen(props) {
-//   return (
-//     <View style={styles.container}>
-//       <Text>works</Text>
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {},
-// });
