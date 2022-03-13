@@ -4,43 +4,46 @@ import Icon from "./Icon";
 import ImageInput from "./ImageInput";
 
 export default function ImageInputList({
-  imageUris = [],
+  imageUris,
   onAddImage,
   onRemoveImage,
   isSwap,
 }) {
   const scrollView = useRef();
-  
+
+  //const URISet = imageUris.map(imageUris => imageUris)
   //const imageUrisSet = imageUris.map((imageUris) => imageUris.replace('file:', ''));
-  //console.log("IMAGES12",imageUrisSet)
+
   return (
+    
     <View style={styles.container}>
       <FlatList
-        ref={scrollView}
+        //ref={scrollView}
         // horizontal
        // onContentSizeChange={() => scrollView.current.scrollToEnd()}
        horizontal={true} 
        showsHorizontalScrollIndicator={false} 
-       data={imageUris}
+       data= {imageUris}
        renderItem={ ({ item, index }) => {
-        console.log(item) 
+
         return(
          
-         <Image source={item} /* Use item to set the image source */
+         <Image source= {item.uri} /* Use item to set the image source */
            key={index} /* Important to set a key for list items,
                           but it's wrong to use indexes as keys, see below */
            style={{
              width:260,
              height:300,
-             borderWidth:2,
-             borderColor:'#d35647',
+            // borderWidth:2,
+             //borderColor:'#d35647',
              resizeMode:'contain',
-             margin:8
+             margin:2
            }}
          />
+      
        )}}
       >
-        {imageUris.map((uri) => (
+        {/* {imageUris.map((uri) => (
           <View key={uri} style={isSwap ? null : styles.imagePadding}>
             <ImageInput
               imageUri={uri}
@@ -55,14 +58,14 @@ export default function ImageInputList({
                 />
               )}
           </View>
-        ))}
+        ))} */}
 
-        {isSwap && imageUris.length < 2 && (
+        {/* {isSwap && imageUris.length < 2 && (
           <ImageInput
             onChangeImage={(uri) => onAddImage(uri)}
             isSwap={isSwap}
           />
-        )}
+        )} */}
       </FlatList>
     </View>
   );
@@ -78,4 +81,8 @@ const styles = StyleSheet.create({
   swapIcon: {
     alignSelf: "center",
   },
+  Image: {
+        width: '100%',
+        height: '100%',
+      },
 });

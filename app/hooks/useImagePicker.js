@@ -20,7 +20,7 @@ export default useImagesPicker = () => {
         //quality: 0.5,
       });
       setFile(result.assets);
-      console.log("Selected image in image picker: ", result.assets);
+
       return result.assets;
     } catch (error) {
       console.log("Error reading an image", error);
