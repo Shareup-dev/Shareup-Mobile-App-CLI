@@ -1,22 +1,22 @@
-import React from "react";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import React from 'react';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import routes from "./routes";
-import NewsFeedScreen from "../screens/NewsFeedScreen";
-import KeepHangScreen from "../screens/KeepHangScreen";
-import CustomHeaderBar from "./CustomHeaderBar";
-import UserProfileScreen from "../screens/UserProfileScreen";
-import MyReelsScreen from "../screens/MyReelsScreen";
-import SwapScreen from "../screens/SwapScreen";
-import EditProfileScreen from "../screens/EditProfileScreen";
-import InviteGroupMembers from "../screens/InviteGroupMembers";
-import GroupFeedScreen from "../screens/GroupFeedScreen";
-import SetPostAudience from "../screens/SetPostAudience";
-import SettingPrivacyScreen from "../screens/SettingPrivacyScreen";
-import SwapDisplay from "../screens/SwapDisplay";
-import ShippingAddress from "../screens/ShippingAddress";
-import SwapCheckout from "../screens/SwapCheckout";
-import SwapCheckoutComplete from "../screens/SwapCheckoutComplete";
+import routes from './routes';
+import NewsFeedScreen from '../screens/NewsFeedScreen';
+import KeepHangScreen from '../screens/KeepHangScreen';
+import CustomHeaderBar from './CustomHeaderBar';
+import UserProfileScreen from '../screens/UserProfileScreen';
+import MyReelsScreen from '../screens/MyReelsScreen';
+import SwapScreen from '../screens/SwapScreen';
+import EditProfileScreen from '../screens/EditProfileScreen';
+import InviteGroupMembers from '../screens/InviteGroupMembers';
+import GroupFeedScreen from '../screens/GroupFeedScreen';
+import SetPostAudience from '../screens/SetPostAudience';
+import SettingPrivacyScreen from '../screens/SettingPrivacyScreen';
+import SwapDisplay from '../screens/SwapDisplay';
+import ShippingAddress from '../screens/ShippingAddress';
+import SwapCheckout from '../screens/SwapCheckout';
+import SwapCheckoutComplete from '../screens/SwapCheckoutComplete';
 
 export default function NewsFeedNavigator() {
   const Stack = createNativeStackNavigator();
@@ -25,19 +25,23 @@ export default function NewsFeedNavigator() {
     <Stack.Navigator
       screenOptions={{
         gestureEnabled: true,
-        gestureDirection: "horizontal",
-      }}
-    >
+        gestureDirection: 'horizontal',
+      }}>
       <Stack.Screen
         name={routes.FEED}
         component={NewsFeedScreen}
         options={{
-          header: ({ navigation }) => (
-            <CustomHeaderBar navigation={navigation} />
-          ),
+          header: ({navigation}) => <CustomHeaderBar navigation={navigation} />,
         }}
       />
       <Stack.Screen
+        name={routes.USER_PROFILE}
+        component={UserProfileScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      {/* <Stack.Screen
         name={routes.KEEP_HANG}
         component={KeepHangScreen}
         options={{
@@ -51,22 +55,16 @@ export default function NewsFeedNavigator() {
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        name={routes.USER_PROFILE}
-        component={UserProfileScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
+     
       <Stack.Screen
         name={routes.EDIT_PROFILE}
         component={EditProfileScreen}
         options={{
           headerShown: false,
         }}
-      />
+      /> */}
 
-      <Stack.Screen
+      {/* <Stack.Screen
         name={routes.MY_REELS}
         component={MyReelsScreen}
         options={{
@@ -87,10 +85,10 @@ export default function NewsFeedNavigator() {
         options={{
           headerShown: false,
         }}
-      />
+      /> */}
 
       {/* there are no use of this  */}
-      <Stack.Screen
+      {/* <Stack.Screen
         name={routes.SET_POST_AUDIENCE}
         component={SetPostAudience}
         options={{
@@ -113,8 +111,8 @@ export default function NewsFeedNavigator() {
           headerShown: false,
           headerTitle: "",
         }}
-      />
-      <Stack.Screen
+      /> */}
+      {/* <Stack.Screen
         name={routes.SWAP_CHECKOUT}
         component={SwapCheckout}
         options={{
@@ -137,7 +135,7 @@ export default function NewsFeedNavigator() {
           headerShown: false,
           gestureEnabled: false,
         }}
-      />
+      /> */}
     </Stack.Navigator>
   );
 }

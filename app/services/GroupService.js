@@ -1,24 +1,24 @@
-import axios from "axios";
-import settings from "../config/settings";
-import AuthService from "./auth.services";
+import axios from 'axios';
+import settings from '../config/settings';
+import AuthService from './old/auth.services';
 
 const baseUrl = `${settings.apiUrl}/api/v1/groups`;
 let authAxios = null;
 
 const authenticate = async () => {
   await AuthService.getCurrentUser().then(
-    (res) => {
+    res => {
       authAxios = axios.create({
         baseURL: baseUrl,
         headers: {
-          Authorization: `Bearer ${res.jwt}`,
-          "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${res.userToken}`,
+          'Access-Control-Allow-Origin': '*',
         },
       });
     },
-    (error) => {
+    error => {
       console.log(error);
-    }
+    },
   );
 };
 authenticate();
@@ -29,7 +29,7 @@ class GroupService {
       const result = await authAxios.post(`/${uid}/create`, formdata);
       return result;
     } catch (error) {
-      console.log("An error occured while creating group: ", error);
+      console.log('An error occured while creating group: ', error);
     }
   };
 
@@ -38,38 +38,38 @@ class GroupService {
       const result = await authAxios.post(`/ ${uid} / create`, groupDetails);
       return result;
     } catch (error) {
-      console.log("An error occured while creating group: ", error);
+      console.log('An error occured while creating group: ', error);
       return false;
     }
   };
 
   getAllGroups = async () => {
     authenticate();
-    const result = await authAxios.get("");
+    const result = await authAxios.get('');
     return result;
   };
 
-  getGroupById = async (id) => {
+  getGroupById = async id => {
     const result = await authAxios.get(`/ id / ${id}`);
     return result;
   };
 
-  getGroupByCurrentUser = async (email) => {
+  getGroupByCurrentUser = async email => {
     const result = await authAxios.get(`/ email / ${email}`);
     return result;
   };
 
-  getGroupsPostsById = async (id) => {
+  getGroupsPostsById = async id => {
     const result = await authAxios.get(`/posts/${id}`);
     return result;
   };
-  getUserGroups = async (email) => {
+  getUserGroups = async email => {
     console.log(
-      "Sending request to: ",
-      `${settings.apiUrl}/api/v1/${email}/groups`
+      'Sending request to: ',
+      `${settings.apiUrl}/api/v1/${email}/groups`,
     );
     const result = await authAxios.get(
-      `${settings.apiUrl}/api/v1/${email}/groups`
+      `${settings.apiUrl}/api/v1/${email}/groups`,
     );
     return result;
   };

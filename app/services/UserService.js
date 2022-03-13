@@ -1,39 +1,39 @@
-import AuthService from "./auth.services";
-import axios from "axios";
-import settings from "../config/settings";
+import AuthService from './old/auth.services';
+import axios from 'axios';
+import settings from '../config/settings';
 
-const USER_API_BASE_URL = "http://192.168.100.239:8080/api/v1/users";
-const servers_api = "http://192.168.100.239:8080";
-const my_api = "http://192.168.100.239:8080";
+const USER_API_BASE_URL = 'http://192.168.100.239:8080/api/v1/users';
+const servers_api = 'http://192.168.100.239:8080';
+const my_api = 'http://192.168.100.239:8080';
 const baseURL = `${settings.apiUrl}/api/v1/`;
 let authAxios = null;
 
 const authenticate = async () => {
   await AuthService.getCurrentUser().then(
-    (res) => {
+    res => {
       // console.log(res.jwt + "  jwt recieved in authenticate")
       authAxios = axios.create({
         baseURL: baseURL,
         headers: {
-          Authorization: `Bearer ${res.jwt}`,
-          "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${res.userToken}`,
+          'Access-Control-Allow-Origin': '*',
         },
       });
     },
-    (error) => {
+    error => {
       console.log(error);
-    }
+    },
   );
 };
 authenticate();
 
 class UserService {
   getUsers = async () => {
-    const result = await authAxios.get("users/");
+    const result = await authAxios.get('users/');
     return result;
   };
 
-  createUser = async (user) => {
+  createUser = async user => {
     const result = await axios.post(`${baseURL}users/`, user);
     return result;
   };
@@ -43,45 +43,44 @@ class UserService {
     return result;
   };
 
-  getUserByEmail = async (email) => {
+  getUserByEmail = async email => {
     authenticate();
-    const result = await authAxios.get("users/email/" + email);
+    const result = await authAxios.get('users/email/' + email).then(res => res);
+    return result;
+  };
+
+  getUserById = async userId => {
+    authenticate();
+    const result = await authAxios.get('users/' + userId);
 
     return result;
   };
 
-  getUserById = async (userId) => {
-    authenticate();
-    const result = await authAxios.get("users/" + userId);
-
-    return result;
-  };
-
-  getFriends = async (email) => {
+  getFriends = async email => {
     try {
-      const result = await authAxios.get("/friends/email/" + email);
+      const result = await authAxios.get('/friends/email/' + email);
       return result;
     } catch (error) {
       console.log(error);
     }
   };
 
-  getFollowers = async (email) => {
+  getFollowers = async email => {
     const result = await authAxios.get(`${email}/followers`);
     return result;
   };
 
-  getFollowing = async (email) => {
+  getFollowing = async email => {
     const result = await authAxios.get(`${email}/following`);
     return result;
   };
 
-  getFriendRequestSent = async (email) => {
+  getFriendRequestSent = async email => {
     const result = await authAxios.get(`${email}/friend_request_sent`);
     return result;
   };
 
-  getFriendRequestRecieved = async (email) => {
+  getFriendRequestRecieved = async email => {
     const result = await authAxios.get(`${email}/friend_request_recieved`);
     return result;
   };
@@ -99,7 +98,7 @@ class UserService {
   uploadProfilePicture = async (email, formdata) => {
     const result = await authAxios.post(
       `users/${email}/upload_profile_picture`,
-      formdata
+      formdata,
     );
 
     return result;
@@ -108,14 +107,14 @@ class UserService {
   uploadCoverPicture = async (email, formdata) => {
     const result = await authAxios.post(
       `users/${email}/upload_cover_picture`,
-      formdata
+      formdata,
     );
     return result;
   };
 
   likePost = async (uid, pid) => {
     const result = await authAxios.put(`/posts/${uid}/like-unlike/${pid}`, {
-      emoji: "like",
+      emoji: 'like',
     });
     return result;
   };

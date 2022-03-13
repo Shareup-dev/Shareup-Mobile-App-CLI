@@ -1,24 +1,24 @@
-import axios from "axios";
-import settings from "../config/settings";
-import AuthService from "./auth.services";
+import axios from 'axios';
+import settings from '../config/settings';
+import AuthService from './old/auth.services';
 
 const baseURL = `${settings.apiUrl}`;
 let authAxios = null;
 
 const authenticate = async () => {
   await AuthService.getCurrentUser().then(
-    (res) => {
+    res => {
       authAxios = axios.create({
         baseURL: `${baseURL}/api/v1/`,
         headers: {
-          Authorization: `Bearer ${res.jwt}`,
-          "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${res.userToken}`,
+          'Access-Control-Allow-Origin': '*',
         },
       });
     },
-    (error) => {
+    error => {
       console.log(error);
-    }
+    },
   );
 };
 authenticate();
@@ -28,7 +28,7 @@ class ReelService {
       const result = await authAxios.post(`/reelslocal/${userId}`, reelData);
       return result;
     } catch (error) {
-      console.log("An error occurred while posting reel: ", error);
+      console.log('An error occurred while posting reel: ', error);
       return error;
     }
   };
@@ -37,7 +37,7 @@ class ReelService {
       const result = await authAxios.get(`/reels`);
       return result;
     } catch (error) {
-      console.log("An error occurred while getting reel: ", error);
+      console.log('An error occurred while getting reel: ', error);
       return error;
     }
   };

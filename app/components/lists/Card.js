@@ -6,7 +6,7 @@ import {SliderBox} from 'react-native-image-slider-box';
 import colors from '../../config/colors';
 import defaultStyles from '../../config/styles';
 import UserService from '../../services/UserService';
-import PostService from '../../services/PostService';
+import PostService from '../../services/old/PostService';
 import PostOptionDrawer from '../drawers/PostOptionsDrawer';
 import fileStorage from '../../config/fileStorage';
 import ImageView from 'react-native-image-viewing';

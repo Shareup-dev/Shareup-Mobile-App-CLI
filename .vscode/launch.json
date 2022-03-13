@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
     // Use IntelliSense to learn about possible attributes.
     // Hover to view descriptions of existing attributes.
@@ -13,3 +14,17 @@
         },
     ]
 }
+=======
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Android",
+      "request": "launch",
+      "type": "reactnative",
+      "cwd": "${workspaceFolder}",
+      "platform": "android"
+    }
+  ]
+}
+>>>>>>> fd748836e9b8ad5301a719f01677e45c00d8dd32

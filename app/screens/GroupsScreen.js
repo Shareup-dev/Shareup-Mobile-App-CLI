@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,29 +7,29 @@ import {
   Dimensions,
   TouchableOpacity,
   Image,
-} from "react-native";
+} from 'react-native';
 
-import Screen from "../components/Screen";
-import Icon from "../components/Icon";
-import TextField from "../components/TextField";
-import Tab from "../components/buttons/Tab";
-import Text from "../components/Text";
-import colors from "../config/colors";
-import LongCard from "../components/lists/LongCard";
-import defaultStyles from "../config/styles";
-import ListHeader from "../components/lists/ListHeader";
-import { HeaderWithBackArrow } from "../components/headers";
-import routes from "../navigation/routes";
-import GroupService from "../services/GroupService";
-import fileStorage from "../config/fileStorage";
-import UserContext from "../UserContext";
-import { useSelector } from "react-redux";
+import Screen from '../components/Screen';
+import Icon from '../components/Icon';
+import TextField from '../components/TextField';
+import Tab from '../components/buttons/Tab';
+import Text from '../components/Text';
+import colors from '../config/colors';
+import LongCard from '../components/lists/LongCard';
+import defaultStyles from '../config/styles';
+import ListHeader from '../components/lists/ListHeader';
+import {HeaderWithBackArrow} from '../components/headers';
+import routes from '../navigation/routes';
+import GroupService from '../services/GroupService';
+import fileStorage from '../config/fileStorage';
+import authContext from '../authContext';
+import {useSelector} from 'react-redux';
 
-export default function GroupsScreen({ navigation }) {
+export default function GroupsScreen({navigation}) {
   // const [allGroups, setallGroups] = useState([]);
   const [userGroups, setuserGroups] = useState([]);
-  const { user: loggedInUser } = useContext(UserContext);
-  let allGroups = useSelector((state) => state.userGroups);
+  const {user: loggedInUser} = useContext(authContext);
+  let allGroups = useSelector(state => state.userGroups);
   // useEffect(() => {
   //   let unmounted = false;
   //   GroupService.getAllGroups().then((resp) => {
@@ -74,7 +74,7 @@ export default function GroupsScreen({ navigation }) {
         <Tab
           title="Your groups"
           style={styles.tab}
-          iconImage={require("../assets/icons/foundation_social-skillshare.png")}
+          iconImage={require('../assets/icons/foundation_social-skillshare.png')}
           iconSize={22}
           titleStyle={styles.tabTitle}
         />
@@ -94,15 +94,15 @@ export default function GroupsScreen({ navigation }) {
         contentContainerStyle={defaultStyles.listContentContainerStyle}
         ListHeaderComponent={() => (
           <ListHeader
-            containerStyle={{ width: Dimensions.get("screen").width }}
+            containerStyle={{width: Dimensions.get('screen').width}}
             title="There no activity yet !"
             subtitle="Join new Groups to know more about them"
           />
         )}
         data={allGroups}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={item => item.id.toString()}
         numColumns={2}
-        renderItem={({ item }) => (
+        renderItem={({item}) => (
           <TouchableOpacity
             onPress={() => {
               navigation.navigate(routes.GROUP_FEED, {
@@ -114,8 +114,7 @@ export default function GroupsScreen({ navigation }) {
                 privacy: item.privacySetting,
                 groupId: item.id,
               });
-            }}
-          >
+            }}>
             <LongCard
               style={defaultStyles.longCard}
               title={item.name}
@@ -139,23 +138,23 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   searchbar: {
-    width: "90%",
+    width: '90%',
     marginLeft: 10,
   },
   searchText: {
-    width: "75%",
+    width: '75%',
   },
   optionsBar: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   tab: {
-    width: "31%",
+    width: '31%',
     height: 30,
     marginHorizontal: 2.5,
     marginTop: 5,
@@ -164,8 +163,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   addGroupsContainer: {
-    flexDirection: "row",
-    alignItems: "flex-end",
+    flexDirection: 'row',
+    alignItems: 'flex-end',
   },
   fancyAddButton: {
     margin: 5,
@@ -176,13 +175,13 @@ const styles = StyleSheet.create({
   },
   separator: {
     backgroundColor: colors.LightGray,
-    width: "100%",
+    width: '100%',
     height: 10,
     marginTop: 15,
   },
   groupsContainer: {
     paddingTop: 30,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   yourGroupsTitle: {
     fontSize: 20,

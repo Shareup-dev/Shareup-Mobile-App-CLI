@@ -5,11 +5,11 @@ import Icon from '../components/Icon';
 import colors from '../config/colors';
 
 import routes from './routes';
-import UserContext from '../UserContext';
-import { getStatusBarHeight } from 'react-native-iphone-x-helper';
+import authContext from '../authContext';
+
 
 export default function CustomHeaderBar({navigation}) {
-  const {user} = useContext(UserContext);
+  const {userData} = useContext(authContext).userState;
 
   const size = 30;
   return (
@@ -38,7 +38,9 @@ export default function CustomHeaderBar({navigation}) {
           image={require('../assets/tab-navigation-icons/user-icon.png')}
           size={size}
           onPress={() =>
-            navigation.navigate(routes.USER_PROFILE, {userEmail: user.email})
+            navigation.navigate(routes.USER_PROFILE, {
+              userEmail: userData.email,
+            })
           }
         />
       </View>

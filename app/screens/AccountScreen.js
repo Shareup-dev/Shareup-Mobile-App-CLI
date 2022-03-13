@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
-import { StyleSheet, Text } from "react-native";
-import Button from "../components/buttons/LinkButton";
-import Screen from "../components/Screen";
-import UserContext from "../UserContext";
+import React, {useContext} from 'react';
+import {StyleSheet, Text} from 'react-native';
+import Button from '../components/buttons/LinkButton';
+import Screen from '../components/Screen';
+import authContext from '../authContext';
 
 export default function AccountScreen(props) {
-  const { user, setUser } = useContext(UserContext);
+  const {user, setUser} = useContext(authContext);
 
   const handelLogout = () => {
     setUser(null);
@@ -17,15 +17,19 @@ export default function AccountScreen(props) {
         {user.firstName} {user.lastName}
       </Text>
       <Text>{user.email}</Text>
-      <Button title="logout Account" onPress={handelLogout} style={styles.button} />
+      <Button
+        title="logout Account"
+        onPress={handelLogout}
+        style={styles.button}
+      />
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   button: {
     marginTop: 20,

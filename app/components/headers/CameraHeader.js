@@ -6,9 +6,9 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-import {AntDesign} from 'react-native-vector-icons';
 
 import colors from '../../config/colors';
+import Icon from '../Icon';
 
 export default function CameraHeader({title, style, onClosePress}) {
   return (
@@ -16,10 +16,11 @@ export default function CameraHeader({title, style, onClosePress}) {
       style={[styles.container, {paddingTop: StatusBar.currentHeight}, style]}>
       <Text style={styles.title}>{title}</Text>
       <TouchableOpacity onPress={onClosePress}>
-        <AntDesign
+        <Icon
           name="close"
+          type="AntDesign"
           size={25}
-          color={colors.white}
+          color={colors.dark}
           style={styles.icon}
         />
       </TouchableOpacity>
