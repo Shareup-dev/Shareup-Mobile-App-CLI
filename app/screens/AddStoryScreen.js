@@ -6,6 +6,7 @@ import {
   Image,
   Text,
   TouchableOpacity,
+  TextInput,
 } from 'react-native';
 
 import colors from '../config/colors';
@@ -60,7 +61,7 @@ export default function AddStoryScreen({navigation}) {
     setCameraType(prev => (prev === 'back' ? 'front' : 'back'));
   };
 
-  const addStoryHandler = async () => {
+  const addStoryHandler = () => {
     setIsUploading(true);
     if (isUploading) {
       return;
@@ -72,27 +73,12 @@ export default function AddStoryScreen({navigation}) {
       type: 'image/jpg',
       uri: storyPhoto.uri,
     });
-
-    console.log(storyData);
-
-    try {
-      const res = await storyService.addStory(userData.id, storyData);
-      console.log(res);
-    } catch (e) {
-      console.log(e.message);
-    }
-
-    // storyService
-
-    //   .then(resp => {
-    //     console.log('Story add resp: ', resp.data);
-    //     store.dispatch(storiesAction.addNewStory(resp.data));
-    //     navigation.popToTop();
-    //   })
-    //   .catch(error => {
-    //     console.log('Error occurred while posting story');
-    //     setIsUploading(false);
-    //   });
+    storyService
+      .addStory(userData.id, storyData)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(e => console.log(e.message));
   };
 
   return (
@@ -114,18 +100,21 @@ export default function AddStoryScreen({navigation}) {
       ) : (
         <View style={styles.storyImgViewer}>
           <CameraHeader title="Story" onClosePress={() => setMode('capture')} />
-          <TouchableOpacity
-            style={styles.forwardArrow}
-            activeOpacity={0.6}
-            disabled={isUploading}
-            onPress={addStoryHandler}>
-            <Icon
-              type={'AntDesign'}
-              color={'#333'}
-              name={'arrowright'}
-              size={64}
-            />
-          </TouchableOpacity>
+          <View style={styles.forwardArrow}>
+            <TextInput placeholder="Caption" multiline style={styles.caption} />
+            <TouchableOpacity
+              activeOpacity={0.6}
+              disabled={isUploading}
+              onPress={addStoryHandler}>
+              <Icon
+                type={'AntDesign'}
+                color={'#333'}
+                name={'arrowright'}
+                size={64}
+                style={{marginLeft: 5}}
+              />
+            </TouchableOpacity>
+          </View>
           <Image
             source={storyPhoto}
             resizeMode={'cover'}
@@ -138,6 +127,13 @@ export default function AddStoryScreen({navigation}) {
   );
 }
 const styles = StyleSheet.create({
+  caption: {
+    paddingHorizontal: 15,
+    backgroundColor: colors.white,
+    borderRadius: 30,
+    fontSize: 18,
+    width: '85%',
+  },
   container: {
     flex: 1,
   },
@@ -151,8 +147,12 @@ const styles = StyleSheet.create({
   },
   forwardArrow: {
     position: 'absolute',
-    bottom: 50,
-    right: 50,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    bottom: 35,
+    paddingRight: 15,
+    paddingLeft: 10,
   },
   title: {
     fontSize: 32,

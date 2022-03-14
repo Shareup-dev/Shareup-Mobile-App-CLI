@@ -13,8 +13,11 @@ import {
 import Icon from '../components/Icon';
 import colors from '../config/colors';
 import fileStorage from '../config/fileStorage';
+import {Menu, Divider, Provider} from 'react-native-paper';
 
 const StoryViewScreen = ({navigation, route}) => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const scale = useRef(new Animated.Value(0)).current;
   const windowWidth = Dimensions.get('screen').width;
 
@@ -42,70 +45,87 @@ const StoryViewScreen = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    startProgress();
+    // startProgress();
     return () => {
       pauseProgress();
     };
   }, []);
 
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPressIn={() => {
-        pauseProgress();
-      }}
-      onPressOut={() => {
-        startProgress();
-      }}>
-      <ImageBackground
-        style={{width: '100%', height: '100%'}}
-        source={{uri: fileStorage.baseUrl + route.params.image}}>
-        <>
-          <View
-            style={{
-              backgroundColor: '#CACACA',
-            }}>
-            <Animated.View
+    <>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPressIn={() => {
+          pauseProgress();
+        }}
+        onPressOut={() => {
+          startProgress();
+        }}>
+        <ImageBackground
+          style={{width: '100%', height: '100%'}}
+          source={{uri: fileStorage.baseUrl + route.params.image}}>
+          <>
+            <View
               style={{
-                backgroundColor: '#242424',
-                transform: [
-                  {
-                    scaleX: scale,
-                  },
-                ],
-                width: 4,
-                height: 4,
-              }}
-            />
-          </View>
-          <View style={styles.container}>
-            <View style={styles.profileContainer}>
-              <View style={styles.profileImg}>
-                <Image
-                  source={require('../assets/icons/user-icon.png')}
-                  resizeMode={'center'}
-                  style={styles.userProfileImg}
-                />
-              </View>
-              <Text style={styles.userName}>{route.params.userName}</Text>
-            </View>
-            <TouchableOpacity
-              style={styles.closeIcon}
-              onPress={() => {
-                navigation.popToTop();
+                backgroundColor: '#CACACA',
               }}>
-              <Icon
-                name={'close'}
-                type={'AntDesign'}
-                size={54}
-                backgroundColor={'unset'}
-                noBackground={true}
+              <Animated.View
+                style={{
+                  backgroundColor: '#242424',
+                  transform: [
+                    {
+                      scaleX: scale,
+                    },
+                  ],
+                  width: 4,
+                  height: 4,
+                }}
               />
-            </TouchableOpacity>
-          </View>
-        </>
-      </ImageBackground>
-    </TouchableOpacity>
+            </View>
+            <View style={styles.container}>
+              <View style={styles.profileContainer}>
+                <View style={styles.profileImg}>
+                  <Image
+                    source={require('../assets/icons/user-icon.png')}
+                    resizeMode={'center'}
+                    style={styles.userProfileImg}
+                  />
+                </View>
+                <Text style={styles.userName}>{route.params.userName}</Text>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <TouchableOpacity
+                  style={styles.closeIcon}
+                  onPress={() => {
+                    setMenuOpen(true);
+                  }}>
+                  <Icon
+                    name={'options'}
+                    type={'SimpleLineIcons'}
+                    size={54}
+                    backgroundColor={'unset'}
+                    noBackground={true}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.closeIcon}
+                  onPress={() => {
+                    navigation.popToTop();
+                  }}>
+                  <Icon
+                    name={'close'}
+                    type={'AntDesign'}
+                    size={54}
+                    backgroundColor={'unset'}
+                    noBackground={true}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </>
+        </ImageBackground>
+      </TouchableOpacity>
+    </>
   );
 };
 

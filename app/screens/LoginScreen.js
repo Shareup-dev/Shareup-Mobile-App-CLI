@@ -116,7 +116,9 @@ export default function LoginScreen({navigation}) {
               textContentType="password" // Only for ios
               style={defaultStyles.formField}
             />
-            <TouchableOpacity activeOpacity={0.6}>
+            <TouchableOpacity
+              activeOpacity={0.6}
+              onPress={() => navigation.navigate(routes.FORGOT_PASSWORD)}>
               <Text style={styles.forgotPassword}>Forgot Password</Text>
             </TouchableOpacity>
 

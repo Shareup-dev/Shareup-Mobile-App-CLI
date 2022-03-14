@@ -1,51 +1,32 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, Text} from 'react-native';
+import {StyleSheet} from 'react-native';
 import * as Yup from 'yup';
 
 import {Form, FormField, SubmitButton} from '../components/forms';
-import Separator from '../components/Separator';
 import routes from '../navigation/routes';
 
 import defaultStyles from '../config/styles';
 import RegistrationContainer from '../components/forms/RegistrationContainer';
-import LinkButton from '../components/buttons/LinkButton';
 
 const validationSchema = Yup.object().shape({
-  firstName: Yup.string().required().label('First Name'),
-  lastName: Yup.string().required().label('Last Name'),
   email: Yup.string().required().email().label('Email'),
 });
 
-export default function SignUpScreen({navigation}) {
+export default function ForgotPassword({navigation}) {
   const handleSubmit = async values => {
-    navigation.navigate(routes.SIGNUP_STEP2, {
+    navigation.navigate(routes.PASSWORD_RESET_OTP, {
       ...values,
     });
   };
 
   return (
-    <RegistrationContainer>
+    <RegistrationContainer title="Forgot Password">
       <Form
         initialValues={{
-          firstName: '',
-          lastName: '',
           email: '',
         }}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}>
-        <FormField
-          autoCorrect={false}
-          name="firstName"
-          placeholder="First Name"
-          style={defaultStyles.formField}
-        />
-        <FormField
-          autoCorrect={false}
-          name="lastName"
-          placeholder="Last Name"
-          style={defaultStyles.formField}
-        />
-
         <FormField
           autoCapitalize="none"
           autoCorrect={false}
@@ -57,14 +38,6 @@ export default function SignUpScreen({navigation}) {
         />
 
         <SubmitButton title="Next" style={styles.submitButton} />
-
-        <Separator text="or" />
-
-        <LinkButton
-          title="Do you have an existing account?"
-          onPress={() => navigation.navigate(routes.LOGIN)}
-          style={{marginTop: 10, fontSize: 18}}
-        />
       </Form>
     </RegistrationContainer>
   );

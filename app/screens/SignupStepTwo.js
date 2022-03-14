@@ -29,8 +29,8 @@ const SignupStepTwo = ({navigation, route}) => {
   const {isReachable, checkIfReachable} = useIsReachable();
 
   const validationSchema = Yup.object().shape({
-    password: Yup.string().required().min(3).label('Password'),
     gender: Yup.string().required(),
+    password: Yup.string().required().min(3).label('Password'),
     confirmPassword: Yup.string()
       .required()
       .label('Re-Enter Password')

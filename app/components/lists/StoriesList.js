@@ -25,14 +25,12 @@ export default function StoriesList({navigation, style}) {
         showsHorizontalScrollIndicator={false}
         keyExtractor={item => item.id.toString()}
         style={styles.list}
-        renderItem={item => {
+        renderItem={({item}) => {
           return (
             <StoryCard
-              image={item.item.storiesImagePath}
+              image={item.storiesImagePath}
               navigation={navigation}
-              userName={
-                item.item.user.firstName + ' ' + item.item.user.lastName
-              }
+              userName={item?.user?.firstName + ' ' + item?.user?.lastName}
             />
           );
         }}

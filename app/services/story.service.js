@@ -2,11 +2,9 @@ import AuthAxios from './authAxios';
 
 class Story {
   addStory = (userId, storyData) =>
-    AuthAxios.post(`/Stories/${userId}`, storyData)
-      .then(res => res)
-      .catch(e => {
-        throw e;
-      });
+    AuthAxios.post(`/Stories/${userId}`, storyData, {
+      headers: {'Content-Type': 'multipart/form-data'},
+    });
 
   getStories = () =>
     AuthAxios.get(`/stories`)
