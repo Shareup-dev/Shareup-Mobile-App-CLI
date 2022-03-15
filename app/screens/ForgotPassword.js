@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Text} from 'react-native';
 import * as Yup from 'yup';
 
 import {Form, FormField, SubmitButton} from '../components/forms';
@@ -71,6 +71,7 @@ export default function ForgotPassword({navigation}) {
           textContentType="emailAddress" // Only for ios
           style={defaultStyles.formField}
         />
+        <Text>Help us to Find your Account</Text>
 
         <SubmitButton
           title={Loading ? `Verifying` : `Find my account`}

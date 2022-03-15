@@ -1,9 +1,7 @@
 import React, {useState, useContext} from 'react';
 import * as Yup from 'yup';
 import {ErrorMessage, Form, FormField, SubmitButton} from '../components/forms';
-import {useSelector} from 'react-redux';
 import Toast from 'react-native-toast-message';
-import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import Text from '../components/Text';
