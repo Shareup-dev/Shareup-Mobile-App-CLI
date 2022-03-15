@@ -49,38 +49,39 @@ export default function LoginScreen({navigation}) {
       return setLoginFailed(true);
     }
 
-    try {
-      // --------- login ----------
-      const result = await AuthService.login(email, password);
+    // --------- login ----------
+    AuthService.login(email, password)
+      .then(async result => {
+  
+        await authActions.login(result.data.username, result.data.jwt);
+        Toast.show({
+          position: 'bottom',
+          visibilityTime: 5000,
+          type: 'success',
+          text1: 'Success',
+          text2: 'Logged in Successfully 👋',
+        });
+      })
+      .catch(e => {
+        let message;
+        if (e.message === 'Request failed with status code 400')
+          message = 'Username or Password incorrect';
+        else message = e.message;
 
-      if (result.status !== 200) {
+        Toast.show({
+          position: 'bottom',
+          visibilityTime: 5000,
+          type: 'error',
+          text1: 'Error',
+          text2: message,
+        });
+      })
+      .finally(_ => {
         setLoading(false);
-        setError('Invalid email and/or password.');
-        return setLoginFailed(true);
-      }
-
-      setLoading(false);
-      Toast.show({
-        position: 'bottom',
-        visibilityTime: 5000,
-        type: 'success',
-        text1: 'Success',
-        text2: 'Logged in Successfully 👋',
+        setLoginFailed(false);
       });
 
-      if (result.ok) {
-        setLoading(false);
-        return setLoginFailed(true);
-      }
-
-      // storing the token into secure store
-      await authActions.login(result.data.username, result.data.jwt);
-
-      setLoginFailed(false);
-    } catch (e) {
-      console.log(e.message);
-    }
-    setLoading(false);
+    // storing the token into secure store
   };
 
   // ToDO: Fix the layout

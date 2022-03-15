@@ -44,6 +44,16 @@ const SignupStepTwo = ({navigation, route}) => {
   });
 
   const handleSubmit = async values => {
+    if (!agreed) {
+      Toast.show({
+        position: 'bottom',
+        visibilityTime: 5000,
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please agree to the terms 👋',
+      });
+      return;
+    }
     setLoading(true);
     const isReachable = await checkIfReachable(settings.apiUrl);
 
@@ -53,50 +63,30 @@ const SignupStepTwo = ({navigation, route}) => {
       return setRegisterFailed(true);
     }
 
-    if (!agreed) {
-      Toast.show({
-        position: 'bottom',
-        visibilityTime: 5000,
-        type: 'error',
-        text1: 'Error',
-        text2: 'Please agree to the terms 👋',
-      });
-      setLoading(false);
-      return;
-    }
-
     const userCompleteData = {...prevStepValues, ...values};
 
-    try {
-      const result = await AuthService.signup(userCompleteData);
-      console.log(result);
-    } catch (e) {
-      Toast.show({
-        position: 'bottom',
-        visibilityTime: 5000,
-        type: 'error',
-        text1: 'Error',
-        text2: e.message,
-      });
-    }
-    setLoading(false);
-
-    // UserService.createUser(userCompleteData)
-    //   .then(res => {
-    //     AuthServer.login(
-    //       userCompleteData.email,
-    //       userCompleteData.password,
-    //     ).then(async res => {
-    //       UserService.getUserByEmail(userCompleteData.email);
-    //       setUser(res.data);
-    //       await EncryptedStorage.setItem('user', JSON.stringify(res.data));
-    //     });
-    //   })
-    //   .catch(error => {
-    //     console.log('Error occurred while registering: ', error);
-    //     setRegisterFailed(true);
-    //     // setRegisterError('User Already Exist');
-    //   });
+    // create new user
+    AuthService.signup(userCompleteData)
+      .then(async res => {
+        await authActions.signup(res.data.username, res.data.jwt);
+        Toast.show({
+          position: 'bottom',
+          visibilityTime: 5000,
+          type: 'success',
+          text1: 'Success',
+          text2: 'You are registered Successfully',
+        });
+      })
+      .catch(e =>
+        Toast.show({
+          position: 'bottom',
+          visibilityTime: 5000,
+          type: 'error',
+          text1: 'Error',
+          text2: 'Error while signup.',
+        }),
+      )
+      .finally(() => setLoading(false));
   };
 
   return (
