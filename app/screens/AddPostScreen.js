@@ -47,9 +47,9 @@ import {PanGestureHandler,
 
 export default function AddPostScreen({navigation, route}) {
 
-  const {user, setUser, loadingIndicator, setloadingIndicator} =
-    useContext(authContext);
-
+  const {userData : user} =
+    useContext(authContext)?.userState;
+  const [loading,setLoading] = useState(false)
   const dispatch = useDispatch();
   const postFeel = useSelector(state => state.postFeel);
 
@@ -239,20 +239,16 @@ export default function AddPostScreen({navigation, route}) {
   const handelPickImage = async () => {
     try {
       const result = await pickImage();
-    
-   
       if (!result.cancelled) onAddImage(result);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
   const onAddImage = uris => {
-  
-  
     setImages(uris);
     console.log(uris)
-    handleButtonActivation(text, [...images,imagesList]);
+    handleButtonActivation(text, [...images,uris]);
   };
   const onRemoveImage = uri => {
    
@@ -262,7 +258,7 @@ export default function AddPostScreen({navigation, route}) {
   };
 
   const handleAddPost = async () => {
-    setloadingIndicator(true);
+    setLoading(true);
 
     if (groupPost) {
       const postContent = {
@@ -277,7 +273,7 @@ export default function AddPostScreen({navigation, route}) {
 
       PostService.createPost(user.id, postContent).then(resp => {
         let existingPosts = store.getState().groupPosts;
-        setloadingIndicator(false);
+        setLoading(false);
         store.dispatch(
           groupPostsActions.setPosts([resp.data, ...existingPosts]),
         );
@@ -296,7 +292,7 @@ export default function AddPostScreen({navigation, route}) {
 
         PostService.createSwapPost(user.id, swapContent).then(resp => {
           store.dispatch(feedPostsAction.addFeedPost(resp.data));
-          setloadingIndicator(false);
+          setLoading(false);
           navigation.navigate(routes.FEED);
         });
       } else {
@@ -311,7 +307,7 @@ export default function AddPostScreen({navigation, route}) {
 
           PostService.createPost(user.id, postContent).then(resp => {
             store.dispatch(feedPostsAction.addFeedPost(resp.data));
-            setloadingIndicator(false);
+            setLoading(false);
             dispatch(postFeelingsActions.setDefault());
 
             navigation.navigate(routes.FEED);
