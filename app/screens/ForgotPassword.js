@@ -19,7 +19,7 @@ export default function ForgotPassword({navigation}) {
   // Sending OTP to email to reset password
   const sendOTP = (values, setFieldError) => {
     authService
-      .sendOTPForPasswordReset(values.email)
+      .passwordResetOTP(values.email)
       .then(res => {
         if (res.status === 200) {
           navigation.navigate(routes.PASSWORD_RESET_OTP, {

@@ -17,8 +17,9 @@ const validationSchema = Yup.object().shape({
     .length(6),
 });
 
-export default function PasswordResetOTP({navigation, route}) {
-  const {email: username} = route?.params;
+export default function SignupVerification({navigation, route}) {
+  // const {email: username} = route?.params;
+  const username = '';
 
   const [timeOver, setTimeOver] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -53,7 +54,7 @@ export default function PasswordResetOTP({navigation, route}) {
 
     setLoading(true);
     authService
-      .verifyPasswordResetOTP(username, values.otp)
+      .verifyOTP(username, values.otp)
       .then(res => {
         if (res.status === 200) {
           navigation.navigate(routes.PASSWORD_RESET, {
@@ -70,7 +71,7 @@ export default function PasswordResetOTP({navigation, route}) {
   };
 
   return (
-    <RegistrationContainer title="Forgot Password">
+    <RegistrationContainer title="Account Verification">
       <Form
         initialValues={{
           otp: '',

@@ -13,11 +13,13 @@ import settings from '../config/settings';
 import useIsReachable from '../hooks/useIsReachable';
 import RegistrationContainer from '../components/forms/RegistrationContainer';
 import Loading from '../components/Loading';
+import routes from '../navigation/routes';
 
 const SignupStepTwo = ({navigation, route}) => {
   const prevStepValues = route?.params;
 
   const [agreed, setagreed] = useState(false);
+  const [verified, setVerified] = useState(false);
   const [registerFailed, setRegisterFailed] = useState(false);
   const [registerError, setRegisterError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -52,7 +54,6 @@ const SignupStepTwo = ({navigation, route}) => {
       });
       return;
     }
-    setLoading(true);
     const isReachable = await checkIfReachable(settings.apiUrl);
 
     if (isReachable === false) {
@@ -63,91 +64,99 @@ const SignupStepTwo = ({navigation, route}) => {
 
     const userCompleteData = {...prevStepValues, ...values};
 
+    AuthService.emailConfirmOTP(userCompleteData.email)
+      .then(res => console.log(res))
+      .catch(e => console.log(e))
+      .finally(_ => setLoading(false));
+
+    // navigation.navigate(routes.SIGNUP_VERIFICATION);
     // create new user
-    AuthService.signup(userCompleteData)
-      .then(async res => {
-        await authActions.signup(res.data.username, res.data.jwt);
-        Toast.show({
-          position: 'bottom',
-          visibilityTime: 5000,
-          type: 'success',
-          text1: 'Success',
-          text2: 'You are registered Successfully',
-        });
-      })
-      .catch(e =>
-        Toast.show({
-          position: 'bottom',
-          visibilityTime: 5000,
-          type: 'error',
-          text1: 'Error',
-          text2: 'Error while signup.',
-        }),
-      )
-      .finally(() => setLoading(false));
+
+    // AuthService.signup(userCompleteData)
+    //   .then(async res => {
+
+    //     await authActions.signup(res.data.username, res.data.jwt);
+    //     Toast.show({
+    //       position: 'bottom',
+    //       visibilityTime: 5000,
+    //       type: 'success',
+    //       text1: 'Success',
+    //       text2: 'You are registered Successfully',
+    //     });
+    //   })
+    //   .catch(e =>
+    //     Toast.show({
+    //       position: 'bottom',
+    //       visibilityTime: 5000,
+    //       type: 'error',
+    //       text1: 'Error',
+    //       text2: 'Error while signup.',
+    //     }),
+    //   )
+    //   .finally(() => setLoading(false));
   };
 
   return (
     <>
-      {loading ? (
-        <Loading text="Signing up..." />
-      ) : (
-        <RegistrationContainer>
-          <View style={styles.registerError}>
-            <ErrorMessage error={registerError} visible={registerFailed} />
+      <RegistrationContainer>
+        <View style={styles.registerError}>
+          <ErrorMessage error={registerError} visible={registerFailed} />
+        </View>
+
+        <Form
+          initialValues={{
+            password: '',
+            confirmPassword: '',
+            gender: '',
+          }}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}>
+          <FormRadio
+            name="gender"
+            style={[styles.formField, styles.formRadio]}
+          />
+
+          <FormField
+            autoCorrect={false}
+            name="password"
+            placeholder="Password"
+            secureTextEntry
+            textContentType="password" // Only for ios
+            style={styles.formField}
+          />
+
+          <FormField
+            autoCorrect={false}
+            name="confirmPassword"
+            placeholder="Re-Enter Password"
+            secureTextEntry
+            textContentType="password" // Only for ios
+            style={styles.formField}
+          />
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <TouchableOpacity
+              style={styles.agree}
+              onPress={() => setagreed(!agreed)}>
+              <Icon
+                name={agreed ? 'check-box' : 'check-box-outline-blank'}
+                type={'MaterialIcons'}
+                size={30}
+                backgroundSizeRatio={0.9}
+                style={styles.checkIcon}
+              />
+            </TouchableOpacity>
+            <Text style={{marginLeft: 10}}>
+              {'Agree to terms & conditions'}
+            </Text>
           </View>
 
-          <Form
-            initialValues={{
-              password: '',
-              confirmPassword: '',
-              gender: '',
-            }}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}>
-            <FormRadio
-              name="gender"
-              style={[styles.formField, styles.formRadio]}
-            />
-
-            <FormField
-              autoCorrect={false}
-              name="password"
-              placeholder="Password"
-              secureTextEntry
-              textContentType="password" // Only for ios
-              style={styles.formField}
-            />
-
-            <FormField
-              autoCorrect={false}
-              name="confirmPassword"
-              placeholder="Re-Enter Password"
-              secureTextEntry
-              textContentType="password" // Only for ios
-              style={styles.formField}
-            />
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <TouchableOpacity
-                style={styles.agree}
-                onPress={() => setagreed(!agreed)}>
-                <Icon
-                  name={agreed ? 'check-box' : 'check-box-outline-blank'}
-                  type={'MaterialIcons'}
-                  size={30}
-                  backgroundSizeRatio={0.9}
-                  style={styles.checkIcon}
-                />
-              </TouchableOpacity>
-              <Text style={{marginLeft: 10}}>
-                {'Agree to terms & conditions'}
-              </Text>
-            </View>
-
-            <SubmitButton title="Register" style={styles.submitButton} />
-          </Form>
-        </RegistrationContainer>
-      )}
+          <SubmitButton
+            disabled={loading}
+            title="Register"
+            style={styles.submitButton}
+          />
+        </Form>
+      </RegistrationContainer>
     </>
   );
 };

@@ -52,7 +52,6 @@ export default function LoginScreen({navigation}) {
     // --------- login ----------
     AuthService.login(email, password)
       .then(async result => {
-  
         await authActions.login(result.data.username, result.data.jwt);
         Toast.show({
           position: 'bottom',

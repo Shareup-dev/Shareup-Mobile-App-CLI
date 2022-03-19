@@ -5,6 +5,7 @@ export default Object.freeze({
   FORGOT_PASSWORD: 'forgotPassword',
   PASSWORD_RESET_OTP: 'passwordResetOTP',
   PASSWORD_RESET: 'passwordReset',
+  SIGNUP_VERIFICATION: 'signupVerification',
   FEED: 'NewsFeed',
   ADD_POST: 'AddPost',
   ACCOUNT: 'Account',

@@ -8,6 +8,7 @@ import SignupStepTwo from '../screens/SignupStepTwo';
 import ForgotPassword from '../screens/ForgotPassword';
 import PasswordResetOTP from '../screens/PasswordResetOTP';
 import ResetPassword from '../screens/ResetPassword';
+import SignupVerification from '../screens/SignupVerification';
 
 export default function AuthNavigation() {
   const Stack = createNativeStackNavigator();
@@ -23,6 +24,10 @@ export default function AuthNavigation() {
       <Stack.Screen name={routes.SIGNUP} component={SignUpScreen} />
       <Stack.Screen name={routes.FORGOT_PASSWORD} component={ForgotPassword} />
       <Stack.Screen name={routes.PASSWORD_RESET} component={ResetPassword} />
+      <Stack.Screen
+        name={routes.SIGNUP_VERIFICATION}
+        component={SignupVerification}
+      />
       <Stack.Screen
         name={routes.PASSWORD_RESET_OTP}
         component={PasswordResetOTP}

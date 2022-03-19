@@ -41,6 +41,7 @@ export default function AddStoryScreen({navigation}) {
 
     setMode('view');
     setstoryPhoto(photo);
+    console.log(photo);
   }
 
   const imagePickHandler = async () => {
@@ -49,6 +50,7 @@ export default function AddStoryScreen({navigation}) {
         quality: 0.5,
         mediaType: 'photo',
       });
+
       setstoryPhoto(result.assets[0]);
       setCameraImg(false);
       setMode('view');
@@ -61,11 +63,9 @@ export default function AddStoryScreen({navigation}) {
     setCameraType(prev => (prev === 'back' ? 'front' : 'back'));
   };
 
-  const addStoryHandler = () => {
+  const addStoryHandler = async () => {
     setIsUploading(true);
-    if (isUploading) {
-      return;
-    }
+
     let storyData = new FormData();
 
     storyData.append('stryfiles', {
@@ -73,12 +73,14 @@ export default function AddStoryScreen({navigation}) {
       type: 'image/jpg',
       uri: storyPhoto.uri,
     });
+
     storyService
       .addStory(userData.id, storyData)
       .then(res => {
         console.log(res);
       })
-      .catch(e => console.log(e.message));
+      .catch(e => console.log(e.message))
+      .finally(_ => setIsUploading(false));
   };
 
   return (

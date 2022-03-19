@@ -14,6 +14,7 @@ import Icon from '../components/Icon';
 import colors from '../config/colors';
 import fileStorage from '../config/fileStorage';
 import {Menu, Divider, Provider} from 'react-native-paper';
+import DownModal from '../components/drawers/DownModal';
 
 const StoryViewScreen = ({navigation, route}) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -50,6 +51,47 @@ const StoryViewScreen = ({navigation, route}) => {
       pauseProgress();
     };
   }, []);
+
+  const DropDownMenu = () => {
+    return (
+      <View style={styles.menuContainer}>
+        <View style={{alignItems: 'center'}}>
+          <View
+            style={{
+              backgroundColor: '#cacaca',
+              width: 80,
+              height: 6,
+              borderRadius: 6,
+            }}
+          />
+        </View>
+        <TouchableOpacity style={styles.menu}>
+          <View>
+            <Text style={styles.menuText}>Edit</Text>
+            <Text>Edit the Caption</Text>
+          </View>
+          <Icon size={45} name={'edit'} type="Entypo" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menu}>
+          <View>
+            <Text style={styles.menuText}>Delete</Text>
+            <Text>Delete your story</Text>
+          </View>
+          <Icon size={45} name={'delete'} color="crimson" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menu}>
+          <View>
+            <Text style={styles.menuText}>Hide this story</Text>
+            <Text
+              style={{
+                maxWidth: 200,
+              }}>{`Posted by @${route.params?.userName}`}</Text>
+          </View>
+          <Icon size={45} name={'eye-with-line'} type="Entypo" />
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   return (
     <>
@@ -120,6 +162,9 @@ const StoryViewScreen = ({navigation, route}) => {
                     noBackground={true}
                   />
                 </TouchableOpacity>
+                <DownModal isVisible={menuOpen} setIsVisible={setMenuOpen}>
+                  <DropDownMenu />
+                </DownModal>
               </View>
             </View>
           </>
@@ -132,6 +177,21 @@ const StoryViewScreen = ({navigation, route}) => {
 export default StoryViewScreen;
 
 const styles = StyleSheet.create({
+  menuContainer: {},
+  menu: {
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    // borderBottomWidth: 0.6,
+    // borderBottomColor: '#cacaca',
+  },
+  menuText: {
+    fontWeight: '600',
+    fontSize: 20,
+    color: '#585858',
+  },
   borderLine: {
     borderBottomWidth: 5,
     borderColor: colors.grayX11Gray,
@@ -168,6 +228,7 @@ const styles = StyleSheet.create({
     height: 32,
   },
   userName: {
+    maxWidth: 200,
     color: '#fdfdfd',
     textShadowColor: 'black',
     textShadowOffset: {width: 0, height: 0},
