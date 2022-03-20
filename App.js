@@ -84,7 +84,10 @@ export default function App() {
             });
           } else {
             dispatch({type: actions.CLEAR_STATE});
-            <AuthNavigator/>
+            <NavigationContainer>
+                <AuthNavigator/>
+            </NavigationContainer>
+            
           }
         } catch (error) {
           console.log(error.message);

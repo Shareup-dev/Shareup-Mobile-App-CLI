@@ -27,4 +27,18 @@ class GroupService {
     AuthAxios.get(`/groups/group_id/${oid}`)
   getGroupById = (gid) =>
     AuthAxios.get(`/groups/id/${id}`)
+  getAllGroups = () =>
+    AuthAxios.get(`/groups`)
+  inviteToJoin = (gid,uid,fid) => 
+    AuthAxios.post(`/groups/${gid},${uid}/invite/${fid}`)
+  acceptInvitation = (rid) =>
+    AuthAxios.put(`/groups/accept_invite/${rid}`)
+  rejectInvitation = (rid) =>
+    AuthAxios.put(`/groups/reject_invite/${rid}`)
+  getMemberRequests = (gid) =>
+    AuthAxios.get(`/groups/${gid}/member_requests`)
+  acceptMemberRequest = (rid) =>
+    AuthAxios.put(`/groups/accept_member_requests/${rid}`)
+  rejectMemberRequest = (rid) =>
+    AuthAxios.put(`/groups/reject_member_request/${rid}`)
 }
