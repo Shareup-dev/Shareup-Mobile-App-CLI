@@ -1,51 +1,62 @@
-import React, { useState } from "react";
-import { StyleSheet } from "react-native";
-import * as Yup from "yup";
+import React, {useState} from 'react';
+import {StyleSheet, TouchableOpacity, Text} from 'react-native';
+import * as Yup from 'yup';
 
-import { Form, FormField, SubmitButton } from "../components/forms";
-import AlternativeRegistrationContainer from "../components/AlternativeRegistrationContainer";
-import Separator from "../components/Separator";
-import routes from "../navigation/routes";
-import store from "../redux/store";
-import registrationSlice from "../redux/accountRegistration";
-import defaultStyles from "../config/styles";
-import RegistrationContainer from "../components/forms/RegistrationContainer";
+import {Form, FormField, SubmitButton} from '../components/forms';
+import Separator from '../components/Separator';
+import routes from '../navigation/routes';
+
+import defaultStyles from '../config/styles';
+import RegistrationContainer from '../components/forms/RegistrationContainer';
+import LinkButton from '../components/buttons/LinkButton';
+import authService from '../services/auth.service';
+import colors from '../config/colors';
 
 const validationSchema = Yup.object().shape({
-  firstName: Yup.string().required().label("First Name"),
-  lastName: Yup.string().required().label("Last Name"),
-  email: Yup.string().required().email().label("Email"),
+  firstName: Yup.string().required().label('First Name'),
+  lastName: Yup.string().required().label('Last Name'),
+  email: Yup.string().required().email().label('Email'),
 });
 
-export default function SignUpScreen({ navigation }) {
-  const [error, setError] = useState();
+export default function SignUpScreen({navigation}) {
+  const [error, setError] = useState('');
+  const [Loading, setLoading] = useState(false);
 
-  const [isLogoVisible, setIsLogoVisible] = useState(true);
+  const handleSubmit = (values, props) => {
+    setLoading(true);
+    const {setFieldError} = props;
 
-  const handleSubmit = async (userInfo) => {
-    console.log(
-      "register " +
-        userInfo.email +
-        " " +
-        userInfo.firstName +
-        " " +
-        userInfo.lastName
-    );
-    store.dispatch(registrationSlice.actions.appendFields(userInfo));
-    navigation.navigate(routes.SIGNUP_STEP2);
+    authService
+      .verifyUser(values?.email)
+      .then(res =>
+        res.status !== 200
+          ? navigation.navigate(routes.SIGNUP_STEP2, {
+              ...values,
+            })
+          : setFieldError('email', 'The Email you provide is already in used.'),
+      )
+      .catch(e => {
+        if (e.message === 'Request failed with status code 404') { // if user not exist move to next step 
+          {
+            navigation.navigate(routes.SIGNUP_STEP2, {
+              ...values,
+            });
+          }
+        } else setError('Unexpected Error.');
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
     <RegistrationContainer>
       <Form
         initialValues={{
-          firstName: "",
-          lastName: "",
-          email: "",
+          firstName: '',
+          lastName: '',
+          email: '',
         }}
         onSubmit={handleSubmit}
-        validationSchema={validationSchema}
-      >
+        validationSchema={validationSchema}>
         <FormField
           autoCorrect={false}
           name="firstName"
@@ -69,11 +80,24 @@ export default function SignUpScreen({ navigation }) {
           style={defaultStyles.formField}
         />
 
-        <SubmitButton title="Next" style={styles.submitButton} />
+        <Text style={{color: colors.red, fontWeight: '700'}}>
+          {error ? error : null}
+        </Text>
+
+        <SubmitButton
+          disabled={Loading}
+          title="Next"
+          dis
+          style={styles.submitButton}
+        />
 
         <Separator text="or" />
 
-        <AlternativeRegistrationContainer />
+        <LinkButton
+          title="Do you have an existing account?"
+          onPress={() => navigation.navigate(routes.LOGIN)}
+          style={{marginTop: 10, fontSize: 18}}
+        />
       </Form>
     </RegistrationContainer>
   );
@@ -85,8 +109,8 @@ const styles = StyleSheet.create({
     paddingTop: 50,
   },
   submitButton: {
-    alignSelf: "center",
-    width: "60%",
-    paddingTop: "10%",
+    alignSelf: 'center',
+    width: '60%',
+    paddingTop: '10%',
   },
 });

@@ -1,23 +1,32 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TextInput, Dimensions } from "react-native";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import React, {useState} from 'react';
+import {View, Text, StyleSheet, TextInput, Dimensions} from 'react-native';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 
-import Screen from "../components/Screen";
-import AppButton from "../components/buttons/Button";
-import Icon from "../components/Icon";
-import Separator from "../components/Separator";
-import AppTextInput from "../components/TextInput";
-import colors from "../config/colors";
-import defaultStyles from "../config/styles";
-import routes from "../navigation/routes";
-import ChoosePrivacyDrawer from "../components/drawers/ChoosePrivacyDrawer";
-import { Header, HeaderCloseIcon, HeaderTitle } from "../components/headers";
+import Screen from '../components/Screen';
+import AppButton from '../components/buttons/Button';
+import Icon from '../components/Icon';
+import Separator from '../components/Separator';
+import AppTextInput from '../components/TextInput';
+import colors from '../config/colors';
+import defaultStyles from '../config/styles';
+import routes from '../navigation/routes';
+import ChoosePrivacyDrawer from '../components/drawers/ChoosePrivacyDrawer';
+import {Header, HeaderCloseIcon, HeaderTitle} from '../components/headers';
 
-export default function CreateNewGroup({ navigation }) {
+import * as Yup from 'yup';
+import {Formik} from 'formik';
+
+export default function CreateNewGroup({navigation}) {
   const [privacySheet, setPrivacySheet] = useState(false);
-  const [privacy, setPrivacy] = useState("Public");
+  const [privacy, setPrivacy] = useState('Public');
   const [groupDetail, setGroupDetail] = useState({});
   const [isPrivacyDrawerVisible, setIsPrivacyDrawerVisible] = useState(false);
+
+  const validationSchema = Yup.object().shape({
+    group_name: Yup.string().required().label('Name'),
+    description: Yup.string().required().min(3).label('Description'),
+    privacy_option: Yup.string().required().label('Privacy option'),
+  });
 
   return (
     <Screen>
@@ -27,19 +36,40 @@ export default function CreateNewGroup({ navigation }) {
       />
       <View style={styles.container}>
         <ScrollView>
-          <View style={styles.input}>
-            <Text style={styles.title}>Name</Text>
-            <Text style={styles.subTitle}>
-              Type useful name so that it can be searched easily
-            </Text>
-            <AppTextInput
-              style={styles.inputField}
-              backgroundColor={"white"}
-              onChangeText={(name) => {
-                setGroupDetail({ ...groupDetail, name });
-              }}
-            />
-          </View>
+          <Formik
+            initialValues={{
+              group_name: '',
+              description: '',
+              privacy_option: '',
+            }}
+            // validationSchema={validationSchema}
+            onSubmit={values => console.log(values)}>
+            {(handleChange, handleBlur, handleSubmit, values) => {
+              return (
+                <>
+                  <View style={styles.input}>
+                    <Text style={styles.title}>Name</Text>
+                    <Text style={styles.subTitle}>
+                      Type useful name so that it can be searched easily
+                    </Text>
+                    <AppTextInput
+                      style={styles.inputField}
+                      backgroundColor={'white'}
+                      onChangeText={() => handleChange('group_name')}
+                      onBlur={() => handleBlur('group_name')}
+                    />
+                  </View>
+                  <AppButton
+                    title={'Next'}
+                    width={'50%'}
+                    style={{alignSelf: 'center', marginTop: 20}}
+                    onPress={handleSubmit}
+                  />
+                </>
+              );
+            }}
+          </Formik>
+
           <View style={styles.input}>
             <Text style={styles.title}>Description</Text>
             <Text style={styles.subTitle}>
@@ -48,8 +78,8 @@ export default function CreateNewGroup({ navigation }) {
             <TextInput
               multiline={true}
               numberOfLines={10}
-              onChangeText={(description) => {
-                setGroupDetail({ ...groupDetail, description });
+              onChangeText={description => {
+                setGroupDetail({...groupDetail, description});
               }}
               style={[styles.inputField, styles.groupDescription]}
             />
@@ -57,11 +87,10 @@ export default function CreateNewGroup({ navigation }) {
 
           <View
             onTouchEnd={() => {
-              console.log("Touchable");
+              console.log('Touchable');
               setIsPrivacyDrawerVisible(!isPrivacyDrawerVisible);
             }}
-            style={styles.input}
-          >
+            style={styles.input}>
             <Text style={styles.title}>Privacy</Text>
             <Text style={styles.subTitle}>
               Choose the privay setting of group
@@ -69,33 +98,18 @@ export default function CreateNewGroup({ navigation }) {
             <View
               style={[
                 styles.privacySelector,
-                { width: "88%", marginHorizontal: 30 },
-              ]}
-            >
+                {width: '88%', marginHorizontal: 30},
+              ]}>
               <View style={defaultStyles.row}>
                 <Icon
-                  type={"Ionicons"}
-                  name={"lock-closed"}
-                  type={privacy === "Public" ? "Entypo" : "Ionicons"}
-                  name={privacy === "Public" ? "globe" : "lock-closed"}
+                  type={privacy === 'Public' ? 'Entypo' : 'Ionicons'}
+                  name={privacy === 'Public' ? 'globe' : 'lock-closed'}
                 />
                 <Text>{privacy}</Text>
               </View>
-              <Icon type={"AntDesign"} size={35} name={"caretdown"} />
+              <Icon type={'AntDesign'} size={35} name={'caretdown'} />
             </View>
           </View>
-          <AppButton
-            title={"Next"}
-            width={"50%"}
-            style={{ alignSelf: "center", marginTop: 20 }}
-            onPress={() => {
-              // console.log("Privacy going to be: ", privacy);
-              groupDetail.privacySetting = privacy;
-              setGroupDetail({ ...groupDetail, privacySetting: privacy });
-              // console.log("Group details: ", groupDetail);
-              navigation.navigate(routes.SET_GROUP_PHOTO, groupDetail);
-            }}
-          />
         </ScrollView>
       </View>
 
@@ -112,14 +126,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   inputField: {
     borderWidth: 1,
-    width: "100%",
+    width: '100%',
     height: 50,
     borderRadius: 8,
-    color: "black",
+    color: 'black',
     paddingHorizontal: 15,
     fontSize: 18,
     borderColor: colors.grayX11Gray,
@@ -132,7 +146,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: "800",
+    fontWeight: '800',
     paddingHorizontal: 30,
   },
   subTitle: {
@@ -142,30 +156,30 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   groupDescription: {
-    width: "88%",
+    width: '88%',
     marginHorizontal: 30,
-    textAlignVertical: "top",
+    textAlignVertical: 'top',
     height: 150,
     paddingTop: 10,
   },
   privacySelector: {
     borderWidth: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     borderRadius: 8,
     borderColor: colors.grayX11Gray,
   },
   privacySheet: {
     // backgroundColor: colors.lighterGray,
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
     elevation: 3,
     zIndex: 1,
-    width: "100%",
+    width: '100%',
     padding: 15,
     paddingHorizontal: 30,
     height: 120,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
     // elevation:1
   },
 });

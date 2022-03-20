@@ -5,7 +5,7 @@ const baseURL = `${settings.apiUrl}/api/v1/`;
 
 const AuthAxios = axios.create({
   baseURL: baseURL,
-  timeout: 1000,
+
   headers: {
     'Access-Control-Allow-Origin': '*',
   },

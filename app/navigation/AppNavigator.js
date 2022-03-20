@@ -16,6 +16,7 @@ import ActivityNavigator from './ActivityNavigator';
 import NewsFeedNavigator from './NewsFeedNavigator';
 import GroupNavigator from './GroupNavigator';
 import {useSelector} from 'react-redux';
+import CustomHeaderBar from './CustomHeaderBar';
 
 const {postTypes} = constants;
 

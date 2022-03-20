@@ -6,68 +6,145 @@ import {
   StyleSheet,
   ImageBackground,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   Dimensions,
+  Alert,
+  Animated,
 } from 'react-native';
 
 import Icon from '../components/Icon';
 import colors from '../config/colors';
 import fileStorage from '../config/fileStorage';
-import {ProgressBar} from 'react-native-paper';
+import DownModal from '../components/drawers/DownModal';
+
+const windowWidth = Dimensions.get('screen').width;
 
 const StoryViewScreen = ({navigation, route}) => {
-  const progress = useRef();
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  let interval = useRef(null);
-  // const [process, setProcess] = useState(0);
-  const [hold, setHold] = useState(false);
+  const scale = useRef(new Animated.Value(0)).current;
 
-  const startTimer = async (duration = 0) => {
-    interval.current = setInterval(() => {
-      if (duration <= 100) {
-        progress.current.setNativeProps({
-          style: {width: duration + '%'},
-        });
-        duration = duration + 5;
-      } else {
-        clearInterval(interval.current);
-        navigation.popToTop();
-      }
-    }, 1);
+  const [duration, setDuration] = useState(6000);
+
+  let startTime;
+  let pauseTime;
+
+  const startProgress = () => {
+    startTime = new Date().valueOf();
+    Animated.timing(scale, {
+      toValue: windowWidth / 2,
+      useNativeDriver: true,
+      duration: duration,
+    }).start(({finished}) => {
+      if (finished) navigation.popToTop();
+    });
   };
+
+  const pauseProgress = () => {
+    pauseTime = new Date().valueOf();
+    setDuration(prev => prev - (pauseTime - startTime));
+
+    Animated.timing(scale).stop();
+  };
+
+  const handleCloseModel = () => {
+    setMenuOpen(false);
+    startProgress();
+  };
+
+  const handleDelete = () => {
+    Alert.alert('Delete this?', 'Are you sure to delete this story?', [
+      {text: "Don't delete", style: 'cancel', onPress: () => {}},
+      {
+        text: 'Delete',
+        style: 'destructive',
+        // If the user confirmed, then we dispatch the action we blocked earlier
+        // This will continue the action that had triggered the removal of the screen
+        onPress: () => {
+          console.log('deleted');
+        },
+      },
+    ]);
+  };
+
   useEffect(() => {
-    startTimer();
+    startProgress();
     return () => {
-      clearInterval(interval.current);
+      pauseProgress();
     };
   }, []);
 
+  const DropDownMenu = () => {
+    return (
+      <View style={styles.menuContainer}>
+        <View style={{alignItems: 'center'}}>
+          <View
+            style={{
+              backgroundColor: '#cacaca',
+              width: 80,
+              height: 6,
+              borderRadius: 6,
+            }}
+          />
+        </View>
+        <TouchableOpacity style={styles.menu}>
+          <View>
+            <Text style={styles.menuText}>Edit</Text>
+            <Text>Edit the Caption</Text>
+          </View>
+          <Icon size={45} name={'edit'} type="Entypo" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menu} onPress={handleDelete}>
+          <View>
+            <Text style={styles.menuText}>Delete</Text>
+            <Text>Delete your story</Text>
+          </View>
+          <Icon size={45} name={'delete'} color="crimson" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menu}>
+          <View>
+            <Text style={styles.menuText}>Hide this story</Text>
+            <Text
+              style={{
+                maxWidth: windowWidth / 2,
+              }}>{`Posted by @${route.params?.userName}`}</Text>
+          </View>
+          <Icon size={45} name={'eye-with-line'} type="Entypo" />
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPressIn={() => {
-        clearInterval(interval.current);
-        setHold(true);
-      }}
-      onPressOut={() => {
-        // startTimer(process * 100);
-        setHold(false);
-      }}>
-      <ImageBackground
-        style={{width: '100%', height: '100%'}}
-        source={{uri: fileStorage.baseUrl + route.params.image}}>
-        {/* <View ref={borderLineRef} style={[styles.borderLine]}></View> */}
-        {!hold ? (
+    <>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPressIn={() => {
+          pauseProgress();
+        }}
+        onPressOut={() => {
+          startProgress();
+        }}>
+        <ImageBackground
+          style={{width: '100%', height: '100%'}}
+          source={{uri: fileStorage.baseUrl + route.params.image}}>
           <>
             <View
-              ref={progress}
               style={{
-                backgroundColor: '#333',
-                width: 0,
-                height: 8,
-                borderRadius: 3,
-              }}
-            />
+                backgroundColor: '#CACACA',
+              }}>
+              <Animated.View
+                style={{
+                  backgroundColor: '#242424',
+                  transform: [
+                    {
+                      scaleX: scale,
+                    },
+                  ],
+                  width: 4,
+                  height: 4,
+                }}
+              />
+            </View>
             <View style={styles.container}>
               <View style={styles.profileContainer}>
                 <View style={styles.profileImg}>
@@ -79,30 +156,64 @@ const StoryViewScreen = ({navigation, route}) => {
                 </View>
                 <Text style={styles.userName}>{route.params.userName}</Text>
               </View>
-              <TouchableOpacity
-                style={styles.closeIcon}
-                onPress={() => {
-                  navigation.popToTop();
-                }}>
-                <Icon
-                  name={'close'}
-                  type={'AntDesign'}
-                  size={54}
-                  backgroundColor={'unset'}
-                  noBackground={true}
-                />
-              </TouchableOpacity>
+              <View style={{flexDirection: 'row'}}>
+                <TouchableOpacity
+                  style={styles.closeIcon}
+                  onPress={() => {
+                    setMenuOpen(true);
+                    pauseProgress();
+                  }}>
+                  <Icon
+                    name={'options'}
+                    type={'SimpleLineIcons'}
+                    size={54}
+                    backgroundColor={'unset'}
+                    noBackground={true}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.closeIcon}
+                  onPress={() => {
+                    navigation.popToTop();
+                  }}>
+                  <Icon
+                    name={'close'}
+                    type={'AntDesign'}
+                    size={54}
+                    backgroundColor={'unset'}
+                    noBackground={true}
+                  />
+                </TouchableOpacity>
+                <DownModal isVisible={menuOpen} setIsVisible={handleCloseModel}>
+                  <DropDownMenu />
+                </DownModal>
+              </View>
             </View>
           </>
-        ) : null}
-      </ImageBackground>
-    </TouchableOpacity>
+        </ImageBackground>
+      </TouchableOpacity>
+    </>
   );
 };
 
 export default StoryViewScreen;
 
 const styles = StyleSheet.create({
+  menuContainer: {},
+  menu: {
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    // borderBottomWidth: 0.6,
+    // borderBottomColor: '#cacaca',
+  },
+  menuText: {
+    fontWeight: '600',
+    fontSize: 20,
+    color: '#585858',
+  },
   borderLine: {
     borderBottomWidth: 5,
     borderColor: colors.grayX11Gray,
@@ -139,8 +250,12 @@ const styles = StyleSheet.create({
     height: 32,
   },
   userName: {
+    maxWidth: windowWidth / 2,
     color: '#fdfdfd',
-    borderColor: '#585858',
+    textShadowColor: 'black',
+    textShadowOffset: {width: 0, height: 0},
+    textShadowRadius: 8,
+    fontWeight: '800',
     marginLeft: 20,
     fontSize: 18,
     fontWeight: '600',

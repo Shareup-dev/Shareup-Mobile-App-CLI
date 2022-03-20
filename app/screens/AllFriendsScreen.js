@@ -11,7 +11,7 @@ import {
 
 import {Header, HeaderTitle} from '../components/headers';
 import authContext from '../authContext';
-import UserService from '../services/UserService';
+import UserService from '../services/user.service';
 import defaultStyles from '../config/styles';
 import FriendService from '../services/FriendService';
 import ListItem from '../components/lists/ListItem';
@@ -23,7 +23,7 @@ import routes from '../navigation/routes';
 export default function AllFriendsScreen({navigation}) {
   const [friends, setFriends] = useState([]);
   const [removed, setremoved] = useState([]);
-  const {user: loggedInUser} = useContext(authContext);
+  const {userData: loggedInUser} = useContext(authContext).userState;
 
   useEffect(() => {
     UserService.getFriends(loggedInUser.email).then(resp => {

@@ -1,13 +1,13 @@
-import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import React from 'react';
+import {View, StyleSheet, Text} from 'react-native';
 
-import colors from "../config/colors";
-import JoinGroupList from "./lists/JoinGroupList";
-import WritePost from "./WritePost";
+import colors from '../config/colors';
+import JoinGroupList from './lists/JoinGroupList';
+import WritePost from './WritePost';
 
-import StoriesList from "./lists/StoriesList";
+import StoriesList from './lists/StoriesList';
 
-export default function FeedTop({ navigation }) {
+export default function FeedTop({navigation}) {
   return (
     <View>
       <StoriesList navigation={navigation} style={styles.storiesList} />
@@ -25,11 +25,11 @@ const styles = StyleSheet.create({
   shareWrapper: {
     padding: 10,
     paddingHorizontal: 15,
-    flexDirection: "row",
+    flexDirection: 'row',
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: colors.LightGray,
-    alignItems: "center",
+    alignItems: 'center',
   },
   shareButton: {
     color: colors.mediumGray,
@@ -37,9 +37,9 @@ const styles = StyleSheet.create({
   },
 
   tabsWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderBottomWidth: 1.5,
     borderColor: colors.LightGray,
   },
@@ -49,10 +49,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.LightGray,
   },
   tabsTitle: {
-    fontWeight: "500",
+    fontWeight: '500',
   },
   suggestedGroupsWrapper: {
     marginHorizontal: 15,
+    marginTop: 10,
   },
   storiesList: {
     marginTop: 15,

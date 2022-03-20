@@ -23,6 +23,7 @@ import settings from '../config/settings';
 import defaultStyles from '../config/styles';
 import LoginContainer from '../components/forms/LoginContainer';
 import Loading from '../components/Loading';
+import authService from '../services/auth.service';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label('Email'),
@@ -30,7 +31,7 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function LoginScreen({navigation}) {
-  const {setUser, authActions} = useContext(authContext);
+  const {authActions} = useContext(authContext);
   const {isReachable, checkIfReachable} = useIsReachable();
 
   const [loading, setLoading] = useState(false);
@@ -50,30 +51,55 @@ export default function LoginScreen({navigation}) {
     }
 
     // --------- login ----------
-    const result = await AuthService.login(email, password);
+    AuthService.login(email, password)
+      .then(async result => {
+        await authActions.login(result.data.username, result.data.jwt);
+        Toast.show({
+          position: 'bottom',
+          visibilityTime: 5000,
+          type: 'success',
+          text1: 'Success',
+          text2: 'Logged in Successfully 👋',
+        });
+      })
+      .catch(async e => {
+        let message;
+        console.log(e.message);
+        if (e.message === 'Request failed with status code 401') {
+          // if the user not verified
+          await authService
+            .verifyEmailOTP(email)
+            .then(res => {
+              if (res.status === 200)
+                navigation.navigate(routes.SIGNUP_VERIFICATION, {
+                  username: email,
+                  password: password,
+                  jwt: null,
+                  fromLogin: true,
+                });
+            })
+            .catch(e => (message = 'Unexpected Error!'));
+        } else {
+          if (e.message === 'Request failed with status code 500')
+            // if invalid password or username
+            message = 'Username or Password incorrect';
+          else message = e.message;
 
-    if (result.status !== 200) {
-      setLoading(false);
-      setError('Invalid email and/or password.');
-      return setLoginFailed(true);
-    }
-
-    setLoading(false);
-    Toast.show({
-      position: 'bottom',
-      visibilityTime: 5000,
-      type: 'success',
-      text1: 'Success',
-      text2: 'Logged in Successfully 👋',
-    });
-
-    if (result.ok) return setLoginFailed(true);
+          Toast.show({
+            position: 'bottom',
+            visibilityTime: 5000,
+            type: 'error',
+            text1: 'Error',
+            text2: message,
+          });
+        }
+      })
+      .finally(_ => {
+        setLoading(false);
+        setLoginFailed(false);
+      });
 
     // storing the token into secure store
-    await authActions.login(result.data.username, result.data.jwt);
-
-    setLoginFailed(false);
-    setLoading(false);
   };
 
   // ToDO: Fix the layout
@@ -109,7 +135,9 @@ export default function LoginScreen({navigation}) {
               textContentType="password" // Only for ios
               style={defaultStyles.formField}
             />
-            <TouchableOpacity activeOpacity={0.6}>
+            <TouchableOpacity
+              activeOpacity={0.6}
+              onPress={() => navigation.navigate(routes.FORGOT_PASSWORD)}>
               <Text style={styles.forgotPassword}>Forgot Password</Text>
             </TouchableOpacity>
 

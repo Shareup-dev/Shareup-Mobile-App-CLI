@@ -7,7 +7,7 @@ import {Header, HeaderTitle} from '../components/headers';
 import Icon from '../components/Icon';
 import ListItem from '../components/lists/ListItem';
 import defaultStyles from '../config/styles';
-import UserService from '../services/UserService';
+import UserService from '../services/user.service';
 import authContext from '../authContext';
 import FriendService from '../services/FriendService';
 import store from '../redux/store';

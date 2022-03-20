@@ -1,4 +1,4 @@
-import axios, { Axios } from 'axios';
+
 import AuthAxios from './authAxios';
 
 class GroupService {
@@ -42,3 +42,6 @@ class GroupService {
   rejectMemberRequest = (rid) =>
     AuthAxios.put(`/groups/reject_member_request/${rid}`)
 }
+
+export default new Group();
+

@@ -14,6 +14,7 @@ export default React.memo(function Loading(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.white,
     justifyContent: 'center',
     alignItems: 'center',
   },

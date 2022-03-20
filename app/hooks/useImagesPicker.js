@@ -1,26 +1,21 @@
 import {useState} from 'react';
+import ImagePicker from 'react-native-image-picker';
 
-export default useImagePicker = () => {
+export default function useImagePicker() {
   // const [imageUri, setImageUri] = useState("");
   const [files, setFiles] = useState([]);
 
   const pickImage = async () => {
-    // get permission
-    // const {granted} = await ImagePicker.requestCameraPermissionsAsync();
-    // if (!granted) alert('You need to enable permission to access the library');
-    // // select an image
-    // try {
-    //   const result = await ImagePicker.launchImageLibraryAsync({
-    //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //     allowsEditing: true,
-    //     allowsMultipleSelection: true,
-    //     quality: 0.5,
-    //   });
-    //   // setImageUri(result.uri);
-    //   setFiles(...files, result.url);
-    // } catch (error) {
-    //   console.log('Error reading an image', error);
-    // }
+    try {
+      const result = await ImagePicker.launchImageLibrary({
+        mediaType: 'photo',
+        quality: '0.5',
+      });
+      // setImageUri(result.uri);
+      setFiles(...files, result.url);
+    } catch (error) {
+      console.log('Error reading an image', error);
+    }
     return null;
   };
 
@@ -29,4 +24,4 @@ export default useImagePicker = () => {
   };
 
   return {files, pickImage, clearFiles};
-};
+}

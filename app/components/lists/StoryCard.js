@@ -14,7 +14,7 @@ export default function StoryCard({style, navigation, image, userName}) {
     });
   };
   return (
-    <TouchableOpacity onPress={addStoryHandler}>
+    <TouchableOpacity onPress={addStoryHandler} activeOpacity={0.8}>
       <View style={[styles.container, style]}>
         <Image
           source={{uri: fileStorage.baseUrl + image}}

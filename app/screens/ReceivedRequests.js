@@ -10,7 +10,7 @@ import {
 import Screen from '../components/Screen';
 import {Header, HeaderTitle} from '../components/headers';
 import Icon from '../components/Icon';
-import UserService from '../services/UserService';
+import UserService from '../services/user.service';
 
 import authContext from '../authContext';
 import defaultStyles from '../config/styles';
@@ -20,7 +20,7 @@ import ListItem from '../components/lists/ListItem';
 import colors from '../config/colors';
 
 export default function ReceivedRequests({navigation}) {
-  const {user} = useContext(authContext);
+  const {userData: user} = useContext(authContext).userState;
   const [requests, setRequests] = useState([]);
   const [acceptedFrom, setAcceptedFrom] = useState([]);
   const [rejectedFrom, setRejectedFrom] = useState([]);
