@@ -9,12 +9,14 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import ShareupAuthentication from './app/util/ShareupAuthentication';
 
 export default function App() {
+
   return (
     <>
       <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'} />
       <OfflineNotice />
       <GestureHandlerRootView style={{flex: 1}}>
         <SafeAreaView style={{flex: 1}}>
+
           <NavigationContainer>
             <ShareupAuthentication />
           </NavigationContainer>
@@ -24,3 +26,5 @@ export default function App() {
     </>
   );
 }
+
+

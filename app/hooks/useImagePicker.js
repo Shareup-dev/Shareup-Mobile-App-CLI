@@ -11,7 +11,7 @@ export default function useImagesPicker() {
         selectionLimit: 1,
       });
       setFile(result.assets);
-      console.log('Selected image in image picker: ', result.assets);
+
       return result.assets;
     } catch (error) {
       console.log('Error reading an image', error);
@@ -21,6 +21,5 @@ export default function useImagesPicker() {
   const clearFile = () => {
     setFile({});
   };
-
   return {file, pickImage, clearFile};
 }

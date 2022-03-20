@@ -30,9 +30,11 @@ export default function StoriesList({navigation, style}) {
         renderItem={({item}) => {
           return (
             <StoryCard
+
               image={item.storiesImagePath}
               navigation={navigation}
               userName={item?.user?.firstName + ' ' + item?.user?.lastName}
+
             />
           );
         }}

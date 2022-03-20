@@ -45,8 +45,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import {postFeelingsActions} from '../redux/postFeelings';
 
 export default function AddPostScreen({navigation, route}) {
-  const [loading, setLoading] = useState(false);
-  const {userData: user} = useContext(authContext)?.userState;
+
+
+  const {userData : user} =
+    useContext(authContext)?.userState;
+  const [loading,setLoading] = useState(false)
 
   const dispatch = useDispatch();
   const postFeel = useSelector(state => state.postFeel);
@@ -207,7 +210,7 @@ export default function AddPostScreen({navigation, route}) {
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [isPrivacyOptionsVisible, setIsPrivacyOptionsVisible] = useState(false);
   const [images, setImages] = useState([]);
-
+  
   const [postPrivacyOption, setPostPrivacyOption] = useState(privacyOptions[0]); // object to present the current privacy option
 
   useEffect(() => {
@@ -217,7 +220,6 @@ export default function AddPostScreen({navigation, route}) {
     } else {
       handleButtonActivation(text, images);
     }
-
     return () => clearFields();
   }, [swapImage]);
 
@@ -227,30 +229,35 @@ export default function AddPostScreen({navigation, route}) {
   };
 
   const handleButtonActivation = (text, images) => {
+   
     if (text !== '' || text !== undefined) setIsButtonActive(true);
-    if (images.length > 0) setIsButtonActive(true);
-    if (images.length === 0 && text === '') setIsButtonActive(false);
-    if (images.length === 0 && text === undefined) setIsButtonActive(false);
+    if (images?.length > 0) setIsButtonActive(true);
+    if (images?.length === 0 && text === '') setIsButtonActive(false);
+    if (images?.length === 0 && text === undefined) setIsButtonActive(false);
   };
 
   const handelPickImage = async () => {
     try {
       const result = await pickImage();
-      //const uris = set.map((set) => (set.uri));
-      console.log('RESULT', uris);
 
-      //#sreelakshmi -need to check ,why uri list is not passing in onAddImage function
-      if (!result.cancelled) onAddImage(result.assets.uri);
+      console.log('result',result)
+      const uri = result.map((item) => {
+        return item.uri;
+      });
+      if (!result.cancelled) onAddImage(uri);
+
     } catch (error) {
       console.log(error);
     }
   };
 
   const onAddImage = uri => {
-    setImages(prev => [...prev, {uri: uri}]);
-    // setImages([...images, uri]);
-    handleButtonActivation(text, [...images, uri]);
+
+    setImages(images.concat(uri));
+    handleButtonActivation(text, images.concat(uri));
+
   };
+
   const onRemoveImage = uri => {
     const updatedImages = images.filter(images => images !== uri);
     setImages(updatedImages);
@@ -332,6 +339,7 @@ export default function AddPostScreen({navigation, route}) {
   };
 
   const clearFields = () => {
+  
     setText('');
     clearFile();
     setDisplayImage(false);

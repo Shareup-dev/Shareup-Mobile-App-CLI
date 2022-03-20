@@ -6,8 +6,6 @@ import {
   ActivityIndicator,
   View,
 } from 'react-native';
-
-import PostService from '../services/post.service';
 import authContext from '../authContext';
 import Screen from '../components/Screen';
 import Card from '../components/lists/Card';
@@ -16,76 +14,77 @@ import colors from '../config/colors';
 import SwapCard from '../components/lists/SwapCard';
 
 import TrendingComponent from '../components/trending/TrendingComponent';
+import postService from '../services/post.service';
+
 
 export default function NewsFeedScreen({navigation, route}) {
   const {userState} = useContext(authContext);
   const [posts, setPosts] = useState([]);
-
   const [activityIndicator, setActivityIndicator] = useState(true);
-
-  const options = [
-    {
-      title: 'Save post',
-      icon: {
-        image: require('../assets/post-options-icons/save-post-icon.png'),
-      },
-      onPress: () => {
-        alert('Save post');
-      },
-    },
-    {
-      title: 'Hide my profile',
-      icon: {
-        image: require('../assets/post-options-icons/hide-profile-icon.png'),
-      },
-      onPress: () => {
-        alert('Save post');
-      },
-    },
-    {
-      title: 'Swap',
-      icon: {image: require('../assets/post-options-icons/swap-icon.png')},
-      onPress: () => {
-        alert('Swap');
-      },
-    },
-    {
-      title: 'Share friends',
-      icon: {
-        image: require('../assets/post-options-icons/share-friends-icon.png'),
-      },
-      onPress: () => {
-        alert('Share friends');
-      },
-    },
-    {
-      title: 'Unfollow',
-      icon: {
-        image: require('../assets/post-options-icons/unfollow-icon.png'),
-      },
-      onPress: () => {
-        alert('Unfollow');
-      },
-    },
-    {
-      title: 'Report',
-      icon: {
-        image: require('../assets/post-options-icons/report-icon.png'),
-      },
-      onPress: () => {
-        alert('Report');
-      },
-    },
-    {
-      title: 'Delete Post',
-      icon: {
-        image: require('../assets/post-options-icons/delete-red-icon.png'),
-      },
-      onPress: () => {
-        showDeleteAlert();
-      },
-    },
-  ];
+  
+  // const options = [
+  //   {
+  //     title: 'Save post',
+  //     icon: {
+  //       image: require('../assets/post-options-icons/save-post-icon.png'),
+  //     },
+  //     onPress: () => {
+  //       alert('Save post');
+  //     },
+  //   },
+  //   {
+  //     title: 'Hide my profile',
+  //     icon: {
+  //       image: require('../assets/post-options-icons/hide-profile-icon.png'),
+  //     },
+  //     onPress: () => {
+  //       alert('Save post');
+  //     },
+  //   },
+  //   {
+  //     title: 'Swap',
+  //     icon: {image: require('../assets/post-options-icons/swap-icon.png')},
+  //     onPress: () => {
+  //       alert('Swap');
+  //     },
+  //   },
+  //   {
+  //     title: 'Share friends',
+  //     icon: {
+  //       image: require('../assets/post-options-icons/share-friends-icon.png'),
+  //     },
+  //     onPress: () => {
+  //       alert('Share friends');
+  //     },
+  //   },
+  //   {
+  //     title: 'Unfollow',
+  //     icon: {
+  //       image: require('../assets/post-options-icons/unfollow-icon.png'),
+  //     },
+  //     onPress: () => {
+  //       alert('Unfollow');
+  //     },
+  //   },
+  //   {
+  //     title: 'Report',
+  //     icon: {
+  //       image: require('../assets/post-options-icons/report-icon.png'),
+  //     },
+  //     onPress: () => {
+  //       alert('Report');
+  //     },
+  //   },
+  //   {
+  //     title: 'Delete Post',
+  //     icon: {
+  //       image: require('../assets/post-options-icons/delete-red-icon.png'),
+  //     },
+  //     onPress: () => {
+  //       showDeleteAlert();
+  //     },
+  //   },
+  // ];
 
   useEffect(() => {
     loadNews();
@@ -95,12 +94,9 @@ export default function NewsFeedScreen({navigation, route}) {
   }, []);
 
   const loadNews = async () => {
-    try {
-      const result = await PostService.getNewsFeed(userState.username);
-      setPosts(result.data);
-    } catch (e) {
-      console.log(e);
-    }
+    postService.getNewsFeed(userState.username)
+    .then(res => setPosts(res.data))
+    .catch(e => console.log(e))
   };
 
   const renderItem = ({item}) => {
@@ -157,7 +153,7 @@ export default function NewsFeedScreen({navigation, route}) {
     );
   };
 
-  return (
+return (
     <Screen style={styles.container} statusPadding={false}>
       <FlatList
         initialNumToRender={10}

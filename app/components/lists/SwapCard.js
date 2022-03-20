@@ -1,9 +1,8 @@
 import React, {useEffect, useState, useContext} from 'react';
-import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Text,Alert,Share} from 'react-native';
 import {useSelector} from 'react-redux';
 import ImageView from 'react-native-image-viewing';
 import {SliderBox} from 'react-native-image-slider-box';
-
 import colors from '../../config/colors';
 import fileStorage from '../../config/fileStorage';
 import PostOptionDrawer from '../drawers/PostOptionsDrawer';
@@ -11,7 +10,7 @@ import PostActions from '../PostActions';
 import defaultStyles from '../../config/styles';
 import SwapActionContainer from '../posts/SwapActionContainer';
 import AuthContext from '../../authContext';
-
+import onShare from '../Share';
 const imageSize = 160;
 const SwapCard = React.memo(({item, navigation, userId, style}) => {
   const actionsTabSizeRatio = 0.5;
@@ -45,6 +44,8 @@ const SwapCard = React.memo(({item, navigation, userId, style}) => {
     loadImages();
   }, []);
 
+  const {userData : user} =
+    useContext(AuthContext)?.userState;
   const loadImages = () => {
     if (item.media.length !== 0) {
       setImages(item.media.map(image => fileStorage.baseUrl + image.mediaPath));
@@ -83,27 +84,27 @@ const SwapCard = React.memo(({item, navigation, userId, style}) => {
         image: require('../../assets/post-options-icons/share-friends-icon.png'),
       },
       onPress: () => {
-        alert('Share friends');
+        onShare();
       },
     },
-    {
-      title: 'Unfollow',
-      icon: {
-        image: require('../../assets/post-options-icons/unfollow-icon.png'),
-      },
-      onPress: () => {
-        alert('Unfollow');
-      },
-    },
-    {
-      title: 'Report',
-      icon: {
-        image: require('../../assets/post-options-icons/report-icon.png'),
-      },
-      onPress: () => {
-        alert('Report');
-      },
-    },
+    // {
+    //   title: 'Unfollow',
+    //   icon: {
+    //     image: require('../../assets/post-options-icons/unfollow-icon.png'),
+    //   },
+    //   onPress: () => {
+    //     alert('Unfollow');
+    //   },
+    // },
+    // {
+    //   title: 'Report',
+    //   icon: {
+    //     image: require('../../assets/post-options-icons/report-icon.png'),
+    //   },
+    //   onPress: () => {
+    //     alert('Report');
+    //   },
+    // },
     {
       title: 'Delete Post',
       icon: {
@@ -114,7 +115,27 @@ const SwapCard = React.memo(({item, navigation, userId, style}) => {
       },
     },
   ];
+  const showDeleteAlert = () =>
+  Alert.alert('Delete', 'Are you sure to delete this post', [
+    {
+      text: 'Yes',
+      onPress: deletePost,
+      style: 'cancel',
+    },
+    {
+      text: 'No',
+      style: 'cancel',
+    },
+  ]) 
 
+const deletePost = async () => {
+  //console.log('data before delete: ' + response.data);
+    // const result = await PostService.deletePost(postId)
+    // .then(res => setPosts(res.data))
+    // .catch(e => console.log(e));
+  //console.log('data after delete: ' + response.data);
+  //reloadPosts();
+};
   const onLayout = e => {
     setSliderWidth(e.nativeEvent.layout.width);
   };
