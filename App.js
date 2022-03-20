@@ -84,6 +84,7 @@ export default function App() {
             });
           } else {
             dispatch({type: actions.CLEAR_STATE});
+            <AuthNavigator/>
           }
         } catch (error) {
           console.log(error.message);
@@ -195,17 +196,17 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'center',
   },
-  listItem: {
-    borderRadius: 10,
-    backgroundColor: colors.white,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+  // listItem: {
+  //   borderRadius: 10,
+  //   backgroundColor: colors.white,
+  //   shadowColor: '#000',
+  //   shadowOffset: {
+  //     width: 0,
+  //     height: 2,
+  //   },
+  //   shadowOpacity: 0.25,
+  //   shadowRadius: 3.84,
 
-    elevation: 6,
-  },
+  //   elevation: 6,
+  // },
 });

@@ -20,7 +20,6 @@ import postService from '../services/post.service';
 export default function NewsFeedScreen({navigation, route}) {
   const {userState} = useContext(authContext);
   const [posts, setPosts] = useState([]);
-
   const [activityIndicator, setActivityIndicator] = useState(true);
   
   // const options = [
@@ -101,7 +100,6 @@ export default function NewsFeedScreen({navigation, route}) {
   };
 
   const renderItem = ({item}) => {
-    console.log("ITEM12",item)
     return item.hasOwnProperty('swaped') ? (
       /**
        * The Swap Should from backend as instance of post
@@ -155,7 +153,7 @@ export default function NewsFeedScreen({navigation, route}) {
     );
   };
 
-  return (
+return (
     <Screen style={styles.container} statusPadding={false}>
       <FlatList
         initialNumToRender={10}

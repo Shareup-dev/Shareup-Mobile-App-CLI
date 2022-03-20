@@ -10,8 +10,6 @@ export default function ImageInputList({
   isSwap,
 }) {
   const scrollView = useRef();
-
-  //const URISet = imageUris.map(imageUris => imageUris)
   //const imageUrisSet = imageUris.map((imageUris) => imageUris.replace('file:', ''));
 
   return (
@@ -25,10 +23,11 @@ export default function ImageInputList({
        showsHorizontalScrollIndicator={false} 
        data= {imageUris}
        renderItem={ ({ item, index }) => {
+       console.log(item,index)
 
         return(
          
-         <Image source= {item.uri} /* Use item to set the image source */
+         <Image source= {{uri:item}} /* Use item to set the image source */
            key={index} /* Important to set a key for list items,
                           but it's wrong to use indexes as keys, see below */
            style={{
@@ -43,7 +42,7 @@ export default function ImageInputList({
       
        )}}
       >
-        {/* {imageUris.map((uri) => (
+        {imageUris.map((uri) => (
           <View key={uri} style={isSwap ? null : styles.imagePadding}>
             <ImageInput
               imageUri={uri}
@@ -58,14 +57,14 @@ export default function ImageInputList({
                 />
               )}
           </View>
-        ))} */}
+        ))}
 
-        {/* {isSwap && imageUris.length < 2 && (
+        {isSwap && imageUris.length < 2 && (
           <ImageInput
             onChangeImage={(uri) => onAddImage(uri)}
             isSwap={isSwap}
           />
-        )} */}
+        )}
       </FlatList>
     </View>
   );

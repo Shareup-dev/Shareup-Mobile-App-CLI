@@ -20,7 +20,6 @@ export default useImagesPicker = () => {
         //quality: 0.5,
       });
       setFile(result.assets);
-
       return result.assets;
     } catch (error) {
       console.log("Error reading an image", error);
@@ -30,6 +29,5 @@ export default useImagesPicker = () => {
   const clearFile = () => {
     setFile({});
   };
-
   return {file, pickImage, clearFile};
 };

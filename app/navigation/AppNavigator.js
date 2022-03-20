@@ -17,8 +17,6 @@ import NewsFeedNavigator from './NewsFeedNavigator';
 import GroupNavigator from './GroupNavigator';
 import {useSelector} from 'react-redux';
 
-// import { NewsFeedNavigator } from "../navigation";
-
 const {postTypes} = constants;
 
 const config = {
@@ -46,7 +44,6 @@ export default function AppNavigator() {
   };
   return (
     <>
-    
       <Tab.Navigator
         screenOptions={{
           tabBarShowLabel: false,

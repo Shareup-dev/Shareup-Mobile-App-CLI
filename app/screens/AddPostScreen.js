@@ -219,7 +219,6 @@ export default function AddPostScreen({navigation, route}) {
     } else {
       handleButtonActivation(text, images);
     }
-
     return () => clearFields();
   }, [swapImage]);
 
@@ -231,27 +230,30 @@ export default function AddPostScreen({navigation, route}) {
   const handleButtonActivation = (text, images) => {
    
     if (text !== '' || text !== undefined) setIsButtonActive(true);
-    if (images.length > 0) setIsButtonActive(true);
-    if (images.length === 0 && text === '') setIsButtonActive(false);
-    if (images.length === 0 && text === undefined) setIsButtonActive(false);
+    if (images?.length > 0) setIsButtonActive(true);
+    if (images?.length === 0 && text === '') setIsButtonActive(false);
+    if (images?.length === 0 && text === undefined) setIsButtonActive(false);
   };
 
   const handelPickImage = async () => {
     try {
       const result = await pickImage();
-      if (!result.cancelled) onAddImage(result);
+      console.log('result',result)
+      const uri = result.map((item) => {
+        return item.uri;
+      });
+      if (!result.cancelled) onAddImage(uri);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const onAddImage = uris => {
-    setImages(uris);
-    console.log(uris)
-    handleButtonActivation(text, [...images,uris]);
+  const onAddImage = uri => {
+    setImages(images.concat(uri));
+    handleButtonActivation(text, images.concat(uri));
   };
+
   const onRemoveImage = uri => {
-   
     const updatedImages = images.filter(images => images !== uri);
     setImages(updatedImages);
     handleButtonActivation(text, updatedImages);
@@ -259,7 +261,6 @@ export default function AddPostScreen({navigation, route}) {
 
   const handleAddPost = async () => {
     setLoading(true);
-
     if (groupPost) {
       const postContent = {
         text,

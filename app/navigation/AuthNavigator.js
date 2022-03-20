@@ -18,7 +18,6 @@ export default function AuthNavigation() {
       }}>
       <Stack.Screen name={routes.LOGIN} component={LoginScreen} />
       <Stack.Screen name={routes.SIGNUP} component={SignUpScreen} />
-
       <Stack.Screen name={routes.SIGNUP_STEP2} component={SignupStepTwo} />
     </Stack.Navigator>
   );
