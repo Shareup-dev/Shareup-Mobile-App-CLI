@@ -31,20 +31,34 @@ export default function AddStoryScreen({navigation}) {
   const [screen, setScreen] = useState('capture');
   const [mode, setMode] = useState('photo');
   const [cameraType, setCameraType] = useState('back');
-  const [cameraImg, setCameraImg] = useState(false);
-  const [storyPhoto, setstoryPhoto] = useState({});
+  const [capturing, setCapturing] = useState(false);
+  const [story, setStory] = useState({});
 
-  async function captureImage() {
-    let photo = await cameraRef.takePictureAsync({
-      skipProcessing: true,
-      quality: 0.5,
-    });
-    setCameraImg(true);
+  async function onCapture() {
+    if (mode === 'photo') {
+      let photo = await cameraRef.takePictureAsync({
+        skipProcessing: true,
+        quality: 0.5,
+      });
+      setStory(photo);
+    } else if (mode === 'video') {
+      setCapturing(true);
+      // let video = await cameraRef.takePictureAsync({
+      //   skipProcessing: true,
+      //   quality: 0.5,
+      // });
 
+      const {uri, codec = 'mp4'} = await cameraRef.current.recordAsync();
+      console.info(uri);
+
+      setStory(video);
+    }
     setScreen('view');
-    setstoryPhoto(photo);
-    console.log(photo);
   }
+
+  const StopRecording = () => {
+    cameraRef.current.stopRecording();
+  };
 
   const imagePickHandler = async () => {
     try {
@@ -53,8 +67,7 @@ export default function AddStoryScreen({navigation}) {
         mediaType: 'photo',
       });
 
-      setstoryPhoto(result.assets[0]);
-      setCameraImg(false);
+      setStory(result.assets[0]);
       setScreen('view');
     } catch (error) {
       console.log('Error reading an image', error);
@@ -73,7 +86,7 @@ export default function AddStoryScreen({navigation}) {
     storyData.append('stryfiles', {
       name: 'stryfiles',
       type: 'image/jpg',
-      uri: storyPhoto.uri,
+      uri: story.uri,
     });
 
     storyService
@@ -98,9 +111,10 @@ export default function AddStoryScreen({navigation}) {
           type={cameraType}>
           <CameraBottomActions
             onPickFile={imagePickHandler}
-            onCapture={captureImage}
+            onCapture={onCapture}
             onRevertCamera={handelRevertCamera}
             mode={mode}
+            capturing={capturing}
             setMode={setMode}
           />
         </RNCamera>
@@ -126,7 +140,7 @@ export default function AddStoryScreen({navigation}) {
             </TouchableOpacity>
           </View>
           <Image
-            source={storyPhoto}
+            source={story}
             resizeMode={'cover'}
             style={{height: '100%', width: '100%', zIndex: -10}}
           />

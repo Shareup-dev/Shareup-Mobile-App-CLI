@@ -1,5 +1,5 @@
 import AuthAxios from './authAxios';
 class Group {
-  createGroup = (uid, data) => AuthAxios.post(`/${uid}/create`, data);
+  createGroup = (oid, data) => AuthAxios.post(`/groups/${oid}`, data);
 }
 export default new Group();

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, Text, Alert, TouchableOpacity} from 'react-native';
 import * as Yup from 'yup';
 
@@ -9,6 +9,8 @@ import defaultStyles from '../config/styles';
 import RegistrationContainer from '../components/forms/RegistrationContainer';
 import colors from '../config/colors';
 import authService from '../services/auth.service';
+import authContext from '../authContext';
+import Loading from '../components/Loading';
 
 const validationSchema = Yup.object().shape({
   otp: Yup.string('Invalid Code')
@@ -18,8 +20,8 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function SignupVerification({navigation, route}) {
-  // const {email: username} = route?.params;
-  const username = '';
+  const {authActions} = useContext(authContext);
+  const {params} = route;
 
   const [timeOver, setTimeOver] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -39,8 +41,6 @@ export default function SignupVerification({navigation, route}) {
             {
               text: 'Discard',
               style: 'destructive',
-              // If the user confirmed, then we dispatch the action we blocked earlier
-              // This will continue the action that had triggered the removal of the screen
               onPress: () => navigation.dispatch(e.data.action),
             },
           ],
@@ -50,24 +50,22 @@ export default function SignupVerification({navigation, route}) {
   );
 
   const handleSubmit = async (values, props) => {
-    const {setFieldError} = props;
-
     setLoading(true);
+    const {setFieldError} = props;
     authService
-      .verifyOTP(username, values.otp)
-      .then(res => {
+      .verifyEmailConfirmOTP(params.username, values.otp)
+      .then(async res => {
         if (res.status === 200) {
-          navigation.navigate(routes.PASSWORD_RESET, {
-            username,
-          });
+          if (params.jwt) await authActions.signup(params.username, params.jwt);
+          else console.log('token not found');
         }
       })
       .catch(e => {
-        if (e.message === 'Request failed with status code 400')
+        if (e.message === 'Request failed with status code 400') {
           setFieldError('otp', 'Incorrect code');
-        else setFieldError('otp', 'Unexpected error.');
+        } else setFieldError('otp', 'Unexpected error.');
       })
-      .finally(() => setLoading(false));
+      .finally(_ => setLoading(false));
   };
 
   return (
@@ -78,31 +76,52 @@ export default function SignupVerification({navigation, route}) {
         }}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}>
-        <Text>Shareup has sent you a verification code to the email</Text>
-        <FormField
-          autoCapitalize="none"
-          autoCorrect={false}
-          keyboardType="number-pad"
-          name="otp"
-          placeholder="Verification code"
-          textContentType="number" // Only for ios
-          style={defaultStyles.formField}
-        />
-        <Text>Verification code will expire after 5 minutes</Text>
-        {timeOver && (
-          <TouchableOpacity activeOpacity={0.7} style={{marginVertical: 5}}>
-            <Text
-              style={{
-                fontWeight: '700',
-                fontSize: 18,
-                color: colors.iondigoDye,
-              }}>
-              Send again
-            </Text>
-          </TouchableOpacity>
-        )}
+        {loading ? (
+          <Loading text="Signing up.." />
+        ) : (
+          <>
+            {params.fromLogin && (
+              <Text
+                style={{
+                  fontWeight: '600',
+                  color: 'crimson',
+                  marginVertical: 10,
+                }}>
+                Your account not verified. Please confirm your Email
+              </Text>
+            )}
+            <Text>Shareup has sent you a verification code to the email</Text>
+            <FormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="number-pad"
+              name="otp"
+              placeholder="Verification code"
+              textContentType="number" // Only for ios
+              style={defaultStyles.formField}
+            />
+            <Text>Verification code will expire after 5 minutes</Text>
 
-        <SubmitButton title="Verify" style={styles.submitButton} />
+            {timeOver && (
+              <TouchableOpacity activeOpacity={0.7} style={{marginVertical: 5}}>
+                <Text
+                  style={{
+                    fontWeight: '700',
+                    fontSize: 18,
+                    color: colors.iondigoDye,
+                  }}>
+                  Send again
+                </Text>
+              </TouchableOpacity>
+            )}
+
+            <SubmitButton
+              title="Verify"
+              disabled={loading}
+              style={styles.submitButton}
+            />
+          </>
+        )}
       </Form>
     </RegistrationContainer>
   );

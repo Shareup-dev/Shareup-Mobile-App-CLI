@@ -49,6 +49,26 @@ export default function ShareupAuthentication() {
   };
   const [userState, dispatch] = useReducer(authReducer, initState);
 
+  const gettingUserInfo = (username, userToken) => {
+    // getting user information
+    userService
+      .getUserByEmail(username)
+      .then(res =>
+        dispatch({
+          type: actions.SET_STATE,
+          username,
+          userToken,
+          userData: res.data,
+        }),
+      )
+      .catch(e => {
+        console.log(e.message);
+        dispatch({
+          type: actions.CLEAR_STATE,
+        });
+      });
+  };
+
   // ------------------ Based on the action change the auth STATE  ------------------
   const authActions = useMemo(
     () => ({
@@ -58,79 +78,42 @@ export default function ShareupAuthentication() {
         if (session) {
           const {username, userToken} = JSON.parse(session);
           setTokenForAxios(userToken);
-
-          // getting user information
-          userService
-            .getUserByEmail(username)
-            .then(res =>
-              dispatch({
-                type: actions.SET_STATE,
-                username,
-                userToken,
-                userData: res.data,
-              }),
-            )
-            .catch(e => console.log(e.message));
+          await gettingUserInfo(username, userToken);
         } else {
           dispatch({type: actions.CLEAR_STATE});
         }
       },
       // Login
       login: async (username, userToken) => {
-        try {
-          await EncryptedStorage.setItem(
-            'auth_session',
-            JSON.stringify({
-              userToken,
-              username,
-            }),
-          );
-          setTokenForAxios(userToken);
-          // getting user information
-          const user = await userService.getUserByEmail(username);
-
-          dispatch({
-            type: actions.SET_STATE,
-            username,
+        await EncryptedStorage.setItem(
+          'auth_session',
+          JSON.stringify({
             userToken,
-            userData: user.data,
-          });
-        } catch (error) {
-          console.log(error);
-        }
+            username,
+          }),
+        );
+        setTokenForAxios(userToken);
+        // getting user information
+        await gettingUserInfo(username, userToken);
       },
       // logout
       logout: async () => {
-        try {
-          await EncryptedStorage.removeItem('auth_session');
-          removeAxiosToken();
-          dispatch({type: actions.CLEAR_STATE});
-        } catch (error) {
-          console.log(error);
-        }
+        await EncryptedStorage.removeItem('auth_session');
+        removeAxiosToken();
+        dispatch({type: actions.CLEAR_STATE});
       },
       // signup
       signup: async (username, userToken) => {
-        try {
-          await EncryptedStorage.setItem(
-            'auth_session',
-            JSON.stringify({
-              userToken,
-              username,
-            }),
-          );
-          setTokenForAxios(userToken);
-          // getting user information
-          const user = await userService.getUserByEmail(username);
-          dispatch({
-            type: actions.SET_STATE,
-            username,
+        await EncryptedStorage.setItem(
+          'auth_session',
+          JSON.stringify({
             userToken,
-            userData: user.data,
-          });
-        } catch (error) {
-          console.log(error);
-        }
+            username,
+          }),
+        );
+        setTokenForAxios(userToken);
+        // getting user information
+        await gettingUserInfo(username, userToken);
       },
     }),
     [],

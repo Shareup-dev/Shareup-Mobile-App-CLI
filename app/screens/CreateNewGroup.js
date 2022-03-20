@@ -13,11 +13,20 @@ import routes from '../navigation/routes';
 import ChoosePrivacyDrawer from '../components/drawers/ChoosePrivacyDrawer';
 import {Header, HeaderCloseIcon, HeaderTitle} from '../components/headers';
 
+import * as Yup from 'yup';
+import {Formik} from 'formik';
+
 export default function CreateNewGroup({navigation}) {
   const [privacySheet, setPrivacySheet] = useState(false);
   const [privacy, setPrivacy] = useState('Public');
   const [groupDetail, setGroupDetail] = useState({});
   const [isPrivacyDrawerVisible, setIsPrivacyDrawerVisible] = useState(false);
+
+  const validationSchema = Yup.object().shape({
+    group_name: Yup.string().required().label('Name'),
+    description: Yup.string().required().min(3).label('Description'),
+    privacy_option: Yup.string().required().label('Privacy option'),
+  });
 
   return (
     <Screen>
@@ -27,19 +36,40 @@ export default function CreateNewGroup({navigation}) {
       />
       <View style={styles.container}>
         <ScrollView>
-          <View style={styles.input}>
-            <Text style={styles.title}>Name</Text>
-            <Text style={styles.subTitle}>
-              Type useful name so that it can be searched easily
-            </Text>
-            <AppTextInput
-              style={styles.inputField}
-              backgroundColor={'white'}
-              onChangeText={name => {
-                setGroupDetail({...groupDetail, name});
-              }}
-            />
-          </View>
+          <Formik
+            initialValues={{
+              group_name: '',
+              description: '',
+              privacy_option: '',
+            }}
+            // validationSchema={validationSchema}
+            onSubmit={values => console.log(values)}>
+            {(handleChange, handleBlur, handleSubmit, values) => {
+              return (
+                <>
+                  <View style={styles.input}>
+                    <Text style={styles.title}>Name</Text>
+                    <Text style={styles.subTitle}>
+                      Type useful name so that it can be searched easily
+                    </Text>
+                    <AppTextInput
+                      style={styles.inputField}
+                      backgroundColor={'white'}
+                      onChangeText={() => handleChange('group_name')}
+                      onBlur={() => handleBlur('group_name')}
+                    />
+                  </View>
+                  <AppButton
+                    title={'Next'}
+                    width={'50%'}
+                    style={{alignSelf: 'center', marginTop: 20}}
+                    onPress={handleSubmit}
+                  />
+                </>
+              );
+            }}
+          </Formik>
+
           <View style={styles.input}>
             <Text style={styles.title}>Description</Text>
             <Text style={styles.subTitle}>
@@ -80,18 +110,6 @@ export default function CreateNewGroup({navigation}) {
               <Icon type={'AntDesign'} size={35} name={'caretdown'} />
             </View>
           </View>
-          <AppButton
-            title={'Next'}
-            width={'50%'}
-            style={{alignSelf: 'center', marginTop: 20}}
-            onPress={() => {
-              // console.log("Privacy going to be: ", privacy);
-              groupDetail.privacySetting = privacy;
-              setGroupDetail({...groupDetail, privacySetting: privacy});
-              // console.log("Group details: ", groupDetail);
-              navigation.navigate(routes.SET_GROUP_PHOTO, groupDetail);
-            }}
-          />
         </ScrollView>
       </View>
 

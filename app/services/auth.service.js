@@ -27,28 +27,27 @@ class AuthService {
   passwordResetOTP = username =>
     axios({
       method: 'PUT',
-      url: `${url}/send_otp/reset_password/${username}`,
+      url: `${url}/send_otp/${username}`,
     });
 
   verifyPasswordResetOTP = (username, otp) =>
     axios({
       method: 'GET',
-      url: `${url}/verifyotp/reset_password/${username}`,
+      url: `${url}/verify_otp_reset_password/${username}`,
       params: {
         otp,
       },
     });
 
-  emailConfirmOTP = username =>
+  verifyEmailOTP = username =>
     axios({
       method: 'PUT',
-      url: `${url}/send_otp/email_verify/${username}`,
+      url: `${url}/send_otp_verify_email/${username}`,
     });
-
   verifyEmailConfirmOTP = (username, otp) =>
     axios({
       method: 'GET',
-      url: `${url}/verifyotp/email_verify/${username}`,
+      url: `${url}/verify_otp_email_verify/${username}`,
       params: {
         otp,
       },

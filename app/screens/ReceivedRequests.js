@@ -20,7 +20,7 @@ import ListItem from '../components/lists/ListItem';
 import colors from '../config/colors';
 
 export default function ReceivedRequests({navigation}) {
-  const {user} = useContext(authContext);
+  const {userData: user} = useContext(authContext).userState;
   const [requests, setRequests] = useState([]);
   const [acceptedFrom, setAcceptedFrom] = useState([]);
   const [rejectedFrom, setRejectedFrom] = useState([]);

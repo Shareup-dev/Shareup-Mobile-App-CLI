@@ -23,6 +23,7 @@ import settings from '../config/settings';
 import defaultStyles from '../config/styles';
 import LoginContainer from '../components/forms/LoginContainer';
 import Loading from '../components/Loading';
+import authService from '../services/auth.service';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label('Email'),
@@ -61,19 +62,36 @@ export default function LoginScreen({navigation}) {
           text2: 'Logged in Successfully 👋',
         });
       })
-      .catch(e => {
+      .catch(async e => {
         let message;
-        if (e.message === 'Request failed with status code 400')
-          message = 'Username or Password incorrect';
-        else message = e.message;
+        console.log(e.message);
+        if (e.message === 'Request failed with status code 401') {
+          // if the user not verified
+          await authService
+            .verifyEmailOTP(email)
+            .then(res => {
+              if (res.status === 200)
+                navigation.navigate(routes.SIGNUP_VERIFICATION, {
+                  username: email,
+                  jwt: null,
+                  fromLogin: true,
+                });
+            })
+            .catch(e => (message = 'Unexpected Error!'));
+        } else {
+          if (e.message === 'Request failed with status code 400')
+            // if invalid password or username
+            message = 'Username or Password incorrect';
+          else message = e.message;
 
-        Toast.show({
-          position: 'bottom',
-          visibilityTime: 5000,
-          type: 'error',
-          text1: 'Error',
-          text2: message,
-        });
+          Toast.show({
+            position: 'bottom',
+            visibilityTime: 5000,
+            type: 'error',
+            text1: 'Error',
+            text2: message,
+          });
+        }
       })
       .finally(_ => {
         setLoading(false);

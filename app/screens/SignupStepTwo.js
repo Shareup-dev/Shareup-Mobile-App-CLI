@@ -8,11 +8,11 @@ import Text from '../components/Text';
 import AuthService from '../services/auth.service';
 import Icon from '../components/Icon';
 import FormRadio from '../components/forms/FormRadio';
-import authContext from '../authContext';
+
 import settings from '../config/settings';
 import useIsReachable from '../hooks/useIsReachable';
 import RegistrationContainer from '../components/forms/RegistrationContainer';
-import Loading from '../components/Loading';
+
 import routes from '../navigation/routes';
 
 const SignupStepTwo = ({navigation, route}) => {
@@ -23,8 +23,6 @@ const SignupStepTwo = ({navigation, route}) => {
   const [registerFailed, setRegisterFailed] = useState(false);
   const [registerError, setRegisterError] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const {authActions} = useContext(authContext);
 
   const {isReachable, checkIfReachable} = useIsReachable();
 
@@ -54,6 +52,7 @@ const SignupStepTwo = ({navigation, route}) => {
       });
       return;
     }
+    setLoading(true);
     const isReachable = await checkIfReachable(settings.apiUrl);
 
     if (isReachable === false) {
@@ -64,36 +63,24 @@ const SignupStepTwo = ({navigation, route}) => {
 
     const userCompleteData = {...prevStepValues, ...values};
 
-    AuthService.emailConfirmOTP(userCompleteData.email)
-      .then(res => console.log(res))
-      .catch(e => console.log(e))
-      .finally(_ => setLoading(false));
-
-    // navigation.navigate(routes.SIGNUP_VERIFICATION);
-    // create new user
-
-    // AuthService.signup(userCompleteData)
-    //   .then(async res => {
-
-    //     await authActions.signup(res.data.username, res.data.jwt);
-    //     Toast.show({
-    //       position: 'bottom',
-    //       visibilityTime: 5000,
-    //       type: 'success',
-    //       text1: 'Success',
-    //       text2: 'You are registered Successfully',
-    //     });
-    //   })
-    //   .catch(e =>
-    //     Toast.show({
-    //       position: 'bottom',
-    //       visibilityTime: 5000,
-    //       type: 'error',
-    //       text1: 'Error',
-    //       text2: 'Error while signup.',
-    //     }),
-    //   )
-    //   .finally(() => setLoading(false));
+    AuthService.signup(userCompleteData)
+      .then(async res => {
+        const {jwt, username} = res.data;
+        navigation.navigate(routes.SIGNUP_VERIFICATION, {
+          jwt,
+          username,
+        });
+      })
+      .catch(e =>
+        Toast.show({
+          position: 'bottom',
+          visibilityTime: 5000,
+          type: 'error',
+          text1: 'Error',
+          text2: 'Error while signup.',
+        }),
+      )
+      .finally(() => setLoading(false));
   };
 
   return (

@@ -21,6 +21,7 @@ export default function CameraBottomActions({
   onRevertCamera,
   mode,
   setMode,
+  capturing = false,
 }) {
   const styles = StyleSheet.create({
     modeContainer: {
@@ -28,7 +29,6 @@ export default function CameraBottomActions({
       justifyContent: 'space-evenly',
       width: '100%',
       backgroundColor: '#000',
-      paddingVertical: 5,
       position: 'absolute',
       bottom: 0,
     },
@@ -50,42 +50,80 @@ export default function CameraBottomActions({
       paddingHorizontal: 20,
       height: 120,
     },
-    bottomBtn: {},
-    captureButton: {
+    bottomBtn: {
+      paddingVertical: 10,
+      flex: 1,
+      alignItems: 'center',
+    },
+    captureButtonContainer: {
       height: 86,
       width: 86,
-      backgroundColor: mode === 'video' ? 'darkred' : colors.white,
       borderRadius: 60,
-      borderWidth: 5,
-      borderColor: colors.LightGray,
+      backgroundColor: colors.LightGray,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    captureButton: {
+      backgroundColor: mode === 'video' ? 'darkred' : colors.white,
+      borderRadius: capturing ? 5 : 60,
+      width: capturing ? 50 : 76,
+      height: capturing ? 50 : 76,
+    },
+    recordingText: {
+      fontWeight: '500',
+      fontSize: 17,
+      color: '#fdfdfd',
+    },
+    recordingIcon: {
+      width: 15,
+      height: 15,
+      borderRadius: 10,
+      backgroundColor: 'crimson',
+      marginHorizontal: 10,
+      marginVertical: 10,
+    },
+    recordingContainer: {
+      alignItems: 'center',
+      backgroundColor: '#000',
+      flexDirection: 'row',
     },
   });
 
   return (
     <>
       <StatusBar backgroundColor="#000" barStyle="light-content" />
+      <View style={styles.recordingContainer}>
+        <View style={styles.recordingIcon} />
+        <Text style={styles.recordingText}>00.00</Text>
+      </View>
       <View style={styles.container}>
-        <TouchableOpacity onPress={onPickFile} style={styles.bottomBtn}>
+        <TouchableOpacity onPress={onPickFile}>
           <Icon type={'FontAwesome'} name={'file-photo-o'} size={64} />
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.captureButton}
-          onPress={onCapture}></TouchableOpacity>
+          style={styles.captureButtonContainer}
+          onPress={onCapture}>
+          <View style={styles.captureButton} />
+        </TouchableOpacity>
 
-        <TouchableOpacity onPress={onRevertCamera} style={styles.bottomBtn}>
+        <TouchableOpacity onPress={onRevertCamera}>
           <Icon type={'Ionicons'} name={'camera-reverse-outline'} size={64} />
         </TouchableOpacity>
       </View>
 
       <View style={styles.modeContainer}>
-        <TouchableOpacity onPress={() => setMode('photo')}>
+        <TouchableOpacity
+          style={styles.bottomBtn}
+          onPress={() => setMode('photo')}>
           <Text
             style={[styles.modeText, mode === 'photo' && styles.modeActive]}>
             Photo
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setMode('video')}>
+        <TouchableOpacity
+          onPress={() => setMode('video')}
+          style={styles.bottomBtn}>
           <Text
             style={[styles.modeText, mode === 'video' && styles.modeActive]}>
             Video
