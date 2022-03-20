@@ -1,14 +1,14 @@
-import Backendless from "./Backendless";
-import UserService from "../services/UserService";
-import dateFormatter from "../dates/dateFormatter";
-import moment from "moment";
-import store from "../redux/store";
-import { conversationAction } from "../redux/ConversationsSlice";
+import Backendless from './Backendless';
+import UserService from '../services/user.service';
+import dateFormatter from '../dates/dateFormatter';
+import moment from 'moment';
+import store from '../redux/store';
+import {conversationAction} from '../redux/ConversationsSlice';
 
-const TABLE_CONVERSATION = "Conversation";
-const TABLE_CHAT_HISTORY = "ChatHistory";
+const TABLE_CONVERSATION = 'Conversation';
+const TABLE_CHAT_HISTORY = 'ChatHistory';
 
-const { calendarFormatter } = dateFormatter;
+const {calendarFormatter} = dateFormatter;
 
 const queryBuilder = Backendless.DataQueryBuilder.create();
 
@@ -29,8 +29,8 @@ const addToConversation = async (user1, user2, messageId) => {
 
     await Backendless.Data.of(TABLE_CONVERSATION).addRelation(
       conversation,
-      "chatHistory",
-      [{ objectId: messageId }]
+      'chatHistory',
+      [{objectId: messageId}],
     );
 
     updateConversation(conversation.objectId);
@@ -46,7 +46,7 @@ const createConversation = async (user1, user2) => {
       user1: user1,
       user2: user2,
     })
-    .catch((err) => console.log(err));
+    .catch(err => console.log(err));
 
   Backendless.Messaging.subscribe(result.objectId);
 
@@ -56,9 +56,9 @@ const createConversation = async (user1, user2) => {
 
   await Backendless.Messaging.publish(
     result.objectId,
-    "init",
-    publishOptions
-  ).catch((err) => console.log(err));
+    'init',
+    publishOptions,
+  ).catch(err => console.log(err));
 
   return result;
 };
@@ -68,7 +68,7 @@ const findConversation = async (user1, user2) => {
   queryBuilder.setWhereClause(whereConversation);
 
   const result = await Backendless.Data.of(TABLE_CONVERSATION).find(
-    queryBuilder
+    queryBuilder,
   );
 
   if (result.length === 0) return null;
@@ -76,9 +76,9 @@ const findConversation = async (user1, user2) => {
   return result[0];
 };
 
-const updateConversation = async (conversationId) => {
+const updateConversation = async conversationId => {
   const updatedConversation = await Backendless.Data.of(
-    TABLE_CONVERSATION
+    TABLE_CONVERSATION,
   ).save({
     objectId: conversationId,
     updated: moment().unix(),
@@ -87,50 +87,50 @@ const updateConversation = async (conversationId) => {
   return updatedConversation;
 };
 
-const getConversations = async (userId) => {
+const getConversations = async userId => {
   const whereConversationsOfUser = `user1 = '${userId}' OR user2 = '${userId}'`;
 
   const queryBuilder = Backendless.DataQueryBuilder.create().setWhereClause(
-    whereConversationsOfUser
+    whereConversationsOfUser,
   );
 
-  queryBuilder.setSortBy("updated DESC");
+  queryBuilder.setSortBy('updated DESC');
 
   const loadRelationsQueryBuilder =
     Backendless.LoadRelationsQueryBuilder.create();
   loadRelationsQueryBuilder
     .setOffset(0)
     .setPageSize(1)
-    .setSortBy("created DESC");
+    .setSortBy('created DESC');
 
   loadRelationsQueryBuilder.addProperties([
-    "YEAR (created)",
-    "MONTH (created)",
-    "DAYOFMONTH (created)",
-    "HOUR (created)",
-    "MINUTE (created)",
-    "SECOND (created)",
-    "messageData",
+    'YEAR (created)',
+    'MONTH (created)',
+    'DAYOFMONTH (created)',
+    'HOUR (created)',
+    'MINUTE (created)',
+    'SECOND (created)',
+    'messageData',
   ]);
 
-  loadRelationsQueryBuilder.setRelationName("chatHistory");
+  loadRelationsQueryBuilder.setRelationName('chatHistory');
 
   const result = await Backendless.Data.of(TABLE_CONVERSATION).find(
-    queryBuilder
+    queryBuilder,
   );
 
   let mappedConversations = [];
 
   for (let i = 0; i < result.length; i++) {
     const lastMessage = await Backendless.Data.of(
-      TABLE_CONVERSATION
+      TABLE_CONVERSATION,
     ).loadRelations(result[i].objectId, loadRelationsQueryBuilder);
 
     if (lastMessage.length !== 0) {
       const conversations = await mapConversation(
         result[i],
         userId,
-        lastMessage[0]
+        lastMessage[0],
       );
       mappedConversations.push(conversations);
     }
@@ -150,12 +150,12 @@ const mapConversation = async (conversation, userId, lastMessage) => {
     lastMessage.Year,
     lastMessage.Hour,
     lastMessage.Minute,
-    lastMessage.Second
+    lastMessage.Second,
   );
 
   return {
     id: conversation.objectId,
-    title: user.firstName + " " + user.lastName,
+    title: user.firstName + ' ' + user.lastName,
     profilePicture: user.profilePicturePath,
     lastMessage: lastMessage.messageData,
     lastMessageTime: date,
@@ -169,12 +169,12 @@ const getContactUser = async (userId, conversation) => {
   } else if (userId == conversation.user2) {
     return await callUserApi(conversation.user1);
   } else {
-    console.log("No user match");
+    console.log('No user match');
     return null;
   }
 };
 
-const callUserApi = async (userId) => {
+const callUserApi = async userId => {
   const id = parseInt(userId);
   const response = await UserService.getUserById(id);
   return response.data;

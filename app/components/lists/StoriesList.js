@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import {useSelector} from 'react-redux';
-import storiesService from '../../services/stories.service';
+import storiesService from '../../services/story.service';
 import CreateStoryCard from './CreateStoryCard';
 import StoryCard from './StoryCard';
 
@@ -10,8 +10,10 @@ export default function StoriesList({navigation, style}) {
 
   useEffect(() => {
     const fetchStories = async () => {
-      const result = await storiesService.getStories();
-      setStories(result.data);
+      storiesService
+        .getStories()
+        .then(res => setStories(res.data))
+        .catch(e => console.log(e.message));
     };
     fetchStories();
   }, []);
@@ -25,14 +27,12 @@ export default function StoriesList({navigation, style}) {
         showsHorizontalScrollIndicator={false}
         keyExtractor={item => item.id.toString()}
         style={styles.list}
-        renderItem={item => {
+        renderItem={({item}) => {
           return (
             <StoryCard
-              image={item.item.storiesImagePath}
+              image={item.storiesImagePath}
               navigation={navigation}
-              userName={
-                item.item.user.firstName + ' ' + item.item.user.lastName
-              }
+              userName={item?.user?.firstName + ' ' + item?.user?.lastName}
             />
           );
         }}

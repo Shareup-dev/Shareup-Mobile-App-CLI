@@ -41,7 +41,7 @@ export default function NewsFeedNavigator() {
           headerShown: false,
         }}
       />
-      {/* <Stack.Screen
+      <Stack.Screen
         name={routes.KEEP_HANG}
         component={KeepHangScreen}
         options={{
@@ -55,16 +55,16 @@ export default function NewsFeedNavigator() {
           headerShown: false,
         }}
       />
-     
+
       <Stack.Screen
         name={routes.EDIT_PROFILE}
         component={EditProfileScreen}
         options={{
           headerShown: false,
         }}
-      /> */}
+      />
 
-      {/* <Stack.Screen
+      <Stack.Screen
         name={routes.MY_REELS}
         component={MyReelsScreen}
         options={{
@@ -85,15 +85,15 @@ export default function NewsFeedNavigator() {
         options={{
           headerShown: false,
         }}
-      /> */}
+      />
 
       {/* there are no use of this  */}
-      {/* <Stack.Screen
+      <Stack.Screen
         name={routes.SET_POST_AUDIENCE}
         component={SetPostAudience}
         options={{
           headerShown: true,
-          headerTitle: "Post Audience",
+          headerTitle: 'Post Audience',
         }}
       />
       <Stack.Screen
@@ -101,7 +101,7 @@ export default function NewsFeedNavigator() {
         component={SwapDisplay}
         options={{
           headerShown: false,
-          headerTitle: "",
+          headerTitle: '',
         }}
       />
       <Stack.Screen
@@ -109,15 +109,15 @@ export default function NewsFeedNavigator() {
         component={ShippingAddress}
         options={{
           headerShown: false,
-          headerTitle: "",
+          headerTitle: '',
         }}
-      /> */}
-      {/* <Stack.Screen
+      />
+      <Stack.Screen
         name={routes.SWAP_CHECKOUT}
         component={SwapCheckout}
         options={{
           headerShown: false,
-          headerTitle: "",
+          headerTitle: '',
         }}
       />
       <Stack.Screen
@@ -125,7 +125,7 @@ export default function NewsFeedNavigator() {
         component={SwapCheckoutComplete}
         options={{
           headerShown: false,
-          headerTitle: "",
+          headerTitle: '',
         }}
       />
       <Stack.Screen
@@ -135,7 +135,7 @@ export default function NewsFeedNavigator() {
           headerShown: false,
           gestureEnabled: false,
         }}
-      /> */}
+      />
     </Stack.Navigator>
   );
 }

@@ -1,18 +1,7 @@
 import AuthAxios from './authAxios';
 
 class Story {
-  addStory = (userId, storyData) =>
-    AuthAxios.post(`/Stories/${userId}`, storyData)
-      .then(res => res)
-      .catch(e => {
-        throw e;
-      });
-
-  getStories = () =>
-    AuthAxios.get(`/Stories`)
-      .then(res => res)
-      .catch(e => {
-        throw e;
-      });
+  addStory = (userId, data) => AuthAxios.post(`/Stories/${userId}`, data);
+  getStories = () => AuthAxios.get(`/stories`);
 }
 export default new Story();

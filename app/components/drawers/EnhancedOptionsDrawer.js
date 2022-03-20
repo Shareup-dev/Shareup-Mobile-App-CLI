@@ -1,23 +1,20 @@
-import React, { useEffect } from "react";
-import { View, StyleSheet, Dimensions ,Button} from "react-native";
-import BottomSheet from "reanimated-bottom-sheet";
-import Animated from 'react-native-reanimated';
-import DrawerList from "./DrawerList";
-import defaultStyle from "../../config/styles";
-import colors from "../../config/colors";
-import TouchableWithoutFeedback from "react-native-gesture-handler";
+import React from 'react';
+import {View, StyleSheet, Dimensions, Text} from 'react-native';
 
-const height = Dimensions.get("window").height;
+import BottomSheet from 'reanimated-bottom-sheet';
+import DrawerList from './DrawerList';
+import defaultStyle from '../../config/styles';
+import colors from '../../config/colors';
 
+const height = Dimensions.get('window').height;
 
-export default function EnhancedOptionsDrawer({ options, forwardedRef }) {
+export default function EnhancedOptionsDrawer({options, forwardedRef}) {
   const renderHeader = () => (
     <View style={[styles.header]}>
-      <View style={defaultStyle.tip} /> 
+      <View style={defaultStyle.tip} />
     </View>
   );
 
-  
   const renderContent = () => (
     <View style={styles.container}>
       <DrawerList options={options} />
@@ -27,21 +24,19 @@ export default function EnhancedOptionsDrawer({ options, forwardedRef }) {
   return (
     <BottomSheet
       ref={forwardedRef}
-      initialSnap={2}
       snapPoints={[140, 100, 200, 320]}
-      enabledGestureInteraction={true}
-      enabledHeaderGestureInteraction = {true}
-      enabledContentGestureInteraction={false}
-      enabledBottomClamp={true}
+      enabledBottomClamp
+      enabledBottomInitialAnimation
       renderHeader={renderHeader}
       renderContent={renderContent}
-    />   
+    />
   );
+  // return <Text>works</Text>;
 }
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: colors.white },
-  contentContainer: { alignItems: "center", backgroundColor: colors.white },
+  container: {backgroundColor: colors.white},
+  contentContainer: {alignItems: 'center', backgroundColor: colors.white},
   header: {
     padding: 10,
     backgroundColor: colors.white,

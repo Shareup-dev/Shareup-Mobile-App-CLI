@@ -1,6 +1,6 @@
-import AuthService from './old/auth.services';
+import AuthService from './auth.services';
 import axios from 'axios';
-import settings from '../config/settings';
+import settings from '../../config/settings';
 
 const USER_API_BASE_URL = 'http://192.168.100.239:8080/api/v1/users';
 const servers_api = 'http://192.168.100.239:8080';
