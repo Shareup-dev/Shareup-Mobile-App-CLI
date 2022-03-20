@@ -7,20 +7,21 @@ import {
   ImageBackground,
   TouchableOpacity,
   Dimensions,
+  Alert,
   Animated,
 } from 'react-native';
 
 import Icon from '../components/Icon';
 import colors from '../config/colors';
 import fileStorage from '../config/fileStorage';
-import {Menu, Divider, Provider} from 'react-native-paper';
 import DownModal from '../components/drawers/DownModal';
+
+const windowWidth = Dimensions.get('screen').width;
 
 const StoryViewScreen = ({navigation, route}) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const scale = useRef(new Animated.Value(0)).current;
-  const windowWidth = Dimensions.get('screen').width;
 
   const [duration, setDuration] = useState(6000);
 
@@ -45,8 +46,28 @@ const StoryViewScreen = ({navigation, route}) => {
     Animated.timing(scale).stop();
   };
 
+  const handleCloseModel = () => {
+    setMenuOpen(false);
+    startProgress();
+  };
+
+  const handleDelete = () => {
+    Alert.alert('Delete this?', 'Are you sure to delete this story?', [
+      {text: "Don't delete", style: 'cancel', onPress: () => {}},
+      {
+        text: 'Delete',
+        style: 'destructive',
+        // If the user confirmed, then we dispatch the action we blocked earlier
+        // This will continue the action that had triggered the removal of the screen
+        onPress: () => {
+          console.log('deleted');
+        },
+      },
+    ]);
+  };
+
   useEffect(() => {
-    // startProgress();
+    startProgress();
     return () => {
       pauseProgress();
     };
@@ -72,7 +93,7 @@ const StoryViewScreen = ({navigation, route}) => {
           </View>
           <Icon size={45} name={'edit'} type="Entypo" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menu}>
+        <TouchableOpacity style={styles.menu} onPress={handleDelete}>
           <View>
             <Text style={styles.menuText}>Delete</Text>
             <Text>Delete your story</Text>
@@ -84,7 +105,7 @@ const StoryViewScreen = ({navigation, route}) => {
             <Text style={styles.menuText}>Hide this story</Text>
             <Text
               style={{
-                maxWidth: 200,
+                maxWidth: windowWidth / 2,
               }}>{`Posted by @${route.params?.userName}`}</Text>
           </View>
           <Icon size={45} name={'eye-with-line'} type="Entypo" />
@@ -140,6 +161,7 @@ const StoryViewScreen = ({navigation, route}) => {
                   style={styles.closeIcon}
                   onPress={() => {
                     setMenuOpen(true);
+                    pauseProgress();
                   }}>
                   <Icon
                     name={'options'}
@@ -162,7 +184,7 @@ const StoryViewScreen = ({navigation, route}) => {
                     noBackground={true}
                   />
                 </TouchableOpacity>
-                <DownModal isVisible={menuOpen} setIsVisible={setMenuOpen}>
+                <DownModal isVisible={menuOpen} setIsVisible={handleCloseModel}>
                   <DropDownMenu />
                 </DownModal>
               </View>
@@ -228,7 +250,7 @@ const styles = StyleSheet.create({
     height: 32,
   },
   userName: {
-    maxWidth: 200,
+    maxWidth: windowWidth / 2,
     color: '#fdfdfd',
     textShadowColor: 'black',
     textShadowOffset: {width: 0, height: 0},

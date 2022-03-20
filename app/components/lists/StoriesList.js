@@ -10,8 +10,10 @@ export default function StoriesList({navigation, style}) {
 
   useEffect(() => {
     const fetchStories = async () => {
-      const result = await storiesService.getStories();
-      setStories(result.data);
+      storiesService
+        .getStories()
+        .then(res => setStories(res.data))
+        .catch(e => console.log(e.message));
     };
     fetchStories();
   }, []);

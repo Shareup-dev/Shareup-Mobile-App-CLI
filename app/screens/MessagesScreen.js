@@ -29,7 +29,7 @@ const tabes = [
 ];
 
 export default function MessagesScreen({navigation}) {
-  const {user} = useContext(authContext);
+  const {userData: user} = useContext(authContext).userState;
 
   const {addConversationListener, removeConversationListener} =
     useConversationListener();

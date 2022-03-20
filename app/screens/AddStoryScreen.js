@@ -20,6 +20,7 @@ import AuthContext from '../authContext';
 import store from '../redux/store';
 import {storiesAction} from '../redux/stories';
 import storyService from '../services/story.service';
+import {ScrollView} from 'react-native-gesture-handler';
 
 export default function AddStoryScreen({navigation}) {
   let cameraRef;
@@ -27,7 +28,8 @@ export default function AddStoryScreen({navigation}) {
   const {userData} = useContext(AuthContext)?.userState;
 
   const [isUploading, setIsUploading] = useState(false);
-  const [mode, setMode] = useState('capture');
+  const [screen, setScreen] = useState('capture');
+  const [mode, setMode] = useState('photo');
   const [cameraType, setCameraType] = useState('back');
   const [cameraImg, setCameraImg] = useState(false);
   const [storyPhoto, setstoryPhoto] = useState({});
@@ -39,7 +41,7 @@ export default function AddStoryScreen({navigation}) {
     });
     setCameraImg(true);
 
-    setMode('view');
+    setScreen('view');
     setstoryPhoto(photo);
     console.log(photo);
   }
@@ -53,7 +55,7 @@ export default function AddStoryScreen({navigation}) {
 
       setstoryPhoto(result.assets[0]);
       setCameraImg(false);
-      setMode('view');
+      setScreen('view');
     } catch (error) {
       console.log('Error reading an image', error);
     }
@@ -85,10 +87,11 @@ export default function AddStoryScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      {mode === 'capture' ? (
+      {screen === 'capture' ? (
         <RNCamera
           style={styles.camera}
           ratio={'16:9'}
+          captureAudio={true}
           ref={ref => {
             cameraRef = ref;
           }}
@@ -97,11 +100,16 @@ export default function AddStoryScreen({navigation}) {
             onPickFile={imagePickHandler}
             onCapture={captureImage}
             onRevertCamera={handelRevertCamera}
+            mode={mode}
+            setMode={setMode}
           />
         </RNCamera>
       ) : (
         <View style={styles.storyImgViewer}>
-          <CameraHeader title="Story" onClosePress={() => setMode('capture')} />
+          <CameraHeader
+            title="Story"
+            onClosePress={() => setScreen('capture')}
+          />
           <View style={styles.forwardArrow}>
             <TextInput placeholder="Caption" multiline style={styles.caption} />
             <TouchableOpacity

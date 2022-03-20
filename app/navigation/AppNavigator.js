@@ -16,6 +16,7 @@ import ActivityNavigator from './ActivityNavigator';
 import NewsFeedNavigator from './NewsFeedNavigator';
 import GroupNavigator from './GroupNavigator';
 import {useSelector} from 'react-redux';
+import CustomHeaderBar from './CustomHeaderBar';
 
 // import { NewsFeedNavigator } from "../navigation";
 
@@ -46,7 +47,6 @@ export default function AppNavigator() {
   };
   return (
     <>
-    
       <Tab.Navigator
         screenOptions={{
           tabBarShowLabel: false,
