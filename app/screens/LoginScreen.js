@@ -73,13 +73,14 @@ export default function LoginScreen({navigation}) {
               if (res.status === 200)
                 navigation.navigate(routes.SIGNUP_VERIFICATION, {
                   username: email,
+                  password: password,
                   jwt: null,
                   fromLogin: true,
                 });
             })
             .catch(e => (message = 'Unexpected Error!'));
         } else {
-          if (e.message === 'Request failed with status code 400')
+          if (e.message === 'Request failed with status code 500')
             // if invalid password or username
             message = 'Username or Password incorrect';
           else message = e.message;

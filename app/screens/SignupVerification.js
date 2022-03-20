@@ -51,21 +51,42 @@ export default function SignupVerification({navigation, route}) {
 
   const handleSubmit = async (values, props) => {
     setLoading(true);
-    const {setFieldError} = props;
-    authService
-      .verifyEmailConfirmOTP(params.username, values.otp)
-      .then(async res => {
-        if (res.status === 200) {
-          if (params.jwt) await authActions.signup(params.username, params.jwt);
-          else console.log('token not found');
-        }
-      })
-      .catch(e => {
-        if (e.message === 'Request failed with status code 400') {
-          setFieldError('otp', 'Incorrect code');
-        } else setFieldError('otp', 'Unexpected error.');
-      })
-      .finally(_ => setLoading(false));
+    setTimeout(() => {
+      const {setFieldError} = props;
+      authService
+        .verifyEmailConfirmOTP(params.username, values.otp)
+        .then(async res => {
+          if (res.status === 200) {
+            if (params.jwt)
+              await authActions.signup(params.username, params.jwt);
+            else {
+              authService
+                .login(params.username, params.password)
+                .then(async result => {
+                  if (result.status === 200) {
+                    await authActions.login(
+                      result.data.username,
+                      result.data.jwt,
+                    );
+                    Toast.show({
+                      position: 'bottom',
+                      visibilityTime: 5000,
+                      type: 'success',
+                      text1: 'Success',
+                      text2: 'Logged in Successfully 👋',
+                    });
+                  }
+                });
+            }
+          }
+        })
+        .catch(e => {
+          if (e.message === 'Request failed with status code 400') {
+            setFieldError('otp', 'Incorrect code');
+          } else setFieldError('otp', 'Unexpected error.');
+        })
+        .finally(_ => setLoading(false));
+    }, 2000);
   };
 
   return (
@@ -76,52 +97,48 @@ export default function SignupVerification({navigation, route}) {
         }}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}>
-        {loading ? (
-          <Loading text="Signing up.." />
-        ) : (
-          <>
-            {params.fromLogin && (
+        <>
+          {params.fromLogin && (
+            <Text
+              style={{
+                fontWeight: '600',
+                color: 'crimson',
+                marginVertical: 10,
+              }}>
+              Your account not verified. Please confirm your Email
+            </Text>
+          )}
+          <Text>Shareup has sent you a verification code to the email</Text>
+          <FormField
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="number-pad"
+            name="otp"
+            placeholder="Verification code"
+            textContentType="number" // Only for ios
+            style={defaultStyles.formField}
+          />
+          <Text>Verification code will expire after 5 minutes</Text>
+
+          {timeOver && (
+            <TouchableOpacity activeOpacity={0.7} style={{marginVertical: 5}}>
               <Text
                 style={{
-                  fontWeight: '600',
-                  color: 'crimson',
-                  marginVertical: 10,
+                  fontWeight: '700',
+                  fontSize: 18,
+                  color: colors.iondigoDye,
                 }}>
-                Your account not verified. Please confirm your Email
+                Send again
               </Text>
-            )}
-            <Text>Shareup has sent you a verification code to the email</Text>
-            <FormField
-              autoCapitalize="none"
-              autoCorrect={false}
-              keyboardType="number-pad"
-              name="otp"
-              placeholder="Verification code"
-              textContentType="number" // Only for ios
-              style={defaultStyles.formField}
-            />
-            <Text>Verification code will expire after 5 minutes</Text>
+            </TouchableOpacity>
+          )}
 
-            {timeOver && (
-              <TouchableOpacity activeOpacity={0.7} style={{marginVertical: 5}}>
-                <Text
-                  style={{
-                    fontWeight: '700',
-                    fontSize: 18,
-                    color: colors.iondigoDye,
-                  }}>
-                  Send again
-                </Text>
-              </TouchableOpacity>
-            )}
-
-            <SubmitButton
-              title="Verify"
-              disabled={loading}
-              style={styles.submitButton}
-            />
-          </>
-        )}
+          <SubmitButton
+            title="Verify"
+            disabled={loading}
+            style={styles.submitButton}
+          />
+        </>
       </Form>
     </RegistrationContainer>
   );
