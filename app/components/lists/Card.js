@@ -145,8 +145,9 @@ export default function Card({
   const [sliderWidth, setSliderWidth] = useState();
 
   const loadImages = () => {
-    if (postImages.length !== 0) {
-      setImages(postImages.map(image => fileStorage.baseUrl + image.mediaPath));
+    console.log("LoadImages",postImages)
+    if (postImages?.length !== 0) {
+      setImages(postImages?.map(image => fileStorage.baseUrl + image.mediaPath));
     }
   };
 
@@ -219,7 +220,7 @@ return (
 
         {/** Post Image */}
 
-        {images.length !== 0 && (
+        {images?.length !== 0 && (
           <SliderBox
             images={images}
             ImageComponentStyle={styles.image}
