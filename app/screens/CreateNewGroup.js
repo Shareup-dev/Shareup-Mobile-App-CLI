@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {View, Text, StyleSheet, TextInput} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 
@@ -14,16 +14,32 @@ import {Header, HeaderCloseIcon, HeaderTitle} from '../components/headers';
 
 import * as Yup from 'yup';
 import {Formik} from 'formik';
+import GroupService from '../services/GroupService';
+import AuthContext from '../authContext';
 
 export default function CreateNewGroup({navigation}) {
-  const [privacy, setPrivacy] = useState('Public');
+  const [privacy, setPrivacy] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [isPrivacyDrawerVisible, setIsPrivacyDrawerVisible] = useState(false);
 
+  const {userData} = useContext(AuthContext).userState;
+
   const validationSchema = Yup.object().shape({
-    group_name: Yup.string().required().label('Name'),
+    name: Yup.string().required().label('Name'),
     description: Yup.string().required().min(3).label('Description'),
-    // privacy_option: Yup.string().required().label('Privacy option'),
+    // privacySetting: Yup.string().required().label('Privacy option'),
   });
+
+  const handleSubmit = values => {
+    setLoading(true);
+    GroupService.createGroup(userData.id, {
+      ...values,
+      privacySetting: privacy,
+    })
+      .then(res => navigation.navigate(routes.SET_GROUP_PHOTO, res))
+      .catch(e => console.log(e))
+      .finally(_ => setLoading(false));
+  };
 
   return (
     <Screen>
@@ -35,14 +51,12 @@ export default function CreateNewGroup({navigation}) {
         <ScrollView>
           <Formik
             initialValues={{
-              group_name: '',
+              name: '',
               description: '',
-              privacy_option: '',
+              privacySetting: '',
             }}
             validationSchema={validationSchema}
-            onSubmit={values =>
-              console.log({...values, privacy_option: privacy})
-            }>
+            onSubmit={handleSubmit}>
             {({setFieldValue, handleSubmit, handleBlur, errors, values}) => {
               return (
                 <>
@@ -54,10 +68,10 @@ export default function CreateNewGroup({navigation}) {
                     <AppTextInput
                       style={styles.inputField}
                       backgroundColor={'white'}
-                      onChangeText={val => setFieldValue('group_name', val)}
-                      onBlur={() => handleBlur('group_name')}
-                      value={values['group_name']}
-                      error={errors['group_name']}
+                      onChangeText={val => setFieldValue('name', val)}
+                      onBlur={() => handleBlur('name')}
+                      value={values['name']}
+                      error={errors['name']}
                     />
                   </View>
                   <View style={styles.input}>
@@ -89,7 +103,31 @@ export default function CreateNewGroup({navigation}) {
                     style={styles.input}>
                     <Text style={styles.title}>Privacy</Text>
                     <Text style={styles.subTitle}>
-                      Choose the privay setting of group
+                      Choose the privacy setting of group
+                    </Text>
+                    <View
+                      style={[
+                        styles.privacySelector,
+                        {width: '88%', marginHorizontal: 30},
+                      ]}>
+                      <View style={defaultStyles.row}>
+                        <Icon
+                          type={privacy === 0 ? 'Entypo' : 'Ionicons'}
+                          name={privacy === 0 ? 'globe' : 'lock-closed'}
+                        />
+                        <Text>{privacy === 0 ? 'Public' : 'Private'}</Text>
+                      </View>
+                      <Icon type={'AntDesign'} size={35} name={'caretdown'} />
+                    </View>
+                  </View>
+                  {/* <View
+                    onTouchEnd={() => {
+                      setIsPrivacyDrawerVisible(!isPrivacyDrawerVisible);
+                    }}
+                    style={styles.input}>
+                    <Text style={styles.title}>Hide group</Text>
+                    <Text style={styles.subTitle}>
+                      Choose the who can find the group
                     </Text>
                     <View
                       style={[
@@ -105,7 +143,7 @@ export default function CreateNewGroup({navigation}) {
                       </View>
                       <Icon type={'AntDesign'} size={35} name={'caretdown'} />
                     </View>
-                  </View>
+                  </View> */}
 
                   <AppButton
                     title={'Next'}

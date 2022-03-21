@@ -31,10 +31,7 @@ export default function PasswordResetOTP({navigation, route}) {
   React.useEffect(
     () =>
       navigation.addListener('beforeRemove', e => {
-        // Prevent default behavior of leaving the screen
         e.preventDefault();
-
-        // Prompt the user before leaving the screen
         Alert.alert(
           'Discard changes?',
           'Are you sure to discard and leave the screen?',
@@ -43,8 +40,6 @@ export default function PasswordResetOTP({navigation, route}) {
             {
               text: 'Discard',
               style: 'destructive',
-              // If the user confirmed, then we dispatch the action we blocked earlier
-              // This will continue the action that had triggered the removal of the screen
               onPress: () => navigation.dispatch(e.data.action),
             },
           ],

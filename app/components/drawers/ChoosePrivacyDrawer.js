@@ -22,7 +22,6 @@ export default function ChoosePrivacyDrawer({
 
   const handleAddGroup = () => {
     setIsVisible(!isVisible);
-    setPrivacy(value);
   };
 
   return (
@@ -42,7 +41,10 @@ export default function ChoosePrivacyDrawer({
       />
 
       <RadioButton.Group
-        onValueChange={newValue => setValue(newValue)}
+        onValueChange={newValue => {
+          setValue(newValue);
+          setPrivacy(newValue);
+        }}
         value={value}>
         <View style={styles.radioGroupWrapper}>
           <View style={styles.radioButtonItemWrapper}>
@@ -53,7 +55,7 @@ export default function ChoosePrivacyDrawer({
               size={20}
             />
             <RadioButton.Item
-              value="Public"
+              value={0}
               label="Public"
               color={colors.iondigoDye}
               style={styles.radioButtonItem}
@@ -72,7 +74,7 @@ export default function ChoosePrivacyDrawer({
               size={20}
             />
             <RadioButton.Item
-              value="Private"
+              value={1}
               label="Private"
               color={colors.iondigoDye}
               style={styles.radioButtonItem}

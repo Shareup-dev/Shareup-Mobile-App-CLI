@@ -7,6 +7,7 @@ import {
   Image,
   Dimensions,
   TouchableWithoutFeedback,
+  Alert,
 } from 'react-native';
 
 import Screen from '../components/Screen';
@@ -25,6 +26,26 @@ import store from '../redux/store';
 import {userGroupActions} from '../redux/userGroups';
 
 const SetGroupPhoto = ({navigation, route}) => {
+  React.useEffect(
+    () =>
+      navigation.addListener('beforeRemove', e => {
+        e.preventDefault();
+        Alert.alert(
+          'Discard changes?',
+          'Are you sure to discard and leave the screen?',
+          [
+            {text: "Don't leave", style: 'cancel', onPress: () => {}},
+            {
+              text: 'Discard',
+              style: 'destructive',
+              // onPress: () => navigation.dispatch(e.data.action),
+            },
+          ],
+        );
+      }),
+    [navigation],
+  );
+
   const {
     user: loggedInUser,
     setloadingIndicator,
