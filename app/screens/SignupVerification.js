@@ -111,6 +111,8 @@ export default function SignupVerification({navigation, route}) {
         .catch(e => {
           if (e.message === 'Request failed with status code 400') {
             setFieldError('otp', 'Incorrect code');
+          } else if (e.message === 'Request failed with status code 408') {
+            setFieldError('otp', 'Code expired');
           } else setFieldError('otp', 'Unexpected error.');
         })
         .finally(_ => setLoading(false));
