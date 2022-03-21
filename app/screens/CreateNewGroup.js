@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TextInput, Dimensions} from 'react-native';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {View, Text, StyleSheet, TextInput} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 
 import Screen from '../components/Screen';
 import AppButton from '../components/buttons/Button';
 import Icon from '../components/Icon';
-import Separator from '../components/Separator';
 import AppTextInput from '../components/TextInput';
 import colors from '../config/colors';
 import defaultStyles from '../config/styles';
@@ -17,15 +16,13 @@ import * as Yup from 'yup';
 import {Formik} from 'formik';
 
 export default function CreateNewGroup({navigation}) {
-  const [privacySheet, setPrivacySheet] = useState(false);
   const [privacy, setPrivacy] = useState('Public');
-  const [groupDetail, setGroupDetail] = useState({});
   const [isPrivacyDrawerVisible, setIsPrivacyDrawerVisible] = useState(false);
 
   const validationSchema = Yup.object().shape({
     group_name: Yup.string().required().label('Name'),
     description: Yup.string().required().min(3).label('Description'),
-    privacy_option: Yup.string().required().label('Privacy option'),
+    // privacy_option: Yup.string().required().label('Privacy option'),
   });
 
   return (
@@ -42,9 +39,11 @@ export default function CreateNewGroup({navigation}) {
               description: '',
               privacy_option: '',
             }}
-            // validationSchema={validationSchema}
-            onSubmit={values => console.log(values)}>
-            {(handleChange, handleBlur, handleSubmit, values) => {
+            validationSchema={validationSchema}
+            onSubmit={values =>
+              console.log({...values, privacy_option: privacy})
+            }>
+            {({setFieldValue, handleSubmit, handleBlur, errors, values}) => {
               return (
                 <>
                   <View style={styles.input}>
@@ -55,10 +54,59 @@ export default function CreateNewGroup({navigation}) {
                     <AppTextInput
                       style={styles.inputField}
                       backgroundColor={'white'}
-                      onChangeText={() => handleChange('group_name')}
+                      onChangeText={val => setFieldValue('group_name', val)}
                       onBlur={() => handleBlur('group_name')}
+                      value={values['group_name']}
+                      error={errors['group_name']}
                     />
                   </View>
+                  <View style={styles.input}>
+                    <Text style={styles.title}>Description</Text>
+                    <Text style={styles.subTitle}>
+                      Describe your group so people know what it’s about.
+                    </Text>
+                    <TextInput
+                      multiline={true}
+                      numberOfLines={10}
+                      onChangeText={val => setFieldValue('description', val)}
+                      onBlur={() => handleBlur('description')}
+                      value={values['description']}
+                      style={[styles.inputField, styles.groupDescription]}
+                    />
+                    <Text
+                      style={{
+                        color: 'crimson',
+                        textAlign: 'right',
+                        paddingHorizontal: 30,
+                      }}>
+                      {errors['description']}
+                    </Text>
+                  </View>
+                  <View
+                    onTouchEnd={() => {
+                      setIsPrivacyDrawerVisible(!isPrivacyDrawerVisible);
+                    }}
+                    style={styles.input}>
+                    <Text style={styles.title}>Privacy</Text>
+                    <Text style={styles.subTitle}>
+                      Choose the privay setting of group
+                    </Text>
+                    <View
+                      style={[
+                        styles.privacySelector,
+                        {width: '88%', marginHorizontal: 30},
+                      ]}>
+                      <View style={defaultStyles.row}>
+                        <Icon
+                          type={privacy === 'Public' ? 'Entypo' : 'Ionicons'}
+                          name={privacy === 'Public' ? 'globe' : 'lock-closed'}
+                        />
+                        <Text>{privacy}</Text>
+                      </View>
+                      <Icon type={'AntDesign'} size={35} name={'caretdown'} />
+                    </View>
+                  </View>
+
                   <AppButton
                     title={'Next'}
                     width={'50%'}
@@ -69,47 +117,6 @@ export default function CreateNewGroup({navigation}) {
               );
             }}
           </Formik>
-
-          <View style={styles.input}>
-            <Text style={styles.title}>Description</Text>
-            <Text style={styles.subTitle}>
-              Describe your group so people know what it’s about.
-            </Text>
-            <TextInput
-              multiline={true}
-              numberOfLines={10}
-              onChangeText={description => {
-                setGroupDetail({...groupDetail, description});
-              }}
-              style={[styles.inputField, styles.groupDescription]}
-            />
-          </View>
-
-          <View
-            onTouchEnd={() => {
-              console.log('Touchable');
-              setIsPrivacyDrawerVisible(!isPrivacyDrawerVisible);
-            }}
-            style={styles.input}>
-            <Text style={styles.title}>Privacy</Text>
-            <Text style={styles.subTitle}>
-              Choose the privay setting of group
-            </Text>
-            <View
-              style={[
-                styles.privacySelector,
-                {width: '88%', marginHorizontal: 30},
-              ]}>
-              <View style={defaultStyles.row}>
-                <Icon
-                  type={privacy === 'Public' ? 'Entypo' : 'Ionicons'}
-                  name={privacy === 'Public' ? 'globe' : 'lock-closed'}
-                />
-                <Text>{privacy}</Text>
-              </View>
-              <Icon type={'AntDesign'} size={35} name={'caretdown'} />
-            </View>
-          </View>
         </ScrollView>
       </View>
 
@@ -138,9 +145,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     borderColor: colors.grayX11Gray,
   },
-  input: {
-    marginVertical: 10,
-  },
+
   icon: {
     marginRight: 15,
   },
