@@ -36,7 +36,7 @@ export default function CreateNewGroup({navigation}) {
       ...values,
       privacySetting: privacy,
     })
-      .then(res => navigation.navigate(routes.SET_GROUP_PHOTO, res))
+      .then(res => navigation.navigate(routes.SET_GROUP_PHOTO, res.data))
       .catch(e => console.log(e))
       .finally(_ => setLoading(false));
   };
@@ -150,6 +150,7 @@ export default function CreateNewGroup({navigation}) {
                     width={'50%'}
                     style={{alignSelf: 'center', marginTop: 20}}
                     onPress={handleSubmit}
+                    disabled={loading}
                   />
                 </>
               );

@@ -13,7 +13,7 @@ export default function AppButton({
   fontSize,
   fontColor,
   icon,
-  disabled,
+  disabled = false,
 }) {
   return (
     <TouchableOpacity

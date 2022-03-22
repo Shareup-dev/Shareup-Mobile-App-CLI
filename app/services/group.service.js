@@ -21,6 +21,9 @@ class GroupService {
     AuthAxios.put(`/groups/accept_member_requests/${rid}`);
   rejectMemberRequest = rid =>
     AuthAxios.put(`/groups/reject_member_request/${rid}`);
+
+  addGroupImage = (gid, data) =>
+    AuthAxios.post(`groups/upload_image/${gid}`, data);
 }
 
 export default new GroupService();
