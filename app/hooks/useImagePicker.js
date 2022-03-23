@@ -1,16 +1,18 @@
 import {useState} from 'react';
-import ImagePicker from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
+
 export default function useImagesPicker() {
-  const [file, setFile] = useState({});
+  const [file, setFile] = useState([]);
 
   const pickImage = async () => {
     try {
-      const result = await ImagePicker.launchImageLibrary({
+      const result = await launchImageLibrary({
         mediaType: 'photo',
-        quality: '0.5',
+        quality: 0.5,
         selectionLimit: 1,
       });
-      setFile(result.assets);
+
+      if (!result.didCancel) setFile(result.assets);
 
       return result.assets;
     } catch (error) {
@@ -19,7 +21,7 @@ export default function useImagesPicker() {
   };
 
   const clearFile = () => {
-    setFile({});
+    setFile([]);
   };
   return {file, pickImage, clearFile};
 }

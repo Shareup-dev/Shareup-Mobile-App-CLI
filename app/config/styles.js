@@ -1,21 +1,20 @@
-import { Platform } from "react-native";
-import colors from "./colors";
+import {Platform} from 'react-native';
+import colors from './colors';
 
 export default {
   colors,
   text: {
     color: colors.dark,
     fontSize: 18,
-    fontFamily: Platform.OS === "android" ? "Roboto" : "Avenir",
+    fontFamily: Platform.OS === 'android' ? 'Roboto' : 'Avenir',
   },
   inputContainer: {
     backgroundColor: colors.lighterGray,
     borderRadius: 25,
-    flexDirection: "row",
+    flexDirection: 'row',
     padding: 15,
     paddingHorizontal: 30,
-    marginVertical: 5,
-    alignItems: "center",
+    alignItems: 'center',
     height: 50,
   },
   inputIcon: {
@@ -31,11 +30,11 @@ export default {
     marginRight: 10,
   },
   titleFontSize: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 22,
   },
   shadow: {
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -46,7 +45,7 @@ export default {
     elevation: 6,
   },
   lightShadow: {
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -63,25 +62,25 @@ export default {
   },
   listContentContainerStyle: {
     paddingTop: 20,
-    width: "100%",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
+    width: '100%',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
     marginHorizontal: 5,
   },
   longCard: {
     margin: 5,
   },
   fontWeightMedium: {
-    fontFamily: Platform.OS === "android" ? "sans-serif-medium" : "System",
-    fontWeight: "500",
+    fontFamily: Platform.OS === 'android' ? 'sans-serif-medium' : 'System',
+    fontWeight: '500',
   },
   listItemTitle: {
     fontSize: 15,
     marginBottom: 3,
     color: colors.dark,
-    textTransform: "capitalize",
+    textTransform: 'capitalize',
   },
-  listItemSubTitle: { fontSize: 10, color: colors.dimGray },
+  listItemSubTitle: {fontSize: 10, color: colors.dimGray},
   listItemStyle: {
     marginBottom: 13,
     marginHorizontal: 28,
@@ -89,24 +88,24 @@ export default {
     backgroundColor: colors.white,
   },
   row: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   tip: {
     height: 3,
     width: 40,
     borderRadius: 25,
     backgroundColor: colors.LightGray,
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   formContainer: {
     paddingHorizontal: 20,
-    alignItems: "center",
+    alignItems: 'center',
     backgroundColor: colors.white,
     flex: 1,
   },
   formField: {
-    width: "90%",
+    width: '90%',
     marginBottom: 5,
   },
   registrationFormTopPadding: {
