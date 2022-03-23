@@ -9,6 +9,7 @@ export default React.forwardRef(function CommentTextField(
   ref
 ) {
   return (
+    
     <View style={styles.container}>
       <TextInput
         placeholder="Comment..."
@@ -18,7 +19,6 @@ export default React.forwardRef(function CommentTextField(
         ref={ref}
         {...otherProps}
       />
-
       <TouchableOpacity onPress={onForwardPress}>
         <Icon
           image={require("../../assets/icons/forward-icon.png")}

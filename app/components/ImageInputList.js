@@ -4,40 +4,42 @@ import Icon from "./Icon";
 import ImageInput from "./ImageInput";
 
 export default function ImageInputList({
-  imageUris = [],
+  imageUris,
   onAddImage,
   onRemoveImage,
   isSwap,
 }) {
   const scrollView = useRef();
-  
   //const imageUrisSet = imageUris.map((imageUris) => imageUris.replace('file:', ''));
-  //console.log("IMAGES12",imageUrisSet)
+
   return (
+    
     <View style={styles.container}>
       <FlatList
-        ref={scrollView}
+        //ref={scrollView}
         // horizontal
        // onContentSizeChange={() => scrollView.current.scrollToEnd()}
        horizontal={true} 
        showsHorizontalScrollIndicator={false} 
-       data={imageUris}
+       data= {imageUris}
        renderItem={ ({ item, index }) => {
-        console.log(item) 
+       console.log(item,index)
+
         return(
          
-         <Image source={item} /* Use item to set the image source */
+         <Image source= {{uri:item}} /* Use item to set the image source */
            key={index} /* Important to set a key for list items,
                           but it's wrong to use indexes as keys, see below */
            style={{
              width:260,
              height:300,
-             borderWidth:2,
-             borderColor:'#d35647',
+            // borderWidth:2,
+             //borderColor:'#d35647',
              resizeMode:'contain',
-             margin:8
+             margin:2
            }}
          />
+      
        )}}
       >
         {imageUris.map((uri) => (
@@ -78,4 +80,8 @@ const styles = StyleSheet.create({
   swapIcon: {
     alignSelf: "center",
   },
+  Image: {
+        width: '100%',
+        height: '100%',
+      },
 });

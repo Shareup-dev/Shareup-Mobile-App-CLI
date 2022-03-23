@@ -25,7 +25,7 @@ import { HeaderWithBackArrow } from "../components/headers";
 import Tab from "../components/buttons/Tab";
 
 const GroupFeedScreen = ({ navigation, route }) => {
-  const posts = useSelector((state) => state.groupPosts);
+const posts = useSelector((state) => state.groupPosts);
 
   useEffect(() => {
     console.log("Group: ", route.params);
@@ -131,6 +131,7 @@ const GroupFeedScreen = ({ navigation, route }) => {
             reactions={item.reactions}
             comments={item.comments}
             navigation={navigation}
+            postImages={item.media}
           />
         )}
       />

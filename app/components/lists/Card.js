@@ -5,8 +5,10 @@ import {SliderBox} from 'react-native-image-slider-box';
 
 import colors from '../../config/colors';
 import defaultStyles from '../../config/styles';
+
 import UserService from '../../services/user.service';
 import PostService from '../../services/old/PostService';
+
 import PostOptionDrawer from '../drawers/PostOptionsDrawer';
 import fileStorage from '../../config/fileStorage';
 import ImageView from 'react-native-image-viewing';
@@ -134,6 +136,7 @@ export default function Card({
 
   const [numberOfReactions, setNumberOfReactions] = useState(reactions.length);
   const [numberOfComments, setNumberOfComments] = useState(comments.length);
+  const [comment,setComments] =useState(comments)
   const [isUserLiked, setIsUserLiked] = useState(false);
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [images, setImages] = useState([]);
@@ -142,8 +145,9 @@ export default function Card({
   const [sliderWidth, setSliderWidth] = useState();
 
   const loadImages = () => {
-    if (postImages.length !== 0) {
-      setImages(postImages.map(image => fileStorage.baseUrl + image.mediaPath));
+    console.log("LoadImages",postImages)
+    if (postImages?.length !== 0) {
+      setImages(postImages?.map(image => fileStorage.baseUrl + image.mediaPath));
     }
   };
 
@@ -155,16 +159,23 @@ export default function Card({
   };
 
   const handleReactions = async () => {
-    const response = await UserService.likePost(userId, postId);
-    setIsUserLiked(!isUserLiked);
+    PostService.likePost(userId, postId)
+    .then (res => {
+      setIsUserLiked(!isUserLiked)
+      console.log("LikePosts",res)})//need to get likePostIds 
+    .catch(e => console.log(e))
     reloadPost();
   };
 
   // rerenders the post when interaction
   const reloadPost = async () => {
-    const response = await PostService.getPostById(postId);
-    setNumberOfComments(response.data.comments.length);
-    setNumberOfReactions(response.data.reactions.length);
+    PostService.getPostById(postId)
+    .then(res => {
+      setComments(res.data.comments)
+      setNumberOfComments(res.data.comments.length);
+      setNumberOfReactions(res.data.reactions.length);})
+    .catch(e => console.log(e))
+    
   };
 
   const showDeleteAlert = () =>
@@ -181,9 +192,7 @@ export default function Card({
     ]);
 
   const deletePost = async () => {
-    console.log('data before delete: ' + response.data);
     const response = await PostService.deletePost(postId);
-    console.log('data after delete: ' + response.data);
     reloadPosts();
   };
 
@@ -193,7 +202,7 @@ export default function Card({
     setSliderWidth(e.nativeEvent.layout.width);
   };
 
-  return (
+return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View
         style={[styles.card, defaultStyles.cardBorder, style]}
@@ -211,7 +220,7 @@ export default function Card({
 
         {/** Post Image */}
 
-        {images.length !== 0 && (
+        {images?.length !== 0 && (
           <SliderBox
             images={images}
             ImageComponentStyle={styles.image}
@@ -227,7 +236,7 @@ export default function Card({
         )}
 
         <PostActions
-          comments={comments}
+          comments={comment}
           firstName={firstName}
           navigation={navigation}
           postId={postId}
@@ -242,6 +251,7 @@ export default function Card({
           setIsVisible={setIsOptionsVisible}
           setIsOptionsVisible={setIsOptionsVisible}
           onInteraction={handleReactions}
+          postType = {postType}
         />
 
         <PostOptionDrawer

@@ -11,7 +11,9 @@ export default function useImagesPicker() {
         quality: 0.5,
         selectionLimit: 1,
       });
+
       if (!result.didCancel) setFile(result.assets);
+
       return result.assets;
     } catch (error) {
       console.log('Error reading an image', error);
@@ -21,6 +23,5 @@ export default function useImagesPicker() {
   const clearFile = () => {
     setFile([]);
   };
-
   return {file, pickImage, clearFile};
 }

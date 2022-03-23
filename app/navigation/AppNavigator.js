@@ -18,8 +18,6 @@ import GroupNavigator from './GroupNavigator';
 import {useSelector} from 'react-redux';
 import CustomHeaderBar from './CustomHeaderBar';
 
-// import { NewsFeedNavigator } from "../navigation";
-
 const {postTypes} = constants;
 
 const config = {

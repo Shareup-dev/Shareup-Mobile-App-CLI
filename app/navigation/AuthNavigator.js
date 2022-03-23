@@ -22,6 +22,7 @@ export default function AuthNavigation() {
       }}>
       <Stack.Screen name={routes.LOGIN} component={LoginScreen} />
       <Stack.Screen name={routes.SIGNUP} component={SignUpScreen} />
+
       <Stack.Screen name={routes.FORGOT_PASSWORD} component={ForgotPassword} />
       <Stack.Screen name={routes.PASSWORD_RESET} component={ResetPassword} />
       <Stack.Screen
@@ -32,6 +33,7 @@ export default function AuthNavigation() {
         name={routes.PASSWORD_RESET_OTP}
         component={PasswordResetOTP}
       />
+
       <Stack.Screen name={routes.SIGNUP_STEP2} component={SignupStepTwo} />
     </Stack.Navigator>
   );
