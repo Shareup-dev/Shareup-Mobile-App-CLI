@@ -63,8 +63,8 @@ const SetGroupPhoto = ({navigation, route}) => {
     // groupFormData.append('group', JSON.stringify({...route.params}));
     if (file[0]?.uri) {
       groupFormData.append('group_image', {
-        name: 'group_image',
-        type: 'image/jpg',
+        name: file[0].fileName,
+        type: file[0].type,
         uri: file[0].uri,
       });
     }
@@ -74,6 +74,7 @@ const SetGroupPhoto = ({navigation, route}) => {
       .then(resp => {
         let allGroups = store.getState().userGroups;
         store.dispatch(userGroupActions.setGroups([...allGroups, resp.data]));
+
         navigation.navigate(routes.INVITE_GROUP_MEMBERS, groupData);
       })
       .catch(e =>

@@ -1,46 +1,68 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Dimensions,
-  FlatList,
-} from "react-native";
-import { useSelector } from "react-redux";
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, Image, Alert, FlatList} from 'react-native';
+import {useSelector} from 'react-redux';
 
-import AppButton from "../components/buttons/Button";
-import FeedTop from "../components/FeedTop";
-import Icon from "../components/Icon";
-import Card from "../components/lists/Card";
-import Screen from "../components/Screen";
-import WritePost from "../components/WritePost";
-import colors from "../config/colors";
-import GroupService from "../services/GroupService";
-import routes from "../navigation/routes";
-import { groupPostsActions } from "../redux/groupPosts";
-import store from "../redux/store";
+import AppButton from '../components/buttons/Button';
+import FeedTop from '../components/FeedTop';
+import Icon from '../components/Icon';
+import Card from '../components/lists/Card';
+import Screen from '../components/Screen';
+import WritePost from '../components/WritePost';
+import colors from '../config/colors';
+import GroupService from '../services/group.service';
+import routes from '../navigation/routes';
+import {groupPostsActions} from '../redux/groupPosts';
+import store from '../redux/store';
 
-import { HeaderWithBackArrow } from "../components/headers";
-import Tab from "../components/buttons/Tab";
+import {HeaderWithBackArrow} from '../components/headers';
+import Tab from '../components/buttons/Tab';
+import fileStorage from '../config/fileStorage';
 
-const GroupFeedScreen = ({ navigation, route }) => {
-const posts = useSelector((state) => state.groupPosts);
+const GroupFeedScreen = ({navigation, route}) => {
+  const posts = useSelector(state => state.groupPosts);
+  const {params: groupData} = route;
+
+  const [group, setGroup] = useState(groupData);
+
+  // useEffect(() => {
+  //   GroupService.getGroupsPostsById(route.params.groupId).then(resp => {
+  //     store.dispatch(groupPostsActions.setPosts(resp.data));
+  //   });
+  //   return () => {
+  //     store.dispatch(groupPostsActions.setPosts(null));
+  //   };
+  // }, [route.params.groupId]);
 
   useEffect(() => {
-    console.log("Group: ", route.params);
-    GroupService.getGroupsPostsById(route.params.groupId).then((resp) => {
-      store.dispatch(groupPostsActions.setPosts(resp.data));
-    });
-    return () => {
-      store.dispatch(groupPostsActions.setPosts(null));
-    };
-  }, [route.params.groupId]);
+    GroupService.getGroupById(groupData.id)
+      .then(res => setGroup(res.data))
+      .catch(e => console.log(e));
+  }, []);
+
+  // useEffect(
+  //   () =>
+  //     navigation.addListener('beforeRemove', e => {
+  //       e.preventDefault();
+  //       Alert.alert(
+  //         'Discard changes?',
+  //         'Are you sure to discard and leave the screen?',
+  //         [
+  //           {text: "Don't leave", style: 'cancel', onPress: () => {}},
+  //           {
+  //             text: 'Exit',
+  //             style: 'destructive',
+  //             onPress: () => {},
+  //           },
+  //         ],
+  //       );
+  //     }),
+  //   [navigation],
+  // );
 
   return (
     <Screen style={styles.feedContainer}>
       <HeaderWithBackArrow
-        title={route.params.title}
+        title={group.name}
         onBackButton={() => navigation.goBack()}
       />
       <FlatList
@@ -53,28 +75,32 @@ const posts = useSelector((state) => state.groupPosts);
                 // resizeMode={route.params.image ? "contain" : "cover"}
                 // resizeMode={"contain"}
                 source={
-                  route.params.image
-                    ? { uri: route.params.image }
-                    : require("../assets/images/group-texture.png")
+                  group.image
+                    ? {
+                        uri:
+                          fileStorage.baseUrl +
+                          'rn_image_picker_lib_temp_1c40de13-cf77-49d1-884a-5a55beaf8934.jpg',
+                      }
+                    : require('../assets/images/group-texture.png')
                 }
               />
               <View style={styles.detailContainer}>
-                <View style={{ marginHorizontal: 20 }}>
-                  <Text style={styles.title}>{route.params.title}</Text>
+                <View style={{marginHorizontal: 20}}>
+                  <Text style={styles.title}>{group.name}</Text>
                   <Text style={styles.subTitle}>
-                    {route.params.privacy} Group
+                    {group.privacySetting ? 'Private' : 'Public'} Group
                   </Text>
-                  <Text style={styles.subTitle}>{route.params.subTitle}</Text>
+                  <Text style={styles.subTitle}>{group.description}</Text>
 
                   <Tab
                     iconName="add-circle"
                     iconType="Ionicons"
-                    title={"invite"}
+                    title={'invite'}
                     fontColor={colors.dark}
                     style={styles.inviteButton}
                     onPress={() => {
                       navigation.navigate(routes.INVITE_GROUP_MEMBERS, {
-                        groupId: route.params.groupId,
+                        id: group.id,
                         newGroup: false,
                       });
                     }}
@@ -102,7 +128,7 @@ const posts = useSelector((state) => state.groupPosts);
                 </View>
                 <WritePost
                   groupPost={true}
-                  groupId={route.params.groupId}
+                  groupId={group.id}
                   navigation={navigation}
                 />
                 {posts?.length === 0 && (
@@ -114,11 +140,11 @@ const posts = useSelector((state) => state.groupPosts);
             </View>
           );
         }}
-        keyExtractor={(post) => {
+        keyExtractor={post => {
           return post.id.toString();
         }}
         showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => (
+        renderItem={({item}) => (
           <Card
             postId={item.id}
             userId={item.user.id}
@@ -141,18 +167,18 @@ const posts = useSelector((state) => state.groupPosts);
 
 const styles = StyleSheet.create({
   feedContainer: {
-    display: "flex",
+    display: 'flex',
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   container: {
     backgroundColor: colors.white,
     // flex: 1,
   },
   groupCoverImage: {
-    width: "100%",
+    width: '100%',
     height: 300,
-    resizeMode: "cover",
+    resizeMode: 'cover',
   },
   detailContainer: {
     paddingVertical: 10,
@@ -161,7 +187,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   subTitle: {
     fontSize: 14,
@@ -178,14 +204,14 @@ const styles = StyleSheet.create({
     elevation: 0,
     height: 40,
     borderRadius: 10,
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
     marginVertical: 10,
   },
   noPostsLabel: {
     fontSize: 24,
     color: colors.LightGray,
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: 80,
   },
 });
