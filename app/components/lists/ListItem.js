@@ -24,6 +24,7 @@ export default function ListItem({
   color,
   IconComponent,
   onPress,
+  onPressProfile,
   style,
   secondBtnAction,
   secondBtnTitle,
@@ -34,8 +35,9 @@ export default function ListItem({
   displayFirstButton = true,
 }) {
   return (
-    <TouchableWithoutFeedback onPress={onPress}>
+    <TouchableWithoutFeedback onPress={onPressProfile}>
       <View style={[styles.listItem, style]}>
+       
         {IconComponent}
         {image && (
           <Image
@@ -43,6 +45,7 @@ export default function ListItem({
             source={{ uri: fileStorage.baseUrl + image }}
           />
         )}
+        <View style={styles.firstlistItem}>
         <View style={styles.detailsContainer}>
           <Text
             numberOfLines={1}
@@ -62,6 +65,7 @@ export default function ListItem({
             </Text>
           )}
         </View>
+        
 
         {displayLeft && (
           <View style={styles.leftContainer}>
@@ -97,7 +101,9 @@ export default function ListItem({
               />
             )}
           </View>
+         
         )}
+         </View>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -106,16 +112,25 @@ export default function ListItem({
 const styles = StyleSheet.create({
   listItem: {
     flexDirection: "row",
-    alignItems: "center",
-    padding: 10,
-    paddingVertical: 17,
+    //alignItems: "center",
+    padding: 15,
+    paddingVertical: 10,
   },
-  detailsContainer: { marginLeft: 5, flex: 1 },
-  image: { height: 50, width: 50, borderRadius: 35 },
+  firstlistItem: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    padding: 15,
+    //paddingVertical: 10,
+
+  },
+  detailsContainer: { marginLeft: 5 ,alignItems:"flex-start"},
+  image: { height: 75, width: 75, borderRadius: 35 },
   title: defaultStyles.listItemTitle,
   leftContainer: {
     flexDirection: "row",
     alignItems: "center",
+    paddingTop:10
+   
   },
   tab: {
     borderRadius: 7,
