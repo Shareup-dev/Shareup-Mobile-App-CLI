@@ -5,9 +5,9 @@ import {createStackNavigator} from '@react-navigation/stack';
 import GroupsScreen from '../screens/GroupsScreen';
 import CreateNewGroup from '../screens/CreateNewGroup';
 import InviteGroupMembers from '../screens/InviteGroupMembers';
-import GroupFeed from '../screens/GroupFeedScreen';
 import SetGroupPhoto from '../screens/SetGroupPhoto';
 import routes from './routes';
+import GroupFeedScreen from '../screens/GroupFeedScreen';
 
 export default function GroupNavigator(props) {
   const Stack = createStackNavigator();
@@ -21,7 +21,13 @@ export default function GroupNavigator(props) {
           headerShown: false,
         }}
       />
-
+      <Stack.Screen
+        name={routes.GROUP_FEED}
+        component={GroupFeedScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen
         name={routes.CREATE_NEW_GROUP}
         component={CreateNewGroup}

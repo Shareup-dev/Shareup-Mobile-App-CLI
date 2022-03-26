@@ -34,20 +34,24 @@ const SetGroupPhoto = ({navigation, route}) => {
   React.useEffect(
     () =>
       navigation.addListener('beforeRemove', e => {
+        console.log(e);
         e.preventDefault();
-        Alert.alert(
-          'Discard changes?',
-          'Are you sure to discard and leave the screen?',
-          [
-            {text: "Don't leave", style: 'cancel', onPress: () => {}},
-            {
-              text: 'Skip',
-              style: 'destructive',
-              onPress: () =>
-                navigation.navigate(routes.INVITE_GROUP_MEMBERS, groupData),
-            },
-          ],
-        );
+        if (e.data?.action?.type === 'POP_TO_TOP') {
+          navigation.dispatch(e.data?.action);
+        } else
+          Alert.alert(
+            'Discard changes?',
+            'Are you sure to discard and leave the screen?',
+            [
+              {text: "Don't leave", style: 'cancel', onPress: () => {}},
+              {
+                text: 'Skip',
+                style: 'destructive',
+                onPress: () =>
+                  navigation.navigate(routes.INVITE_GROUP_MEMBERS, groupData),
+              },
+            ],
+          );
       }),
     [navigation],
   );

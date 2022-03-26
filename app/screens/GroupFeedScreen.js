@@ -1,5 +1,13 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Image, Alert, FlatList} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Alert,
+  FlatList,
+  Touchable,
+} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import AppButton from '../components/buttons/Button';
@@ -17,12 +25,17 @@ import store from '../redux/store';
 import {HeaderWithBackArrow} from '../components/headers';
 import Tab from '../components/buttons/Tab';
 import fileStorage from '../config/fileStorage';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import AuthContext from '../authContext';
+import {Divider} from 'react-native-paper';
 
 const GroupFeedScreen = ({navigation, route}) => {
   const posts = useSelector(state => state.groupPosts);
+  const {userData} = useContext(AuthContext).userState;
   const {params: groupData} = route;
 
   const [group, setGroup] = useState(groupData);
+  const [join, setJoin] = useState(false);
 
   // useEffect(() => {
   //   GroupService.getGroupsPostsById(route.params.groupId).then(resp => {
@@ -39,31 +52,24 @@ const GroupFeedScreen = ({navigation, route}) => {
       .catch(e => console.log(e));
   }, []);
 
-  // useEffect(
-  //   () =>
-  //     navigation.addListener('beforeRemove', e => {
-  //       e.preventDefault();
-  //       Alert.alert(
-  //         'Discard changes?',
-  //         'Are you sure to discard and leave the screen?',
-  //         [
-  //           {text: "Don't leave", style: 'cancel', onPress: () => {}},
-  //           {
-  //             text: 'Exit',
-  //             style: 'destructive',
-  //             onPress: () => {},
-  //           },
-  //         ],
-  //       );
-  //     }),
-  //   [navigation],
-  // );
+  const handleJoinGroup = () => {
+    GroupService.joinRequest(userData.id, groupData.id)
+      .then(res => setJoin(true))
+      .catch(e => e);
+  };
+  const handleExitGroup = () => {
+    GroupService.leavegroup(userData.id, groupData.id)
+      .then(res => setJoin(false))
+      .catch(e => e);
+  };
 
   return (
     <Screen style={styles.feedContainer}>
       <HeaderWithBackArrow
         title={group.name}
-        onBackButton={() => navigation.goBack()}
+        onBackButton={() => {
+          navigation.popToTop();
+        }}
       />
       <FlatList
         data={posts}
@@ -72,14 +78,12 @@ const GroupFeedScreen = ({navigation, route}) => {
             <View>
               <Image
                 style={styles.groupCoverImage}
-                // resizeMode={route.params.image ? "contain" : "cover"}
-                // resizeMode={"contain"}
+                // resizeMode={route.params.image ? 'contain' : 'cover'}
+                // resizeMode={'cover'}
                 source={
                   group.image
                     ? {
-                        uri:
-                          fileStorage.baseUrl +
-                          'rn_image_picker_lib_temp_1c40de13-cf77-49d1-884a-5a55beaf8934.jpg',
+                        uri: fileStorage.baseUrl + group.image,
                       }
                     : require('../assets/images/group-texture.png')
                 }
@@ -87,24 +91,39 @@ const GroupFeedScreen = ({navigation, route}) => {
               <View style={styles.detailContainer}>
                 <View style={{marginHorizontal: 20}}>
                   <Text style={styles.title}>{group.name}</Text>
-                  <Text style={styles.subTitle}>
-                    {group.privacySetting ? 'Private' : 'Public'} Group
-                  </Text>
                   <Text style={styles.subTitle}>{group.description}</Text>
-
-                  <Tab
-                    iconName="add-circle"
-                    iconType="Ionicons"
-                    title={'invite'}
-                    fontColor={colors.dark}
-                    style={styles.inviteButton}
-                    onPress={() => {
-                      navigation.navigate(routes.INVITE_GROUP_MEMBERS, {
-                        id: group.id,
-                        newGroup: false,
-                      });
-                    }}
-                  />
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Icon name={group.privacySetting ? 'lock' : 'earth'} />
+                    <Text style={styles.subTitle}>
+                      {group.privacySetting ? 'Private' : 'Public'} Group
+                    </Text>
+                  </View>
+                  {userData.id === group.owner?.id ? (
+                    <Tab
+                      iconName="add-circle"
+                      iconType="Ionicons"
+                      title={'invite'}
+                      fontColor={colors.dark}
+                      style={styles.inviteButton}
+                      onPress={() => {
+                        navigation.navigate(routes.INVITE_GROUP_MEMBERS, {
+                          id: group.id,
+                          newGroup: false,
+                        });
+                      }}
+                    />
+                  ) : (
+                    <Tab
+                      iconName={!join ? 'people' : 'exit'}
+                      iconType="Ionicons"
+                      title={!join ? 'Join Group' : 'Left Group'}
+                      fontColor={colors.dark}
+                      style={[styles.inviteButton]}
+                      onPress={() => {
+                        !join ? handleJoinGroup() : handleExitGroup();
+                      }}
+                    />
+                  )}
 
                   {/* <AppButton
                     icon={
@@ -126,11 +145,21 @@ const GroupFeedScreen = ({navigation, route}) => {
                     }}
                   /> */}
                 </View>
-                <WritePost
-                  groupPost={true}
-                  groupId={group.id}
-                  navigation={navigation}
-                />
+                {userData.id === group.owner?.id ? (
+                  <WritePost
+                    groupPost={true}
+                    groupId={group.id}
+                    navigation={navigation}
+                  />
+                ) : (
+                  <View
+                    style={{
+                      borderBottomColor: '#cacaca',
+                      borderWidth: 0.5,
+                      opacity: 0.5,
+                    }}
+                  />
+                )}
                 {posts?.length === 0 && (
                   <View>
                     <Text style={styles.noPostsLabel}>No posts found !</Text>

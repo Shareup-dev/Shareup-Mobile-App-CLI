@@ -78,14 +78,14 @@ export default function GroupsScreen({navigation}) {
           iconSize={22}
           titleStyle={styles.tabTitle}
         />
-        <Tab
+        {/* <Tab
           title="Categories"
           style={styles.tab}
           iconName="list"
           iconType="Feather"
           iconSize={18}
           titleStyle={styles.tabTitle}
-        />
+        /> */}
       </View>
 
       <View style={styles.separator} />

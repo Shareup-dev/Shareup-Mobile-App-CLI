@@ -31,13 +31,7 @@ export default function HomeNavigator(props) {
         component={StoryViewScreen}
       />
       <Stack.Screen name={routes.ADDS_STORY} component={AddStoryScreen} />
-      <Stack.Screen
-        name={routes.GROUP_FEED}
-        component={GroupFeedScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
+
       <Stack.Screen name={routes.TAG_PEOPLE} component={TagPeople} />
       <Stack.Screen name={routes.COMMENTS} component={CommentsScreen} />
       <Stack.Screen name={routes.ADD_NEW_REEL} component={AddNewReel} />
