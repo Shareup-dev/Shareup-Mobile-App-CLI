@@ -2,7 +2,7 @@ import AuthAxios from './authAxios';
 
 class UserService {
   
-  search = keyword => AuthAxios.get(`search`,keyword)
+  search = keyword => AuthAxios.get(`search?keyword=${keyword}`)
   /*..............User..............*/
   getUserByEmail = email => AuthAxios.get(`users/email/${email}`);
   getUsers = () => AuthAxios.get(`users`);

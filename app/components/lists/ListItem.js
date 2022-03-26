@@ -5,6 +5,7 @@ import {
   Image,
   TouchableWithoutFeedback,
   Text,
+  Touchable,
 } from "react-native";
 
 import colors from "../../config/colors";
@@ -12,8 +13,10 @@ import Tab from "../buttons/Tab";
 import Icon from "../Icon";
 import defaultStyles from "../../config/styles";
 import fileStorage from "../../config/fileStorage";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function ListItem({
+  email,
   title,
   tabTitle = "Send Request",
   titleStyle,
@@ -35,7 +38,7 @@ export default function ListItem({
   displayFirstButton = true,
 }) {
   return (
-    <TouchableWithoutFeedback onPress={onPressProfile}>
+    <TouchableOpacity onPress={onPressProfile}>
       <View style={[styles.listItem, style]}>
        
         {IconComponent}
@@ -105,7 +108,7 @@ export default function ListItem({
         )}
          </View>
       </View>
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   );
 }
 

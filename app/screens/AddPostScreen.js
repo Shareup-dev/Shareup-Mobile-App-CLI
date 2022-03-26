@@ -22,7 +22,7 @@ import IconButton from '../components/buttons/IconButton';
 import Text from '../components/Text';
 import Screen from '../components/Screen';
 import authContext from '../authContext';
-import PostService from '../services/old/PostService';
+import PostService from '../services/post.service';
 import routes from '../navigation/routes';
 import {useImagePicker} from '../hooks';
 import Header from '../components/headers/Header';
@@ -223,6 +223,33 @@ export default function AddPostScreen({navigation, route}) {
     return () => clearFields();
   }, [swapImage]);
 
+  createPostFormData = content => {
+    const formData = new FormData();
+
+    formData.append('content', content.text);
+
+    if (content.images.length !== 0) {
+      console.log('Post Images', content.images);
+
+      content.images.forEach(image => {
+        const splitPathArr = image.split('/');
+
+        formData.append(`files`, {
+          name: splitPathArr.slice(-1).pop(),
+          type: 'image/jpg',
+          uri: image,
+        });
+      });
+    }
+
+    if (content.groupId) {
+      formData.append('groupid', content.groupId);
+    }
+    console.log('Creating post: ', formData);
+
+    return formData;
+  };
+
   const handleOnChangeText = text => {
     setText(text);
     handleButtonActivation(text, images);
@@ -252,10 +279,8 @@ export default function AddPostScreen({navigation, route}) {
   };
 
   const onAddImage = uri => {
-
     setImages(images.concat(uri));
     handleButtonActivation(text, images.concat(uri));
-
   };
 
   const onRemoveImage = uri => {
@@ -277,8 +302,8 @@ export default function AddPostScreen({navigation, route}) {
         postContent.image = file;
       }
       if (postFeel.feeling) postContent.feeling = postFeel.feeling;
-
-      PostService.createPost(user.id, postContent).then(resp => {
+      const formData = this.createPostFormData(postContent);
+      PostService.createPost(user.id, formData).then(resp => {
         let existingPosts = store.getState().groupPosts;
         setLoading(false);
         store.dispatch(
@@ -296,7 +321,7 @@ export default function AddPostScreen({navigation, route}) {
           text: text === '' ? SWAP_DEFAULT_TEXT : text,
           images: images,
         };
-
+        
         PostService.createSwapPost(user.id, swapContent).then(resp => {
           store.dispatch(feedPostsAction.addFeedPost(resp.data));
           setLoading(false);
@@ -311,8 +336,8 @@ export default function AddPostScreen({navigation, route}) {
             images: images,
             feeling: postFeel.feeling ? postFeel.feeling : null,
           };
-
-          PostService.createPost(user.id, postContent).then(resp => {
+          const formData = this.createPostFormData(postContent);
+          PostService.createPost(user.id, formData).then(resp => {
             store.dispatch(feedPostsAction.addFeedPost(resp.data));
             setLoading(false);
             dispatch(postFeelingsActions.setDefault());

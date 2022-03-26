@@ -17,6 +17,7 @@ import UserService from '../services/user.service';
 import FriendService from '../services/FriendService';
 import store from '../redux/store';
 import {sentRequestsActions} from '../redux/sentRequests';
+import {receivedRequestsAction} from '../redux/receivedRequest';
 import {useSelector} from 'react-redux';
 import Toast from 'react-native-toast-message';
 import userService from '../services/user.service';
@@ -26,8 +27,11 @@ export default function ActivityScreen({navigation}) {
   const [users, setusers] = useState([]);
   const [sentto, setSentto] = useState([]);
   const {userState} = useContext(authContext);
- // const {user: loggedInUser} = useContext(authContext);
+  const [searchResult,setSearchResult] = useState([]);
+  const [isSearch,setIsSearch] = useState(false)
+  const {user: loggedInUser} = useContext(authContext).userState;
   let alreadySentTo = useSelector(state => state.sentRequests);
+  let receivedReq = useSelector(state => state.receivedRequests)
 
   useFocusEffect(
     useCallback(() => {
@@ -39,6 +43,7 @@ export default function ActivityScreen({navigation}) {
           let sendFiltered = allUsers.filter(({id: id1}) => !sentRequests.some(({id: id2}) => id2 === id1),);
           UserService.getFriendRequestRecieved(userState?.userData?.email).then(resp => {
             let receivedReq = resp.data;
+            //store.dispatch(receivedRequestsAction.setList(receivedReq));
             let receiveFiltered = sendFiltered.filter(({id: id1}) => !receivedReq.some(({id: id2}) => id2 === id1),);
             UserService.getFriends(userState?.userData?.email).then(res => {
               let friends = res.data;
@@ -56,11 +61,24 @@ export default function ActivityScreen({navigation}) {
  
 
   
-  const onCloseButtonPress = data => {
-    console.log(data)
-  } 
-  const onSearchFriend = (searchKey) => {
+  // const redirectToProfile = (userEmail) => {
+  //   console.log(userEmail)
+  //   navigation.navigate(routes.USER_PROFILE, {userEmail:userEmail} )
+  // } 
+  const onSearchFriend = searchKey => {
     console.log(searchKey)
+    if (searchKey == ""){
+      setIsSearch(false)
+    }else{
+    UserService.search(searchKey).then(resp => {
+      console.log(resp.data);
+      let filteredResult = resp.data.filter(person => person.id !== userState?.userData?.id)
+      setSearchResult(filteredResult);
+      setIsSearch(true);
+    },
+    );
+  }
+    return;
   } 
   const onSendRequest = (recievedUser) => {
     console.log('user received in ActivityScreen: ', recievedUser.firstName);
@@ -153,16 +171,17 @@ export default function ActivityScreen({navigation}) {
 
       <FlatList
         contentContainerStyle={styles.groupsList}
-        ListHeaderComponent={() => (
+        ListHeaderComponent={!isSearch? () => (
           <ListHeader
             title="There no activity yet !"
             subtitle="Add new friends to know more about them"
           />
-        )}
-        data={users}
+        ): ()=>{return null;}}
+        data={!isSearch ? users: searchResult}
         keyExtractor={item => item.id.toString()}
         renderItem={({item}) => (
           <ListItem
+            email={item.email}
             user={item}
             image={item.profilePicturePath}
             title={item.firstName}
@@ -188,7 +207,8 @@ export default function ActivityScreen({navigation}) {
             secondBtn={false}
             fullWidth={true}
             style={[defaultStyles.listItemStyle, defaultStyles.lightShadow]}
-            displayLeft={true}
+            displayLeft={!isSearch?true:false}
+            onPressProfile={()=> navigation.navigate(routes.USER_PROFILE , item.email)}
           />
         )}
       />

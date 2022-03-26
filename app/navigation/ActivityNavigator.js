@@ -8,6 +8,7 @@ import AddNewFriendScreen from "../screens/AddNewFriendScreen";
 import ReceivedRequests from "../screens/ReceivedRequests";
 import SentRequests from "../screens/SentRequests";
 import routes from "./routes";
+import UserProfileScreen from "../screens/UserProfileScreen";
 
 export default function ActivityNavigation(props) {
   const Stack = createStackNavigator();
@@ -52,6 +53,13 @@ export default function ActivityNavigation(props) {
           headerShown: false,
           title: "Sent Requests",
         }}
+      />
+      <Stack.Screen
+      name={routes.USER_PROFILE}
+      component = {UserProfileScreen}
+      options={{
+        headerShown:false,
+      }}
       />
     </Stack.Navigator>
   );

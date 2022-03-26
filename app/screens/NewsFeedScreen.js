@@ -94,8 +94,11 @@ export default function NewsFeedScreen({navigation, route}) {
   }, []);
 
   const loadNews = async () => {
-    postService.getNewsFeed(userState.username)
-    .then(res => setPosts(res.data))
+    postService.getNewsFeed(userState?.userData?.email)
+    .then(res =>{ 
+      console.log("data",res)
+      setPosts(res.data)
+    })
     .catch(e => console.log(e))
   };
 
