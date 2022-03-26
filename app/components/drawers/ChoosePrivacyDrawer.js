@@ -1,11 +1,11 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
-import { RadioButton, Text } from "react-native-paper";
+import React from 'react';
+import {View, StyleSheet} from 'react-native';
+import {RadioButton, Text} from 'react-native-paper';
 
-import DownModal from "./DownModal";
-import { Header, HeaderCloseIcon, HeaderButton, HeaderTitle } from "../headers";
-import colors from "../../config/colors";
-import Icon from "../Icon";
+import DownModal from './DownModal';
+import {Header, HeaderCloseIcon, HeaderButton, HeaderTitle} from '../headers';
+import colors from '../../config/colors';
+import Icon from '../Icon';
 
 export default function ChoosePrivacyDrawer({
   options,
@@ -14,17 +14,14 @@ export default function ChoosePrivacyDrawer({
   title,
   setPrivacy,
 }) {
-  const [value, setValue] = React.useState("first");
+  const [value, setValue] = React.useState('first');
 
   const handleCancel = () => {
-    console.log("Handle Cancel");
     setIsVisible(!isVisible);
   };
 
   const handleAddGroup = () => {
     setIsVisible(!isVisible);
-    console.log("Privacy set to: ", value);
-    setPrivacy(value);
   };
 
   return (
@@ -44,9 +41,11 @@ export default function ChoosePrivacyDrawer({
       />
 
       <RadioButton.Group
-        onValueChange={(newValue) => setValue(newValue)}
-        value={value}
-      >
+        onValueChange={newValue => {
+          setValue(newValue);
+          setPrivacy(newValue);
+        }}
+        value={value}>
         <View style={styles.radioGroupWrapper}>
           <View style={styles.radioButtonItemWrapper}>
             <Icon
@@ -56,7 +55,7 @@ export default function ChoosePrivacyDrawer({
               size={20}
             />
             <RadioButton.Item
-              value="Public"
+              value={0}
               label="Public"
               color={colors.iondigoDye}
               style={styles.radioButtonItem}
@@ -75,7 +74,7 @@ export default function ChoosePrivacyDrawer({
               size={20}
             />
             <RadioButton.Item
-              value="Private"
+              value={1}
               label="Private"
               color={colors.iondigoDye}
               style={styles.radioButtonItem}
@@ -96,30 +95,30 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   radioButtonItem: {
-    flexDirection: "row",
+    flexDirection: 'row',
     height: 70,
   },
   RadioLabelStyle: {
-    width: "90%",
+    width: '90%',
   },
   radioButtonText: {
-    width: "90%",
+    width: '90%',
   },
   radioButtonItemWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginHorizontal: 20,
   },
   radioButtonDescription: {
-    position: "absolute",
-    top: "65%",
-    left: "10%",
+    position: 'absolute',
+    top: '65%',
+    left: '10%',
     color: colors.mediumGray,
   },
   separator: {
     height: 2,
-    width: "90%",
-    alignSelf: "center",
+    width: '90%',
+    alignSelf: 'center',
     backgroundColor: colors.lighterGray,
     marginVertical: 10,
   },

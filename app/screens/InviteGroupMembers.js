@@ -7,19 +7,13 @@ import {
 } from 'react-native';
 
 import Screen from '../components/Screen';
-import TextField from '../components/TextField';
-import Tab from '../components/buttons/Tab';
-import Separator from '../components/Separator';
 import ListItem from '../components/lists/ListItem';
 import defaultStyles from '../config/styles';
 import ListHeader from '../components/lists/ListHeader';
 import colors from '../config/colors';
-import {HeaderWithBackArrow} from '../components/headers';
-import UserProfilePicture from '../components/UserProfilePicture';
 import routes from '../navigation/routes';
 import authContext from '../authContext';
 import UserService from '../services/user.service';
-import FriendService from '../services/FriendService';
 import GroupService from '../services/GroupService';
 import Icon from '../components/Icon';
 import AppButton from '../components/buttons/Button';
@@ -28,18 +22,19 @@ import {Header, HeaderTitle} from '../components/headers';
 const InviteGroupMembers = ({navigation, route}) => {
   const [users, setusers] = useState([]);
   const [invitedTo, setinvitedTo] = useState([]);
-  const {user: loggedInUser} = useContext(authContext);
+  const {userData: loggedInUser} = useContext(authContext).userState;
   useEffect(() => {
     UserService.getUsers().then(resp => {
-      let allUsers = resp.data.filter(person => person.id !== loggedInUser.id);
-      setusers(allUsers);
+      let allUsers = resp.data.filter(data => data.id !== loggedInUser.id);
+      setusers([...users, allUsers]);
     });
   }, []);
+
   const onAddMember = member => {
     if (invitedTo.filter(invitedMember => member.id === invitedMember.id)[0]) {
       return;
     }
-    GroupService.joinGroup(member.id, route.params.groupId).then(resp => {});
+    // GroupService.joinGroup(member.id, route.params.groupId).then(resp => {});
     setinvitedTo(previouslyInvited => {
       return [...previouslyInvited, member];
     });
@@ -59,7 +54,7 @@ const InviteGroupMembers = ({navigation, route}) => {
             />
           </TouchableWithoutFeedback>
         }
-        middle={<HeaderTitle>Add People</HeaderTitle>}
+        middle={<HeaderTitle>Invite People</HeaderTitle>}
       />
       <FlatList
         contentContainerStyle={styles.groupsList}
@@ -84,8 +79,8 @@ const InviteGroupMembers = ({navigation, route}) => {
             title={item.firstName}
             tabTitle={
               invitedTo.filter(user => user.email === item.email)[0]
-                ? 'Added'
-                : 'Add'
+                ? 'Invited'
+                : 'Invite'
             }
             color={
               invitedTo.filter(user => user.email === item.email)[0]
@@ -105,21 +100,21 @@ const InviteGroupMembers = ({navigation, route}) => {
         )}
       />
       <View style={[defaultStyles.row, {justifyContent: 'center'}]}>
-        {route.params.newGroup && (
+        {/* {route.params.newGroup && (
           <AppButton
             onPress={() => {
-              navigation.navigate(routes.GROUP_FEED, {
-                title: route.params.groupInfo.name,
-                privacy: route.params.groupInfo.privacySetting,
-                description: route.params.groupInfo.description,
-                groupId: route.params.groupId,
-                image: route.params.groupCoverPath,
-              });
+              // navigation.navigate(routes.GROUP_FEED, {
+              //   title: route.params.groupInfo.name,
+              //   privacy: route.params.groupInfo.privacySetting,
+              //   description: route.params.groupInfo.description,
+              //   groupId: route.params.groupId,
+              //   image: route.params.groupCoverPath,
+              // });
             }}
             title={'Finish'}
             width={'50%'}
           />
-        )}
+        )} */}
       </View>
     </Screen>
   );

@@ -40,5 +40,6 @@ class GroupService {
     AuthAxios.put(`groups/reject_member_request/${rid}`)
 }
 
-export default new Group();
+export default new GroupService();
+
 
