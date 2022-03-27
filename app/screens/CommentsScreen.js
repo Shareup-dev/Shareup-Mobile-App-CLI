@@ -135,11 +135,11 @@ export default function CommentsScreen({navigation, route}) {
         onRefresh={refreshComments}
         renderItem={({item}) => (
           <CommentItem
-            commentId={item.id}
-            username={item.user.firstName}
-            comment={item.content}
-            user={item.user}
-            publishedDate={item.published}
+            commentId={item?.id}
+            username={item?.user?.firstName}
+            comment={item?.content}
+            user={item?.user}
+            publishedDate={item?.published}
             reactionsLength={
               item?.reactions?.length ? item?.reactions?.length : 0
             }

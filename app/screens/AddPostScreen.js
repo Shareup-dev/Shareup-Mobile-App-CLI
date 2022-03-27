@@ -266,13 +266,10 @@ export default function AddPostScreen({navigation, route}) {
   const handelPickImage = async () => {
     try {
       const result = await pickImage();
-
-      console.log('result',result)
       const uri = result.map((item) => {
         return item.uri;
       });
       if (!result.cancelled) onAddImage(uri);
-
     } catch (error) {
       console.log(error);
     }
@@ -297,7 +294,6 @@ export default function AddPostScreen({navigation, route}) {
         text,
         groupId,
       };
-
       if (file.uri) {
         postContent.image = file;
       }
@@ -321,7 +317,6 @@ export default function AddPostScreen({navigation, route}) {
           text: text === '' ? SWAP_DEFAULT_TEXT : text,
           images: images,
         };
-        
         PostService.createSwapPost(user.id, swapContent).then(resp => {
           store.dispatch(feedPostsAction.addFeedPost(resp.data));
           setLoading(false);
@@ -341,9 +336,8 @@ export default function AddPostScreen({navigation, route}) {
             store.dispatch(feedPostsAction.addFeedPost(resp.data));
             setLoading(false);
             dispatch(postFeelingsActions.setDefault());
-
             navigation.navigate(routes.FEED);
-          });
+          }).catch(e => {console.log(e)})
         }
       }
     }

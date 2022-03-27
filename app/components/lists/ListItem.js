@@ -35,10 +35,10 @@ export default function ListItem({
   secondBtn = false,
   showCloseButton = true,
   fullWidth,
-  displayFirstButton = true,
+  isBottomSheet = false,
 }) {
   return (
-    <TouchableOpacity onPress={onPressProfile}>
+    <TouchableWithoutFeedback onPress={!isBottomSheet ? onPressProfile : onPress}>
       <View style={[styles.listItem, style]}>
        
         {IconComponent}
@@ -108,7 +108,7 @@ export default function ListItem({
         )}
          </View>
       </View>
-    </TouchableOpacity>
+    </TouchableWithoutFeedback>
   );
 }
 

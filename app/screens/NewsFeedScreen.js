@@ -15,7 +15,7 @@ import SwapCard from '../components/lists/SwapCard';
 
 import TrendingComponent from '../components/trending/TrendingComponent';
 import postService from '../services/post.service';
-
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function NewsFeedScreen({navigation, route}) {
   const {userState} = useContext(authContext);
@@ -86,18 +86,19 @@ export default function NewsFeedScreen({navigation, route}) {
   //   },
   // ];
 
-  useEffect(() => {
+  useFocusEffect(
+    useCallback(() => {
     loadNews();
     // loadStories();
-
     // return setActivityIndicator(false);
-  }, []);
-
+    return;
+  }, [])
+)
   const loadNews = async () => {
     postService.getNewsFeed(userState?.userData?.email)
     .then(res =>{ 
-      console.log("data",res)
-      setPosts(res.data)
+      const postArray = res.data.reverse();
+      setPosts(postArray)
     })
     .catch(e => console.log(e))
   };

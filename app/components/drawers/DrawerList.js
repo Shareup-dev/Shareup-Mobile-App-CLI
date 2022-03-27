@@ -19,6 +19,7 @@ export default function DrawerList({ options }) {
           style={styles.listItem}
           title={item.title}
           onPress={item.onPress}
+          isBottomSheet={true}
           IconComponent={
             <Icon
               name={item.icon.name}

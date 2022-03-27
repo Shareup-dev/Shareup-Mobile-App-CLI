@@ -31,6 +31,7 @@ export default function PostOptionDrawer({
         style={styles.listItem}
         title={lastItem.title}
         onPress={lastItem.onPress}
+        isBottomSheet = {true}
         IconComponent={
           <Icon
             name={lastItem.icon.name}
