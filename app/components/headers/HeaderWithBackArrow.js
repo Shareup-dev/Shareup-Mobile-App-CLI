@@ -1,8 +1,8 @@
-import React from "react";
-import { View, StyleSheet, TouchableWithoutFeedback, Text } from "react-native";
-import colors from "../../config/colors";
+import React from 'react';
+import {View, StyleSheet, TouchableWithoutFeedback, Text} from 'react-native';
+import colors from '../../config/colors';
 
-import Icon from "../Icon";
+import Icon from '../Icon';
 
 export default function HeaderWithBackArrow({
   onBackButton,
@@ -34,19 +34,20 @@ export default function HeaderWithBackArrow({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
     paddingVertical: 10,
     paddingHorizontal: 13,
     height: 60,
+    backgroundColor: '#FFF',
   },
   title: {
-    fontSize: 25,
-    fontWeight: "bold",
+    fontSize: 22,
+    fontWeight: 'bold',
   },
   rightComponent: {
-    position: "absolute",
-    right: "10%",
+    position: 'absolute',
+    right: '2%',
   },
 });

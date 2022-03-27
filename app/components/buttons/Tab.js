@@ -1,8 +1,8 @@
-import React from "react";
-import { StyleSheet, TouchableOpacity, Text } from "react-native";
+import React from 'react';
+import {StyleSheet, TouchableOpacity, Text} from 'react-native';
 
-import Icon from "../Icon";
-import colors from "../../config/colors";
+import Icon from '../Icon';
+import colors from '../../config/colors';
 
 export default function AppButton({
   title,
@@ -16,12 +16,13 @@ export default function AppButton({
   user,
   iconType,
   iconImage,
-  iconColor = "",
+  iconColor = '',
   textFontSize = 14,
   iconSize = 22 * sizeRatio,
   fontColor = colors.dark,
-  fontWeight = "normal",
+  fontWeight = 'normal',
   titleStyle,
+  disabled = false,
 }) {
   const renderIcon = () => {
     if (iconName)
@@ -61,8 +62,10 @@ export default function AppButton({
           paddingHorizontal: 10,
         },
         style,
+        {opacity: disabled ? 0.6 : 1},
       ]} //wrap the button inside a container to modify the width: ;
       onPress={user ? () => onPress(user) : onPress}
+      disabled={disabled}
       // onPress={() => {
       //   if (user) {
       //     onPress(user);
@@ -83,8 +86,7 @@ export default function AppButton({
               fontWeight: fontWeight,
             },
             titleStyle,
-          ]}
-        >
+          ]}>
           {title}
         </Text>
       )}
@@ -94,10 +96,10 @@ export default function AppButton({
 
 const styles = StyleSheet.create({
   button: {
-    flexDirection: "row",
+    flexDirection: 'row',
     borderRadius: 25,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     // paddingHorizontal: 20 / sizeRatio,
   },
   title: {

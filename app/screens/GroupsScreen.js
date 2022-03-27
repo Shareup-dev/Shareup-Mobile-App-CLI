@@ -2,50 +2,99 @@ import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
-  ScrollView,
-  FlatList,
-  Dimensions,
   TouchableOpacity,
   Image,
+  FlatList,
+  ScrollView,
 } from 'react-native';
 
-import Screen from '../components/Screen';
 import Icon from '../components/Icon';
 import TextField from '../components/TextField';
 import Tab from '../components/buttons/Tab';
 import Text from '../components/Text';
 import colors from '../config/colors';
-import LongCard from '../components/lists/LongCard';
-import defaultStyles from '../config/styles';
-import ListHeader from '../components/lists/ListHeader';
 import {HeaderWithBackArrow} from '../components/headers';
 import routes from '../navigation/routes';
-import GroupService from '../services/GroupService';
 import fileStorage from '../config/fileStorage';
 import authContext from '../authContext';
-import {useSelector} from 'react-redux';
+import groupService from '../services/group.service';
 
 export default function GroupsScreen({navigation}) {
-  // const [allGroups, setallGroups] = useState([]);
-  const [userGroups, setuserGroups] = useState([]);
-  const {user: loggedInUser} = useContext(authContext);
-  let allGroups = useSelector(state => state.userGroups);
-  // useEffect(() => {
-  //   let unmounted = false;
-  //   GroupService.getAllGroups().then((resp) => {
-  //     if (!unmounted) {
-  //       setallGroups(resp.data);
-  //     }
-  //   });
-  //   GroupService.getUserGroups(loggedInUser.email).then((resp) => {
-  //     setuserGroups(resp.data);
-  //   });
-  //   return () => {
-  //     unmounted = true;
-  //   };
-  // }, []);
+  const {userData} = useContext(authContext).userState;
+  const [groups, setGroups] = useState([]);
+
+  useEffect(() => {
+    navigation.addListener('focus', async () => {
+      groupService
+        .getGroupsOfOwner(userData.id)
+        .then(res => setGroups(res.data))
+        .catch(e => console.error(e.message));
+    });
+  }, [navigation]);
+
+  const Item = ({item}) => {
+    return (
+      <View
+        style={{
+          paddingHorizontal: 10,
+          paddingVertical: 10,
+          backgroundColor: '#fff',
+          borderRadius: 10,
+          borderColor: '#cacaca',
+          borderWidth: 0.3,
+          marginVertical: 5,
+        }}>
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onPress={() => navigation.navigate(routes.GROUP_FEED, item)}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <Image
+              source={
+                item.image
+                  ? {uri: fileStorage.baseUrl + item.image}
+                  : require('../assets/images/group-texture.png')
+              }
+              style={styles.img}
+            />
+            <View style={styles.item}>
+              <Text style={[styles.title]}>{item.name}</Text>
+              <Text style={{fontSize: 13}}>{item.description}</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+        <View style={styles.actionContainer}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Icon
+              name={'md-people-sharp'}
+              noBackground
+              size={50}
+              type="Ionicons"
+            />
+            <Text style={{fontSize: 16}}>Member Requests</Text>
+          </View>
+          <Text></Text>
+        </View>
+        <View style={styles.actionContainer}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Icon name={'report'} noBackground size={50} type="Octicons" />
+            <Text style={{fontSize: 16}}>Reports</Text>
+          </View>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Icon name={'delete'} noBackground size={50} />
+            <Text style={{fontSize: 16}}>Delete this group</Text>
+          </View>
+          <Text></Text>
+        </View>
+      </View>
+    );
+  };
+
   return (
-    <Screen style={styles.container}>
+    <View style={styles.container}>
       <HeaderWithBackArrow
         onBackButton={() => navigation.navigate(routes.FEED)}
         component={
@@ -77,6 +126,9 @@ export default function GroupsScreen({navigation}) {
           iconImage={require('../assets/icons/foundation_social-skillshare.png')}
           iconSize={22}
           titleStyle={styles.tabTitle}
+          onPress={() => {
+            navigation.navigate(routes.MY_GROUPS);
+          }}
         />
         {/* <Tab
           title="Categories"
@@ -88,54 +140,61 @@ export default function GroupsScreen({navigation}) {
         /> */}
       </View>
 
-      <View style={styles.separator} />
+      <ScrollView style={styles.listContainer}>
+        <Text
+          style={[
+            {
+              textAlign: 'center',
+              marginVertical: 5,
+            },
+            styles.title,
+          ]}>
+          Groups you manage
+        </Text>
 
-      <FlatList
-        contentContainerStyle={defaultStyles.listContentContainerStyle}
-        ListHeaderComponent={() => (
-          <ListHeader
-            containerStyle={{width: Dimensions.get('screen').width}}
-            title="There no activity yet !"
-            subtitle="Join new Groups to know more about them"
-          />
-        )}
-        data={allGroups}
-        keyExtractor={item => item.id.toString()}
-        numColumns={2}
-        renderItem={({item}) => (
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate(routes.GROUP_FEED, {
-                title: item.name,
-                subTitle: item.description,
-                image: item.groupCoverPath
-                  ? fileStorage.baseUrl + item.groupCoverPath
-                  : null,
-                privacy: item.privacySetting,
-                groupId: item.id,
-              });
-            }}>
-            <LongCard
-              style={defaultStyles.longCard}
-              title={item.name}
-              subTitle={item.privacySetting}
-              image={
-                item.groupCoverPath
-                  ? fileStorage.baseUrl + item.groupCoverPath
-                  : null
-              }
-              navigation={navigation}
-            />
-          </TouchableOpacity>
-        )}
-      />
-    </Screen>
+        {groups.map((group, index) => (
+          <Item item={group} key={index} />
+        ))}
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#cacaca35',
+  },
+  actionContainer: {
+    borderTopWidth: 1,
+
+    paddingHorizontal: 15,
+    marginTop: 5,
+    borderTopColor: '#cacaca60',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  listContainer: {
+    paddingHorizontal: 10,
+    marginBottom: 10,
+    paddingVertical: 10,
+  },
+  item: {
+    paddingHorizontal: 10,
+    marginVertical: 8,
+    justifyContent: 'center',
+  },
+  header: {
+    marginTop: 15,
+    marginBottom: 5,
+    fontSize: 20,
+    fontWeight: '600',
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#333',
   },
   header: {
     flexDirection: 'row',
@@ -152,6 +211,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#fff',
+    paddingBottom: 10,
   },
   tab: {
     width: '31%',
@@ -177,7 +238,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.LightGray,
     width: '100%',
     height: 10,
-    marginTop: 15,
   },
   groupsContainer: {
     paddingTop: 30,
@@ -194,5 +254,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     borderColor: colors.lighterGray,
+  },
+  img: {
+    backgroundColor: '#33333360',
+    width: 70,
+    borderRadius: 10,
+    resizeMode: 'cover',
+    height: 70,
   },
 });

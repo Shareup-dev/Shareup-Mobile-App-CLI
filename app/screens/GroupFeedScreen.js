@@ -36,20 +36,22 @@ const GroupFeedScreen = ({navigation, route}) => {
 
   const [group, setGroup] = useState(groupData);
   const [join, setJoin] = useState(false);
-
-  // useEffect(() => {
-  //   GroupService.getGroupsPostsById(route.params.groupId).then(resp => {
-  //     store.dispatch(groupPostsActions.setPosts(resp.data));
-  //   });
-  //   return () => {
-  //     store.dispatch(groupPostsActions.setPosts(null));
-  //   };
-  // }, [route.params.groupId]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    GroupService.getGroupById(groupData.id)
-      .then(res => setGroup(res.data))
-      .catch(e => console.log(e));
+    const getGroupInfo = async () => {
+      setLoading(true);
+      await Promise.all([
+        GroupService.getGroupById(groupData.id)
+          .then(res => setGroup(res.data))
+          .catch(e => console.error(e)),
+        GroupService.checkIsMember(groupData.id, userData.id)
+          .then(res => setJoin(res.data))
+          .catch(e => console.error(e)),
+      ]);
+      setLoading(false);
+    };
+    getGroupInfo();
   }, []);
 
   const handleJoinGroup = () => {
@@ -63,6 +65,11 @@ const GroupFeedScreen = ({navigation, route}) => {
       .catch(e => e);
   };
 
+  const checkOwner = () => {
+    if (userData.id === groupData.owner?.id) return true;
+    else return false;
+  };
+
   return (
     <Screen style={styles.feedContainer}>
       <HeaderWithBackArrow
@@ -70,6 +77,11 @@ const GroupFeedScreen = ({navigation, route}) => {
         onBackButton={() => {
           navigation.popToTop();
         }}
+        rightComponent={
+          <TouchableOpacity activeOpacity={0.6}>
+            <Icon type="SimpleLineIcons" name="options" />
+          </TouchableOpacity>
+        }
       />
       <FlatList
         data={posts}
@@ -98,7 +110,7 @@ const GroupFeedScreen = ({navigation, route}) => {
                       {group.privacySetting ? 'Private' : 'Public'} Group
                     </Text>
                   </View>
-                  {userData.id === group.owner?.id ? (
+                  {checkOwner() ? (
                     <Tab
                       iconName="add-circle"
                       iconType="Ionicons"
@@ -114,11 +126,18 @@ const GroupFeedScreen = ({navigation, route}) => {
                     />
                   ) : (
                     <Tab
-                      iconName={!join ? 'people' : 'exit'}
+                      iconName={loading ? null : !join ? 'people' : 'exit'}
                       iconType="Ionicons"
-                      title={!join ? 'Join Group' : 'Left Group'}
+                      title={
+                        loading
+                          ? 'Loading'
+                          : !join
+                          ? 'Join Group'
+                          : 'Left Group'
+                      }
                       fontColor={colors.dark}
                       style={[styles.inviteButton]}
+                      disabled={loading}
                       onPress={() => {
                         !join ? handleJoinGroup() : handleExitGroup();
                       }}
@@ -145,7 +164,7 @@ const GroupFeedScreen = ({navigation, route}) => {
                     }}
                   /> */}
                 </View>
-                {userData.id === group.owner?.id ? (
+                {checkOwner() || join ? (
                   <WritePost
                     groupPost={true}
                     groupId={group.id}

@@ -2,8 +2,7 @@ import AuthAxios from './authAxios';
 
 class GroupService {
   createGroup = (oid, data) => AuthAxios.post(`groups/${oid}/create`, data);
-  getUserGroups = email =>
-    AuthAxios.get(`${settings.apiUrl}/api/v1/${email}/groups`);
+  getUserGroups = email => AuthAxios.get(`${email}/groups`);
   joinRequest = (uid, gid) => AuthAxios.post(`groups/${uid}/join/${gid}`);
   getMembers = gid => AuthAxios.get(`groups/${gid}/members`);
   createAdmin = (gid, aid) => AuthAxios.post(`groups/${gid}/add_admin/${aid}`);
@@ -26,6 +25,8 @@ class GroupService {
   addGroupImage = (gid, data) =>
     AuthAxios.post(`groups/upload_image/${gid}`, data);
   groupSuggestion = uid => AuthAxios.get(`groups/suggestion/${uid}`);
+
+  checkIsMember = (gid, uid) => AuthAxios.get(`groups/${uid}/is_member/${gid}`);
 }
 
 export default new GroupService();
