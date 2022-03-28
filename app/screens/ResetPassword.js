@@ -58,13 +58,13 @@ export default function ResetPassword({navigation, route}) {
         await authActions.login(res.data.username, res.data.jwt);
       })
       .finally(() => {
-        Toast.show({
-          position: 'bottom',
-          visibilityTime: 5000,
-          type: 'success',
-          text1: 'Success',
-          text2: 'Password changed',
-        });
+        // Toast.show({
+        //   position: 'bottom',
+        //   visibilityTime: 5000,
+        //   type: 'success',
+        //   text1: 'Success',
+        //   text2: 'Password changed',
+        // });
         setLoading(false);
       });
   };

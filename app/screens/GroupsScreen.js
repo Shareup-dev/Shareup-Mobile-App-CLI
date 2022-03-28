@@ -24,8 +24,9 @@ export default function GroupsScreen({navigation}) {
   const [groups, setGroups] = useState([]);
 
   useEffect(() => {
-    navigation.addListener('focus', async () => {
-      groupService
+    navigation.addListener('focus', async e => {
+      console.log(e, navigation);
+      await groupService
         .getGroupsOfOwner(userData.id)
         .then(res => setGroups(res.data))
         .catch(e => console.error(e.message));
@@ -46,7 +47,10 @@ export default function GroupsScreen({navigation}) {
         }}>
         <TouchableOpacity
           activeOpacity={0.6}
-          onPress={() => navigation.navigate(routes.GROUP_FEED, item)}>
+          onPress={() =>
+            console.log(item)
+          } /*navigation.navigate(routes.GROUP_FEED, item)}*/
+        >
           <View
             style={{
               flexDirection: 'row',
@@ -67,7 +71,10 @@ export default function GroupsScreen({navigation}) {
           </View>
         </TouchableOpacity>
         <View style={styles.actionContainer}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={{flexDirection: 'row', alignItems: 'center'}}
+            onPress={_ => navigation.navigate(routes.MEMBER_REQUEST, item)}>
             <Icon
               name={'md-people-sharp'}
               noBackground
@@ -75,7 +82,7 @@ export default function GroupsScreen({navigation}) {
               type="Ionicons"
             />
             <Text style={{fontSize: 16}}>Member Requests</Text>
-          </View>
+          </TouchableOpacity>
           <Text></Text>
         </View>
         <View style={styles.actionContainer}>

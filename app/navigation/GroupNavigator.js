@@ -9,6 +9,7 @@ import SetGroupPhoto from '../screens/SetGroupPhoto';
 import routes from './routes';
 import GroupFeedScreen from '../screens/GroupFeedScreen';
 import MyGroups from '../screens/MyGroups';
+import MemberRequest from '../screens/ListOfMemberRequests';
 
 export default function GroupNavigator(props) {
   const Stack = createStackNavigator();
@@ -39,6 +40,13 @@ export default function GroupNavigator(props) {
       <Stack.Screen
         name={routes.MY_GROUPS}
         component={MyGroups}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={routes.MEMBER_REQUEST}
+        component={MemberRequest}
         options={{
           headerShown: false,
         }}

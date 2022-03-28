@@ -26,6 +26,7 @@ export default Object.freeze({
   CREATE_NEW_GROUP: 'CreateNewGroup',
   SET_GROUP_PHOTO: 'SetGroupPhoto',
   MY_GROUPS: 'MY_GROUPS',
+  MEMBER_REQUEST: 'MEMBER_REQUEST',
   INVITE_GROUP_MEMBERS: 'InviteGroupMembers',
   SET_POST_AUDIENCE: 'SetPostAudience',
   MESSAGES_NAVIGATOR: 'MessagesNavigator',

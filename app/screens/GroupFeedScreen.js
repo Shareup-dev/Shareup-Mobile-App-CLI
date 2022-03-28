@@ -35,7 +35,8 @@ const GroupFeedScreen = ({navigation, route}) => {
   const {params: groupData} = route;
 
   const [group, setGroup] = useState(groupData);
-  const [join, setJoin] = useState(false);
+  const [isMember, setIsMember] = useState(false);
+  const [requested, setRequested] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -46,7 +47,7 @@ const GroupFeedScreen = ({navigation, route}) => {
           .then(res => setGroup(res.data))
           .catch(e => console.error(e)),
         GroupService.checkIsMember(groupData.id, userData.id)
-          .then(res => setJoin(res.data))
+          .then(res => setIsMember(res.data))
           .catch(e => console.error(e)),
       ]);
       setLoading(false);
@@ -56,12 +57,12 @@ const GroupFeedScreen = ({navigation, route}) => {
 
   const handleJoinGroup = () => {
     GroupService.joinRequest(userData.id, groupData.id)
-      .then(res => setJoin(true))
+      .then(res => setRequested(true))
       .catch(e => e);
   };
   const handleExitGroup = () => {
     GroupService.leavegroup(userData.id, groupData.id)
-      .then(res => setJoin(false))
+      .then(res => setIsMember(false))
       .catch(e => e);
   };
 
@@ -126,20 +127,22 @@ const GroupFeedScreen = ({navigation, route}) => {
                     />
                   ) : (
                     <Tab
-                      iconName={loading ? null : !join ? 'people' : 'exit'}
+                      iconName={loading ? null : !isMember ? 'people' : 'exit'}
                       iconType="Ionicons"
                       title={
                         loading
                           ? 'Loading'
-                          : !join
-                          ? 'Join Group'
+                          : !isMember
+                          ? requested
+                            ? 'Request sent'
+                            : 'Ask to Join'
                           : 'Left Group'
                       }
                       fontColor={colors.dark}
                       style={[styles.inviteButton]}
                       disabled={loading}
                       onPress={() => {
-                        !join ? handleJoinGroup() : handleExitGroup();
+                        !isMember ? handleJoinGroup() : handleExitGroup();
                       }}
                     />
                   )}
@@ -164,7 +167,7 @@ const GroupFeedScreen = ({navigation, route}) => {
                     }}
                   /> */}
                 </View>
-                {checkOwner() || join ? (
+                {checkOwner() || isMember ? (
                   <WritePost
                     groupPost={true}
                     groupId={group.id}
