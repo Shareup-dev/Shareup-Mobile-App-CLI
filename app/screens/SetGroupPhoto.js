@@ -61,6 +61,7 @@ const SetGroupPhoto = ({navigation, route}) => {
     setLoading(true);
     const groupFormData = new FormData();
     // groupFormData.append('group', JSON.stringify({...route.params}));
+    console.log("file",file)
     if (file[0]?.uri) {
       groupFormData.append('group_image', {
         name: 'group_image',
@@ -68,7 +69,7 @@ const SetGroupPhoto = ({navigation, route}) => {
         uri: file[0].uri,
       });
     }
-
+    console.log("groupFormData",groupFormData)
     groupService
       .addGroupImage(groupData.id, groupFormData)
       .then(resp => {

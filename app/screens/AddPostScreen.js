@@ -11,7 +11,7 @@ import {
   View,
   Image,
   TextInput,
-  TouchableOpacity,
+  TouchableOpacity,Platform
 } from 'react-native';
 import Icon from '../components/Icon';
 import StackActions from '@react-navigation/routers';
@@ -223,21 +223,20 @@ export default function AddPostScreen({navigation, route}) {
     return () => clearFields();
   }, [swapImage]);
 
-  createPostFormData = content => {
+  const createPostFormData = content => {
     const formData = new FormData();
-
+    
     formData.append('content', content.text);
-
     if (content.images.length !== 0) {
       console.log('Post Images', content.images);
-
       content.images.forEach(image => {
         const splitPathArr = image.split('/');
-
         formData.append(`files`, {
-          name: splitPathArr.slice(-1).pop(),
+          name: String(splitPathArr.slice(-1).pop()),
           type: 'image/jpg',
-          uri: image,
+          uri: Platform.OS === 'ios' ? 
+          image.replace('file://', '')
+          : image,
         });
       });
     }
@@ -298,7 +297,7 @@ export default function AddPostScreen({navigation, route}) {
         postContent.image = file;
       }
       if (postFeel.feeling) postContent.feeling = postFeel.feeling;
-      const formData = this.createPostFormData(postContent);
+      const formData = createPostFormData(postContent);
       PostService.createPost(user.id, formData).then(resp => {
         let existingPosts = store.getState().groupPosts;
         setLoading(false);
@@ -331,7 +330,7 @@ export default function AddPostScreen({navigation, route}) {
             images: images,
             feeling: postFeel.feeling ? postFeel.feeling : null,
           };
-          const formData = this.createPostFormData(postContent);
+          const formData = createPostFormData(postContent)
           PostService.createPost(user.id, formData).then(resp => {
             store.dispatch(feedPostsAction.addFeedPost(resp.data));
             setLoading(false);
