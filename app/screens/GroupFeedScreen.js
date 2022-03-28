@@ -6,12 +6,11 @@ import {
   Image,
   Alert,
   FlatList,
-  Touchable,
+  Dimensions,
+  TouchableOpacity,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 
-import AppButton from '../components/buttons/Button';
-import FeedTop from '../components/FeedTop';
 import Icon from '../components/Icon';
 import Card from '../components/lists/Card';
 import Screen from '../components/Screen';
@@ -19,16 +18,15 @@ import WritePost from '../components/WritePost';
 import colors from '../config/colors';
 import GroupService from '../services/group.service';
 import routes from '../navigation/routes';
-import {groupPostsActions} from '../redux/groupPosts';
-import store from '../redux/store';
 
 import {HeaderWithBackArrow} from '../components/headers';
 import Tab from '../components/buttons/Tab';
 import fileStorage from '../config/fileStorage';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import AuthContext from '../authContext';
-import {Divider} from 'react-native-paper';
 
+import AuthContext from '../authContext';
+import DownModal from '../components/drawers/DownModal';
+
+const windowWidth = Dimensions.get('screen').width;
 const GroupFeedScreen = ({navigation, route}) => {
   const posts = useSelector(state => state.groupPosts);
   const {userData} = useContext(AuthContext).userState;
@@ -38,6 +36,7 @@ const GroupFeedScreen = ({navigation, route}) => {
   const [isMember, setIsMember] = useState(false);
   const [requested, setRequested] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const getGroupInfo = async () => {
@@ -55,6 +54,25 @@ const GroupFeedScreen = ({navigation, route}) => {
     getGroupInfo();
   }, []);
 
+  const deleteGroup = _ => {
+    Alert.alert('Delete group?', 'Are you sure to this group?', [
+      {text: 'Cancel', style: 'cancel', onPress: () => {}},
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: () =>
+          groupService
+            .deleteGroup(userData.id, groupData.id)
+            .then(
+              res =>
+                res === 200 &&
+                setGroups(prev => prev.filter(item => item.id !== gid)),
+            )
+            .catch(e => console.error(e.message)),
+      },
+    ]);
+  };
+
   const handleJoinGroup = () => {
     GroupService.joinRequest(userData.id, groupData.id)
       .then(res => setRequested(true))
@@ -66,9 +84,46 @@ const GroupFeedScreen = ({navigation, route}) => {
       .catch(e => e);
   };
 
+  const handleCloseModel = () => {
+    setMenuOpen(false);
+  };
+
   const checkOwner = () => {
     if (userData.id === groupData.owner?.id) return true;
     else return false;
+  };
+  const DropDownMenu = () => {
+    return (
+      <View style={styles.menuContainer}>
+        <View style={{alignItems: 'center'}}>
+          <View
+            style={{
+              backgroundColor: '#cacaca',
+              width: 80,
+              height: 6,
+              borderRadius: 6,
+            }}
+          />
+        </View>
+        <TouchableOpacity style={styles.menu}>
+          <Text style={styles.menuText}>Edit</Text>
+          <Text>Change the name and Description</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menu} onPress={deleteGroup}>
+          <Text style={styles.menuText}>Delete</Text>
+          <Text>Delete this group</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menu}>
+          <Text style={styles.menuText}>Cover image</Text>
+          <Text
+            style={{
+              maxWidth: windowWidth / 2,
+            }}>
+            Change cover image
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
   };
 
   return (
@@ -79,9 +134,15 @@ const GroupFeedScreen = ({navigation, route}) => {
           navigation.popToTop();
         }}
         rightComponent={
-          <TouchableOpacity activeOpacity={0.6}>
-            <Icon type="SimpleLineIcons" name="options" />
-          </TouchableOpacity>
+          <>
+            {checkOwner() && (
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={_ => setMenuOpen(true)}>
+                <Icon type="SimpleLineIcons" name="options" />
+              </TouchableOpacity>
+            )}
+          </>
         }
       />
       <FlatList
@@ -89,6 +150,9 @@ const GroupFeedScreen = ({navigation, route}) => {
         ListHeaderComponent={() => {
           return (
             <View>
+              <DownModal isVisible={menuOpen} setIsVisible={handleCloseModel}>
+                <DropDownMenu />
+              </DownModal>
               <Image
                 style={styles.groupCoverImage}
                 // resizeMode={route.params.image ? 'contain' : 'cover'}
@@ -105,12 +169,27 @@ const GroupFeedScreen = ({navigation, route}) => {
                 <View style={{marginHorizontal: 20}}>
                   <Text style={styles.title}>{group.name}</Text>
                   <Text style={styles.subTitle}>{group.description}</Text>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Icon name={group.privacySetting ? 'lock' : 'earth'} />
-                    <Text style={styles.subTitle}>
-                      {group.privacySetting ? 'Private' : 'Public'} Group
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}>
+                      <Icon name={group.privacySetting ? 'lock' : 'earth'} />
+                      <Text style={styles.subTitle}>
+                        {group.privacySetting ? 'Private' : 'Public'} Group
+                      </Text>
+                    </View>
+                    <Text style={{fontWeight: '600', fontSize: 15}}>
+                      Members{' '}
                     </Text>
                   </View>
+
                   {checkOwner() ? (
                     <Tab
                       iconName="add-circle"
@@ -146,7 +225,7 @@ const GroupFeedScreen = ({navigation, route}) => {
                       }}
                     />
                   )}
-
+                  <View style={styles.membersCard}></View>
                   {/* <AppButton
                     icon={
                       <Icon
@@ -217,6 +296,19 @@ const GroupFeedScreen = ({navigation, route}) => {
 };
 
 const styles = StyleSheet.create({
+  menuContainer: {},
+  menu: {
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+  },
+  icon: {
+    marginRight: 15,
+  },
+  menuText: {
+    fontWeight: '600',
+    fontSize: 20,
+    color: '#585858',
+  },
   feedContainer: {
     display: 'flex',
     flex: 1,

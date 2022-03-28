@@ -6,6 +6,7 @@ import {
   Image,
   FlatList,
   ScrollView,
+  Alert,
 } from 'react-native';
 
 import Icon from '../components/Icon';
@@ -25,13 +26,31 @@ export default function GroupsScreen({navigation}) {
 
   useEffect(() => {
     navigation.addListener('focus', async e => {
-      console.log(e, navigation);
       await groupService
         .getGroupsOfOwner(userData.id)
         .then(res => setGroups(res.data))
         .catch(e => console.error(e.message));
     });
   }, [navigation]);
+
+  const deleteGroup = gid => {
+    Alert.alert('Delete group?', 'Are you sure to this group?', [
+      {text: 'Cancel', style: 'cancel', onPress: () => {}},
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: () =>
+          groupService
+            .deleteGroup(userData.id, gid)
+            .then(
+              res =>
+                res === 200 &&
+                setGroups(prev => prev.filter(item => item.id !== gid)),
+            )
+            .catch(e => console.error(e.message)),
+      },
+    ]);
+  };
 
   const Item = ({item}) => {
     return (
@@ -90,10 +109,13 @@ export default function GroupsScreen({navigation}) {
             <Icon name={'report'} noBackground size={50} type="Octicons" />
             <Text style={{fontSize: 16}}>Reports</Text>
           </View>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={() => deleteGroup(item.id)}
+            style={{flexDirection: 'row', alignItems: 'center'}}>
             <Icon name={'delete'} noBackground size={50} />
             <Text style={{fontSize: 16}}>Delete this group</Text>
-          </View>
+          </TouchableOpacity>
           <Text></Text>
         </View>
       </View>

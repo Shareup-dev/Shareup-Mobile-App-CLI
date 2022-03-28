@@ -23,7 +23,7 @@ class GroupService {
   // join requests
   joinRequest = (uid,gid) => AuthAxios.post(`groups/${uid}/Join_group/${gid}`);
   acceptMemberRequest = rid => AuthAxios.put(`groups/accept_member_requests/${rid}`);
-  rejectMemberRequest = rid => AuthAxios.put(`groups/reject_member_request/${rid}`);
+  rejectMemberRequest = rid => AuthAxios.put(`groups/reject_member_requests/${rid}`);
   listOfRequests = (gid) => AuthAxios.get(`groups/${gid}/member_requests`);
   
   // post
