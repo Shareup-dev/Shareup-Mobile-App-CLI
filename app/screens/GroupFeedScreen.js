@@ -185,9 +185,15 @@ const GroupFeedScreen = ({navigation, route}) => {
                         {group.privacySetting ? 'Private' : 'Public'} Group
                       </Text>
                     </View>
-                    <Text style={{fontWeight: '600', fontSize: 15}}>
-                      Members{' '}
-                    </Text>
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      onPress={() => {
+                        navigation.navigate(routes.LIST_OF_MEMBERS, groupData);
+                      }}>
+                      <Text style={{fontWeight: '600', fontSize: 15}}>
+                        Members{' '}
+                      </Text>
+                    </TouchableOpacity>
                   </View>
 
                   {checkOwner() ? (
@@ -301,13 +307,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 15,
   },
-  icon: {
-    marginRight: 15,
-  },
+
   menuText: {
     fontWeight: '600',
     fontSize: 20,
     color: '#585858',
+  },
+  icon: {
+    marginRight: 15,
   },
   feedContainer: {
     display: 'flex',

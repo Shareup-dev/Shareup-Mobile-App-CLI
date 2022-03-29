@@ -19,6 +19,7 @@ class GroupService {
   // group Admin
   addAdmin = (gid, aid) => AuthAxios.post(`groups/${gid}/add_admin/${aid}`);
   getGroupsOfOwner = oid => AuthAxios.get(`groups/group_id/${oid}`);
+  getAdmins = gid => AuthAxios.get(`groups/${gid}/list_admins`);
 
   // members
   getMembers = gid => AuthAxios.get(`groups/${gid}/members`);
@@ -26,6 +27,7 @@ class GroupService {
   leavegroup = (uid, gid) => AuthAxios.delete(`groups/${uid}/leave/${gid}`);
   checkIsMember = (gid, uid) => AuthAxios.get(`groups/${uid}/is_member/${gid}`);
   addMember = (uid, gid) => AuthAxios.post(`groups/${uid}/join/${gid}`);
+  deleteMember = (aid,uid,gid) => AuthAxios.delete(`groups/${aid}/${gid}/delete/${uid}`)
 
   // join requests
   joinRequest = (uid, gid) => AuthAxios.post(`groups/${uid}/Join_group/${gid}`);
