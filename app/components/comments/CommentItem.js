@@ -21,19 +21,15 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import authContext from "../../authContext";
 import { Button } from "react-native-paper";
 export default function CommentItem({
-  commentId,
-  username,
   comment,
-  user,
   reactionsLength,
-  publishedDate,
   isUserLiked,
   onInteraction,
   handleDelete,
 }) {
   const {userState} = useContext(authContext);
   const [time, setTime] = useState(
-    moment(publishedDate, "DD MMMM YYYY hh:mm:ss").fromNow()
+    moment(comment.published, "DD MMMM YYYY hh:mm:ss").fromNow()
   );
   
   const leftSwipe = (progress, dragX) => {
@@ -44,12 +40,12 @@ export default function CommentItem({
     });
     return (
      
-      <TouchableOpacity onPress={()=> user.id == userState?.userData?.id ? handleDelete(commentId): ()=>{}} 
+      <TouchableOpacity onPress={()=> comment.user.id == userState?.userData?.id ? handleDelete(comment.id,false): handleDelete(comment.id,true)} 
       activeOpacity={0.6}
       style = {styles.deleteBox}>
         <View>
-          <Animated.Text style={{transform: [{scale: scale}]}}>
-            Delete
+          <Animated.Text style={{transform: [{scale: scale}],color:colors.white}}>
+            {comment.user.id == userState?.userData?.id ? "Delete" : "Hide"}
           </Animated.Text>
         </View>
       </TouchableOpacity>
@@ -59,7 +55,7 @@ export default function CommentItem({
   };
   return (
     <>
-    <Swipeable renderLeftActions={leftSwipe}>
+    <Swipeable renderLeftActions={comment.user.id == userState?.userData?.id ? leftSwipe : ()=>{}}>
       <View style={styles.container}>
         {/** Left */}
         <View>
@@ -68,12 +64,12 @@ export default function CommentItem({
 
         {/** Medial */}
         <View style={styles.medialContainer}>
-          <Text style={styles.userName}>{username}</Text>
+          <Text style={styles.userName}>{comment.user.firstName}</Text>
 
           {/* <Text style={styles.comment}>{comment}</Text> */}
           <View style={styles.commentBody}>
             <CommentText
-              text={comment}
+              text={comment.content}
               textStyle={styles.comment}
               readMoreStyle={styles.readMore}
             />
@@ -188,7 +184,7 @@ const styles = StyleSheet.create({
     color: colors.iondigoDye,
   },
   deleteBox: {
-    backgroundColor: colors.LightGray,
+    backgroundColor: colors.dimGray,
     justifyContent: 'center',
     alignItems: 'center',
     

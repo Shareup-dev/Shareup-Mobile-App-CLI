@@ -49,8 +49,10 @@ export default function UserProfileScreen({navigation, route}) {
     //   .catch(err => console.log(err));
   };
   const getUserData = () => {
+    console.log(userEmail)
     UserService.getUserByEmail(userEmail)
       .then(res => {
+        console.log(res.data.firstName)
         setUserData(res.data);
         console.log('user Data', res.data);
       })

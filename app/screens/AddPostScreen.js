@@ -332,6 +332,7 @@ export default function AddPostScreen({navigation, route}) {
           };
           const formData = createPostFormData(postContent)
           PostService.createPost(user.id, formData).then(resp => {
+            console.log(resp)
             store.dispatch(feedPostsAction.addFeedPost(resp.data));
             setLoading(false);
             dispatch(postFeelingsActions.setDefault());
