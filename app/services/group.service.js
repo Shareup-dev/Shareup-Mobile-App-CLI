@@ -9,8 +9,15 @@ class GroupService {
   groupSuggestion = uid => AuthAxios.get(`groups/suggestion/${uid}`);
   addGroupImage = (gid, data) => AuthAxios.post(`groups/upload_image/${gid}`, data);
   
-  // group Admin  
-  addAdmin = (gid, aid) => AuthAxios.post(`groups/${gid}/add_admin/${aid }`);
+  search = keyword =>
+    AuthAxios({
+      url: `groups/search`,
+      method: 'GET',
+      params: {keyword},
+    });
+
+  // group Admin
+  addAdmin = (gid, aid) => AuthAxios.post(`groups/${gid}/add_admin/${aid}`);
   getGroupsOfOwner = oid => AuthAxios.get(`groups/group_id/${oid}`);
 
   // members
@@ -19,22 +26,21 @@ class GroupService {
   leavegroup = (uid, gid) => AuthAxios.delete(`groups/${uid}/leave/${gid}`);
   checkIsMember = (gid, uid) => AuthAxios.get(`groups/${uid}/is_member/${gid}`);
   addMember = (uid, gid) => AuthAxios.post(`groups/${uid}/join/${gid}`);
-  
+
   // join requests
-  joinRequest = (uid,gid) => AuthAxios.post(`groups/${uid}/Join_group/${gid}`);
+  joinRequest = (uid, gid) => AuthAxios.post(`groups/${uid}/Join_group/${gid}`);
   acceptMemberRequest = rid => AuthAxios.put(`groups/accept_member_requests/${rid}`);
   rejectMemberRequest = rid => AuthAxios.put(`groups/reject_member_requests/${rid}`);
-  listOfRequests = (gid) => AuthAxios.get(`groups/${gid}/member_requests`);
-  
+  listOfRequests = gid => AuthAxios.get(`groups/${gid}/member_requests`);
+
   // post
   getPostByUserId = uid => AuthAxios.get(`groups/posts_user_group/${uid}`);
   getGroupPost = gid => AuthAxios.get(`groups/posts/${gid}`);
-  
+
   // invitations
   inviteToJoin = (gid, uid, fid) => AuthAxios.post(`groups/${gid}/${uid}/invite/${fid}`);
   acceptInvitation = rid => AuthAxios.put(`groups/accept_invite/${rid}`);
   rejectInvitation = rid => AuthAxios.put(`groups/reject_invite/${rid}`);
-  
 }
 
 export default new GroupService();

@@ -24,8 +24,16 @@ export default function GroupsScreen({navigation}) {
   const {userData} = useContext(authContext).userState;
   const [groups, setGroups] = useState([]);
 
+  const initSearchVal = {
+    keyword: '',
+    result: [],
+    loading: 0,
+  };
+  const [search, setSearch] = useState(initSearchVal);
+
   useEffect(() => {
     navigation.addListener('focus', async e => {
+      // setSearch(initSearchVal);
       await groupService
         .getGroupsOfOwner(userData.id)
         .then(res => setGroups(res.data))
@@ -52,7 +60,23 @@ export default function GroupsScreen({navigation}) {
     ]);
   };
 
-  const Item = ({item}) => {
+  const searchGroups = _ => {
+    if (search.keyword) {
+      setSearch(prev => ({...prev, loading: 1}));
+      groupService
+        .search(search.keyword)
+        .then(res => setSearch(prev => ({...prev, result: res.data})))
+        .catch(e => console.error(e.message))
+        .finally(_ => setSearch(prev => ({...prev, loading: 2})));
+    } else {
+      setSearch(prev => ({...prev, loading: 0, result: []}));
+    }
+  };
+  const handleClearSearch = () => {
+    setSearch(initSearchVal);
+  };
+
+  const ManageGroupCard = ({item}) => {
     return (
       <View
         style={{
@@ -122,6 +146,31 @@ export default function GroupsScreen({navigation}) {
     );
   };
 
+  const SearchResultCard = ({item}) => (
+    <TouchableOpacity
+      activeOpacity={0.6}
+      onPress={() => navigation.navigate(routes.GROUP_FEED, item)}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
+        <Image
+          source={
+            item.image
+              ? {uri: fileStorage.baseUrl + item.image}
+              : require('../assets/images/group-texture.png')
+          }
+          style={styles.searchCardImg}
+        />
+        <View style={styles.item}>
+          <Text style={styles.title}>{item.name}</Text>
+          <Text>{item.description}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+
   return (
     <View style={styles.container}>
       <HeaderWithBackArrow
@@ -132,6 +181,22 @@ export default function GroupsScreen({navigation}) {
             iconName="search1"
             iconType="AntDesign"
             style={styles.searchbar}
+            onChangeText={val => setSearch(prev => ({...prev, keyword: val}))}
+            onSubmitEditing={searchGroups}
+            value={search.keyword}
+            returnKeyType="search"
+            endComponent={
+              <TouchableOpacity
+                style={{marginLeft: 10}}
+                onPress={handleClearSearch}>
+                <Icon
+                  name="close"
+                  noBackground
+                  size={35}
+                  style={{paddingHorizontal: 5}}
+                />
+              </TouchableOpacity>
+            }
           />
         }
       />
@@ -170,19 +235,37 @@ export default function GroupsScreen({navigation}) {
       </View>
 
       <ScrollView style={styles.listContainer}>
-        <Text
-          style={[
-            {
-              textAlign: 'center',
-              marginVertical: 5,
-            },
-            styles.title,
-          ]}>
+        {search.loading === 2 && (
+          <>
+            <Text style={[{marginVertical: 5}, styles.title]}>
+              {`Search Results`}
+            </Text>
+            <View
+              style={{
+                backgroundColor: '#fdfdfd',
+                paddingHorizontal: 15,
+                paddingVertical: 10,
+                borderRadius: 10,
+              }}>
+              {search.result.length === 0 && (
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    marginVertical: 15,
+                    fontSize: 15,
+                  }}>{`Groups not found`}</Text>
+              )}
+              {search.result.map((result, i) => (
+                <SearchResultCard item={result} key={i} />
+              ))}
+            </View>
+          </>
+        )}
+        <Text style={[{marginVertical: 5}, styles.title]}>
           Groups you manage
         </Text>
-
         {groups.map((group, index) => (
-          <Item item={group} key={index} />
+          <ManageGroupCard item={group} key={index} />
         ))}
       </ScrollView>
     </View>
@@ -193,6 +276,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#cacaca35',
+  },
+  searchCardImg: {
+    backgroundColor: '#33333360',
+    width: 50,
+    borderRadius: 10,
+    resizeMode: 'cover',
+    height: 50,
   },
   actionContainer: {
     borderTopWidth: 1,
