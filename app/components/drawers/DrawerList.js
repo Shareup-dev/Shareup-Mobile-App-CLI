@@ -15,6 +15,7 @@ export default function DrawerList({ options }) {
       data={options}
       keyExtractor={(item) => item.title}
       renderItem={({ item }) => (
+        item.title !== "" ?
         <ListItem
           style={styles.listItem}
           title={item.title}
@@ -29,7 +30,7 @@ export default function DrawerList({ options }) {
               backgroundSizeRatio={0.6}
             />
           }
-        />
+        /> : <></>
       )}
     />
   );

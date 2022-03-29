@@ -21,71 +21,6 @@ export default function NewsFeedScreen({navigation, route}) {
   const {userState} = useContext(authContext);
   const [posts, setPosts] = useState([]);
   const [activityIndicator, setActivityIndicator] = useState(true);
-  
-  // const options = [
-  //   {
-  //     title: 'Save post',
-  //     icon: {
-  //       image: require('../assets/post-options-icons/save-post-icon.png'),
-  //     },
-  //     onPress: () => {
-  //       alert('Save post');
-  //     },
-  //   },
-  //   {
-  //     title: 'Hide my profile',
-  //     icon: {
-  //       image: require('../assets/post-options-icons/hide-profile-icon.png'),
-  //     },
-  //     onPress: () => {
-  //       alert('Save post');
-  //     },
-  //   },
-  //   {
-  //     title: 'Swap',
-  //     icon: {image: require('../assets/post-options-icons/swap-icon.png')},
-  //     onPress: () => {
-  //       alert('Swap');
-  //     },
-  //   },
-  //   {
-  //     title: 'Share friends',
-  //     icon: {
-  //       image: require('../assets/post-options-icons/share-friends-icon.png'),
-  //     },
-  //     onPress: () => {
-  //       alert('Share friends');
-  //     },
-  //   },
-  //   {
-  //     title: 'Unfollow',
-  //     icon: {
-  //       image: require('../assets/post-options-icons/unfollow-icon.png'),
-  //     },
-  //     onPress: () => {
-  //       alert('Unfollow');
-  //     },
-  //   },
-  //   {
-  //     title: 'Report',
-  //     icon: {
-  //       image: require('../assets/post-options-icons/report-icon.png'),
-  //     },
-  //     onPress: () => {
-  //       alert('Report');
-  //     },
-  //   },
-  //   {
-  //     title: 'Delete Post',
-  //     icon: {
-  //       image: require('../assets/post-options-icons/delete-red-icon.png'),
-  //     },
-  //     onPress: () => {
-  //       showDeleteAlert();
-  //     },
-  //   },
-  // ];
-
   useFocusEffect(
     useCallback(() => {
     loadNews();
@@ -119,17 +54,18 @@ export default function NewsFeedScreen({navigation, route}) {
     ) : (
       <Card
         user={item.user}
-        postId={item.id}
-        userId={item.user.id}
-        userEmail={item.user.email}
-        firstName={item.user.firstName}
-        lastName={item.user.lastName}
-        profileImage={item.user.profilePicturePath}
-        date={item.lastEdited}
-        postText={item.content}
-        postImages={item.media}
-        reactions={item.reactions}
-        comments={item.comments}
+        postData={item}
+        //postId={item.id}
+        //userId={item.user.id}
+        //userEmail={item.user.email}
+        //firstName={item.user.firstName}
+        //lastName={item.user.lastName}
+        //profileImage={item.user.profilePicturePath}
+        //date={item.lastEdited}
+        //postText={item.content}
+        //postImages={item.media}
+        //reactions={item.reactions}
+        //comments={item.comments}
         navigation={navigation}
         reloadPosts={loadNews}
         postType={item.hasOwnProperty('swaped') ? 'swap' : 'regularPost'}

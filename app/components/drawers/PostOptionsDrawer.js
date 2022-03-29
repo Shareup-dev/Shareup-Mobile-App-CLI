@@ -17,8 +17,8 @@ export default function PostOptionDrawer({
   postId,
   postText,
 }) {
-  const [optionsList, setOptionsList] = useState(() => options.slice(0, -1));
-  const [lastItem, setLastItem] = useState(() => options.slice(-1).pop());
+  const [optionsList, setOptionsList] = useState(() => options)//.slice(0, -1));
+  //const [lastItem, setLastItem] = useState(() => options.slice(-1).pop());
   // console.log("title: ", postText);
   return (
     <DownModal isVisible={isVisible} setIsVisible={setIsVisible}>
@@ -26,7 +26,7 @@ export default function PostOptionDrawer({
 
       <DrawerList options={optionsList} />
 
-      <ListItem
+      {/* <ListItem
         titleStyle={styles.lastItemTitle}
         style={styles.listItem}
         title={lastItem.title}
@@ -41,7 +41,7 @@ export default function PostOptionDrawer({
             backgroundSizeRatio={0.6}
           />
         }
-      />
+      /> */}
     </DownModal>
   );
 }

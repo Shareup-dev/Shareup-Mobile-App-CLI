@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import Icon from '../components/Icon';
 import StackActions from '@react-navigation/routers';
-
+import { ProgressBar, Colors } from 'react-native-paper';
 import {groupPostsActions} from '../redux/groupPosts';
 import EnhancedOptionsDrawer from '../components/drawers/EnhancedOptionsDrawer';
 import IconButton from '../components/buttons/IconButton';
@@ -210,7 +210,7 @@ export default function AddPostScreen({navigation, route}) {
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [isPrivacyOptionsVisible, setIsPrivacyOptionsVisible] = useState(false);
   const [images, setImages] = useState([]);
-  
+  const [progress,setProgress] = useState(0);
   const [postPrivacyOption, setPostPrivacyOption] = useState(privacyOptions[0]); // object to present the current privacy option
 
   useEffect(() => {
@@ -225,7 +225,6 @@ export default function AddPostScreen({navigation, route}) {
 
   const createPostFormData = content => {
     const formData = new FormData();
-    
     formData.append('content', content.text);
     if (content.images.length !== 0) {
       console.log('Post Images', content.images);
@@ -245,7 +244,6 @@ export default function AddPostScreen({navigation, route}) {
       formData.append('groupid', content.groupId);
     }
     console.log('Creating post: ', formData);
-
     return formData;
   };
 
@@ -331,13 +329,14 @@ export default function AddPostScreen({navigation, route}) {
             feeling: postFeel.feeling ? postFeel.feeling : null,
           };
           const formData = createPostFormData(postContent)
-          PostService.createPost(user.id, formData).then(resp => {
+            PostService.createPost(user.id, formData).then(resp => {
             console.log(resp)
             store.dispatch(feedPostsAction.addFeedPost(resp.data));
             setLoading(false);
             dispatch(postFeelingsActions.setDefault());
             navigation.navigate(routes.FEED);
           }).catch(e => {console.log(e)})
+          //setProgress(prog)
         }
       }
     }
@@ -416,13 +415,12 @@ export default function AddPostScreen({navigation, route}) {
               isActive={isButtonActive}
             />
           }
-        />
+        /> 
       );
   };
   return (
     <Screen>
       {renderHeader()}
-
       <View style={[styles.topContainer]}>
         {/** User */}
         <View style={styles.row}>
@@ -535,6 +533,7 @@ export default function AddPostScreen({navigation, route}) {
           isSwap={postType === postTypes.SWAP ? true : false}
           onRemoveImage={onRemoveImage}
         />
+        {/* <ProgressBar visible={loading? true :false} progress={progress} color={Colors.red800}></ProgressBar> */}
       </View>
 
       {postType === postTypes.CREATE_POST && (
@@ -569,6 +568,7 @@ export default function AddPostScreen({navigation, route}) {
         initialValue={privacyOptions[0].value}
         onSubmit={handelPrivacySetting}
       />
+      
     </Screen>
   );
 }
