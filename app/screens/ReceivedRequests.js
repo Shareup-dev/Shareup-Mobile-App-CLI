@@ -11,10 +11,10 @@ import Screen from '../components/Screen';
 import {Header, HeaderTitle} from '../components/headers';
 import Icon from '../components/Icon';
 import UserService from '../services/user.service';
-
+import routes from '../navigation/routes';
 import authContext from '../authContext';
 import defaultStyles from '../config/styles';
-import FriendService from '../services/FriendService';
+//import FriendService from '../services/FriendService';
 import ListHeader from '../components/lists/ListHeader';
 import ListItem from '../components/lists/ListItem';
 import colors from '../config/colors';
@@ -26,17 +26,21 @@ export default function ReceivedRequests({navigation}) {
   const [rejectedFrom, setRejectedFrom] = useState([]);
 
   useEffect(() => {
+    let mounted = true
+    if (mounted){
     UserService.getFriendRequestRecieved(user.email).then(resp => {
       setRequests(resp.data);
       requests.forEach(request => {
         console.log('Received Request from: ', request.firstName);
       });
     });
+  } 
+  return () => mounted = false
   }, []);
 
   const acceptFriendRequest = friend => {
     console.log('Accepting friend request from : ', friend.email);
-    FriendService.acceptRequest(user.id, friend.id).then(resp => {
+    UserService.acceptFriendRequest(user.id, friend.id).then(resp => {
       console.log('accept request resp: ', resp);
     });
 
@@ -47,7 +51,7 @@ export default function ReceivedRequests({navigation}) {
 
   const rejectFriendRequest = friend => {
     console.log('Rejecting friend request from : ', friend.email);
-    FriendService.declineRequest(user.id, friend.id).then(resp => {
+    UserService.declineFriendRequest(user.id, friend.id).then(resp => {
       console.log('friend request declined: ', resp.data);
     });
 
@@ -58,7 +62,7 @@ export default function ReceivedRequests({navigation}) {
 
   const getTabTitle = friend => {
     if (acceptedFrom.filter(user => friend.email === user.email)[0]) {
-      return 'Accepted';
+      return 'unfriend';
     }
 
     if (rejectedFrom.filter(user => friend.email === user.email)[0]) {

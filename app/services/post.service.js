@@ -1,13 +1,14 @@
+import React, {useState} from 'react';
 import axios, { Axios } from 'axios';
 import AuthAxios from './authAxios';
+
 
 class PostService {
   getNewsFeed = email =>
     AuthAxios.get(`newsFeed/${email}`)
-  createPost = (uid,data) =>
-    AuthAxios.post(`posts/${uid}`,data)
-  getPostById = postId =>
-    AuthAxios.get(`posts/user/${postId}`)
+
+  createPost = (uid,data) => 
+     AuthAxios.post(`posts/${uid}`,data,config)
   getPostByEmail = email =>
     AuthAxios.get(`posts/email/${email}`)
   getPostByPostId = pid =>
@@ -28,7 +29,15 @@ class PostService {
     AuthAxios.delete(`comment/${commentid}`)
   replay = (uid,commentId,data) =>
     AuthAxios.post(`reply/${uid}/${commentId}`,data)
-  
-
+}
+const config = {
+  onUploadProgress: progressEvent => {
+    progress = (progressEvent.loaded / progressEvent.total) * 50;
+    console.log(progressEvent.loaded)
+  },
+  onDownloadProgress: progressEvent => {
+    progress = 50 + (progressEvent.loaded / progressEvent.total) * 50;
+    console.log(progress);
+  },
 }
 export default new PostService();

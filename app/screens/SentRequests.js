@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext,useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,46 +6,58 @@ import {
   StyleSheet,
   Alert,
   TouchableWithoutFeedback,
+  
 } from 'react-native';
 import {useSelector} from 'react-redux';
-
 import Screen from '../components/Screen';
 import {Header, HeaderTitle} from '../components/headers';
 import Icon from '../components/Icon';
 import authContext from '../authContext';
 import ListItem from '../components/lists/ListItem';
-import FriendService from '../services/FriendService';
+import UserService from '../services/user.service';
 import store from '../redux/store';
 import {sentRequestsActions} from '../redux/sentRequests';
 import colors from '../config/colors';
 import defaultStyles from '../config/styles';
+import ActivityScreen from './ActivityScreen';
+import routes from '../navigation/routes';
+
 
 export default function SentRequests({navigation}) {
-  const {user: loggedInUser} = useContext(authContext);
-  let sentto = useSelector(state => state.sentRequests);
+  
+  //const {user: loggedInUser} = useContext(authContext);
+  const {userState} = useContext(authContext);
+  const [sentto, setSentto] = useState([]);
+  const [fetch,setFetch] = useState(false)
+  //let sentto = useSelector(state => state.sentRequests);
 
+  useEffect(() => {
+    let mounted = true
+    if (mounted){
+    UserService.getFriendRequestSent(userState?.userData?.email).then(resp => {
+      setSentto(resp.data);
+      resp.data.forEach(request => {
+        console.log('send Request from: ', request.firstName);
+      });
+    });
+    }
+    return () => mounted = false
+  }, [fetch]);
+ 
+  const redirectToProfile = () => {
+    console.log(sentto)
+  }
   const onCancelRequest = friend => {
-    return Alert.alert(
-      'Confirm',
-      `Are you sure you want to cancel the friend request sent to ${friend.firstName} ?`,
-      [
-        {
-          text: 'Yes',
-          onPress: () => {
-            sentto = sentto.filter(dost => dost.email !== friend.email);
-            store.dispatch(sentRequestsActions.setList(sentto));
-
-            FriendService.unsendRequest(loggedInUser.id, friend.id).then(
-              resp => {
-                console.log('unsend resp: ', resp.data);
-              },
-            );
-          },
-        },
-        {text: 'No'},
-      ],
+    sentto = sentto.filter(dost => dost.email !== friend.email);
+    //store.dispatch(sentRequestsActions.setList(sentto));
+    UserService.declineFriendRequest(userState?.userData?.id, friend.id).then(
+      resp => {
+        console.log('unsend resp: ', resp.data);
+      },
     );
-  };
+    setFetch(true)
+   //setSentto(alreadySentTo);   
+   }
 
   const renderSentRequestsList = () => {
     if (sentto.length === 0) {
@@ -68,9 +80,10 @@ export default function SentRequests({navigation}) {
                 user={item}
                 image={item.profilePicturePath}
                 title={item.firstName}
+                showCloseButton={false}
                 tabTitle={
                   sentto.filter(user => user.email === item.email)[0]
-                    ? 'Request Sent'
+                    ? 'Cancel Request'
                     : 'Cancelled'
                 }
                 color={
@@ -85,6 +98,7 @@ export default function SentRequests({navigation}) {
                 }
                 subTitle="Sent"
                 onPress={onCancelRequest}
+                onPressProfile={redirectToProfile}
                 style={[defaultStyles.listItemStyle, defaultStyles.lightShadow]}
                 displayLeft={true}
               />
@@ -101,6 +115,13 @@ export default function SentRequests({navigation}) {
         backgroundColor={colors.white}
         left={
           <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
+             {/* reset(
+             {
+                index: 0,
+                actions: [
+                  navigation.navigate(routes.ACTIVITY)
+                ]
+              })}> */}
             <Icon
               name="chevron-back"
               type="Ionicons"

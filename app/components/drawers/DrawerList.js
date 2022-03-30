@@ -15,10 +15,12 @@ export default function DrawerList({ options }) {
       data={options}
       keyExtractor={(item) => item.title}
       renderItem={({ item }) => (
+        item.title !== "" ?
         <ListItem
           style={styles.listItem}
           title={item.title}
           onPress={item.onPress}
+          isBottomSheet={true}
           IconComponent={
             <Icon
               name={item.icon.name}
@@ -28,7 +30,7 @@ export default function DrawerList({ options }) {
               backgroundSizeRatio={0.6}
             />
           }
-        />
+        /> : <></>
       )}
     />
   );

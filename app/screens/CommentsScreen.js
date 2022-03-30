@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef,useContext} from 'react';
 import {View, StyleSheet, FlatList, Keyboard,Animated,TouchableOpacity,Dimensions,Text} from 'react-native';
 
 import {Header, HeaderCloseIcon, HeaderTitle} from '../components/headers';
@@ -10,6 +10,7 @@ import PostService from '../services/post.service';
 import constants from '../config/constants';
 import { prepareDataForValidation } from 'formik';
 import colors from "../config/colors";
+import AuthContext from '../authContext';
 //import UserService from '../services/UserService';
 export default function CommentsScreen({navigation, route}) {
   const commentsListRef = useRef();
@@ -23,16 +24,18 @@ export default function CommentsScreen({navigation, route}) {
   const [commentId,setCommentId] = useState('')
   // needed to setup list refreshing
   const [refreshing, setRefreshing] = useState(false);
+  const {userState} = useContext(AuthContext);
   console.log('swapId: ', swapId);
   const handleCancel = () => {
     navigation.goBack();
   };
   console.log('commentContent',commentContent)
+
   const handleAddComment = async () => {
     if (postType === 'swapPost') {
       console.log('it is Swap');
       const comment = {content: commentContent};
-      PostService.addSwapComment(userId, swapId, comment.content).then(resp => {
+      PostService.addSwapComment(userState?.userData?.id, swapId, comment.content).then(resp => {
         console.log('added swap comment success: ', resp.data);
         refreshComments();
         setCommentContent('');
@@ -44,7 +47,7 @@ export default function CommentsScreen({navigation, route}) {
       const comment = {content: commentContent};
       console.log('Making comment: ', userId, postId, comment);
       if (commentContent !== '') {
-        PostService.addComment(userId, postId, comment)
+        PostService.addComment(userState?.userData?.id, postId, comment)
         .then(res => {
           refreshComments();
           setCommentContent('');
@@ -58,10 +61,12 @@ export default function CommentsScreen({navigation, route}) {
     }
   };
   
-  const handleDeleteComment= (itemId)=> {
+  const handleDeleteComment= (itemId,isHide)=> {
+    
     if (postType === 'swapPost') {
       console.log('it is Swap');
       const comment = {content: commentContent};
+      
       PostService.addSwapComment(userId, swapId, comment.content).then(resp => {
         console.log('added swap comment success: ', resp.data);
         refreshComments();
@@ -71,7 +76,8 @@ export default function CommentsScreen({navigation, route}) {
         // scrollToListBottom();
       });
     } else {
-      console.log('deleting comment: ', commentId);
+      if(!isHide){
+      console.log('deleting comment: ', itemId);
         PostService.deleteComment(itemId)
         .then(res => {
           console.log(res.data)
@@ -79,7 +85,9 @@ export default function CommentsScreen({navigation, route}) {
            Keyboard.dismiss();
         })
         .catch(e => console.log(e))
+      }else{
         
+      }
         // scrollToListBottom();
     }
   };
@@ -88,9 +96,15 @@ export default function CommentsScreen({navigation, route}) {
     setRefreshing(true);
     if (postType !== 'swapPost') {
       console.log('if NOT swapPost');
-      PostService.getPostById(postId)
+      PostService.getPostByPostId(postId)
       .then(res => {
-        setCommentsList(res.data.comments);})
+        console.log("response",res.data)
+       
+        setCommentsList(res.data.comments);
+       
+        
+       // setCommentsList(res.data.comments);
+      })
       .catch(e => console.log(e))
       
     } else {
@@ -98,7 +112,6 @@ export default function CommentsScreen({navigation, route}) {
       const response = await PostService.getSwapById(swapId);
       setCommentsList(response.data.comments);
     }
-
     setRefreshing(false);
   };
 
@@ -135,11 +148,7 @@ export default function CommentsScreen({navigation, route}) {
         onRefresh={refreshComments}
         renderItem={({item}) => (
           <CommentItem
-            commentId={item.id}
-            username={item.user.firstName}
-            comment={item.content}
-            user={item.user}
-            publishedDate={item.published}
+            comment={item}
             reactionsLength={
               item?.reactions?.length ? item?.reactions?.length : 0
             }

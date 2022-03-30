@@ -1,14 +1,19 @@
 import AuthAxios from './authAxios';
 
 class UserService {
+  
+  search = keyword => AuthAxios.get(`search?keyword=${keyword}`)
+
   /*..............User..............*/
   getUserByEmail = email => AuthAxios.get(`users/email/${email}`);
   getUsers = () => AuthAxios.get(`users`);
   getUserById = userId => AuthAxios.get(`users/${userId}`);
+
   /*..............UserProfile..............*/
   editProfile = (email, user) => AuthAxios.put(`users/${email}/edit_profile`, user);
   uploadProfilePicture = (email, formdata) => AuthAxios.post(`users/${email}/upload_profile_picture`, formdata);
   uploadCoverPicture = (email, formdata) => AuthAxios.post(`users/${email}/upload_cover_picture`, formdata);
+
   /*..............Friends..............*/
   getFriends = email => AuthAxios.get(`friends/email/${email}`);
   sendFriendRequest = (uid,fid) => AuthAxios.post(`${uid}/friend_request/${fid}`)
@@ -21,6 +26,7 @@ class UserService {
   getFriendsOfFriend = (fid) => AuthAxios.get(`friends/${fid}`)
   getPostOfFriend = (fid) => AuthAxios.get(`getpostfriends/${fid}`)
   getAllFriendRequest = (email) => AuthAxios.get(`friendsWithRequests/${email}`)
+  
   /*..............Flowers..............*/
   getFollowers = email => AuthAxios.get(`${email}/followers`);
   getFollowing = email => AuthAxios.get(`${email}/following`);

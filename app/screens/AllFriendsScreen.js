@@ -13,7 +13,7 @@ import {Header, HeaderTitle} from '../components/headers';
 import authContext from '../authContext';
 import UserService from '../services/user.service';
 import defaultStyles from '../config/styles';
-import FriendService from '../services/FriendService';
+//import FriendService from '../services/FriendService';
 import ListItem from '../components/lists/ListItem';
 import Icon from '../components/Icon';
 import Screen from '../components/Screen';
@@ -45,7 +45,7 @@ export default function AllFriendsScreen({navigation}) {
             // setremoved((previousState) => {
             //   return [...previousState, friend];
             // })
-            FriendService.removeFriends(loggedInUser.id, friend.id).then(
+            UserService.deleteFriend(loggedInUser.id, friend.id).then(
               removeResp => {
                 // console.log("Friend removed: ", removeResp);
                 setFriends(previousFriends => {
@@ -92,10 +92,12 @@ export default function AllFriendsScreen({navigation}) {
               user={item}
               image={item.profilePicturePath}
               title={item.firstName}
-              tabTitle={'Friend'}
-              color={colors.lighterGray}
-              fontColor={colors.dark}
+              tabTitle={'Unfriend'}
+              color={colors.iondigoDye}
+              fontColor={colors.white}
               subTitle="Connected"
+              showCloseButton={false}
+              fullWidth={true}
               onPress={UnfriendConfirmationDialog}
               style={[defaultStyles.listItemStyle, defaultStyles.lightShadow]}
               displayLeft={true}
