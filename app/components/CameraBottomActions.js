@@ -26,26 +26,29 @@ export default function CameraBottomActions({
   const styles = StyleSheet.create({
     modeContainer: {
       flexDirection: 'row',
-      justifyContent: 'space-evenly',
-      width: '100%',
-      backgroundColor: '#000',
-      position: 'absolute',
-      bottom: 0,
+      justifyContent: 'space-between',
+      backgroundColor: '#00000035',
+      // width: '100%',
+      // position: 'absolute',
+      // bottom: 0,
     },
     modeActive: {
-      fontWeight: '700',
-      fontSize: 15,
+      fontWeight: '800',
+      fontSize: 18,
+      color: 'darkred',
     },
     modeText: {
+      fontWeight: '700',
       color: '#fdfdfd',
-      fontSize: 14,
+      fontSize: 17,
+      marginHorizontal: 5,
     },
     container: {
       width: '100%',
       flexDirection: 'row',
       justifyContent: 'space-between',
       position: 'absolute',
-      bottom: 40,
+      bottom: 15,
       zIndex: 1,
       paddingHorizontal: 20,
       height: 120,
@@ -53,8 +56,11 @@ export default function CameraBottomActions({
     bottomBtn: {
       paddingVertical: 10,
       flex: 1,
+      flexDirection: 'row',
       alignItems: 'center',
+      justifyContent: 'center',
     },
+
     captureButtonContainer: {
       height: 86,
       width: 86,
@@ -65,9 +71,9 @@ export default function CameraBottomActions({
     },
     captureButton: {
       backgroundColor: mode === 'video' ? 'darkred' : colors.white,
-      borderRadius: capturing ? 5 : 60,
-      width: capturing ? 50 : 76,
-      height: capturing ? 50 : 76,
+      borderRadius: capturing && mode === 'video' ? 5 : 60,
+      width: capturing && mode === 'video' ? 50 : 76,
+      height: capturing && mode === 'video' ? 50 : 76,
     },
     recordingText: {
       fontWeight: '500',
@@ -92,10 +98,7 @@ export default function CameraBottomActions({
   return (
     <>
       <StatusBar backgroundColor="#000" barStyle="light-content" />
-      <View style={styles.recordingContainer}>
-        <View style={styles.recordingIcon} />
-        <Text style={styles.recordingText}>00.00</Text>
-      </View>
+
       <View style={styles.container}>
         <TouchableOpacity onPress={onPickFile}>
           <Icon type={'FontAwesome'} name={'file-photo-o'} size={64} />
@@ -111,25 +114,50 @@ export default function CameraBottomActions({
           <Icon type={'Ionicons'} name={'camera-reverse-outline'} size={64} />
         </TouchableOpacity>
       </View>
-
-      <View style={styles.modeContainer}>
-        <TouchableOpacity
-          style={styles.bottomBtn}
-          onPress={() => setMode('photo')}>
-          <Text
-            style={[styles.modeText, mode === 'photo' && styles.modeActive]}>
-            Photo
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setMode('video')}
-          style={styles.bottomBtn}>
-          <Text
-            style={[styles.modeText, mode === 'video' && styles.modeActive]}>
-            Video
-          </Text>
-        </TouchableOpacity>
-      </View>
+      {capturing ? (
+        <View style={styles.recordingContainer}>
+          {/* <View style={styles.recordingIcon} /> */}
+          {/* <Text style={styles.recordingText}>{` Recording..`}</Text> */}
+        </View>
+      ) : (
+        <View style={styles.modeContainer}>
+          <TouchableOpacity
+            style={styles.bottomBtn}
+            onPress={() => setMode('photo')}>
+            <Icon
+              style={styles.icon}
+              name={'camera'}
+              noBackground
+              color={mode === 'photo' ? 'crimson' : '#fff'}
+              type="Entypo"></Icon>
+            <Text
+              style={[
+                styles.modeText,
+                {color: mode === 'photo' ? 'crimson' : '#fff'},
+              ]}>
+              Photo
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setMode('video')}
+            style={styles.bottomBtn}>
+            <Icon
+              style={styles.icon}
+              name={'video-camera'}
+              noBackground
+              color={mode === 'video' ? 'crimson' : '#fff'}
+              type="Entypo"
+            />
+            <Text
+              style={[
+                styles.modeText,
+                {color: mode === 'video' ? 'crimson' : '#fff'},
+              ]}>
+              Video
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </>
   );
 }

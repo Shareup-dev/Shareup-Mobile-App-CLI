@@ -1,13 +1,16 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
-import { createStackNavigator } from "@react-navigation/stack";
+import React from 'react';
+import {View, StyleSheet} from 'react-native';
+import {createStackNavigator} from '@react-navigation/stack';
 
-import GroupsScreen from "../screens/GroupsScreen";
-import CreateNewGroup from "../screens/CreateNewGroup";
-import InviteGroupMembers from "../screens/InviteGroupMembers";
-import GroupFeed from "../screens/GroupFeedScreen";
-import SetGroupPhoto from "../screens/SetGroupPhoto";
-import routes from "./routes";
+import GroupsScreen from '../screens/GroupsScreen';
+import CreateNewGroup from '../screens/CreateNewGroup';
+import InviteGroupMembers from '../screens/InviteGroupMembers';
+import SetGroupPhoto from '../screens/SetGroupPhoto';
+import routes from './routes';
+import GroupFeedScreen from '../screens/GroupFeedScreen';
+import MyGroups from '../screens/MyGroups';
+import MemberRequest from '../screens/ListOfMemberRequests';
+import ListOfMembers from '../screens/ListOfMembers';
 
 export default function GroupNavigator(props) {
   const Stack = createStackNavigator();
@@ -23,7 +26,7 @@ export default function GroupNavigator(props) {
       />
       <Stack.Screen
         name={routes.GROUP_FEED}
-        component={GroupFeed}
+        component={GroupFeedScreen}
         options={{
           headerShown: false,
         }}
@@ -31,6 +34,27 @@ export default function GroupNavigator(props) {
       <Stack.Screen
         name={routes.CREATE_NEW_GROUP}
         component={CreateNewGroup}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={routes.MY_GROUPS}
+        component={MyGroups}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={routes.MEMBER_REQUEST}
+        component={MemberRequest}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={routes.LIST_OF_MEMBERS}
+        component={ListOfMembers}
         options={{
           headerShown: false,
         }}

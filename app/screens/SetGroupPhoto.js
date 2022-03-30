@@ -34,20 +34,24 @@ const SetGroupPhoto = ({navigation, route}) => {
   React.useEffect(
     () =>
       navigation.addListener('beforeRemove', e => {
+        console.log(e);
         e.preventDefault();
-        Alert.alert(
-          'Discard changes?',
-          'Are you sure to discard and leave the screen?',
-          [
-            {text: "Don't leave", style: 'cancel', onPress: () => {}},
-            {
-              text: 'Skip',
-              style: 'destructive',
-              onPress: () =>
-                navigation.navigate(routes.INVITE_GROUP_MEMBERS, groupData),
-            },
-          ],
-        );
+        if (e.data?.action?.type === 'POP_TO_TOP') {
+          navigation.dispatch(e.data?.action);
+        } else
+          Alert.alert(
+            'Discard changes?',
+            'Are you sure to discard and leave the screen?',
+            [
+              {text: "Don't leave", style: 'cancel', onPress: () => {}},
+              {
+                text: 'Skip',
+                style: 'destructive',
+                onPress: () =>
+                  navigation.navigate(routes.INVITE_GROUP_MEMBERS, groupData),
+              },
+            ],
+          );
       }),
     [navigation],
   );
@@ -64,8 +68,8 @@ const SetGroupPhoto = ({navigation, route}) => {
     console.log("file",file)
     if (file[0]?.uri) {
       groupFormData.append('group_image', {
-        name: 'group_image',
-        type: 'image/jpg',
+        name: file[0].fileName,
+        type: file[0].type,
         uri: file[0].uri,
       });
     }
@@ -75,6 +79,7 @@ const SetGroupPhoto = ({navigation, route}) => {
       .then(resp => {
         let allGroups = store.getState().userGroups;
         store.dispatch(userGroupActions.setGroups([...allGroups, resp.data]));
+
         navigation.navigate(routes.INVITE_GROUP_MEMBERS, groupData);
       })
       .catch(e =>
