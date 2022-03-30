@@ -11,6 +11,8 @@ import GroupFeedScreen from '../screens/GroupFeedScreen';
 import MyGroups from '../screens/MyGroups';
 import MemberRequest from '../screens/ListOfMemberRequests';
 import ListOfMembers from '../screens/ListOfMembers';
+import EditGroup from '../screens/EditGroupScreen';
+import UpdateGroupPhoto from '../screens/UpdateGroupImage';
 
 export default function GroupNavigator(props) {
   const Stack = createStackNavigator();
@@ -32,8 +34,22 @@ export default function GroupNavigator(props) {
         }}
       />
       <Stack.Screen
+        name={routes.UPDATE_GROUP_PHOTO}
+        component={UpdateGroupPhoto}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         name={routes.CREATE_NEW_GROUP}
         component={CreateNewGroup}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={routes.EDIT_GROUP}
+        component={EditGroup}
         options={{
           headerShown: false,
         }}

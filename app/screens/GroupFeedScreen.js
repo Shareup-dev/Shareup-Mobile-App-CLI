@@ -42,17 +42,18 @@ const GroupFeedScreen = ({navigation, route}) => {
     const getGroupInfo = async () => {
       setLoading(true);
       await Promise.all([
-        GroupService.getGroupById(groupData.id)
-          .then(res => setGroup(res.data))
-          .catch(e => console.error(e)),
-        GroupService.checkIsMember(groupData.id, userData.id)
-          .then(res => setIsMember(res.data))
-          .catch(e => console.error(e)),
-      ]);
-      setLoading(false);
+        GroupService.getGroupById(groupData.id),
+        GroupService.checkIsMember(groupData.id, userData.id),
+      ])
+        .then(res => {
+          setGroup(res[0].data);
+          setIsMember(res[1].data);
+        })
+        .catch(e => console.log(e))
+        .finally(_ => setLoading(false));
     };
     getGroupInfo();
-  }, []);
+  }, [route.params]);
 
   const deleteGroup = _ => {
     Alert.alert('Delete group?', 'Are you sure to this group?', [
@@ -61,8 +62,7 @@ const GroupFeedScreen = ({navigation, route}) => {
         text: 'Delete',
         style: 'destructive',
         onPress: () =>
-          groupService
-            .deleteGroup(userData.id, groupData.id)
+          GroupService.deleteGroup(userData.id, groupData.id)
             .then(
               res =>
                 res === 200 &&
@@ -105,7 +105,13 @@ const GroupFeedScreen = ({navigation, route}) => {
             }}
           />
         </View>
-        <TouchableOpacity style={styles.menu}>
+        <TouchableOpacity
+          style={styles.menu}
+          activeOpacity={0.6}
+          onPress={_ => {
+            navigation.navigate(routes.EDIT_GROUP, groupData);
+            setMenuOpen(false);
+          }}>
           <Text style={styles.menuText}>Edit</Text>
           <Text>Change the name and Description</Text>
         </TouchableOpacity>
@@ -113,7 +119,12 @@ const GroupFeedScreen = ({navigation, route}) => {
           <Text style={styles.menuText}>Delete</Text>
           <Text>Delete this group</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menu}>
+        <TouchableOpacity
+          style={styles.menu}
+          onPress={_ => {
+            navigation.navigate(routes.UPDATE_GROUP_PHOTO, groupData);
+            setMenuOpen(false);
+          }}>
           <Text style={styles.menuText}>Cover image</Text>
           <Text
             style={{
@@ -138,7 +149,7 @@ const GroupFeedScreen = ({navigation, route}) => {
             {checkOwner() && (
               <TouchableOpacity
                 activeOpacity={0.6}
-                onPress={_ => setMenuOpen(true)}>
+                onPress={_ => setMenuOpen(prev => !prev)}>
                 <Icon type="SimpleLineIcons" name="options" />
               </TouchableOpacity>
             )}

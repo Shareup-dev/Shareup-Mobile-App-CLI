@@ -18,6 +18,7 @@ export default function MyGroups({navigation}) {
   const {userState} = useContext(AuthContext);
   const [groups, setGroups] = useState([]);
 
+
   const Item = ({item}) => {
     return (
       <TouchableOpacity
@@ -46,32 +47,17 @@ export default function MyGroups({navigation}) {
   };
 
   useEffect(() => {
-    const getMyGroups = async () => {
-      try {
-        await Promise.all([
-          groupService.getGroupsOfOwner(userState?.userData?.id).then(res =>
-            setGroups([
-              {
-                title: 'Groups you manage',
-                data: res.data,
-              },
-            ]),
-          ),
-          groupService.getUserGroups(userState.username).then(res =>
-            setGroups(prev => [
-              ...prev,
-              {
-                title: 'Other groups',
-                data: res.data,
-              },
-            ]),
-          ),
-        ]);
-      } catch (e) {
-        console.error(e.message);
-      }
+    const fetchMyGroups = () => {
+      Promise.all([
+        groupService.getGroupsOfOwner(userState?.userData?.id),
+        groupService.getUserGroups(userState?.username),
+      ]).then(res => {
+        setGroups([{title: 'Groups you manage',data: res[0].data,},]);
+        setGroups(prev => [...prev,{title: 'Other groups',data: res[1].data,},]);
+      }).catch(e=> console.log(e.message));
+
     };
-    getMyGroups();
+    fetchMyGroups(); 
   }, []);
 
   return (

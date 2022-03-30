@@ -91,8 +91,8 @@ export default function GroupsScreen({navigation}) {
         <TouchableOpacity
           activeOpacity={0.6}
           onPress={() =>
-            console.log(item)
-          } /*navigation.navigate(routes.GROUP_FEED, item)}*/
+            console.log(item)}
+          // navigation.navigate(routes.GROUP_FEED, item)}
         >
           <View
             style={{
