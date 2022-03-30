@@ -1,7 +1,7 @@
 import AuthAxios from './authAxios';
 
 class Story {
-  addStory = (userId, data) => AuthAxios.post(`/Stories/${userId}`, data);
+  addStory = (userId, data) => AuthAxios.post(`/stories/${userId}`, data);
   getStories = () => AuthAxios.get(`/stories`);
   getStoriesByEmail = (email) => AuthAxios.get(`stories/${email}`)
   updateStory = (sid) => AuthAxios.put(`stories/${sid}`,data)

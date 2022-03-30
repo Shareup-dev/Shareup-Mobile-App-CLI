@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   StyleSheet,
   View,
@@ -6,19 +6,21 @@ import {
   TouchableWithoutFeedback,
   Text,
   Touchable,
-} from "react-native";
 
-import colors from "../../config/colors";
-import Tab from "../buttons/Tab";
-import Icon from "../Icon";
-import defaultStyles from "../../config/styles";
-import fileStorage from "../../config/fileStorage";
-import { TouchableOpacity } from "react-native-gesture-handler";
+} from 'react-native';
+
+import colors from '../../config/colors';
+import Tab from '../buttons/Tab';
+import Icon from '../Icon';
+import defaultStyles from '../../config/styles';
+import fileStorage from '../../config/fileStorage';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+
 
 export default function ListItem({
   email,
   title,
-  tabTitle = "Send Request",
+  tabTitle = 'Send Request',
   titleStyle,
   subTitle,
   image,
@@ -35,7 +37,10 @@ export default function ListItem({
   secondBtn = false,
   showCloseButton = true,
   fullWidth,
+  handleClose,
+  displayFirstButton = true,
   isBottomSheet = false,
+
 }) {
   return (
     <TouchableWithoutFeedback onPress={!isBottomSheet ? onPressProfile : onPress}>
@@ -45,15 +50,14 @@ export default function ListItem({
         {image && (
           <Image
             style={styles.image}
-            source={{ uri: fileStorage.baseUrl + image }}
+            source={{uri: fileStorage.baseUrl + image}}
           />
         )}
         <View style={styles.firstlistItem}>
         <View style={styles.detailsContainer}>
           <Text
             numberOfLines={1}
-            style={[styles.title, defaultStyles.fontWeightMedium, titleStyle]}
-          >
+            style={[styles.title, defaultStyles.fontWeightMedium, titleStyle]}>
             {title}
           </Text>
           {subTitle && (
@@ -62,8 +66,7 @@ export default function ListItem({
               style={[
                 defaultStyles.listItemSubTitle,
                 defaultStyles.fontWeightMedium,
-              ]}
-            >
+              ]}>
               {subTitle}
             </Text>
           )}
@@ -75,7 +78,7 @@ export default function ListItem({
             <Tab
               title={tabTitle}
               titleStyle={styles.buttonTitle}
-              style={[styles.tab, { width: fullWidth ? 200 : 100 }]}
+              style={[styles.tab, {width: fullWidth ? 200 : 100}]}
               height={30}
               user={user}
               color={color}
@@ -86,7 +89,7 @@ export default function ListItem({
               <Tab
                 title={secondBtnTitle}
                 titleStyle={styles.buttonTitle}
-                style={[styles.tab, { width: fullWidth ? 200 : 100 }]}
+                style={[styles.tab, {width: fullWidth ? 200 : 100}]}
                 // fullWidth={false}
                 height={30}
                 user={user}
@@ -96,12 +99,14 @@ export default function ListItem({
               />
             )}
             {!secondBtn && showCloseButton && (
-              <Icon
-                name="close"
-                type="AntDesign"
-                backgroundSizeRatio={0.5}
-                size={30}
-              />
+              <TouchableOpacity onPress={handleClose}>
+                <Icon
+                  name="close"
+                  type="AntDesign"
+                  backgroundSizeRatio={0.5}
+                  size={30}
+                />
+              </TouchableOpacity>
             )}
           </View>
          
@@ -114,6 +119,7 @@ export default function ListItem({
 
 const styles = StyleSheet.create({
   listItem: {
+
     flexDirection: "row",
     //alignItems: "center",
     padding: 15,
@@ -133,7 +139,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingTop:10
-   
+ 
   },
   tab: {
     borderRadius: 7,

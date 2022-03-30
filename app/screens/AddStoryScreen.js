@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -17,17 +17,17 @@ import CameraHeader from '../components/headers/CameraHeader';
 import Icon from '../components/Icon';
 import {launchImageLibrary} from 'react-native-image-picker';
 import AuthContext from '../authContext';
-import store from '../redux/store';
-import {storiesAction} from '../redux/stories';
+
 import storyService from '../services/story.service';
-import {ScrollView} from 'react-native-gesture-handler';
 
 export default function AddStoryScreen({navigation}) {
   let cameraRef;
+  let playerRef = useRef();
 
   const {userData} = useContext(AuthContext)?.userState;
 
   const [isUploading, setIsUploading] = useState(false);
+  const [timer, setTimer] = useState(0);
   const [screen, setScreen] = useState('capture');
   const [mode, setMode] = useState('photo');
   const [cameraType, setCameraType] = useState('back');
@@ -38,26 +38,31 @@ export default function AddStoryScreen({navigation}) {
     if (mode === 'photo') {
       let photo = await cameraRef.takePictureAsync({
         skipProcessing: true,
-        quality: 0.5,
+        quality: 0.7,
       });
       setStory(photo);
     } else if (mode === 'video') {
+      if (capturing) {
+        return StopRecording();
+      }
       setCapturing(true);
+
       // let video = await cameraRef.takePictureAsync({
       //   skipProcessing: true,
       //   quality: 0.5,
       // });
 
-      const {uri, codec = 'mp4'} = await cameraRef.current.recordAsync();
-      console.info(uri);
+      const video = await cameraRef.recordAsync();
+      console.log(video.uri);
 
       setStory(video);
     }
     setScreen('view');
   }
 
-  const StopRecording = () => {
-    cameraRef.current.stopRecording();
+  const StopRecording = async () => {
+    setCapturing(false);
+    await cameraRef.stopRecording();
   };
 
   const imagePickHandler = async () => {
@@ -139,11 +144,16 @@ export default function AddStoryScreen({navigation}) {
               />
             </TouchableOpacity>
           </View>
-          <Image
-            source={story}
-            resizeMode={'cover'}
-            style={{height: '100%', width: '100%', zIndex: -10}}
-          />
+
+          {mode === 'photo' ? (
+            <Image
+              source={story}
+              resizeMode={'cover'}
+              style={{height: '100%', width: '100%', zIndex: -10}}
+            />
+          ) : (
+            <></>
+          )}
           <Text>Uploading...</Text>
         </View>
       )}

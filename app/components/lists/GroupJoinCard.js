@@ -16,27 +16,20 @@ import GroupService from '../../services/GroupService';
 import AuthContext from '../../authContext';
 
 const resizeRatio = 0.7;
-export default function GroupJoinCard({
-  image,
-  title,
-  subTitle,
-  navigation,
-  params,
-  privacy,
-  groupId,
-}) {
-  // console.log("Navigation in joinGroupCard: ", navigation);
+export default function GroupJoinCard({item, navigation}) {
+  const {image, name, description, privacySetting, id} = item;
+
   const [joinBackGroundColor, setJoinBackGroundColor] = useState(
     colors.iondigoDye,
   );
-  const {user: loggedInUser} = useContext(AuthContext);
+  const {userData: loggedInUser} = useContext(AuthContext).userState;
 
   const [joinTitle, setJoinTitle] = useState('Join');
   const [joinTitleColor, setJoinTitleColor] = useState(colors.white);
 
   const handleJoin = () => {
-    console.log('Join this group with id: ', groupId);
-    GroupService.joinGroup(loggedInUser.id, groupId).then(resp => {
+    console.log('Join this group with id: ', id);
+    GroupService.joinGroup(loggedInUser.id, id).then(resp => {
       console.log('Join group resp: ', resp.data);
     });
     if (joinTitle == 'Join') {
@@ -54,7 +47,10 @@ export default function GroupJoinCard({
   return (
     <View style={[styles.container, defaultStyle.cardBorder]}>
       {image ? (
-        <Image source={{uri: image}} style={styles.image} />
+        <Image
+          source={{uri: fileStorage.baseUrl + image}}
+          style={styles.image}
+        />
       ) : (
         <Image
           source={require('../../assets/images/group-texture.png')}
@@ -64,23 +60,17 @@ export default function GroupJoinCard({
       <TouchableOpacity
         onPress={() => {
           console.log('navigating to gropu_feed');
-          navigation.navigate(routes.GROUP_FEED, {
-            title,
-            subTitle,
-            image,
-            privacy,
-            groupId,
-          });
+          navigation.navigate(routes.GROUP_FEED, item);
         }}>
-        <Text numberOfLines={1} style={styles.title}>
-          {title}
+        <Text numberOfLines={1} style={styles.name}>
+          {name}
         </Text>
-        <Text numberOfLines={1} style={styles.subTitle}>
-          {subTitle}
+        <Text numberOfLines={1} style={styles.description}>
+          {description}
         </Text>
       </TouchableOpacity>
       <View style={styles.tabsContainer}>
-        <Tab
+        {/* <Tab
           title={joinTitle}
           style={styles.tab}
           height={20}
@@ -89,23 +79,17 @@ export default function GroupJoinCard({
           color={joinBackGroundColor}
           width="45%"
           onPress={handleJoin}
-        />
+        /> */}
         <Tab
           title="View"
           style={styles.tab}
           height={20}
           sizeRatio={resizeRatio}
           color={colors.lighterGray}
-          width="45%"
+          width="85%"
           fontColor={colors.dark}
           onPress={() => {
-            navigation.navigate(routes.GROUP_FEED, {
-              title,
-              subTitle,
-              image,
-              privacy,
-              groupId,
-            });
+            navigation.navigate(routes.GROUP_FEED, item);
           }}
         />
       </View>
@@ -139,14 +123,13 @@ const styles = StyleSheet.create({
   tabTitleStyle: {
     fontSize: 13,
   },
-  title: {
+  name: {
     fontSize: 11,
     margin: 5,
   },
-  subTitle: {
+  description: {
     fontSize: 10,
     color: colors.mediumGray,
-    alignSelf: 'flex-end',
     marginHorizontal: 5,
     overflow: 'hidden',
   },

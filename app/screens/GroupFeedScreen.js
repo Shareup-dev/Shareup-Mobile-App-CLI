@@ -1,85 +1,237 @@
-import React, { useEffect, useState } from "react";
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   Image,
-  Dimensions,
+  Alert,
   FlatList,
-} from "react-native";
-import { useSelector } from "react-redux";
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
+import {useSelector} from 'react-redux';
 
-import AppButton from "../components/buttons/Button";
-import FeedTop from "../components/FeedTop";
-import Icon from "../components/Icon";
-import Card from "../components/lists/Card";
-import Screen from "../components/Screen";
-import WritePost from "../components/WritePost";
-import colors from "../config/colors";
-import GroupService from "../services/GroupService";
-import routes from "../navigation/routes";
-import { groupPostsActions } from "../redux/groupPosts";
-import store from "../redux/store";
+import Icon from '../components/Icon';
+import Card from '../components/lists/Card';
+import Screen from '../components/Screen';
+import WritePost from '../components/WritePost';
+import colors from '../config/colors';
+import GroupService from '../services/group.service';
+import routes from '../navigation/routes';
 
-import { HeaderWithBackArrow } from "../components/headers";
-import Tab from "../components/buttons/Tab";
+import {HeaderWithBackArrow} from '../components/headers';
+import Tab from '../components/buttons/Tab';
+import fileStorage from '../config/fileStorage';
 
-const GroupFeedScreen = ({ navigation, route }) => {
-const posts = useSelector((state) => state.groupPosts);
+import AuthContext from '../authContext';
+import DownModal from '../components/drawers/DownModal';
+
+const windowWidth = Dimensions.get('screen').width;
+const GroupFeedScreen = ({navigation, route}) => {
+  const posts = useSelector(state => state.groupPosts);
+  const {userData} = useContext(AuthContext).userState;
+  const {params: groupData} = route;
+
+  const [group, setGroup] = useState(groupData);
+  const [isMember, setIsMember] = useState(false);
+  const [requested, setRequested] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    console.log("Group: ", route.params);
-    GroupService.getGroupsPostsById(route.params.groupId).then((resp) => {
-      store.dispatch(groupPostsActions.setPosts(resp.data));
-    });
-    return () => {
-      store.dispatch(groupPostsActions.setPosts(null));
+    const getGroupInfo = async () => {
+      setLoading(true);
+      await Promise.all([
+        GroupService.getGroupById(groupData.id)
+          .then(res => setGroup(res.data))
+          .catch(e => console.error(e)),
+        GroupService.checkIsMember(groupData.id, userData.id)
+          .then(res => setIsMember(res.data))
+          .catch(e => console.error(e)),
+      ]);
+      setLoading(false);
     };
-  }, [route.params.groupId]);
+    getGroupInfo();
+  }, []);
+
+  const deleteGroup = _ => {
+    Alert.alert('Delete group?', 'Are you sure to this group?', [
+      {text: 'Cancel', style: 'cancel', onPress: () => {}},
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: () =>
+          groupService
+            .deleteGroup(userData.id, groupData.id)
+            .then(
+              res =>
+                res === 200 &&
+                setGroups(prev => prev.filter(item => item.id !== gid)),
+            )
+            .catch(e => console.error(e.message)),
+      },
+    ]);
+  };
+
+  const handleJoinGroup = () => {
+    GroupService.joinRequest(userData.id, groupData.id)
+      .then(res => setRequested(true))
+      .catch(e => e);
+  };
+  const handleExitGroup = () => {
+    GroupService.leavegroup(userData.id, groupData.id)
+      .then(res => setIsMember(false))
+      .catch(e => e);
+  };
+
+  const handleCloseModel = () => {
+    setMenuOpen(false);
+  };
+
+  const checkOwner = () => {
+    if (userData.id === groupData.owner?.id) return true;
+    else return false;
+  };
+  const DropDownMenu = () => {
+    return (
+      <View style={styles.menuContainer}>
+        <View style={{alignItems: 'center'}}>
+          <View
+            style={{
+              backgroundColor: '#cacaca',
+              width: 80,
+              height: 6,
+              borderRadius: 6,
+            }}
+          />
+        </View>
+        <TouchableOpacity style={styles.menu}>
+          <Text style={styles.menuText}>Edit</Text>
+          <Text>Change the name and Description</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menu} onPress={deleteGroup}>
+          <Text style={styles.menuText}>Delete</Text>
+          <Text>Delete this group</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menu}>
+          <Text style={styles.menuText}>Cover image</Text>
+          <Text
+            style={{
+              maxWidth: windowWidth / 2,
+            }}>
+            Change cover image
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   return (
     <Screen style={styles.feedContainer}>
       <HeaderWithBackArrow
-        title={route.params.title}
-        onBackButton={() => navigation.goBack()}
+        title={group.name}
+        onBackButton={() => {
+          navigation.popToTop();
+        }}
+        rightComponent={
+          <>
+            {checkOwner() && (
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={_ => setMenuOpen(true)}>
+                <Icon type="SimpleLineIcons" name="options" />
+              </TouchableOpacity>
+            )}
+          </>
+        }
       />
       <FlatList
         data={posts}
         ListHeaderComponent={() => {
           return (
             <View>
+              <DownModal isVisible={menuOpen} setIsVisible={handleCloseModel}>
+                <DropDownMenu />
+              </DownModal>
               <Image
                 style={styles.groupCoverImage}
-                // resizeMode={route.params.image ? "contain" : "cover"}
-                // resizeMode={"contain"}
+                // resizeMode={route.params.image ? 'contain' : 'cover'}
+                // resizeMode={'cover'}
                 source={
-                  route.params.image
-                    ? { uri: route.params.image }
-                    : require("../assets/images/group-texture.png")
+                  group.image
+                    ? {
+                        uri: fileStorage.baseUrl + group.image,
+                      }
+                    : require('../assets/images/group-texture.png')
                 }
               />
               <View style={styles.detailContainer}>
-                <View style={{ marginHorizontal: 20 }}>
-                  <Text style={styles.title}>{route.params.title}</Text>
-                  <Text style={styles.subTitle}>
-                    {route.params.privacy} Group
-                  </Text>
-                  <Text style={styles.subTitle}>{route.params.subTitle}</Text>
+                <View style={{marginHorizontal: 20}}>
+                  <Text style={styles.title}>{group.name}</Text>
+                  <Text style={styles.subTitle}>{group.description}</Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}>
+                      <Icon name={group.privacySetting ? 'lock' : 'earth'} />
+                      <Text style={styles.subTitle}>
+                        {group.privacySetting ? 'Private' : 'Public'} Group
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      onPress={() => {
+                        navigation.navigate(routes.LIST_OF_MEMBERS, groupData);
+                      }}>
+                      <Text style={{fontWeight: '600', fontSize: 15}}>
+                        Members{' '}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
 
-                  <Tab
-                    iconName="add-circle"
-                    iconType="Ionicons"
-                    title={"invite"}
-                    fontColor={colors.dark}
-                    style={styles.inviteButton}
-                    onPress={() => {
-                      navigation.navigate(routes.INVITE_GROUP_MEMBERS, {
-                        groupId: route.params.groupId,
-                        newGroup: false,
-                      });
-                    }}
-                  />
-
+                  {checkOwner() ? (
+                    <Tab
+                      iconName="add-circle"
+                      iconType="Ionicons"
+                      title={'invite'}
+                      fontColor={colors.dark}
+                      style={styles.inviteButton}
+                      onPress={() => {
+                        navigation.navigate(routes.INVITE_GROUP_MEMBERS, {
+                          id: group.id,
+                          newGroup: false,
+                        });
+                      }}
+                    />
+                  ) : (
+                    <Tab
+                      iconName={loading ? null : !isMember ? 'people' : 'exit'}
+                      iconType="Ionicons"
+                      title={
+                        loading
+                          ? 'Loading'
+                          : !isMember
+                          ? requested
+                            ? 'Request sent'
+                            : 'Ask to Join'
+                          : 'Left Group'
+                      }
+                      fontColor={colors.dark}
+                      style={[styles.inviteButton]}
+                      disabled={loading}
+                      onPress={() => {
+                        !isMember ? handleJoinGroup() : handleExitGroup();
+                      }}
+                    />
+                  )}
+                  <View style={styles.membersCard}></View>
                   {/* <AppButton
                     icon={
                       <Icon
@@ -100,11 +252,21 @@ const posts = useSelector((state) => state.groupPosts);
                     }}
                   /> */}
                 </View>
-                <WritePost
-                  groupPost={true}
-                  groupId={route.params.groupId}
-                  navigation={navigation}
-                />
+                {checkOwner() || isMember ? (
+                  <WritePost
+                    groupPost={true}
+                    groupId={group.id}
+                    navigation={navigation}
+                  />
+                ) : (
+                  <View
+                    style={{
+                      borderBottomColor: '#cacaca',
+                      borderWidth: 0.5,
+                      opacity: 0.5,
+                    }}
+                  />
+                )}
                 {posts?.length === 0 && (
                   <View>
                     <Text style={styles.noPostsLabel}>No posts found !</Text>
@@ -114,11 +276,11 @@ const posts = useSelector((state) => state.groupPosts);
             </View>
           );
         }}
-        keyExtractor={(post) => {
+        keyExtractor={post => {
           return post.id.toString();
         }}
         showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => (
+        renderItem={({item}) => (
           <Card
             postId={item.id}
             userId={item.user.id}
@@ -140,19 +302,33 @@ const posts = useSelector((state) => state.groupPosts);
 };
 
 const styles = StyleSheet.create({
+  menuContainer: {},
+  menu: {
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+  },
+
+  menuText: {
+    fontWeight: '600',
+    fontSize: 20,
+    color: '#585858',
+  },
+  icon: {
+    marginRight: 15,
+  },
   feedContainer: {
-    display: "flex",
+    display: 'flex',
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   container: {
     backgroundColor: colors.white,
     // flex: 1,
   },
   groupCoverImage: {
-    width: "100%",
+    width: '100%',
     height: 300,
-    resizeMode: "cover",
+    resizeMode: 'cover',
   },
   detailContainer: {
     paddingVertical: 10,
@@ -161,7 +337,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   subTitle: {
     fontSize: 14,
@@ -178,14 +354,14 @@ const styles = StyleSheet.create({
     elevation: 0,
     height: 40,
     borderRadius: 10,
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
     marginVertical: 10,
   },
   noPostsLabel: {
     fontSize: 24,
     color: colors.LightGray,
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: 80,
   },
 });

@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import routes from './routes';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 import CommentsScreen from '../screens/CommentsScreen';
 import {AppNavigator} from '.';
@@ -14,15 +14,15 @@ import ReelPlayer from '../screens/ReelPlayer';
 import AddPostScreen from '../screens/AddPostScreen';
 import TagPeople from '../screens/tagPeople';
 import FeelingAndActivity from '../screens/feelingAndActivity';
-import { getStatusBarHeight } from 'react-native-iphone-x-helper';
-import {useHeaderHeight} from '@react-navigation/stack'
+import {getStatusBarHeight} from 'react-native-iphone-x-helper';
+import {useHeaderHeight} from '@react-navigation/stack';
+import GroupFeedScreen from '../screens/GroupFeedScreen';
 const Stack = createNativeStackNavigator();
-const headerHeight = useHeaderHeight
+const headerHeight = useHeaderHeight;
 export default function HomeNavigator(props) {
   return (
-    
     <Stack.Navigator
-      screenOptions ={{
+      screenOptions={{
         headerShown: false,
       }}>
       <Stack.Screen name={routes.APP_NAVIGATOR} component={AppNavigator} />
@@ -31,6 +31,7 @@ export default function HomeNavigator(props) {
         component={StoryViewScreen}
       />
       <Stack.Screen name={routes.ADDS_STORY} component={AddStoryScreen} />
+
       <Stack.Screen name={routes.TAG_PEOPLE} component={TagPeople} />
       <Stack.Screen name={routes.COMMENTS} component={CommentsScreen} />
       <Stack.Screen name={routes.ADD_NEW_REEL} component={AddNewReel} />
@@ -46,7 +47,6 @@ export default function HomeNavigator(props) {
 
       <Stack.Screen name={routes.REEL_PLAYER} component={ReelPlayer} />
     </Stack.Navigator>
-   
   );
 }
 
@@ -54,6 +54,6 @@ const styles = StyleSheet.create({
   container: {},
   header: {
     paddingTop: 0,
-    height:10,
+    height: 10,
   },
 });
