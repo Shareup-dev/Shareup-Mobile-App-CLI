@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import {
   View,
   TouchableWithoutFeedback,
@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-
+import moment from "moment";
 import colors from "../config/colors";
 import Text from "../components/Text";
 import Tab from "../components/buttons/Tab";
@@ -16,11 +16,12 @@ import fileStorage from "../config/fileStorage";
 
 const PostActions = ({
   postId,
+  postData,
   userId,
-  userEmail,
-  firstName,
-  postText,
-  profileImage,
+  //userEmail,
+  //firstName,
+  //postText,
+  //profileImage,
   comments,
   navigation,
   isUserLiked,
@@ -32,25 +33,28 @@ const PostActions = ({
   onInteraction,
 }) => {
   const actionsTabSizeRatio = 0.5;
+  const [date, setDate] = useState(
+    moment(postData.published, "DD MMMM YYYY hh:mm:ss").fromNow()
+  );
 
   return (
     <View style={styles.content}>
       <View style={styles.userInfo}>
         <Image
-          source={{ uri: fileStorage.baseUrl + profileImage }}
+          source={{ uri: fileStorage.baseUrl + postData.user.profilePicturePath }}
           style={styles.profilePicture}
         />
 
         <View style={styles.userNameContainer}>
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate(routes.USER_PROFILE, { userEmail })
+              navigation.navigate(routes.USER_PROFILE, postData.user.email )
             }
           >
-            <Text style={styles.userName}>{firstName}</Text>
+            <Text style={styles.userName}>{postData.user.firstName}</Text>
           </TouchableOpacity>
 
-          <Text style={styles.postDate}>on October 12 2016</Text>
+          <Text style={styles.postDate}>{date}</Text>
         </View>
 
         <View style={styles.actionsContainer}>
@@ -136,7 +140,7 @@ const PostActions = ({
         </View>
       </View>
 
-      {postText !== "" && <Text style={styles.postText}>{postText}</Text>}
+      {postData.content !== "" && <Text style={styles.postText}>{postData.content}</Text>}
 
       <TouchableOpacity
         style={styles.menuButton}

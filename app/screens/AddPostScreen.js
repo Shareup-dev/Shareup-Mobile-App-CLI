@@ -11,18 +11,18 @@ import {
   View,
   Image,
   TextInput,
-  TouchableOpacity,
+  TouchableOpacity,Platform
 } from 'react-native';
 import Icon from '../components/Icon';
 import StackActions from '@react-navigation/routers';
-
+import { ProgressBar, Colors } from 'react-native-paper';
 import {groupPostsActions} from '../redux/groupPosts';
 import EnhancedOptionsDrawer from '../components/drawers/EnhancedOptionsDrawer';
 import IconButton from '../components/buttons/IconButton';
 import Text from '../components/Text';
 import Screen from '../components/Screen';
 import authContext from '../authContext';
-import PostService from '../services/old/PostService';
+import PostService from '../services/post.service';
 import routes from '../navigation/routes';
 import {useImagePicker} from '../hooks';
 import Header from '../components/headers/Header';
@@ -210,7 +210,7 @@ export default function AddPostScreen({navigation, route}) {
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [isPrivacyOptionsVisible, setIsPrivacyOptionsVisible] = useState(false);
   const [images, setImages] = useState([]);
-  
+  const [progress,setProgress] = useState(0);
   const [postPrivacyOption, setPostPrivacyOption] = useState(privacyOptions[0]); // object to present the current privacy option
 
   useEffect(() => {
@@ -222,6 +222,30 @@ export default function AddPostScreen({navigation, route}) {
     }
     return () => clearFields();
   }, [swapImage]);
+
+  const createPostFormData = content => {
+    const formData = new FormData();
+    formData.append('content', content.text);
+    if (content.images.length !== 0) {
+      console.log('Post Images', content.images);
+      content.images.forEach(image => {
+        const splitPathArr = image.split('/');
+        formData.append(`files`, {
+          name: String(splitPathArr.slice(-1).pop()),
+          type: 'image/jpg',
+          uri: Platform.OS === 'ios' ? 
+          image.replace('file://', '')
+          : image,
+        });
+      });
+    }
+
+    if (content.groupId) {
+      formData.append('groupid', content.groupId);
+    }
+    console.log('Creating post: ', formData);
+    return formData;
+  };
 
   const handleOnChangeText = text => {
     setText(text);
@@ -239,23 +263,18 @@ export default function AddPostScreen({navigation, route}) {
   const handelPickImage = async () => {
     try {
       const result = await pickImage();
-
-      console.log('result',result)
       const uri = result.map((item) => {
         return item.uri;
       });
       if (!result.cancelled) onAddImage(uri);
-
     } catch (error) {
       console.log(error);
     }
   };
 
   const onAddImage = uri => {
-
     setImages(images.concat(uri));
     handleButtonActivation(text, images.concat(uri));
-
   };
 
   const onRemoveImage = uri => {
@@ -272,13 +291,12 @@ export default function AddPostScreen({navigation, route}) {
         text,
         groupId,
       };
-
       if (file.uri) {
         postContent.image = file;
       }
       if (postFeel.feeling) postContent.feeling = postFeel.feeling;
-
-      PostService.createPost(user.id, postContent).then(resp => {
+      const formData = createPostFormData(postContent);
+      PostService.createPost(user.id, formData).then(resp => {
         let existingPosts = store.getState().groupPosts;
         setLoading(false);
         store.dispatch(
@@ -296,7 +314,6 @@ export default function AddPostScreen({navigation, route}) {
           text: text === '' ? SWAP_DEFAULT_TEXT : text,
           images: images,
         };
-
         PostService.createSwapPost(user.id, swapContent).then(resp => {
           store.dispatch(feedPostsAction.addFeedPost(resp.data));
           setLoading(false);
@@ -311,14 +328,15 @@ export default function AddPostScreen({navigation, route}) {
             images: images,
             feeling: postFeel.feeling ? postFeel.feeling : null,
           };
-
-          PostService.createPost(user.id, postContent).then(resp => {
+          const formData = createPostFormData(postContent)
+            PostService.createPost(user.id, formData).then(resp => {
+            console.log(resp)
             store.dispatch(feedPostsAction.addFeedPost(resp.data));
             setLoading(false);
             dispatch(postFeelingsActions.setDefault());
-
             navigation.navigate(routes.FEED);
-          });
+          }).catch(e => {console.log(e)})
+          //setProgress(prog)
         }
       }
     }
@@ -397,13 +415,12 @@ export default function AddPostScreen({navigation, route}) {
               isActive={isButtonActive}
             />
           }
-        />
+        /> 
       );
   };
   return (
     <Screen>
       {renderHeader()}
-
       <View style={[styles.topContainer]}>
         {/** User */}
         <View style={styles.row}>
@@ -516,6 +533,7 @@ export default function AddPostScreen({navigation, route}) {
           isSwap={postType === postTypes.SWAP ? true : false}
           onRemoveImage={onRemoveImage}
         />
+        {/* <ProgressBar visible={loading? true :false} progress={progress} color={Colors.red800}></ProgressBar> */}
       </View>
 
       {postType === postTypes.CREATE_POST && (
@@ -550,6 +568,7 @@ export default function AddPostScreen({navigation, route}) {
         initialValue={privacyOptions[0].value}
         onSubmit={handelPrivacySetting}
       />
+      
     </Screen>
   );
 }

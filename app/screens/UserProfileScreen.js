@@ -6,7 +6,7 @@ import Icon from '../components/Icon';
 import Screen from '../components/Screen';
 import colors from '../config/colors';
 import authContext from '../authContext';
-import PostService from '../services/old/PostService';
+import UserService from '../services/user.service';
 import Card from '../components/lists/Card';
 
 import {
@@ -30,24 +30,37 @@ export default function UserProfileScreen({navigation, route}) {
   const [currentTab, setCurrentTab] = useState(POSTS);
   const {userState} = useContext(authContext);
   const [posts, setPosts] = useState([]);
+  const [userData,setUserData] = useState([]);
   const [imagesAndVideos, setImagesAndVideos] = useState([]);
   const [tags, setTags] = useState([]);
 
-  const {userEmail} = route.params;
-
+  const userEmail = route.params;
+  console.log(userEmail)
   const handleTapped = name => {
     setCurrentTab(name);
   };
 
   const getUserPosts = () => {
-    PostService.getPostsForUser(userEmail)
+    // PostService.getPostsForUser(userEmail)
+    //   .then(res => {
+    //     setPosts(res.data);
+    //     console.log('user Posts', res.data);
+    //   })
+    //   .catch(err => console.log(err));
+  };
+  const getUserData = () => {
+    console.log(userEmail)
+    UserService.getUserByEmail(userEmail)
       .then(res => {
-        setPosts(res.data);
-        console.log('user Posts', res.data);
+        console.log(res.data.firstName)
+        setUserData(res.data);
+        console.log('user Data', res.data);
       })
       .catch(err => console.log(err));
   };
+
   useEffect(() => {
+    getUserData();
     getUserPosts();
   }, []);
 
@@ -96,7 +109,7 @@ export default function UserProfileScreen({navigation, route}) {
   return (
     <Screen style={styles.container}>
       <HeaderWithBackArrow
-        title={userState?.userData?.firstName}
+        title={userData.firstName}
         onBackButton={() => navigation.goBack()}
         leftComponent={
           <Icon

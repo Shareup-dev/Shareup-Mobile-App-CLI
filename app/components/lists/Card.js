@@ -1,11 +1,11 @@
-import React, {useState, useEffect, useCallback} from 'react';
-import {StyleSheet, View, TouchableWithoutFeedback, Alert} from 'react-native';
+import React, {useState, useEffect, useCallback,useContext} from 'react';
+import {StyleSheet, View, TouchableWithoutFeedback, Alert,Text} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {SliderBox} from 'react-native-image-slider-box';
 
 import colors from '../../config/colors';
 import defaultStyles from '../../config/styles';
-
+import authContext from '../../authContext';
 import UserService from '../../services/user.service';
 import PostService from '../../services/old/PostService';
 
@@ -13,25 +13,29 @@ import PostOptionDrawer from '../drawers/PostOptionsDrawer';
 import fileStorage from '../../config/fileStorage';
 import ImageView from 'react-native-image-viewing';
 import PostActions from '../PostActions';
+import { color } from 'react-native-reanimated';
 export default function Card({
-  postId,
-  userId,
-  firstName,
-  lastName,
-  userEmail,
-  date,
-  postText,
-  postImages,
-  profileImage,
-  reactions,
-  comments,
-  post,
+  user,
+  //postId,
+  //userId,
+  postData,
+  //firstName,
+  //lastName,
+  //userEmail,
+  //date,
+  //postText,
+  //postImages,
+  //profileImage,
+  //reactions,
+  //comments,
+  //post,
   reloadPosts,
   onPress,
   style,
   navigation,
   postType,
 }) {
+  const {userState} = useContext(authContext);
   const options = [
     {
       title: 'Save post',
@@ -68,7 +72,7 @@ export default function Card({
       },
     },
     {
-      title: 'Unfollow',
+      title: userState?.userData?.id !== user.id ? 'Unfollow' : '',
       icon: {
         image: require('../../assets/post-options-icons/unfollow-icon.png'),
       },
@@ -77,21 +81,12 @@ export default function Card({
       },
     },
     {
-      title: 'Report',
+      title: userState?.userData?.id !== user.id ? <Text style={{color:colors.dark}}>Report</Text> : <Text style={{color:colors.red}}>Delete</Text>,
       icon: {
-        image: require('../../assets/post-options-icons/report-icon.png'),
+        image:  userState?.userData?.id !== user.id ? require('../../assets/post-options-icons/report-icon.png'): require('../../assets/post-options-icons/delete-red-icon.png'),
       },
       onPress: () => {
-        alert('Report');
-      },
-    },
-    {
-      title: 'Delete Post',
-      icon: {
-        image: require('../../assets/post-options-icons/delete-red-icon.png'),
-      },
-      onPress: () => {
-        showDeleteAlert();
+        userState?.userData?.id !== user.id ? alert('Report'): showDeleteAlert();
       },
     },
   ];
@@ -106,7 +101,7 @@ export default function Card({
     return Math.floor(Math.random() * (100000 - 0 + 1) + 0);
   }
   const formateDate = () => {
-    const arrDate = date.split(' ');
+    const arrDate = postData.lastEdited.split(' ');
     const monthShort = arrDate[1].slice(0, 3);
     setFormattedDate({
       day: arrDate[0],
@@ -131,12 +126,12 @@ export default function Card({
   useFocusEffect(
     useCallback(() => {
       reloadPost();
-    }, [postId]),
+    }, [postData.id]),
   );
 
-  const [numberOfReactions, setNumberOfReactions] = useState(reactions.length);
-  const [numberOfComments, setNumberOfComments] = useState(comments.length);
-  const [comment,setComments] =useState(comments)
+  const [numberOfReactions, setNumberOfReactions] = useState(postData.reactions.length);
+  const [numberOfComments, setNumberOfComments] = useState(postData.comments.length);
+  const [comment,setComments] =useState(postData.comments)
   const [isUserLiked, setIsUserLiked] = useState(false);
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [images, setImages] = useState([]);
@@ -145,20 +140,21 @@ export default function Card({
   const [sliderWidth, setSliderWidth] = useState();
 
   const loadImages = () => {
-    if (postImages.length !== 0) {
-      setImages(postImages.map(image => fileStorage.baseUrl + image.mediaPath));
+    console.log("LoadImages",postData.media)
+    if (postData.media?.length !== 0) {
+      setImages(postData.media?.map(image => fileStorage.baseUrl + image.mediaPath));
     }
   };
 
   const checkIfLiked = () => {
-    const result = reactions.filter(reaction => reaction.user.id == userId);
+    const result = postData.reactions.filter(reaction => reaction.user.id == user.id);
     if (result.length > 0) {
       return setIsUserLiked(true);
     }
   };
 
   const handleReactions = async () => {
-    PostService.likePost(userId, postId)
+    PostService.likePost(user.id, postData.id)
     .then (res => {
       setIsUserLiked(!isUserLiked)
       console.log("LikePosts",res)})//need to get likePostIds 
@@ -168,7 +164,7 @@ export default function Card({
 
   // rerenders the post when interaction
   const reloadPost = async () => {
-    PostService.getPostById(postId)
+    PostService.getPostById(postData.id)
     .then(res => {
       setComments(res.data.comments)
       setNumberOfComments(res.data.comments.length);
@@ -191,7 +187,7 @@ export default function Card({
     ]);
 
   const deletePost = async () => {
-    const response = await PostService.deletePost(postId);
+    const response = await PostService.deletePost(postData.id);
     reloadPosts();
   };
 
@@ -219,7 +215,7 @@ return (
 
         {/** Post Image */}
 
-        {images.length !== 0 && (
+        {images?.length !== 0 && (
           <SliderBox
             images={images}
             ImageComponentStyle={styles.image}
@@ -235,16 +231,17 @@ return (
         )}
 
         <PostActions
-          comments={comment}
-          firstName={firstName}
+          //comments={comment}
+          postData={postData}
+          //firstName={firstName}
           navigation={navigation}
-          postId={postId}
-          postText={postText}
-          userId={userId}
-          userEmail={userEmail}
+          postId={postData.id}
+          //postText={postText}
+          //userId={userId}
+          //userEmail={userEmail}
           numberOfReactions={`${numberOfReactions}`}
           numberOfComments={`${numberOfComments}`}
-          profileImage={profileImage}
+          //profileImage={profileImage}
           isUserLiked={isUserLiked}
           isVisible={isOptionsVisible}
           setIsVisible={setIsOptionsVisible}
@@ -255,8 +252,8 @@ return (
 
         <PostOptionDrawer
           source={'card'}
-          postId={postId}
-          postText={postText}
+          postId={postData.id}
+          postText={postData.content}
           options={options}
           isVisible={isOptionsVisible}
           setIsVisible={setIsOptionsVisible}

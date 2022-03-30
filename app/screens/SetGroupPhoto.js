@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   Image,
   Dimensions,
   TouchableWithoutFeedback,
+  Alert,
 } from 'react-native';
 
 import Screen from '../components/Screen';
@@ -23,63 +24,71 @@ import {Header, HeaderTitle} from '../components/headers';
 import Toast from 'react-native-toast-message';
 import store from '../redux/store';
 import {userGroupActions} from '../redux/userGroups';
+import groupService from '../services/group.service';
 
 const SetGroupPhoto = ({navigation, route}) => {
-  const {
-    user: loggedInUser,
-    setloadingIndicator,
-    loadingIndicator,
-  } = useContext(authContext);
-  const {file, pickImage, clearFile} = useImagePicker();
-  console.log('Params received: ', route.params);
+  const groupData = route.params;
+
+  const [loading, setLoading] = useState(false);
+
+  React.useEffect(
+    () =>
+      navigation.addListener('beforeRemove', e => {
+        e.preventDefault();
+        Alert.alert(
+          'Discard changes?',
+          'Are you sure to discard and leave the screen?',
+          [
+            {text: "Don't leave", style: 'cancel', onPress: () => {}},
+            {
+              text: 'Skip',
+              style: 'destructive',
+              onPress: () =>
+                navigation.navigate(routes.INVITE_GROUP_MEMBERS, groupData),
+            },
+          ],
+        );
+      }),
+    [navigation],
+  );
+
+  const {file, pickImage} = useImagePicker();
 
   const proceedHandler = () => {
-    if (loadingIndicator) {
+    if (loading) {
       return;
     }
-    setloadingIndicator(true);
+    setLoading(true);
     const groupFormData = new FormData();
-    groupFormData.append('group', JSON.stringify({...route.params}));
-    if (file.uri) {
-      groupFormData.append('groupCover', {
-        name: 'groupCover',
+    // groupFormData.append('group', JSON.stringify({...route.params}));
+    console.log("file",file)
+    if (file[0]?.uri) {
+      groupFormData.append('group_image', {
+        name: 'group_image',
         type: 'image/jpg',
-        uri: file.uri,
+        uri: file[0].uri,
       });
     }
-    GroupService.createGroup(loggedInUser.id, groupFormData)
+    console.log("groupFormData",groupFormData)
+    groupService
+      .addGroupImage(groupData.id, groupFormData)
       .then(resp => {
-        console.log('Group create resp: ', resp.data);
-        setloadingIndicator(false);
-        Toast.show({
-          position: 'bottom',
-          visibilityTime: 5000,
-          type: 'success',
-          text1: 'Success',
-          text2: 'Group created successfully 👋',
-        });
         let allGroups = store.getState().userGroups;
         store.dispatch(userGroupActions.setGroups([...allGroups, resp.data]));
-        navigation.navigate(routes.INVITE_GROUP_MEMBERS, {
-          groupAdminId: loggedInUser.id,
-          groupId: resp.data.id,
-          groupInfo: route.params,
-          newGroup: true,
-          groupCoverPath: resp.data.groupCoverPath
-            ? `${fileStorage.baseUrl}${resp.data.groupCoverPath}`
-            : null,
-        });
+        navigation.navigate(routes.INVITE_GROUP_MEMBERS, groupData);
       })
-      .catch(error => {
+      .catch(e =>
         Toast.show({
           position: 'bottom',
           visibilityTime: 5000,
           type: 'error',
           text1: 'Error',
           text2: 'Error occurred while creating the group 😒',
-        });
-      });
+        }),
+      )
+      .finally(_ => setLoading(false));
   };
+
   return (
     <Screen>
       <Header
@@ -95,13 +104,21 @@ const SetGroupPhoto = ({navigation, route}) => {
           </TouchableWithoutFeedback>
         }
         middle={<HeaderTitle>Add Group Photo</HeaderTitle>}
+        right={
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate(routes.INVITE_GROUP_MEMBERS, groupData)
+            }>
+            <Text>Skip</Text>
+          </TouchableOpacity>
+        }
       />
       <Text style={styles.title}>Add Group Cover photo</Text>
       <Text style={styles.subTitle}>
         Give people an idea of what your group is about with a photo
       </Text>
       <View style={styles.photoContainer}>
-        {!file.uri && (
+        {!file[0]?.uri && (
           <TouchableOpacity
             style={[defautlStyles.row, styles.uploadButton]}
             onPress={pickImage}>
@@ -114,26 +131,27 @@ const SetGroupPhoto = ({navigation, route}) => {
             <Text>Upload cover photo</Text>
           </TouchableOpacity>
         )}
-        {file.uri && (
+        {file[0]?.uri && (
           <View onTouchEnd={pickImage}>
-            <Image style={styles.groupPhoto} source={file} />
+            <Image style={styles.groupPhoto} source={file[0]} />
           </View>
         )}
       </View>
-      {file.uri && (
-        <Text style={styles.subTitle}>
+      {file[0]?.uri && (
+        <Text style={[styles.subTitle]}>
           Touch on the image to change if needed
         </Text>
       )}
       <View
         style={[defautlStyles.row, {justifyContent: 'center', padding: 30}]}>
         <AppButton
-          disabled={loadingIndicator ? true : false}
+          disabled={loading ? true : false}
           title={'Proceed'}
           width={'50%'}
           style={{alignSelf: 'center', marginTop: 20}}
           onPress={proceedHandler}
         />
+
         {/* <AppButton onPress={pickImage} title={'Clear'} width={'30%'} style={{ alignSelf: 'center', marginTop: 20 }} /> */}
       </View>
     </Screen>

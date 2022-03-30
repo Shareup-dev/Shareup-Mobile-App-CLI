@@ -5,6 +5,7 @@ import {
   Image,
   TouchableWithoutFeedback,
   Text,
+  Touchable,
 } from "react-native";
 
 import colors from "../../config/colors";
@@ -12,8 +13,10 @@ import Tab from "../buttons/Tab";
 import Icon from "../Icon";
 import defaultStyles from "../../config/styles";
 import fileStorage from "../../config/fileStorage";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function ListItem({
+  email,
   title,
   tabTitle = "Send Request",
   titleStyle,
@@ -24,6 +27,7 @@ export default function ListItem({
   color,
   IconComponent,
   onPress,
+  onPressProfile,
   style,
   secondBtnAction,
   secondBtnTitle,
@@ -31,11 +35,12 @@ export default function ListItem({
   secondBtn = false,
   showCloseButton = true,
   fullWidth,
-  displayFirstButton = true,
+  isBottomSheet = false,
 }) {
   return (
-    <TouchableWithoutFeedback onPress={onPress}>
+    <TouchableWithoutFeedback onPress={!isBottomSheet ? onPressProfile : onPress}>
       <View style={[styles.listItem, style]}>
+       
         {IconComponent}
         {image && (
           <Image
@@ -43,6 +48,7 @@ export default function ListItem({
             source={{ uri: fileStorage.baseUrl + image }}
           />
         )}
+        <View style={styles.firstlistItem}>
         <View style={styles.detailsContainer}>
           <Text
             numberOfLines={1}
@@ -62,6 +68,7 @@ export default function ListItem({
             </Text>
           )}
         </View>
+        
 
         {displayLeft && (
           <View style={styles.leftContainer}>
@@ -97,7 +104,9 @@ export default function ListItem({
               />
             )}
           </View>
+         
         )}
+         </View>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -106,16 +115,25 @@ export default function ListItem({
 const styles = StyleSheet.create({
   listItem: {
     flexDirection: "row",
-    alignItems: "center",
-    padding: 10,
-    paddingVertical: 17,
+    //alignItems: "center",
+    padding: 15,
+    paddingVertical: 10,
   },
-  detailsContainer: { marginLeft: 5, flex: 1 },
-  image: { height: 50, width: 50, borderRadius: 35 },
+  firstlistItem: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    padding: 15,
+    //paddingVertical: 10,
+
+  },
+  detailsContainer: { marginLeft: 5 ,alignItems:"flex-start"},
+  image: { height: 75, width: 75, borderRadius: 35 },
   title: defaultStyles.listItemTitle,
   leftContainer: {
     flexDirection: "row",
     alignItems: "center",
+    paddingTop:10
+   
   },
   tab: {
     borderRadius: 7,

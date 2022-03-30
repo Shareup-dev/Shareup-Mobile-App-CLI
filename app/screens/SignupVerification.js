@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {StyleSheet, Text, Alert, TouchableOpacity} from 'react-native';
 import * as Yup from 'yup';
 
@@ -22,6 +22,12 @@ const validationSchema = Yup.object().shape({
 export default function SignupVerification({navigation, route}) {
   const {authActions} = useContext(authContext);
   const {params} = route;
+
+  const [message, setMessage] = useState({
+    text: 'Shareup has sent you a verification code to the email',
+    type: 'default',
+    isSending: false,
+  });
 
   const [timeOver, setTimeOver] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -48,6 +54,28 @@ export default function SignupVerification({navigation, route}) {
       }),
     [navigation],
   );
+
+  const resendOTP = () => {
+    setMessage({...message, isSending: true});
+    authService
+      .verifyEmailOTP(params.username)
+      .then(res =>
+        res.status === 200
+          ? setMessage({
+              isSending: false,
+              text: 'Shareup has re-sent your verification code',
+              type: 'success',
+            })
+          : null,
+      )
+      .catch(e =>
+        setMessage({
+          isSending: false,
+          text: 'Verification code not send',
+          type: 'error',
+        }),
+      );
+  };
 
   const handleSubmit = async (values, props) => {
     setLoading(true);
@@ -83,6 +111,8 @@ export default function SignupVerification({navigation, route}) {
         .catch(e => {
           if (e.message === 'Request failed with status code 400') {
             setFieldError('otp', 'Incorrect code');
+          } else if (e.message === 'Request failed with status code 408') {
+            setFieldError('otp', 'Code expired');
           } else setFieldError('otp', 'Unexpected error.');
         })
         .finally(_ => setLoading(false));
@@ -108,7 +138,14 @@ export default function SignupVerification({navigation, route}) {
               Your account not verified. Please confirm your Email
             </Text>
           )}
-          <Text>Shareup has sent you a verification code to the email</Text>
+          <Text
+            style={
+              message.type === 'success'
+                ? {color: 'green'}
+                : message.type === 'error' && 'crimson'
+            }>
+            {message.text}
+          </Text>
           <FormField
             autoCapitalize="none"
             autoCorrect={false}
@@ -119,6 +156,22 @@ export default function SignupVerification({navigation, route}) {
             style={defaultStyles.formField}
           />
           <Text>Verification code will expire after 5 minutes</Text>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={{
+              marginVertical: 5,
+              backgroundColor: '#cacaca60',
+              paddingHorizontal: 15,
+              paddingVertical: 6,
+              borderRadius: 30,
+            }}
+            disabled={message.isSending}>
+            <Text
+              style={{color: colors.iondigoDye, fontWeight: '700'}}
+              onPress={resendOTP}>
+              {message.isSending ? 'Sending..' : 'Re-send'}
+            </Text>
+          </TouchableOpacity>
 
           {timeOver && (
             <TouchableOpacity activeOpacity={0.7} style={{marginVertical: 5}}>

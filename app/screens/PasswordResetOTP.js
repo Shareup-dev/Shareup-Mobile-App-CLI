@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Text, Alert, TouchableOpacity} from 'react-native';
 import * as Yup from 'yup';
 
@@ -20,16 +20,18 @@ const validationSchema = Yup.object().shape({
 export default function PasswordResetOTP({navigation, route}) {
   const {email: username} = route?.params;
 
-  const [timeOver, setTimeOver] = React.useState(false);
+  const [message, setMessage] = useState({
+    text: 'Shareup has sent you a verification code to the email',
+    type: 'default',
+    isSending: false,
+  });
+
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(
     () =>
       navigation.addListener('beforeRemove', e => {
-        // Prevent default behavior of leaving the screen
         e.preventDefault();
-
-        // Prompt the user before leaving the screen
         Alert.alert(
           'Discard changes?',
           'Are you sure to discard and leave the screen?',
@@ -38,8 +40,6 @@ export default function PasswordResetOTP({navigation, route}) {
             {
               text: 'Discard',
               style: 'destructive',
-              // If the user confirmed, then we dispatch the action we blocked earlier
-              // This will continue the action that had triggered the removal of the screen
               onPress: () => navigation.dispatch(e.data.action),
             },
           ],
@@ -64,9 +64,34 @@ export default function PasswordResetOTP({navigation, route}) {
       .catch(e => {
         if (e.message === 'Request failed with status code 400')
           setFieldError('otp', 'Incorrect code');
+        else if (e.message === 'Request failed with status code 408')
+          setFieldError('otp', 'Code expired');
         else setFieldError('otp', 'Unexpected error.');
       })
       .finally(() => setLoading(false));
+  };
+
+  const resendOTP = () => {
+    setMessage({...message, isSending: true});
+    authService
+
+      .passwordResetOTP(username)
+      .then(res =>
+        res.status === 200
+          ? setMessage({
+              isSending: false,
+              text: 'Shareup has re-sent your verification code',
+              type: 'success',
+            })
+          : null,
+      )
+      .catch(e =>
+        setMessage({
+          isSending: false,
+          text: 'Verification code not send',
+          type: 'error',
+        }),
+      );
   };
 
   return (
@@ -77,7 +102,14 @@ export default function PasswordResetOTP({navigation, route}) {
         }}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}>
-        <Text>Shareup has sent you a verification code to the email</Text>
+        <Text
+          style={
+            message.type === 'success'
+              ? {color: 'green'}
+              : message.type === 'error' && 'crimson'
+          }>
+          {message.text}
+        </Text>
         <FormField
           autoCapitalize="none"
           autoCorrect={false}
@@ -88,20 +120,28 @@ export default function PasswordResetOTP({navigation, route}) {
           style={defaultStyles.formField}
         />
         <Text>Verification code will expire after 5 minutes</Text>
-        {timeOver && (
-          <TouchableOpacity activeOpacity={0.7} style={{marginVertical: 5}}>
-            <Text
-              style={{
-                fontWeight: '700',
-                fontSize: 18,
-                color: colors.iondigoDye,
-              }}>
-              Send again
-            </Text>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity
+          activeOpacity={0.6}
+          style={{
+            marginVertical: 5,
+            backgroundColor: '#cacaca60',
+            paddingHorizontal: 15,
+            paddingVertical: 6,
+            borderRadius: 30,
+          }}
+          disabled={message.isSending}>
+          <Text
+            style={{color: colors.iondigoDye, fontWeight: '700'}}
+            onPress={resendOTP}>
+            {message.isSending ? 'Sending..' : 'Re-send'}
+          </Text>
+        </TouchableOpacity>
 
-        <SubmitButton title="Verify" style={styles.submitButton} />
+        <SubmitButton
+          title="Verify"
+          disabled={loading}
+          style={styles.submitButton}
+        />
       </Form>
     </RegistrationContainer>
   );

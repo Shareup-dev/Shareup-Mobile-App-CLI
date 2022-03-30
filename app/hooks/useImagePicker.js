@@ -1,25 +1,28 @@
 import {useState} from 'react';
-import ImagePicker from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
+import * as ImagePicker from 'react-native-image-picker';
+
 export default function useImagesPicker() {
-  const [file, setFile] = useState({});
+  const [file, setFile] = useState([]);
 
   const pickImage = async () => {
     try {
       const result = await ImagePicker.launchImageLibrary({
         mediaType: 'photo',
-        quality: '0.5',
-        selectionLimit: 1,
+        selectionLimit: 5,
+        //allowsEditing: true,
+        //allowsMultipleSelection: true,
+        //quality: 0.5,
       });
       setFile(result.assets);
-
       return result.assets;
     } catch (error) {
-      console.log('Error reading an image', error);
+      console.log("Error reading an image", error);
     }
   };
 
   const clearFile = () => {
-    setFile({});
+    setFile([]);
   };
   return {file, pickImage, clearFile};
 }
