@@ -26,7 +26,7 @@ const UpdateGroupPhoto = ({navigation, route}) => {
 
   const [loading, setLoading] = useState(false);
 
-  const {file, pickImage} = useImagePicker();
+  const {file = [], pickImage} = useImagePicker();
 
   const proceedHandler = () => {
     if (loading) {
@@ -81,8 +81,8 @@ const UpdateGroupPhoto = ({navigation, route}) => {
         }
         middle={<HeaderTitle>Change Group Photo</HeaderTitle>}
         right={
-          <TouchableOpacity onPress={proceedHandler}>
-            <Text>Save</Text>
+          <TouchableOpacity disabled={loading} onPress={proceedHandler}>
+            <Text>{loading?'Saving':'Save'}</Text>
           </TouchableOpacity>
         }
       />

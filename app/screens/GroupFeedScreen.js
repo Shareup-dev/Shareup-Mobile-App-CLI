@@ -63,11 +63,10 @@ const GroupFeedScreen = ({navigation, route}) => {
         style: 'destructive',
         onPress: () =>
           GroupService.deleteGroup(userData.id, groupData.id)
-            .then(
-              res =>
-                res === 200 &&
-                setGroups(prev => prev.filter(item => item.id !== gid)),
-            )
+            .then(_ => {
+              handleCloseModel();
+              navigation.popToTop();
+            })
             .catch(e => console.error(e.message)),
       },
     ]);
