@@ -1,18 +1,24 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import {useSelector} from 'react-redux';
+import AuthContext from '../../authContext';
 import storiesService from '../../services/story.service';
 import CreateStoryCard from './CreateStoryCard';
 import StoryCard from './StoryCard';
 
 export default function StoriesList({navigation, style}) {
+  const {
+    userState: {userData},
+  } = useContext(AuthContext);
   const [stories, setStories] = useState([]);
 
   useEffect(() => {
     const fetchStories = async () => {
       storiesService
         .getStories()
-        .then(res => setStories(res.data))
+        .then(({data}) => {
+          setStories(data);
+        })
         .catch(e => console.log(e.message));
     };
     fetchStories();
@@ -30,11 +36,10 @@ export default function StoriesList({navigation, style}) {
         renderItem={({item}) => {
           return (
             <StoryCard
-
               image={item.storiesImagePath}
+              data={stories}
               navigation={navigation}
               userName={item?.user?.firstName + ' ' + item?.user?.lastName}
-
             />
           );
         }}

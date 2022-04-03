@@ -19,31 +19,37 @@ import DownModal from '../components/drawers/DownModal';
 const windowWidth = Dimensions.get('screen').width;
 
 const StoryViewScreen = ({navigation, route}) => {
+  const {data} = route.params;
   const [menuOpen, setMenuOpen] = useState(false);
+  let duration = 6000;
+  const [activeIndex, setActiveIndex] = useState(0);
+  // const scale = useRef(new Animated.Value(0)).current;
 
-  const scale = useRef(new Animated.Value(0)).current;
-
-  const [duration, setDuration] = useState(6000);
+  const width = [];
+  data.map(_ => width.push(useRef(new Animated.Value(0)).current));
 
   let startTime;
   let pauseTime;
 
   const startProgress = () => {
     startTime = new Date().valueOf();
-    Animated.timing(scale, {
-      toValue: windowWidth / 2,
-      useNativeDriver: true,
+    Animated.timing(width[activeIndex], {
+      toValue: windowWidth / data.length,
+      useNativeDriver: false,
       duration: duration,
     }).start(({finished}) => {
-      if (finished) navigation.popToTop();
+      if (finished)
+        if (activeIndex !== data.length - 1) {
+          duration = 6000;
+          setActiveIndex(prev => prev + 1);
+        } else navigation.popToTop();
     });
   };
-
   const pauseProgress = () => {
     pauseTime = new Date().valueOf();
-    setDuration(prev => prev - (pauseTime - startTime));
+    duration = duration - (pauseTime - startTime);
+    Animated.timing(width[activeIndex]).stop();
 
-    Animated.timing(scale).stop();
   };
 
   const handleCloseModel = () => {
@@ -71,7 +77,7 @@ const StoryViewScreen = ({navigation, route}) => {
     return () => {
       pauseProgress();
     };
-  }, []);
+  }, [activeIndex]);
 
   const DropDownMenu = () => {
     return (
@@ -113,7 +119,6 @@ const StoryViewScreen = ({navigation, route}) => {
       </View>
     );
   };
-
   return (
     <>
       <TouchableOpacity
@@ -128,22 +133,26 @@ const StoryViewScreen = ({navigation, route}) => {
           style={{width: '100%', height: '100%'}}
           source={{uri: fileStorage.baseUrl + route.params.image}}>
           <>
-            <View
-              style={{
-                backgroundColor: '#CACACA',
-              }}>
-              <Animated.View
-                style={{
-                  backgroundColor: '#242424',
-                  transform: [
-                    {
-                      scaleX: scale,
-                    },
-                  ],
-                  width: 4,
-                  height: 4,
-                }}
-              />
+            <View style={{flexDirection: 'row'}}>
+              {data.map((item, index) => (
+                <View
+                  key={index}
+                  style={{
+                      borderRadius: 6,
+                      marginHorizontal: 1,
+                    backgroundColor: '#CACACA',
+                    width: windowWidth / data.length,
+                  }}>
+                  <Animated.View
+                    style={{
+                      backgroundColor: '#242424',
+                      width: width[index],
+                      borderRadius: 6,
+                      height: 6,
+                    }}
+                  />
+                </View>
+              ))}
             </View>
             <View style={styles.container}>
               <View style={styles.profileContainer}>

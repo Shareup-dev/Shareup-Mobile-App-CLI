@@ -13,10 +13,18 @@ import {HeaderWithBackArrow} from '../components/headers';
 import Icon from '../components/Icon';
 import fileStorage from '../config/fileStorage';
 import groupService from '../services/group.service';
+import AppTextField from '../components/TextField';
 
 export default function ListOfMembers({navigation, route}) {
   const {userData} = useContext(AuthContext).userState;
   const {params: groupData} = route;
+
+  const initSearchVal = {
+    keyword: '',
+    result: [],
+    loading: 0,
+  };
+  const [search, setSearch] = useState(initSearchVal);
 
   const initSelMember = {
     member: null,
@@ -37,6 +45,22 @@ export default function ListOfMembers({navigation, route}) {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const SearchMembers = _ => {
+    if (search.keyword) {
+      setSearch(prev => ({...prev, loading: 1}));
+      groupService
+        .search(search.keyword)
+        .then(res => setSearch(prev => ({...prev, result: res.data})))
+        .catch(e => console.error(e.message))
+        .finally(_ => setSearch(prev => ({...prev, loading: 2})));
+    } else {
+      setSearch(prev => ({...prev, loading: 0, result: []}));
+    }
+  };
+  const handleClearSearch = () => {
+    setSearch(initSearchVal);
+  };
 
   const fetchData = () => {
     setMembers(prev => ({...prev, loading: 1}));
@@ -186,13 +210,37 @@ export default function ListOfMembers({navigation, route}) {
       </DownModal>
       <View style={styles.container}>
         <HeaderWithBackArrow
-          title={'Group Members'}
+          component={
+            <AppTextField
+              placeholder="Search members"
+              iconName="search1"
+              iconType="AntDesign"
+              style={styles.searchbar}
+              onChangeText={val => setSearch(prev => ({...prev, keyword: val}))}
+              onSubmitEditing={SearchMembers}
+              value={search.keyword}
+              returnKeyType="search"
+              endComponent={
+                <TouchableOpacity
+                  style={{marginLeft: 10}}
+                  onPress={handleClearSearch}>
+                  <Icon
+                    name="close"
+                    noBackground
+                    size={35}
+                    style={{paddingHorizontal: 5}}
+                  />
+                </TouchableOpacity>
+              }
+            />
+          }
           onBackButton={() => {
             navigation.goBack();
           }}
         />
       </View>
       <View style={styles.listContainer}>
+
         <SectionList
           showsVerticalScrollIndicator={false}
           sections={members.sections}
@@ -237,6 +285,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 60,
   },
+  searchbar: {
+    width: '90%',
+    marginLeft: 10,
+  },
   item: {
     paddingHorizontal: 10,
     marginVertical: 8,
@@ -245,7 +297,7 @@ const styles = StyleSheet.create({
   header: {
     marginTop: 15,
     marginBottom: 5,
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: '600',
   },
   title: {

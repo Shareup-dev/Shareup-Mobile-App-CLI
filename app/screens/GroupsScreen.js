@@ -50,16 +50,11 @@ export default function GroupsScreen({navigation}) {
         onPress: () =>
           groupService
             .deleteGroup(userData.id, gid)
-            .then(
-              res =>
-                res === 200 &&
-                setGroups(prev => prev.filter(item => item.id !== gid)),
-            )
+            .then(_ => setGroups(prev => prev.filter(item => item.id !== gid)))
             .catch(e => console.error(e.message)),
       },
     ]);
   };
-
   const searchGroups = _ => {
     if (search.keyword) {
       setSearch(prev => ({...prev, loading: 1}));
@@ -90,8 +85,7 @@ export default function GroupsScreen({navigation}) {
         }}>
         <TouchableOpacity
           activeOpacity={0.6}
-          onPress={() =>
-            console.log(item)}
+          onPress={() => console.log(item)}
           // navigation.navigate(routes.GROUP_FEED, item)}
         >
           <View
@@ -234,7 +228,9 @@ export default function GroupsScreen({navigation}) {
         /> */}
       </View>
 
-      <ScrollView style={styles.listContainer}>
+      <ScrollView
+        style={styles.listContainer}
+        showsVerticalScrollIndicator={false}>
         {search.loading === 2 && (
           <>
             <Text style={[{marginVertical: 5}, styles.title]}>
@@ -261,12 +257,21 @@ export default function GroupsScreen({navigation}) {
             </View>
           </>
         )}
-        <Text style={[{marginVertical: 5}, styles.title]}>
-          Groups you manage
-        </Text>
-        {groups.map((group, index) => (
-          <ManageGroupCard item={group} key={index} />
-        ))}
+
+        {!groups.length ? (
+          <Text style={{textAlign: 'center', fontSize: 12}}>
+            You don't have any groups to manage
+          </Text>
+        ) : (
+          <React.Fragment>
+            <Text style={[{marginVertical: 5}, styles.title]}>
+              Groups you manage
+            </Text>
+            {groups.map((group, index) => (
+              <ManageGroupCard item={group} key={index} />
+            ))}
+          </React.Fragment>
+        )}
       </ScrollView>
     </View>
   );

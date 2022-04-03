@@ -13,6 +13,8 @@ target 'shareup' do
     :hermes_enabled => false
     )
     
+    pod 'react-native-video', :path => '../node_modules/react-native-video'
+
     target 'shareupTests' do
       inherit! :complete
       # Pods for testing

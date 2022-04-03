@@ -1,12 +1,13 @@
-import React, {useContext, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
   View,
   Dimensions,
   Image,
-  Text,
+  Animated,
   TouchableOpacity,
   TextInput,
+  StatusBar,
 } from 'react-native';
 
 import colors from '../config/colors';
@@ -17,12 +18,15 @@ import CameraHeader from '../components/headers/CameraHeader';
 import Icon from '../components/Icon';
 import {launchImageLibrary} from 'react-native-image-picker';
 import AuthContext from '../authContext';
-
+import Video from 'react-native-video';
 import storyService from '../services/story.service';
+import {date} from 'yup';
 
 export default function AddStoryScreen({navigation}) {
   let cameraRef;
   let playerRef = useRef();
+
+  const windowWidth = Dimensions.get('screen').width;
 
   const {userData} = useContext(AuthContext)?.userState;
 
@@ -33,6 +37,37 @@ export default function AddStoryScreen({navigation}) {
   const [cameraType, setCameraType] = useState('back');
   const [capturing, setCapturing] = useState(false);
   const [story, setStory] = useState({});
+  const scale = useRef(new Animated.Value(0)).current;
+
+  const [duration, setDuration] = useState(10000);
+
+  let startTime;
+  // let pauseTime;
+
+  async function StopRecording() {
+    await cameraRef.stopRecording();
+    StopProgress();
+    setCapturing(false);
+  }
+
+  const startProgress = () => {
+    startTime = new Date().valueOf();
+    Animated.timing(scale, {
+      toValue: windowWidth,
+      useNativeDriver: true,
+      duration: duration,
+    }).start(() => {
+      StopProgress();
+      setCapturing(false);
+    });
+  };
+
+  const StopProgress = () => {
+    // pauseTime = new Date().valueOf();
+    // setDuration(prev => prev - (pauseTime - startTime));
+
+    Animated.timing(scale).reset();
+  };
 
   async function onCapture() {
     if (mode === 'photo') {
@@ -46,30 +81,25 @@ export default function AddStoryScreen({navigation}) {
         return StopRecording();
       }
       setCapturing(true);
+      startProgress();
 
-      // let video = await cameraRef.takePictureAsync({
-      //   skipProcessing: true,
-      //   quality: 0.5,
-      // });
-
-      const video = await cameraRef.recordAsync();
-      console.log(video.uri);
+      const video = await cameraRef.recordAsync({
+        maxDuration: 10,
+        quality: RNCamera.Constants.VideoQuality['288p'],
+        
+      });
 
       setStory(video);
     }
     setScreen('view');
   }
 
-  const StopRecording = async () => {
-    setCapturing(false);
-    await cameraRef.stopRecording();
-  };
-
   const imagePickHandler = async () => {
     try {
       const result = await launchImageLibrary({
         quality: 0.5,
-        mediaType: 'photo',
+        mediaType: 'mixed',
+        durationLimit: 10,
       });
 
       setStory(result.assets[0]);
@@ -88,9 +118,13 @@ export default function AddStoryScreen({navigation}) {
 
     let storyData = new FormData();
 
+    const uniId = new Date().valueOf();
     storyData.append('stryfiles', {
-      name: 'stryfiles',
-      type: 'image/jpg',
+      name:
+        mode === 'photo'
+          ? `story-image-${uniId}.jpg`
+          : `story-video-${uniId}.mp4`,
+      type: mode === 'photo' ? 'image/jpg' : 'video/mp4',
       uri: story.uri,
     });
 
@@ -105,6 +139,7 @@ export default function AddStoryScreen({navigation}) {
 
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor="#000" barStyle="light-content" />
       {screen === 'capture' ? (
         <RNCamera
           style={styles.camera}
@@ -121,6 +156,20 @@ export default function AddStoryScreen({navigation}) {
             mode={mode}
             capturing={capturing}
             setMode={setMode}
+          />
+          <Animated.View
+            style={{
+              backgroundColor: 'crimson',
+              position: 'absolute',
+              bottom: 0,
+              transform: [
+                {
+                  scaleX: scale,
+                },
+              ],
+              width: 2.1,
+              height: 6,
+            }}
           />
         </RNCamera>
       ) : (
@@ -152,9 +201,13 @@ export default function AddStoryScreen({navigation}) {
               style={{height: '100%', width: '100%', zIndex: -10}}
             />
           ) : (
-            <></>
+            <Video
+              resizeMode={'cover'}
+              style={[styles.backgroundVideo]}
+              source={{uri: story.uri}}
+              repeat
+            />
           )}
-          <Text>Uploading...</Text>
         </View>
       )}
     </View>
@@ -167,6 +220,10 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     fontSize: 18,
     width: '85%',
+  },
+  backgroundVideo: {
+    flex: 1,
+    zIndex: -5,
   },
   container: {
     flex: 1,
