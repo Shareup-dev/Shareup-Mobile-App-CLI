@@ -1,4 +1,4 @@
-import React, { useContext,useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -8,7 +8,8 @@ import {
   Dimensions,
   TouchableOpacity,
   Animated,
-  Alert
+  Alert,
+  FlatList,
 } from "react-native";
 import moment from "moment";
 import colors from "../../config/colors";
@@ -20,18 +21,27 @@ import CommentText from "./CommentText";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import authContext from "../../authContext";
 import { Button } from "react-native-paper";
+import CommentsScreen from "../../screens/CommentsScreen";
 export default function CommentItem({
+  fromReply,
   comment,
   reactionsLength,
   isUserLiked,
   onInteraction,
   handleDelete,
+  onReply,
+  isReply,
+  reply,
+  postType,
+  swapId,
+  setNumberOfComments
 }) {
-  const {userState} = useContext(authContext);
+  //const isReply = false
+  const { userState } = useContext(authContext);
   const [time, setTime] = useState(
     moment(comment.published, "DD MMMM YYYY hh:mm:ss").fromNow()
   );
-  
+
   const leftSwipe = (progress, dragX) => {
     const scale = dragX.interpolate({
       inputRange: [0, 100],
@@ -39,54 +49,55 @@ export default function CommentItem({
       extrapolate: 'clamp',
     });
     return (
-     
-      <TouchableOpacity onPress={()=> comment.user.id == userState?.userData?.id ? handleDelete(comment.id,false): handleDelete(comment.id,true)} 
-      activeOpacity={0.6}
-      style = {styles.deleteBox}>
+
+      <TouchableOpacity onPress={() => comment.user.id == userState?.userData?.id ? handleDelete(comment.id, false) : handleDelete(comment.id, true)}
+        activeOpacity={0.6}
+        style={styles.deleteBox}>
         <View>
-          <Animated.Text style={{transform: [{scale: scale}],color:colors.white}}>
+          <Animated.Text style={{ transform: [{ scale: scale }], color: colors.white }}>
             {comment.user.id == userState?.userData?.id ? "Delete" : "Hide"}
           </Animated.Text>
         </View>
       </TouchableOpacity>
-       
+
     );
 
   };
   return (
     <>
-    <Swipeable renderLeftActions={comment.user.id == userState?.userData?.id ? leftSwipe : ()=>{}}>
-      <View style={styles.container}>
-        {/** Left */}
-        <View>
-          <UserProfilePicture size={40} />
-        </View>
-
-        {/** Medial */}
-        <View style={styles.medialContainer}>
-          <Text style={styles.userName}>{comment.user.firstName}</Text>
-
-          {/* <Text style={styles.comment}>{comment}</Text> */}
-          <View style={styles.commentBody}>
-            <CommentText
-              text={comment.content}
-              textStyle={styles.comment}
-              readMoreStyle={styles.readMore}
-            />
+    
+      <Swipeable renderLeftActions={comment.user.id == userState?.userData?.id ? leftSwipe : () => { }}>
+        <View style={!fromReply?styles.container:styles.replyContainer}>
+          {/** Left */}
+          <View>
+            <UserProfilePicture size={40} />
           </View>
 
-          <View style={styles.commentDetailsContainer}>
-            <Text style={styles.time}>{time}</Text>
-            <Text style={styles.stars}>
-              {reactionsLength} {reactionsLength < 2 ? "Star" : "Stars"}
-            </Text>
-            <LinkButton title="Reply" style={styles.reply}/>
-          </View>
-        </View>
+          {/** Medial */}
+          <View style={styles.medialContainer}>
+            <Text style={styles.userName}>{comment.user.firstName}</Text>
 
-        {/** Right */}
-        <View style={styles.reactionContainer}>
-          {/* <TouchableWithoutFeedback onPress={onInteraction}>
+            {/* <Text style={styles.comment}>{comment}</Text> */}
+            <View style={styles.commentBody}>
+              <CommentText
+                text={comment.content}
+                textStyle={styles.comment}
+                readMoreStyle={styles.readMore}
+              />
+            </View>
+
+            <View style={styles.commentDetailsContainer}>
+              <Text style={styles.time}>{time}</Text>
+              <Text style={styles.stars}>
+                {reactionsLength} {reactionsLength < 2 ? "Star" : "Stars"}
+              </Text>
+              <LinkButton title="Reply" style={styles.reply} onPress={() => onReply(comment.id)} />
+            </View>
+          </View>
+
+          {/** Right */}
+          <View style={styles.reactionContainer}>
+            {/* <TouchableWithoutFeedback onPress={onInteraction}>
             <Icon
               name="staro"
               type="AntDesign"
@@ -95,31 +106,34 @@ export default function CommentItem({
               backgroundSizeRatio={1}
             />
           </TouchableWithoutFeedback> */}
-          {isUserLiked ? (
-            <TouchableWithoutFeedback onPress={onInteraction}>
-              <Icon
-                name="star"
-                type="AntDesign"
-                size={20}
-                color={colors.iondigoDye}
-                backgroundSizeRatio={1}
-              />
-            </TouchableWithoutFeedback>
-          ) : (
-            <TouchableWithoutFeedback onPress={onInteraction}>
-              <Icon
-                name="staro"
-                type="AntDesign"
-                size={20}
-                color={colors.iondigoDye}
-                backgroundSizeRatio={1}
-              />
-            </TouchableWithoutFeedback>
-          )}
+            {isUserLiked ? (
+              <TouchableWithoutFeedback onPress={() => onInteraction(comment.id)}>
+                <Icon
+                  name="star"
+                  type="AntDesign"
+                  size={isReply?20:15}
+                  color={colors.iondigoDye}
+                  backgroundSizeRatio={1}
+                />
+              </TouchableWithoutFeedback>
+            ) : (
+              <TouchableWithoutFeedback onPress={() => onInteraction(comment.id)}>
+                <Icon
+                  name="staro"
+                  type="AntDesign"
+                  size={isReply?20:15}
+                  color={colors.iondigoDye}
+                  backgroundSizeRatio={1}
+                />
+              </TouchableWithoutFeedback>
+            )}
+          </View>
         </View>
-      </View>
-
-      <Separator style={styles.separator} />
+        <Separator style={styles.separator} />
+        {isReply ? (
+          <CommentsScreen route={{params: { comments: reply, userId: comment.user.id, commendId: comment.id, postType: postType, swapId: swapId, fromReply:true }}}/>
+        ) : (<Text />)}
+        {/* <Separator style={styles.separator} /> */}
       </Swipeable>
     </>
   );
@@ -129,12 +143,21 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     width: "100%",
-    paddingHorizontal: 50,
+    paddingHorizontal: "10%",
     paddingTop: 25,
     paddingBottom: 6,
-    justifyContent: "flex-start",
+    justifyContent: "center",
+    alignSelf:"center",
+    
   },
- 
+  replyContainer: {
+    flexDirection: "row",
+    width: "90%",
+    paddingTop: 20,
+    paddingBottom: 6,
+    //justifyContent: "flex-start",
+    justifyContent: "space-between",
+  },
 
   medialContainer: {
     marginLeft: 10,
@@ -174,6 +197,7 @@ const styles = StyleSheet.create({
   },
   separator: {
     marginHorizontal: 15,
+    width:"90%"
   },
   commentTextContainer: {
     marginVertical: 5,
@@ -187,7 +211,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.dimGray,
     justifyContent: 'center',
     alignItems: 'center',
-    
     width: 100,
     height: '100%',
   },

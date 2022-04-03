@@ -15,6 +15,7 @@ class UserService {
   uploadCoverPicture = (email, formdata) => AuthAxios.post(`users/${email}/upload_cover_picture`, formdata);
 
   /*..............Friends..............*/
+  searchFriends = (uid,keyword) => AuthAxios.get(`/friends/search/${uid}?keyword=${keyword}`)
   getFriends = email => AuthAxios.get(`friends/email/${email}`);
   sendFriendRequest = (uid,fid) => AuthAxios.post(`${uid}/friend_request/${fid}`)
   acceptFriendRequest = (uid,fid) => AuthAxios.post(`${uid}/accept_friend_request/${fid}`)

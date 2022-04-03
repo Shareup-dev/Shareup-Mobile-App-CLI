@@ -8,6 +8,7 @@ class GroupService {
   getAllGroups = () => AuthAxios.get(`groups`);
   groupSuggestion = uid => AuthAxios.get(`groups/suggestion/${uid}`);
   addGroupImage = (gid, data) => AuthAxios.post(`groups/upload_image/${gid}`, data);
+  editGroup = (gid,data) => AuthAxios.put(`groups/${gid}/edit_group`,data);
   
   search = keyword =>
     AuthAxios({

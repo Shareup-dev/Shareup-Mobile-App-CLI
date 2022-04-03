@@ -14,11 +14,11 @@ import {Header, HeaderCloseIcon, HeaderTitle} from '../components/headers';
 
 import * as Yup from 'yup';
 import {Formik} from 'formik';
-import GroupService from '../services/GroupService';
+import GroupService from '../services/group.service';
 import AuthContext from '../authContext';
 
 export default function CreateNewGroup({navigation}) {
-  const [privacy, setPrivacy] = useState(0);
+  const [privacy, setPrivacy] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isPrivacyDrawerVisible, setIsPrivacyDrawerVisible] = useState(false);
 
@@ -112,10 +112,10 @@ export default function CreateNewGroup({navigation}) {
                       ]}>
                       <View style={defaultStyles.row}>
                         <Icon
-                          type={privacy === 0 ? 'Entypo' : 'Ionicons'}
-                          name={privacy === 0 ? 'globe' : 'lock-closed'}
+                          type={!privacy ? 'Entypo' : 'Ionicons'}
+                          name={!privacy ? 'globe' : 'lock-closed'}
                         />
-                        <Text>{privacy === 0 ? 'Public' : 'Private'}</Text>
+                        <Text>{!privacy ? 'Public' : 'Private'}</Text>
                       </View>
                       <Icon type={'AntDesign'} size={35} name={'caretdown'} />
                     </View>

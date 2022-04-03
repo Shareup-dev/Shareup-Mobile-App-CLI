@@ -46,32 +46,21 @@ export default function MyGroups({navigation}) {
   };
 
   useEffect(() => {
-    const getMyGroups = async () => {
-      try {
-        await Promise.all([
-          groupService.getGroupsOfOwner(userState?.userData?.id).then(res =>
-            setGroups([
-              {
-                title: 'Groups you manage',
-                data: res.data,
-              },
-            ]),
-          ),
-          groupService.getUserGroups(userState.username).then(res =>
-            setGroups(prev => [
-              ...prev,
-              {
-                title: 'Other groups',
-                data: res.data,
-              },
-            ]),
-          ),
-        ]);
-      } catch (e) {
-        console.error(e.message);
-      }
+    const fetchMyGroups = () => {
+      Promise.all([
+        groupService.getGroupsOfOwner(userState?.userData?.id),
+        groupService.getUserGroups(userState?.username),
+      ])
+        .then(res => {
+          setGroups([{title: 'Groups you manage', data: res[0].data}]);
+          setGroups(prev => [
+            ...prev,
+            {title: 'Other groups', data: res[1].data},
+          ]);
+        })
+        .catch(e => console.log(e.message));
     };
-    getMyGroups();
+    fetchMyGroups();
   }, []);
 
   return (
@@ -90,9 +79,29 @@ export default function MyGroups({navigation}) {
           sections={groups}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item}) => <Item item={item} />}
-          renderSectionHeader={({section: {title}}) => (
-            <Text style={styles.header}>{title}</Text>
-          )}
+          renderSectionHeader={props => {
+            const {
+              section: {title, data},
+            } = props;
+
+            return (
+              <>
+                <Text style={styles.header}>{title}</Text>
+                {!data.length && (
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      textAlign: 'center',
+                      marginVertical: 15,
+                    }}>
+                    {`You don't have any ${
+                      title === 'Other groups'? 'Other groups': 'groups to manage'
+                    }`}
+                  </Text>
+                )}
+              </>
+            );
+          }}
         />
       </View>
     </>

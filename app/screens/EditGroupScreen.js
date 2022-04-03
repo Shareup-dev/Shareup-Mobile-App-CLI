@@ -1,28 +1,26 @@
-import React, {useContext, useState} from 'react';
-import {View, Text, StyleSheet, TextInput} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import React, {useState} from 'react';
+import {View, Text, StyleSheet, TextInput, Touchable} from 'react-native';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 
 import Screen from '../components/Screen';
-import AppButton from '../components/buttons/Button';
 import Icon from '../components/Icon';
 import AppTextInput from '../components/TextInput';
 import colors from '../config/colors';
 import defaultStyles from '../config/styles';
-import routes from '../navigation/routes';
 import ChoosePrivacyDrawer from '../components/drawers/ChoosePrivacyDrawer';
 import {Header, HeaderCloseIcon, HeaderTitle} from '../components/headers';
 
 import * as Yup from 'yup';
 import {Formik} from 'formik';
-import GroupService from '../services/GroupService';
-import AuthContext from '../authContext';
+import GroupService from '../services/group.service';
+import routes from '../navigation/routes';
 
-export default function CreateNewGroup({navigation}) {
-  const [privacy, setPrivacy] = useState(0);
-  const [loading, setLoading] = useState(false);
+export default function EditGroup({navigation, route}) {
+  const groupData = route?.params;
+  const [privacy, setPrivacy] = useState(groupData?.privacySetting);
   const [isPrivacyDrawerVisible, setIsPrivacyDrawerVisible] = useState(false);
 
-  const {userData} = useContext(AuthContext).userState;
+  // console.log(navigation);
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required().label('Name'),
@@ -30,36 +28,47 @@ export default function CreateNewGroup({navigation}) {
     // privacySetting: Yup.string().required().label('Privacy option'),
   });
 
-  const handleSubmit = values => {
-    setLoading(true);
-    GroupService.createGroup(userData.id, {
+  const handleEdit =  values => {
+    GroupService.editGroup(groupData.id, {
       ...values,
       privacySetting: privacy,
     })
-      .then(res => navigation.navigate(routes.SET_GROUP_PHOTO, res.data))
-      .catch(e => console.log(e))
-      .finally(_ => setLoading(false));
+      .then( async res => {
+        if (res.status === 200) {
+          navigation.navigate({
+            name: routes.GROUP_FEED,
+            params: res.data,
+            merge:true
+          });
+        }
+      })
+      .catch(e => console.log(e));
   };
 
   return (
-    <Screen>
-      <Header
-        left={<HeaderCloseIcon onPress={() => navigation.goBack()} />}
-        middle={<HeaderTitle>Create Group</HeaderTitle>}
-      />
-      <View style={styles.container}>
-        <ScrollView>
-          <Formik
-            initialValues={{
-              name: '',
-              description: '',
-              privacySetting: '',
-            }}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}>
-            {({setFieldValue, handleSubmit, handleBlur, errors, values}) => {
-              return (
-                <>
+    <Formik
+      initialValues={{
+        name: groupData.name,
+        description: groupData.description,
+        privacySetting: '',
+      }}
+      validationSchema={validationSchema}
+      onSubmit={handleEdit}>
+      {({setFieldValue, handleSubmit, handleBlur, errors, values}) => {
+        return (
+          <>
+            <Screen>
+              <Header
+                left={<HeaderCloseIcon onPress={() => navigation.goBack()} />}
+                middle={<HeaderTitle>Edit Group</HeaderTitle>}
+                right={
+                  <TouchableOpacity onPress={handleSubmit}>
+                    <Text>Save</Text>
+                  </TouchableOpacity>
+                }
+              />
+              <View style={styles.container}>
+                <ScrollView>
                   <View style={styles.input}>
                     <Text style={styles.title}>Name</Text>
                     <Text style={styles.subTitle}>
@@ -112,59 +121,27 @@ export default function CreateNewGroup({navigation}) {
                       ]}>
                       <View style={defaultStyles.row}>
                         <Icon
-                          type={privacy === 0 ? 'Entypo' : 'Ionicons'}
-                          name={privacy === 0 ? 'globe' : 'lock-closed'}
+                          type={!privacy ? 'Entypo' : 'Ionicons'}
+                          name={!privacy ? 'globe' : 'lock-closed'}
                         />
-                        <Text>{privacy === 0 ? 'Public' : 'Private'}</Text>
+                        <Text>{!privacy ? 'Public' : 'Private'}</Text>
                       </View>
                       <Icon type={'AntDesign'} size={35} name={'caretdown'} />
                     </View>
                   </View>
-                  {/* <View
-                    onTouchEnd={() => {
-                      setIsPrivacyDrawerVisible(!isPrivacyDrawerVisible);
-                    }}
-                    style={styles.input}>
-                    <Text style={styles.title}>Hide group</Text>
-                    <Text style={styles.subTitle}>
-                      Choose the who can find the group
-                    </Text>
-                    <View
-                      style={[
-                        styles.privacySelector,
-                        {width: '88%', marginHorizontal: 30},
-                      ]}>
-                      <View style={defaultStyles.row}>
-                        <Icon
-                          type={privacy === 'Public' ? 'Entypo' : 'Ionicons'}
-                          name={privacy === 'Public' ? 'globe' : 'lock-closed'}
-                        />
-                        <Text>{privacy}</Text>
-                      </View>
-                      <Icon type={'AntDesign'} size={35} name={'caretdown'} />
-                    </View>
-                  </View> */}
+                </ScrollView>
+              </View>
 
-                  <AppButton
-                    title={'Next'}
-                    width={'50%'}
-                    style={{alignSelf: 'center', marginTop: 20}}
-                    onPress={handleSubmit}
-                    disabled={loading}
-                  />
-                </>
-              );
-            }}
-          </Formik>
-        </ScrollView>
-      </View>
-
-      <ChoosePrivacyDrawer
-        setPrivacy={setPrivacy}
-        isVisible={isPrivacyDrawerVisible}
-        setIsVisible={setIsPrivacyDrawerVisible}
-      />
-    </Screen>
+              <ChoosePrivacyDrawer
+                setPrivacy={setPrivacy}
+                isVisible={isPrivacyDrawerVisible}
+                setIsVisible={setIsPrivacyDrawerVisible}
+              />
+            </Screen>
+          </>
+        );
+      }}
+    </Formik>
   );
 }
 

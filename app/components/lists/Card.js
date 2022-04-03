@@ -142,10 +142,10 @@ export default function Card({
   const loadImages = () => {
     console.log("LoadImages",postData.media)
     if (postData.media?.length !== 0) {
-      setImages(postData.media?.map(image => fileStorage.baseUrl + image.mediaPath));
+      setImages(postData.media?.map(image => fileStorage.baseUrl + image.media + 'g'));
     }
   };
-
+  console.log("images",images)
   const checkIfLiked = () => {
     const result = postData.reactions.filter(reaction => reaction.user.id == user.id);
     if (result.length > 0) {
@@ -231,13 +231,14 @@ return (
         )}
 
         <PostActions
-          //comments={comment}
+          comments={comment}
           postData={postData}
           //firstName={firstName}
           navigation={navigation}
           postId={postData.id}
+          //date={formattedDate}
           //postText={postText}
-          //userId={userId}
+          userId={user.id}
           //userEmail={userEmail}
           numberOfReactions={`${numberOfReactions}`}
           numberOfComments={`${numberOfComments}`}

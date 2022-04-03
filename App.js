@@ -11,7 +11,8 @@ import ShareupAuthentication from './app/util/ShareupAuthentication';
 export default function App() {
   return (
     <>
-      <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'} />
+      {/* <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'} /> */}
+      <SafeAreaView></SafeAreaView>
       <OfflineNotice />
       <GestureHandlerRootView style={{flex: 1}}>
         <NavigationContainer>

@@ -33,7 +33,7 @@ export default function ChoosePrivacyDrawer({
             backgroundColor={colors.white}
           />
         }
-        middle={<HeaderTitle>Create Group</HeaderTitle>}
+        middle={<HeaderTitle>Group Privacy</HeaderTitle>}
         backgroundColor={colors.white}
         right={
           <HeaderButton onPress={handleAddGroup} title="Done" isActive={true} />
@@ -55,7 +55,7 @@ export default function ChoosePrivacyDrawer({
               size={20}
             />
             <RadioButton.Item
-              value={0}
+              value={false}
               label="Public"
               color={colors.iondigoDye}
               style={styles.radioButtonItem}
@@ -74,7 +74,7 @@ export default function ChoosePrivacyDrawer({
               size={20}
             />
             <RadioButton.Item
-              value={1}
+              value={true}
               label="Private"
               color={colors.iondigoDye}
               style={styles.radioButtonItem}
