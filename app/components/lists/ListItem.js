@@ -42,6 +42,7 @@ export default function ListItem({
   isBottomSheet = false,
 
 }) {
+  console.log("image",fileStorage.baseUrl + image)
   return (
     <TouchableWithoutFeedback onPress={!isBottomSheet ? onPressProfile : onPress}>
       <View style={[styles.listItem, style]}>

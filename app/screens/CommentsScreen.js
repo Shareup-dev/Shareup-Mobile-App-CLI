@@ -11,27 +11,125 @@ import constants from '../config/constants';
 import { prepareDataForValidation } from 'formik';
 import colors from "../config/colors";
 import AuthContext from '../authContext';
+import { color } from 'react-native-reanimated';
 //import UserService from '../services/UserService';
 export default function CommentsScreen({navigation, route}) {
+  const {comments, userId, postId, setNumberOfComments, postType, swapId,fromReply} =
+    route.params;
   const commentsListRef = useRef();
   const commentTextFieldRef = useRef();
   const [isUserLiked, setIsUserLiked] = useState(false);
-
-  const {comments, userId, postId, setNumberOfComments, postType, swapId} =
-    route.params;
   const [commentsList, setCommentsList] = useState(comments);
   const [commentContent, setCommentContent] = useState('');
   const [commentId,setCommentId] = useState('')
+  const [isReply,setIsReply] = useState(false)
   // needed to setup list refreshing
   const [refreshing, setRefreshing] = useState(false);
   const {userState} = useContext(AuthContext);
+  //const [frmReply,setFrmReply] = useState(fromReply)
   console.log('swapId: ', swapId);
   const handleCancel = () => {
     navigation.goBack();
   };
+  console.log('comment',comments)
   console.log('commentContent',commentContent)
+  const reply = [
+    {
+        "id": 1648458212510,
+        "content": "#1 reply",
+        "published": "28 March 2022 12:03:32",
+        "lastEdited": "28 March 2022 12:03:32",
+        "user": {
+            "id": 1648458047559,
+            "email": "woxik36142@f1xm.com",
+            "password": "$2a$10$gOrB0KVRwTiYLhY8xASb9.zNSQxn4JbgzkdHpXbALIR.BXP9X8jYK",
+            "firstName": "UserTwo",
+            "lastName": "Two",
+            "profilePicture": "default.png",
+            "coverPicture": null,
+            "aboutme": null,
+            "job": null,
+            "hometown": null,
+            "currenttown": null,
+            "relationshipstatus": null,
+            "interests": null,
+            "gender": "Female",
+            "verificationCode": null,
+            "profilePicturePath": "/src/main/default.png",
+            "coverPicturePath": null,
+            "numberOfFriends": 0,
+            "numberOfFollowers": 0,
+            "numberOfFollowing": 0,
+            "newUser": true
+        },
+        "commentType": null
+    },
+    {
+      "id": 1648458212511,
+      "content": "#2 reply",
+      "published": "28 March 2022 12:03:32",
+      "lastEdited": "28 March 2022 12:03:32",
+      "user": {
+          "id": 1648458047559,
+          "email": "woxik36142@f1xm.com",
+          "password": "$2a$10$gOrB0KVRwTiYLhY8xASb9.zNSQxn4JbgzkdHpXbALIR.BXP9X8jYK",
+          "firstName": "UserTwo",
+          "lastName": "Two",
+          "profilePicture": "default.png",
+          "coverPicture": null,
+          "aboutme": null,
+          "job": null,
+          "hometown": null,
+          "currenttown": null,
+          "relationshipstatus": null,
+          "interests": null,
+          "gender": "Female",
+          "verificationCode": null,
+          "profilePicturePath": "/src/main/default.png",
+          "coverPicturePath": null,
+          "numberOfFriends": 0,
+          "numberOfFollowers": 0,
+          "numberOfFollowing": 0,
+          "newUser": true
+      },
+      "commentType": null
+  },]
 
+  const hideReply = () => {
+    
+    console.log("reply",fromReply)
+    //<CommentsScreen route={{params: { comments: reply, userId: comment.user.id, commendId: comment.id, postType: postType, swapId: swapId, fromReply:true }}}/>
+  }
   const handleAddComment = async () => {
+    if (isReply){
+      if (postType === 'swapPost') {
+      console.log('it is Swap');
+      const comment = {content: commentContent};
+      PostService.addSwapComment(userState?.userData?.id, swapId, comment.content).then(resp => {
+        console.log('added swap comment success: ', resp.data);
+        refreshComments();
+        setCommentContent('');
+        commentTextFieldRef.current.clear();
+        Keyboard.dismiss();
+        // scrollToListBottom();
+      });
+    } else {
+      const comment = {content: commentContent};
+      console.log('Making comment: ', userId, commentId, comment);
+      if (commentContent !== '') {
+        PostService.replay(userState?.userData?.id, commentId, comment)
+        .then(res => {
+          refreshComments();
+          setCommentContent('');
+          commentTextFieldRef.current.clear();
+           Keyboard.dismiss();
+        })
+        .catch(e => console.log(e))
+        
+        // scrollToListBottom();
+      }
+    }
+  }else{
     if (postType === 'swapPost') {
       console.log('it is Swap');
       const comment = {content: commentContent};
@@ -59,6 +157,15 @@ export default function CommentsScreen({navigation, route}) {
         // scrollToListBottom();
       }
     }
+  }
+  };
+
+  
+  const handleReplyComment = async (commentId) => {
+    setCommentId(commentId)
+    //setCommentsList(reply)
+    setIsReply(true)
+    commentTextFieldRef.current.focus()
   };
   
   const handleDeleteComment= (itemId,isHide)=> {
@@ -122,19 +229,21 @@ export default function CommentsScreen({navigation, route}) {
   const scrollToListBottom = () => {
     commentsListRef.current.scrollToEnd({animated: true});
   };
-  const handleReactions = async () => {
-    PostService.likePost(userId, postId)
+  const handleReactions = async (cid) => {
+    console.log(userId,cid)
+    PostService.likeUnlikeComment(userId, cid)
     .then (res => {
+      console.log(res.data)
       setIsUserLiked(!isUserLiked)
       })//need to get likePostIds 
     .catch(e => console.log(e))
-    reloadPost();
+   // reloadPost();
   };
 
-  
-  return (
+  console.log("isReply",fromReply)
+  return !fromReply ? (  
     <Screen style={styles.container}>
-      <Header
+       <Header
         left={<HeaderCloseIcon onPress={handleCancel} />}
         middle={<HeaderTitle>Comments</HeaderTitle>}
       />
@@ -155,7 +264,10 @@ export default function CommentsScreen({navigation, route}) {
             isUserLiked ={isUserLiked}
             onInteraction={handleReactions}
             handleDelete={handleDeleteComment}
-            
+            onReply={handleReplyComment}
+            isReply={isReply}
+            reply = {reply}
+            postType={postType}
           />
         )}
       />
@@ -167,12 +279,38 @@ export default function CommentsScreen({navigation, route}) {
             onForwardPress={handleAddComment}
             onChangeText={handleOnChangeText}
             ref={commentTextFieldRef}
+            isReply={isReply}
           />
       </View>
-      </View>
+      </View> 
     </Screen>
-    
-  );
+  ) : ( <Screen style={styles.replayContainer}>
+    <Text style={{color:colors.iondigoDye,fontSize:12}} onPress={hideReply}>-- Hide replies</Text>
+   <FlatList
+     data={commentsList}
+     keyExtractor={comment => comment.id.toString()}
+     ref={commentsListRef}
+     onContentSizeChange={scrollToListBottom}
+     refreshing={refreshing}
+     onRefresh={refreshComments}
+     renderItem={({item}) => (
+       <CommentItem
+         comment={item}
+         reactionsLength={
+           item?.reactions?.length ? item?.reactions?.length : 0
+         }
+         isUserLiked ={isUserLiked}
+         onInteraction={handleReactions}
+         handleDelete={handleDeleteComment}
+         onReply={handleReplyComment}
+         isReply={isReply}
+         reply = {reply}
+         postType={postType}
+         fromReply={fromReply}
+       />
+     )}
+   />
+ </Screen>);
 }
 
 const styles = StyleSheet.create({
@@ -182,4 +320,10 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   container: {},
+  replayContainer:{
+    marginTop: 15,
+    marginStart:"20%",
+   // width: "50%",
+    alignItems:"flex-start"
+  }
 });

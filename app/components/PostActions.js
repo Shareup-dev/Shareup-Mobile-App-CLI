@@ -32,6 +32,7 @@ const PostActions = ({
   swapId,
   onInteraction,
 }) => {
+  const fromReply = false
   const actionsTabSizeRatio = 0.5;
   const [date, setDate] = useState(
     moment(postData.published, "DD MMMM YYYY hh:mm:ss").fromNow()
@@ -128,6 +129,7 @@ const PostActions = ({
                 comments,
                 postType,
                 swapId,
+                fromReply,
               })
             }
           >

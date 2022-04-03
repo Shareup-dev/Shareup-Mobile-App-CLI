@@ -5,18 +5,19 @@ import colors from "../../config/colors";
 import Icon from "../Icon";
 
 export default React.forwardRef(function CommentTextField(
-  { onForwardPress, onChangeText, ...otherProps },
+  { onForwardPress, onChangeText,isReply, ...otherProps },
   ref
 ) {
   return (
     
     <View style={styles.container}>
       <TextInput
-        placeholder="Comment..."
+        placeholder={!isReply ?"Comment...":"Reply..."}
         placeholderTextColor={colors.mediumGray}
         style={styles.textInput}
         onChangeText={onChangeText}
         ref={ref}
+        autoFocus={isReply}
         {...otherProps}
       />
       <TouchableOpacity onPress={onForwardPress}>
