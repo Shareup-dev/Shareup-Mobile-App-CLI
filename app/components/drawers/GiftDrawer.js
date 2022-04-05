@@ -47,9 +47,7 @@ export default function GiftDrawer({isVisible, setIsVisible}) {
           image: require('../../assets/gift-images/jeans.png'),
         },
       ],
-      onPress: () => {
-        console.log('Item Clicked');
-      },
+      onPress: () => {},
     },
     {
       title: 'Flipkart',

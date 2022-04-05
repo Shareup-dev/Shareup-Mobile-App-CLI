@@ -11,6 +11,7 @@ import {
   Animated,
 } from 'react-native';
 
+import Video from 'react-native-video';
 import Icon from '../components/Icon';
 import colors from '../config/colors';
 import fileStorage from '../config/fileStorage';
@@ -19,7 +20,7 @@ import DownModal from '../components/drawers/DownModal';
 const windowWidth = Dimensions.get('screen').width;
 
 const StoryViewScreen = ({navigation, route}) => {
-  const {data} = route.params;
+  const data = route.params;
   const [menuOpen, setMenuOpen] = useState(false);
   let duration = 6000;
   const [activeIndex, setActiveIndex] = useState(0);
@@ -31,10 +32,11 @@ const StoryViewScreen = ({navigation, route}) => {
   let startTime;
   let pauseTime;
 
+  // progress animations
   const startProgress = () => {
     startTime = new Date().valueOf();
     Animated.timing(width[activeIndex], {
-      toValue: windowWidth / data.length,
+      toValue: windowWidth / data.length - 2,
       useNativeDriver: false,
       duration: duration,
     }).start(({finished}) => {
@@ -49,7 +51,6 @@ const StoryViewScreen = ({navigation, route}) => {
     pauseTime = new Date().valueOf();
     duration = duration - (pauseTime - startTime);
     Animated.timing(width[activeIndex]).stop();
-
   };
 
   const handleCloseModel = () => {
@@ -66,7 +67,7 @@ const StoryViewScreen = ({navigation, route}) => {
         // If the user confirmed, then we dispatch the action we blocked earlier
         // This will continue the action that had triggered the removal of the screen
         onPress: () => {
-          console.log('deleted');
+    
         },
       },
     ]);
@@ -129,77 +130,93 @@ const StoryViewScreen = ({navigation, route}) => {
         onPressOut={() => {
           startProgress();
         }}>
-        <ImageBackground
-          style={{width: '100%', height: '100%'}}
-          source={{uri: fileStorage.baseUrl + route.params.image}}>
-          <>
-            <View style={{flexDirection: 'row'}}>
-              {data.map((item, index) => (
-                <View
-                  key={index}
-                  style={{
-                      borderRadius: 6,
-                      marginHorizontal: 1,
-                    backgroundColor: '#CACACA',
-                    width: windowWidth / data.length,
-                  }}>
-                  <Animated.View
-                    style={{
-                      backgroundColor: '#242424',
-                      width: width[index],
-                      borderRadius: 6,
-                      height: 6,
+          {
+            data[activeIndex].video ? (
+              <Video
+              resizeMode={'contain'}
+              source={{uri: story.uri}}
+            />
+            ) :(
+              <ImageBackground
+              style={{width: '100%', height: '100%'}}
+              source={{uri: fileStorage.baseUrl + data[activeIndex].image}}>
+              <>
+                <View style={{flexDirection: 'row'}}>
+                  {data.map((item, index) => (
+                    <View
+                    key={index}
+                    style={{paddingHorizontal:1,
+                      width: windowWidth / data.length,                
                     }}
-                  />
+                    
+                    >
+                      <View
+                        style={{
+                          borderRadius: 6,
+                          backgroundColor: '#CACACA',
+                        }}>
+                        <Animated.View
+                          style={{
+                            backgroundColor: '#00000099',
+                            width: width[index],
+    
+                            borderRadius: 6,
+                            height: 4,
+                          }}
+                        />
+                      </View>
+                    </View>
+                  ))}
                 </View>
-              ))}
-            </View>
-            <View style={styles.container}>
-              <View style={styles.profileContainer}>
-                <View style={styles.profileImg}>
-                  <Image
-                    source={require('../assets/icons/user-icon.png')}
-                    resizeMode={'center'}
-                    style={styles.userProfileImg}
-                  />
+                <View style={styles.container}>
+                  <View style={styles.profileContainer}>
+                    <View style={styles.profileImg}>
+                      <Image
+                        source={require('../assets/icons/user-icon.png')}
+                        resizeMode={'center'}
+                        style={styles.userProfileImg}
+                      />
+                    </View>
+                    <Text style={styles.userName}>{`${data[0].user?.firstName} ${data[0].user?.lastName}`}</Text>
+                  </View>
+                  <View style={{flexDirection: 'row'}}>
+                    <TouchableOpacity
+                      style={styles.closeIcon}
+                      onPress={() => {
+                        setMenuOpen(true);
+                        pauseProgress();
+                      }}>
+                      <Icon
+                        name={'options'}
+                        type={'SimpleLineIcons'}
+                        size={54}
+                        backgroundColor={'unset'}
+                        noBackground={true}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.closeIcon}
+                      onPress={() => {
+                        navigation.popToTop();
+                      }}>
+                      <Icon
+                        name={'close'}
+                        type={'AntDesign'}
+                        size={54}
+                        backgroundColor={'unset'}
+                        noBackground={true}
+                      />
+                    </TouchableOpacity>
+                    <DownModal isVisible={menuOpen} setIsVisible={handleCloseModel}>
+                      <DropDownMenu />
+                    </DownModal>
+                  </View>
                 </View>
-                <Text style={styles.userName}>{route.params.userName}</Text>
-              </View>
-              <View style={{flexDirection: 'row'}}>
-                <TouchableOpacity
-                  style={styles.closeIcon}
-                  onPress={() => {
-                    setMenuOpen(true);
-                    pauseProgress();
-                  }}>
-                  <Icon
-                    name={'options'}
-                    type={'SimpleLineIcons'}
-                    size={54}
-                    backgroundColor={'unset'}
-                    noBackground={true}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.closeIcon}
-                  onPress={() => {
-                    navigation.popToTop();
-                  }}>
-                  <Icon
-                    name={'close'}
-                    type={'AntDesign'}
-                    size={54}
-                    backgroundColor={'unset'}
-                    noBackground={true}
-                  />
-                </TouchableOpacity>
-                <DownModal isVisible={menuOpen} setIsVisible={handleCloseModel}>
-                  <DropDownMenu />
-                </DownModal>
-              </View>
-            </View>
-          </>
-        </ImageBackground>
+              </>
+            </ImageBackground>
+            )
+          }
+    
       </TouchableOpacity>
     </>
   );

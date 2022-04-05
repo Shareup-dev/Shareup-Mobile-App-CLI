@@ -11,11 +11,7 @@ export default function MultiImagePicker({isVisible, setIsVisible}) {
   const [hasCameraRollPermission, setHasCameraRollPermission] = useState(null);
 
   const imagesCallback = callback => {
-    callback
-      .then(photos => {
-        console.log(photos);
-      })
-      .catch(e => console.log(e));
+    callback.then(photos => photos).catch(e => console.error(e));
   };
 
   const updateHandler = (count, onSubmit) => {

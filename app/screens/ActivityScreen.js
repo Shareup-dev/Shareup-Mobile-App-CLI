@@ -1,5 +1,5 @@
-import React, {useContext, useEffect, useState,useCallback} from 'react';
-import {StyleSheet, Text, View, FlatList, Image,Alert} from 'react-native';
+import React, {useContext, useEffect, useState, useCallback} from 'react';
+import {StyleSheet, Text, View, FlatList, Image, Alert} from 'react-native';
 
 import Screen from '../components/Screen';
 import TextField from '../components/TextField';
@@ -21,72 +21,85 @@ import {receivedRequestsAction} from '../redux/receivedRequest';
 import {useSelector} from 'react-redux';
 import Toast from 'react-native-toast-message';
 import userService from '../services/user.service';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 
 export default function ActivityScreen({navigation}) {
   const [users, setusers] = useState([]);
   const [sentto, setSentto] = useState([]);
   const {userState} = useContext(authContext);
-  const [searchResult,setSearchResult] = useState([]);
-  const [isSearch,setIsSearch] = useState(false)
+  const [searchResult, setSearchResult] = useState([]);
+  const [isSearch, setIsSearch] = useState(false);
   const {user: loggedInUser} = useContext(authContext).userState;
   let alreadySentTo = useSelector(state => state.sentRequests);
-  let receivedReq = useSelector(state => state.receivedRequests)
+  let receivedReq = useSelector(state => state.receivedRequests);
 
   useFocusEffect(
     useCallback(() => {
-     UserService.getUsers().then(resp => {
-        let allUsers = resp.data.filter(person => person.id !== userState?.userData?.id);
-        UserService.getFriendRequestSent(userState?.userData?.email).then(resp => {
-          let sentRequests = resp.data;
-          store.dispatch(sentRequestsActions.setList(sentRequests));
-          let sendFiltered = allUsers.filter(({id: id1}) => !sentRequests.some(({id: id2}) => id2 === id1),);
-          UserService.getFriendRequestRecieved(userState?.userData?.email).then(resp => {
-            let receivedReq = resp.data;
-            //store.dispatch(receivedRequestsAction.setList(receivedReq));
-            let receiveFiltered = sendFiltered.filter(({id: id1}) => !receivedReq.some(({id: id2}) => id2 === id1),);
-            UserService.getFriends(userState?.userData?.email).then(res => {
-              let friends = res.data;
-              let notFriends = receiveFiltered.filter(({id: id1}) => !friends.some(({id: id2}) => id2 === id1))
-              setusers(notFriends);
-             }).catch(e => console.log("error",e));
-          }).catch(e => console.log("error",e)); 
-         // differedReqs.forEach(user => {}); 
-         setSentto(resp.data) 
-        }).catch(e => console.log("error",e));
-      }).catch(e => console.log("error",e))
+      UserService.getUsers()
+        .then(resp => {
+          let allUsers = resp.data.filter(
+            person => person.id !== userState?.userData?.id,
+          );
+          UserService.getFriendRequestSent(userState?.userData?.email)
+            .then(resp => {
+              let sentRequests = resp.data;
+              store.dispatch(sentRequestsActions.setList(sentRequests));
+              let sendFiltered = allUsers.filter(
+                ({id: id1}) => !sentRequests.some(({id: id2}) => id2 === id1),
+              );
+              UserService.getFriendRequestRecieved(userState?.userData?.email)
+                .then(resp => {
+                  let receivedReq = resp.data;
+                  //store.dispatch(receivedRequestsAction.setList(receivedReq));
+                  let receiveFiltered = sendFiltered.filter(
+                    ({id: id1}) =>
+                      !receivedReq.some(({id: id2}) => id2 === id1),
+                  );
+                  UserService.getFriends(userState?.userData?.email)
+                    .then(res => {
+                      let friends = res.data;
+                      let notFriends = receiveFiltered.filter(
+                        ({id: id1}) =>
+                          !friends.some(({id: id2}) => id2 === id1),
+                      );
+                      setusers(notFriends);
+                    })
+                    .catch(e => console.error('error', e));
+                })
+                .catch(e => console.error('error', e));
+              // differedReqs.forEach(user => {});
+              setSentto(resp.data);
+            })
+            .catch(e => console.error('error', e));
+        })
+        .catch(e => console.error('error', e));
       return;
-    }, [])
-  )
- 
+    }, []),
+  );
 
-  
   // const redirectToProfile = (userEmail) => {
-  //   console.log(userEmail)
+
   //   navigation.navigate(routes.USER_PROFILE, {userEmail:userEmail} )
-  // } 
+  // }
   const onSearchFriend = searchKey => {
-    console.log(searchKey)
-    if (searchKey == ""){
-      setIsSearch(false)
-    }else{
-    UserService.search(searchKey).then(resp => {
-      console.log(resp.data);
-      let filteredResult = resp.data.filter(person => person.id !== userState?.userData?.id)
-      setSearchResult(filteredResult);
-      setIsSearch(true);
-    },
-    );
-  }
+    if (searchKey == '') {
+      setIsSearch(false);
+    } else {
+      UserService.search(searchKey).then(resp => {
+        let filteredResult = resp.data.filter(
+          person => person.id !== userState?.userData?.id,
+        );
+        setSearchResult(filteredResult);
+        setIsSearch(true);
+      });
+    }
     return;
-  } 
-  const onSendRequest = (recievedUser) => {
-    console.log('user received in ActivityScreen: ', recievedUser.firstName);
+  };
+  const onSendRequest = recievedUser => {
     if (!recievedUser.firstName) {
       return;
     }
     if (sentto.filter(user => user.email === recievedUser.email)[0]) {
-      console.log('already sent to this user');
       // Toast.show({
       //   position: 'bottom',
       //   visibilityTime: 5000,
@@ -94,37 +107,32 @@ export default function ActivityScreen({navigation}) {
       //   text1: 'Error',
       //   text2: 'Already sent to this user',
       // });
-      alreadySentTo = alreadySentTo.filter(dost => dost.email !== recievedUser.email);
-      console.log("alreadySentTo",alreadySentTo)
+      alreadySentTo = alreadySentTo.filter(
+        dost => dost.email !== recievedUser.email,
+      );
+
       setSentto(alreadySentTo);
       store.dispatch(sentRequestsActions.setList(alreadySentTo));
-      userService.declineFriendRequest(userState?.userData?.id, recievedUser.id).then(
-        resp => {
-          console.log('unsend resp: ', resp.data);
-       },
-      );
+      userService
+        .declineFriendRequest(userState?.userData?.id, recievedUser.id)
+        .then(resp => resp.data);
       return;
-    }
-    else{
-      UserService.sendFriendRequest(userState?.userData?.id, recievedUser.id).then(resp => {
-        console.log('Sent');
-      });
+    } else {
+      UserService.sendFriendRequest(
+        userState?.userData?.id,
+        recievedUser.id,
+      ).then(resp => {});
 
       setSentto(previousState => {
         return [...previousState, recievedUser];
       });
-      store.dispatch(
-        sentRequestsActions.setList([...sentto, recievedUser]),
-      );
-     
+      store.dispatch(sentRequestsActions.setList([...sentto, recievedUser]));
     }
-    
   };
   return (
     <Screen>
       <HeaderWithBackArrow
-        onBackButton={() => navigation. 
-          navigate(routes.FEED)}
+        onBackButton={() => navigation.navigate(routes.FEED)}
         title="Activity"
         rightComponent={<UserProfilePicture size={35} />}
       />
@@ -134,8 +142,9 @@ export default function ActivityScreen({navigation}) {
           iconName="search1"
           iconType="AntDesign"
           style={styles.searchbar}
-          onChangeText={(text)=>{onSearchFriend(text)}}
-          
+          onChangeText={text => {
+            onSearchFriend(text);
+          }}
         />
 
         <View style={styles.tabs}>
@@ -143,7 +152,6 @@ export default function ActivityScreen({navigation}) {
             title="Requests"
             onPress={() => {
               navigation.navigate(routes.RECEIVED_REQUESTS);
-
             }}
             style={styles.tab}
             sizeRatio={0.8}
@@ -171,13 +179,19 @@ export default function ActivityScreen({navigation}) {
 
       <FlatList
         contentContainerStyle={styles.groupsList}
-        ListHeaderComponent={!isSearch? () => (
-          <ListHeader
-            title="There no activity yet !"
-            subtitle="Add new friends to know more about them"
-          />
-        ): ()=>{return null;}}
-        data={!isSearch ? users: searchResult}
+        ListHeaderComponent={
+          !isSearch
+            ? () => (
+                <ListHeader
+                  title="There no activity yet !"
+                  subtitle="Add new friends to know more about them"
+                />
+              )
+            : () => {
+                return null;
+              }
+        }
+        data={!isSearch ? users : searchResult}
         keyExtractor={item => item.id.toString()}
         renderItem={({item}) => (
           <ListItem
@@ -186,8 +200,8 @@ export default function ActivityScreen({navigation}) {
             image={item.profilePicturePath}
             title={item.firstName}
             tabTitle={
-            //  sentto.filter(user => user.email === item.email)[0]
-            alreadySentTo.filter(user => user.email === item.email)[0]
+              //  sentto.filter(user => user.email === item.email)[0]
+              alreadySentTo.filter(user => user.email === item.email)[0]
                 ? 'Cancel Request'
                 : 'Send Request'
             }
@@ -201,14 +215,20 @@ export default function ActivityScreen({navigation}) {
                 ? colors.white
                 : colors.dark
             }
-            subTitle={alreadySentTo.filter(user => user.email === item.email)[0] ? "Request send" : "Recommended"}
+            subTitle={
+              alreadySentTo.filter(user => user.email === item.email)[0]
+                ? 'Request send'
+                : 'Recommended'
+            }
             onPress={onSendRequest}
             showCloseButton={false}
             secondBtn={false}
             fullWidth={true}
             style={[defaultStyles.listItemStyle, defaultStyles.lightShadow]}
-            displayLeft={!isSearch?true:false}
-            onPressProfile={()=> navigation.navigate(routes.USER_PROFILE , item.email)}
+            displayLeft={!isSearch ? true : false}
+            onPressProfile={() =>
+              navigation.navigate(routes.USER_PROFILE, item.email)
+            }
           />
         )}
       />

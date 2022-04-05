@@ -58,7 +58,7 @@ export default function MyGroups({navigation}) {
             {title: 'Other groups', data: res[1].data},
           ]);
         })
-        .catch(e => console.log(e.message));
+        .catch(e => console.error(e.message));
     };
     fetchMyGroups();
   }, []);

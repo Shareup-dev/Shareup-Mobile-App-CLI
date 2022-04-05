@@ -7,7 +7,7 @@ import colors from "../config/colors";
 import routes from "../navigation/routes";
 
 const SwapCheckout = ({ navigation, route }) => {
-  console.log("swapedPostId checkout: ", route.params);
+
   return (
     <Screen>
       <Header

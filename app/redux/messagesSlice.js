@@ -13,7 +13,7 @@ const messagesSlice = createSlice({
     },
     updateMessagesList: (previousMessages, newMessages) => {
       let allMessages = [...previousMessages, ...newMessages.payload];
-      console.log("updateMessagesList: ", allMessages);
+
       return (previousMessages = allMessages);
     },
     // ToDO: Add remove reducer

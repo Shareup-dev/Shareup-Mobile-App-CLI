@@ -11,7 +11,7 @@ const sentRequestSlice = createSlice({
       return (state = newState.payload);
     },
     removeFriend: () => {
-      console.log("friend removed");
+
     },
     getList: (state) => {
       return state.payload;

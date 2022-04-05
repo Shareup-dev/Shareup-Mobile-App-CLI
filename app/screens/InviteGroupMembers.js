@@ -36,7 +36,7 @@ const InviteGroupMembers = ({navigation, route}) => {
           let allUsers = resp.data.filter(data => data.id !== loggedInUser.id);
           setusers(allUsers);
         })
-        .catch(e => console.log(e))
+        .catch(e => console.error(e))
         .finally(_ => setLoading(false));
     };
     getUsers();

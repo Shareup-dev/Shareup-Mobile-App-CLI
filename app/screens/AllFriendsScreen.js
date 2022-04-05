@@ -27,9 +27,7 @@ export default function AllFriendsScreen({navigation}) {
 
   useEffect(() => {
     UserService.getFriends(loggedInUser.email).then(resp => {
-      resp.data.forEach(dost => {
-        console.log('dost: ', dost.email);
-      });
+      resp.data.forEach(dost => dost.email);
       setFriends(resp.data);
     });
   }, []);
@@ -47,7 +45,7 @@ export default function AllFriendsScreen({navigation}) {
             // })
             UserService.deleteFriend(loggedInUser.id, friend.id).then(
               removeResp => {
-                // console.log("Friend removed: ", removeResp);
+               
                 setFriends(previousFriends => {
                   return previousFriends.filter(
                     dost => dost.email !== friend.email,
@@ -57,7 +55,7 @@ export default function AllFriendsScreen({navigation}) {
             );
           },
         },
-        {text: 'No', onPress: () => console.log('OK Pressed')},
+        {text: 'No', onPress: () => {}},
       ],
     );
   };

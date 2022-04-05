@@ -17,7 +17,7 @@ const authenticate = async () => {
       });
     },
     error => {
-      console.log(error);
+      console.error(error);
     },
   );
 };
@@ -28,7 +28,7 @@ class ReelService {
       const result = await authAxios.post(`/reelslocal/${userId}`, reelData);
       return result;
     } catch (error) {
-      console.log('An error occurred while posting reel: ', error);
+      console.error('An error occurred while posting reel: ', error);
       return error;
     }
   };
@@ -37,7 +37,7 @@ class ReelService {
       const result = await authAxios.get(`/reels`);
       return result;
     } catch (error) {
-      console.log('An error occurred while getting reel: ', error);
+      console.error('An error occurred while getting reel: ', error);
       return error;
     }
   };

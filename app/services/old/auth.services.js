@@ -30,15 +30,15 @@ class AuthService {
     try {
       const user = await EncryptedStorage.getItem('auth_session');
       if (user !== null) {
-        // console.log("This is the user: " + user);
+
         let token = await JSON.parse(user);
-        // console.log(token);
+
         return token;
       } else {
         return null;
       }
     } catch (error) {
-      console.log('Error retrieving data');
+      console.error('Error retrieving data');
     }
   };
 }

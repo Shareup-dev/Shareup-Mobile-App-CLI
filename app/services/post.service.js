@@ -39,11 +39,11 @@ class PostService {
 const config = {
   onUploadProgress: progressEvent => {
     progress = (progressEvent.loaded / progressEvent.total) * 50;
-    console.log(progressEvent.loaded)
+
   },
   onDownloadProgress: progressEvent => {
     progress = 50 + (progressEvent.loaded / progressEvent.total) * 50;
-    console.log(progress);
+
   },
 }
 export default new PostService();

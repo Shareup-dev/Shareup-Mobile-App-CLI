@@ -30,9 +30,7 @@ export default function RadioOptionDrawer({
     setAllowSubmit(false);
   }, []);
 
-  // useEffect(() => {
-  //   console.log("Value", value);
-  // }, [value]);
+
 
   return (
     <DownModal isVisible={isVisible} setIsVisible={setIsVisible}>

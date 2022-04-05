@@ -9,7 +9,7 @@ import store from "../redux/store";
 import { swapedImagesAction } from "../redux/swapedImages";
 
 const SwapCheckoutComplete = ({ navigation, route }) => {
-  console.log("Route: ", route.params);
+
   return (
     <Screen>
       <View style={styles.mainContainer}>

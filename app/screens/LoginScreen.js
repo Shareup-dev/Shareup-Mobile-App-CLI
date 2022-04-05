@@ -64,7 +64,7 @@ export default function LoginScreen({navigation}) {
       })
       .catch(async e => {
         let message;
-        console.log(e.message);
+  
         if (e.message === 'Request failed with status code 401') {
           // if the user not verified
           await authService

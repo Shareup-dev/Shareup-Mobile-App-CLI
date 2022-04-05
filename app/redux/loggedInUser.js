@@ -5,14 +5,11 @@ const userSlice = createSlice({
   name: 'userSlice',
   initialState,
   reducers: {
-    logOut: () => {
-      console.log('log out user here');
-    },
+    logOut: () => {},
     setUser: (state, user) => {
       return (state = user);
     },
     checkCurrentState: state => {
-      console.log('current logged in user state: ', state);
       return state;
     },
   },

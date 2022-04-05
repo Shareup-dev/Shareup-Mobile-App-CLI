@@ -46,10 +46,10 @@ export default function AddNewReel({navigation}) {
   //     if (!result.uri) {
   //       return;
   //     }
-  //     console.log('result: ', result);
+
   //     // video.current.presentFullscreenPlayer();
   //   } catch (error) {
-  //     console.log('Error reading an image', error);
+  //     console.error('Error reading an image', error);
   //   }
   // };
 
@@ -71,7 +71,7 @@ export default function AddNewReel({navigation}) {
   //     skipProcessing: true,
   //   });
   //   setCameraImg(true);
-  //   console.log('Captured photo: ', photo.uri);
+
   //   try {
   //     editedResult = await ImageManipulator.manipulateAsync(
   //       photo.uri,
@@ -79,7 +79,7 @@ export default function AddNewReel({navigation}) {
   //       {compress: 0.5},
   //     );
   //   } catch (error) {
-  //     console.log('Edited error: ', error);
+  //     console.error('Edited error: ', error);
   //   }
   //   setMode('view');
   //   setreelPhoto(editedResult);
@@ -124,12 +124,12 @@ export default function AddNewReel({navigation}) {
   //   // }, 30);
   //   ReelService.addReel(loggedInUser.id, reelData)
   //     .then(resp => {
-  //       console.log('reel add resp: ', resp.data);
+  //       console.error('reel add resp: ', resp.data);
   //       setIsUploading(false);
   //       navigation.popToTop();
   //     })
   //     .catch(error => {
-  //       console.log('Error occurred while posting reel');
+  //       console.error('Error occurred while posting reel');
   //       setIsUploading(false);
   //     });
   // };

@@ -46,7 +46,7 @@ const createConversation = async (user1, user2) => {
       user1: user1,
       user2: user2,
     })
-    .catch(err => console.log(err));
+    .catch(err => console.error(err));
 
   Backendless.Messaging.subscribe(result.objectId);
 
@@ -58,7 +58,7 @@ const createConversation = async (user1, user2) => {
     result.objectId,
     'init',
     publishOptions,
-  ).catch(err => console.log(err));
+  ).catch(err => console.error(err));
 
   return result;
 };
@@ -169,7 +169,7 @@ const getContactUser = async (userId, conversation) => {
   } else if (userId == conversation.user2) {
     return await callUserApi(conversation.user1);
   } else {
-    console.log('No user match');
+  
     return null;
   }
 };

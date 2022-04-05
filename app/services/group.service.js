@@ -28,7 +28,16 @@ class GroupService {
   leavegroup = (uid, gid) => AuthAxios.delete(`groups/${uid}/leave/${gid}`);
   checkIsMember = (gid, uid) => AuthAxios.get(`groups/${uid}/is_member/${gid}`);
   addMember = (uid, gid) => AuthAxios.post(`groups/${uid}/join/${gid}`);
-  deleteMember = (aid,uid,gid) => AuthAxios.delete(`groups/${aid}/${gid}/delete/${uid}`)
+  deleteMember = (aid,uid,gid) => AuthAxios.delete(`groups/${aid}/${gid}/delete/${uid}`);
+  
+  searchMembers = (keyword,gid) => AuthAxios({
+    method:'GET',
+    url:"groups/members_search",
+    params:{
+      keyword,
+      gid
+    }
+  });
 
   // join requests
   joinRequest = (uid, gid) => AuthAxios.post(`groups/${uid}/Join_group/${gid}`);
