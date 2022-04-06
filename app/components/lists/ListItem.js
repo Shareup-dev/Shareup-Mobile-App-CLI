@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   },
   detailsContainer: { marginLeft: 5 ,alignItems:"flex-start"},
   image: { height: 75, width: 75, borderRadius: 35 },
-  title: defaultStyles.listItemTitle,
+  title: {alignItems: "center",},//defaultStyles.listItemTitle,
   leftContainer: {
     flexDirection: "row",
     alignItems: "center",

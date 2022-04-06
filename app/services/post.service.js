@@ -6,7 +6,6 @@ import AuthAxios from './authAxios';
 class PostService {
   getNewsFeed = email =>
     AuthAxios.get(`newsFeed/${email}`)
-
   createPost = (uid,data) => 
      AuthAxios.post(`posts/${uid}`,data,config)
   getPostByEmail = email =>
@@ -20,7 +19,7 @@ class PostService {
   editPost = postId =>
     AuthAxios.put(`posts/${postId}`)
   likePost = (uid, pid) => 
-    AuthAxios.put(`posts/${uid}/like-unlike/${pid}`)
+    AuthAxios.put(`posts/${uid}/like-unlike/${pid}/true`,)
   getPosts = () => 
     AuthAxios.get(`posts`)
 
@@ -31,8 +30,8 @@ class PostService {
     AuthAxios.delete(`comment/${commentid}`)
   replay = (uid,commentId,data) =>
     AuthAxios.post(`reply/${uid}/${commentId}`,data)
-  likeUnlikeComment = (uid,cid) =>
-    AuthAxios.put(`comment/${uid}/like-unlike/${cid}`)
+  likeUnlikeComment = (uid,cid,params) =>
+    AuthAxios.put(`comment/${uid}/like-unlike/${cid}`,params)
   editComment = (cid) => 
     AuthAxios.put(`comment/Edit_comment/${cid}`)
 }

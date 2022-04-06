@@ -6,7 +6,7 @@
 const settings = {
   dev: {
     apiUrl: 'http://192.168.100.239:8080', //Logeeshan
-   // apiUrl: 'http://192.168.100.238:8080', //This Mac
+    //apiUrl: 'http://192.168.100.238:8080', //This Mac
   },
   staging: {
     apiUrl: 'http://192.168.100.2:8080',

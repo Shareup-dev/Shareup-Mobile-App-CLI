@@ -18,7 +18,7 @@ export default function CommentsScreen({navigation, route}) {
     route.params;
   const commentsListRef = useRef();
   const commentTextFieldRef = useRef();
-  const [isUserLiked, setIsUserLiked] = useState(false);
+  //const [isUserLiked, setIsUserLiked] = useState(false);
   const [commentsList, setCommentsList] = useState(comments);
   const [commentContent, setCommentContent] = useState('');
   const [commentId,setCommentId] = useState('')
@@ -101,6 +101,7 @@ export default function CommentsScreen({navigation, route}) {
     //<CommentsScreen route={{params: { comments: reply, userId: comment.user.id, commendId: comment.id, postType: postType, swapId: swapId, fromReply:true }}}/>
   }
   const handleAddComment = async () => {
+    console.log("hereee!!!!!!")
     if (isReply){
       if (postType === 'swapPost') {
       console.log('it is Swap');
@@ -114,10 +115,11 @@ export default function CommentsScreen({navigation, route}) {
         // scrollToListBottom();
       });
     } else {
-      const comment = {content: commentContent};
-      console.log('Making comment: ', userId, commentId, comment);
+      console.log("hereee!!!!!!")
+      const reply = {reply: commentContent};
+      console.log('Making comment: ', userId, commentId, reply);
       if (commentContent !== '') {
-        PostService.replay(userState?.userData?.id, commentId, comment)
+        PostService.replay(userState?.userData?.id, commentId, reply)
         .then(res => {
           refreshComments();
           setCommentContent('');
@@ -142,6 +144,7 @@ export default function CommentsScreen({navigation, route}) {
         // scrollToListBottom();
       });
     } else {
+      console.log("hereeee")
       const comment = {content: commentContent};
       console.log('Making comment: ', userId, postId, comment);
       if (commentContent !== '') {
@@ -160,8 +163,12 @@ export default function CommentsScreen({navigation, route}) {
   }
   };
 
-  
-  const handleReplyComment = async (commentId) => {
+  const handleEditComment = (comment) => {
+    //<CommentTextField value={comment.content}/>
+    //commentTextFieldRef.current.value = "hello" //defaultValue = comment.content
+    // commentTextFieldRef.current.focus()
+  }
+  const handleReplyComment = (commentId) => {
     setCommentId(commentId)
     //setCommentsList(reply)
     setIsReply(true)
@@ -169,7 +176,6 @@ export default function CommentsScreen({navigation, route}) {
   };
   
   const handleDeleteComment= (itemId,isHide)=> {
-    
     if (postType === 'swapPost') {
       console.log('it is Swap');
       const comment = {content: commentContent};
@@ -206,7 +212,6 @@ export default function CommentsScreen({navigation, route}) {
       PostService.getPostByPostId(postId)
       .then(res => {
         console.log("response",res.data)
-       
         setCommentsList(res.data.comments);
        
         
@@ -229,15 +234,16 @@ export default function CommentsScreen({navigation, route}) {
   const scrollToListBottom = () => {
     commentsListRef.current.scrollToEnd({animated: true});
   };
-  const handleReactions = async (cid) => {
-    console.log(userId,cid)
-    PostService.likeUnlikeComment(userId, cid)
+  const handleReactions = async (cid,isUserLiked) => {
+    console.log(userState?.userData?.id,cid,isUserLiked)
+    const params = ({reaction:isUserLiked})
+    PostService.likeUnlikeComment(userState?.userData?.id, cid,params)
     .then (res => {
       console.log(res.data)
-      setIsUserLiked(!isUserLiked)
+      //setIsUserLiked(!isUserLiked)
       })//need to get likePostIds 
     .catch(e => console.log(e))
-   // reloadPost();
+    //refreshComments();
   };
 
   console.log("isReply",fromReply)
@@ -261,10 +267,11 @@ export default function CommentsScreen({navigation, route}) {
             reactionsLength={
               item?.reactions?.length ? item?.reactions?.length : 0
             }
-            isUserLiked ={isUserLiked}
+            //isUserLiked ={isUserLiked}
             onInteraction={handleReactions}
             handleDelete={handleDeleteComment}
             onReply={handleReplyComment}
+            handleEdit={handleEditComment}
             isReply={isReply}
             reply = {reply}
             postType={postType}
@@ -299,10 +306,11 @@ export default function CommentsScreen({navigation, route}) {
          reactionsLength={
            item?.reactions?.length ? item?.reactions?.length : 0
          }
-         isUserLiked ={isUserLiked}
+        // isUserLiked ={isUserLiked}
          onInteraction={handleReactions}
          handleDelete={handleDeleteComment}
          onReply={handleReplyComment}
+         handleEdit={handleEditComment}
          isReply={isReply}
          reply = {reply}
          postType={postType}

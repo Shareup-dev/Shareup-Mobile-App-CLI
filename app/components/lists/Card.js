@@ -7,7 +7,7 @@ import colors from '../../config/colors';
 import defaultStyles from '../../config/styles';
 import authContext from '../../authContext';
 import UserService from '../../services/user.service';
-import PostService from '../../services/old/PostService';
+import PostService from '../../services/post.service';
 
 import PostOptionDrawer from '../drawers/PostOptionsDrawer';
 import fileStorage from '../../config/fileStorage';
@@ -164,7 +164,7 @@ export default function Card({
 
   // rerenders the post when interaction
   const reloadPost = async () => {
-    PostService.getPostById(postData.id)
+    PostService.getPostByPostId(postData.id)
     .then(res => {
       setComments(res.data.comments)
       setNumberOfComments(res.data.comments.length);
