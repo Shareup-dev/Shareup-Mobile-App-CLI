@@ -37,7 +37,7 @@ const PostActions = ({
   const [date, setDate] = useState(
     moment(postData.published, "DD MMMM YYYY hh:mm:ss").fromNow()
   );
-
+console.log("postData....:",postData)
   return (
     <View style={styles.content}>
       <View style={styles.userInfo}>

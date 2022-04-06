@@ -35,6 +35,7 @@ export default function Card({
   navigation,
   postType,
 }) {
+  console.log("PostData.....:",postData)
   const {userState} = useContext(authContext);
   const options = [
     {
@@ -154,7 +155,7 @@ export default function Card({
   };
 
   const handleReactions = async () => {
-    PostService.likePost(user.id, postData.id)
+    PostService.likePost(user.id, postData.id,"like")
     .then (res => {
       setIsUserLiked(!isUserLiked)
       })//need to get likePostIds 
