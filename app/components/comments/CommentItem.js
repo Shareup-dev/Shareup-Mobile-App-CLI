@@ -18,10 +18,10 @@ import UserProfilePicture from "../UserProfilePicture";
 import Icon from "../Icon";
 import LinkButton from "../buttons/LinkButton";
 import CommentText from "./CommentText";
-import Swipeable from 'react-native-gesture-handler/Swipeable';
 import authContext from "../../authContext";
 import { Button } from "react-native-paper";
 import CommentsScreen from "../../screens/CommentsScreen";
+import PostOptionDrawer from "../drawers/PostOptionsDrawer";
 export default function CommentItem({
   fromReply,
   comment,
@@ -29,11 +29,14 @@ export default function CommentItem({
   isUserLiked,
   onInteraction,
   handleDelete,
+  handleLongPress,
   onReply,
   isReply,
   reply,
   postType,
   swapId,
+  setIsOptionsVisible,
+  isOptionsVisible,
   setNumberOfComments
 }) {
   //const isReply = false
@@ -41,32 +44,9 @@ export default function CommentItem({
   const [time, setTime] = useState(
     moment(comment.published, "DD MMMM YYYY hh:mm:ss").fromNow()
   );
-
-  const leftSwipe = (progress, dragX) => {
-    const scale = dragX.interpolate({
-      inputRange: [0, 100],
-      outputRange: [0, 1],
-      extrapolate: 'clamp',
-    });
-    return (
-
-      <TouchableOpacity onPress={() => comment.user.id == userState?.userData?.id ? handleDelete(comment.id, false) : handleDelete(comment.id, true)}
-        activeOpacity={0.6}
-        style={styles.deleteBox}>
-        <View>
-          <Animated.Text style={{ transform: [{ scale: scale }], color: colors.white }}>
-            {comment.user.id == userState?.userData?.id ? "Delete" : "Hide"}
-          </Animated.Text>
-        </View>
-      </TouchableOpacity>
-
-    );
-
-  };
   return (
     <>
-    
-      <Swipeable renderLeftActions={comment.user.id == userState?.userData?.id ? leftSwipe : () => { }}>
+     <TouchableWithoutFeedback onLongPress={setIsOptionsVisible(true)}>
         <View style={!fromReply?styles.container:styles.replyContainer}>
           {/** Left */}
           <View>
@@ -134,7 +114,7 @@ export default function CommentItem({
           <CommentsScreen route={{params: { comments: reply, userId: comment.user.id, commendId: comment.id, postType: postType, swapId: swapId, fromReply:true }}}/>
         ) : (<Text />)}
         {/* <Separator style={styles.separator} /> */}
-      </Swipeable>
+        </TouchableWithoutFeedback>
     </>
   );
 }
