@@ -60,7 +60,7 @@ const loadComments = async () => {
     //<CommentsScreen route={{params: { comments: reply, userId: comment.user.id, commendId: comment.id, postType: postType, swapId: swapId, fromReply:true }}}/>
   }
   const handleAddComment = async () => {
-    
+
     if (isReply){
       if (postType === 'swapPost') {
       const comment = {content: commentContent};
@@ -72,8 +72,10 @@ const loadComments = async () => {
         // scrollToListBottom();
       });
     } else {
+
       const reply = {reply: commentContent};
       console.log('Making comment: ', userId, commentId, reply);
+
       const comment = {content: commentContent};
       if (commentContent !== '') {
         postService.replay(userState?.userData?.id, commentId, reply)
@@ -100,7 +102,9 @@ const loadComments = async () => {
         // scrollToListBottom();
       });
     } else {
+
      
+
       const comment = {content: commentContent};
   
       if (commentContent !== '') {
@@ -170,12 +174,14 @@ const loadComments = async () => {
   const refreshComments = async () => {
     setRefreshing(true);
     if (postType !== 'swapPost') {
+
       loadComments();
       // postService.getPostByPostId(postId)
       // .then(res => {
       //   console.log("response",res.data)
       //   setCommentsList(res.data.comments);
        
+
         
       //  // setCommentsList(res.data.comments);
       // })
@@ -198,14 +204,19 @@ const loadComments = async () => {
   };
 
   const handleReactions = async (cid,isUserLiked) => {
-    //console.log(userState?.userData?.id,cid,isUserLiked)
+
+
     const params = ({reaction:isUserLiked})
     postService.likeUnlikeComment(userState?.userData?.id, cid,params)
     .then (res => {
+
       console.log("responseLike",res.data)
       //setIsUserLiked(!isUserLiked)
       })//need to get likePostIds 
     .catch(e => console.log("4",e))
+
+    .catch(e => console.error(e))
+
     //refreshComments();
   };
 

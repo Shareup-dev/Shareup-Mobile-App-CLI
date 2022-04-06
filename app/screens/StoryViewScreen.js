@@ -1,4 +1,4 @@
-import React, {memo, useEffect,  useRef, useState} from 'react';
+import React, {memo, useEffect, useReducer, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -19,39 +19,85 @@ import DownModal from '../components/drawers/DownModal';
 const windowWidth = Dimensions.get('screen').width;
 
 const StoryViewScreen = ({navigation, route}) => {
-  const {stories_List:data} = route.params;
+  const {
+    stories_List: data,
+    firstName,
+    lastName,
+    profilePicture,
+  } = route.params;
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [paused, setPaused] = useState(false);
-  const [VideoLoaded, setVideoLoaded] = useState(false);
-  let duration = 6000;
+  const [Loaded, setLoaded] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  // const scale = useRef(new Animated.Value(0)).current;
+
+  //  ----------------------- TIMER REDUCER ----------------------------//
+  const initState = {
+    duration: 6000,
+    startedTime: 0,
+    pausedTime: 0,
+  };
+
+  const actions = {
+    START_TIMER: 'START_TIMER',
+    PAUSE_TIMER: 'PAUSE_TIMER',
+    RESET_TIMER: 'RESET_TIMER',
+  };
+
+  const timerReducer = (prevState, action) => {
+    switch (action.type) {
+      case actions.START_TIMER:
+        return {
+          ...prevState,
+          startedTime: action.startTime,
+        };
+      case actions.PAUSE_TIMER:
+        return {
+          ...prevState,
+          pausedTime: action.pausedTime,
+          duration: action.duration,
+        };
+      case actions.RESET_TIMER:
+        return initState;
+
+      default:
+        return initState;
+    }
+  };
+  const [timerState, dispatch] = useReducer(timerReducer, initState);
 
   const width = [];
   data.map(_ => width.push(useRef(new Animated.Value(0)).current));
 
-  let startTime;
-  let pauseTime;
-
-  // progress animations
+  // Start progress animations
   const startProgress = () => {
-    startTime = new Date().valueOf();
+    let startTime = new Date().valueOf();
+    dispatch({type: actions.START_TIMER, startTime});
+
     Animated.timing(width[activeIndex], {
       toValue: windowWidth / data.length - 2,
       useNativeDriver: false,
-      duration: duration,
+      duration: timerState.duration,
     }).start(({finished}) => {
       if (finished)
         if (activeIndex !== data.length - 1) {
-          duration = 6000;
+          dispatch({type: actions.RESET_TIMER});
+          setLoaded(false);
           setActiveIndex(prev => prev + 1);
-          
         } else navigation.popToTop();
     });
   };
+  // Pause progress animations
   const pauseProgress = () => {
-    pauseTime = new Date().valueOf();
-    duration = duration - (pauseTime - startTime);
+    let pausedTime = new Date().valueOf();
+    const {duration, startedTime} = timerState;
+    const currentDuration = duration - (pausedTime - startedTime);
+
+    dispatch({
+      type: actions.PAUSE_TIMER,
+      pausedTime,
+      duration: currentDuration,
+    });
     Animated.timing(width[activeIndex]).stop();
   };
 
@@ -66,20 +112,21 @@ const StoryViewScreen = ({navigation, route}) => {
       {
         text: 'Delete',
         style: 'destructive',
-        // If the user confirmed, then we dispatch the action we blocked earlier
-        // This will continue the action that had triggered the removal of the screen
         onPress: () => {},
       },
     ]);
   };
 
   useEffect(() => {
-    if (data[activeIndex].video && VideoLoaded) startProgress();
-    else if(data[activeIndex].image) startProgress();
+    if (Loaded) {
+      startProgress();
+    }
     return () => {
-      pauseProgress();
+      Animated.timing(width[activeIndex]).stop();
     };
-  }, [activeIndex, VideoLoaded]);
+  }, [activeIndex, Loaded]);
+
+
 
   const DropDownMenu = () => {
     return (
@@ -160,10 +207,7 @@ const StoryViewScreen = ({navigation, route}) => {
                 style={styles.userProfileImg}
               />
             </View>
-            <Text
-              style={
-                styles.userName
-              }>{`${data[0].user?.firstName} ${data[0].user?.lastName}`}</Text>
+            <Text style={styles.userName}>{`${firstName} ${lastName}`}</Text>
           </View>
           <View style={{flexDirection: 'row'}}>
             <TouchableOpacity
@@ -215,21 +259,29 @@ const StoryViewScreen = ({navigation, route}) => {
           startProgress();
         }}>
         <StorySlides />
-        {data[activeIndex].video ? (
+        {data[activeIndex]?.video ? (
           <Video
             ref={ref => (this.player = ref)}
             paused={paused}
-            onLoad={_ => setVideoLoaded(true)}
+            onLoad={_ => setLoaded(true)}
             resizeMode={'cover'}
-            style={{width: '100%', height: '100%'}}
-            onEnd={props=>setVideoLoaded(props)}
+            style={{
+              width: '100%',
+              height: '100%',
+              backgroundColor: '#34343460',
+            }}
             source={{
               uri: fileStorage.baseUrl + data[activeIndex].video,
             }}
           />
         ) : (
           <Image
-            style={{width: '100%', height: '100%'}}
+            style={{
+              width: '100%',
+              height: '100%',
+              backgroundColor: '#34343460',
+            }}
+            onLoadEnd={_ => setLoaded(true)}
             source={{uri: fileStorage.baseUrl + data[activeIndex].image}}
           />
         )}

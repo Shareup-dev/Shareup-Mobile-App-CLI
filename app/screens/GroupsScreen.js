@@ -85,7 +85,7 @@ export default function GroupsScreen({navigation}) {
         }}>
         <TouchableOpacity
           activeOpacity={0.6}
-       
+
           // navigation.navigate(routes.GROUP_FEED, item)}
         >
           <View
@@ -267,9 +267,11 @@ export default function GroupsScreen({navigation}) {
             <Text style={[{marginVertical: 5}, styles.title]}>
               Groups you manage
             </Text>
-            {groups.map((group, index) => (
-              <ManageGroupCard item={group} key={index} />
-            ))}
+            <FlatList
+              data={groups}        
+              keyExtractor={(item, i) => i.toString()}
+              renderItem={({item}) => <ManageGroupCard item={item} />}
+            />
           </React.Fragment>
         )}
       </ScrollView>
