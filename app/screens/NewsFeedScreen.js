@@ -49,11 +49,11 @@ export default function NewsFeedScreen({navigation, route}) {
         navigation={navigation}
         route={route}
         item={item}
-        userId={item.user.id}
+        userId={item.userdata.id}
       />
     ) : (
       <Card
-        user={item.user}
+        user={item.userdata}
         postData={item}
         //postId={item.id}
         //userId={item.user.id}
@@ -84,7 +84,6 @@ export default function NewsFeedScreen({navigation, route}) {
       )}
     </View>
   );
-
   const ListHeader = () => {
     return (
       <>
