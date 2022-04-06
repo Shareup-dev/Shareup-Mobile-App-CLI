@@ -32,11 +32,11 @@ export default function NewsFeedScreen({navigation, route}) {
   const loadNews = async () => {
     postService.getNewsFeed(userState?.userData?.email)
     .then(res =>{ 
-      console.log("News Feed",res,"Data",res.data)
+      console.log("News Feed Data",res.data)
       const postArray = res.data.reverse();
       setPosts(postArray)
     })
-    .catch(e => console.log(e))
+    .catch(e => console.error(e))
   };
 
   const renderItem = ({item}) => {

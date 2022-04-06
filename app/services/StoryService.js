@@ -17,7 +17,7 @@ const authenticate = async () => {
       });
     },
     error => {
-      console.log(error);
+      console.error(error);
     },
   );
 };
@@ -28,7 +28,7 @@ class StoryService {
       const result = await authAxios.post(`/Stories/${userId}`, storyData);
       return result;
     } catch (error) {
-      console.log('An error occurred while posting stories: ', error);
+      console.error('An error occurred while posting stories: ', error);
       return error;
     }
   };
@@ -37,7 +37,7 @@ class StoryService {
       const result = await authAxios.get(`/stories`);
       return result;
     } catch (error) {
-      console.log('An error occurred while getting stories: ', error);
+      console.error('An error occurred while getting stories: ', error);
       return error;
     }
   };

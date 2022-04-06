@@ -31,7 +31,7 @@ export default function ReceivedRequests({navigation}) {
     UserService.getFriendRequestRecieved(user.email).then(resp => {
       setRequests(resp.data);
       requests.forEach(request => {
-        console.log('Received Request from: ', request.firstName);
+   
       });
     });
   } 
@@ -39,9 +39,9 @@ export default function ReceivedRequests({navigation}) {
   }, []);
 
   const acceptFriendRequest = friend => {
-    console.log('Accepting friend request from : ', friend.email);
+ 
     UserService.acceptFriendRequest(user.id, friend.id).then(resp => {
-      console.log('accept request resp: ', resp);
+     
     });
 
     setAcceptedFrom(previousState => {
@@ -50,9 +50,9 @@ export default function ReceivedRequests({navigation}) {
   };
 
   const rejectFriendRequest = friend => {
-    console.log('Rejecting friend request from : ', friend.email);
+
     UserService.declineFriendRequest(user.id, friend.id).then(resp => {
-      console.log('friend request declined: ', resp.data);
+    
     });
 
     setRejectedFrom(previousState => {

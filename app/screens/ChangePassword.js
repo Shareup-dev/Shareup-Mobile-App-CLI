@@ -1,28 +1,27 @@
-import React from "react";
-import { Form, FormField, SubmitButton } from "../components/forms";
-import { StyleSheet, View, Text } from "react-native";
-import Screen from "../components/Screen";
-import defaultStyles from "../config/styles";
-import { Header, HeaderTitle, HeaderCloseIcon } from "../components/headers";
-import * as Yup from "yup";
-import colors from "../config/colors";
-import routes from "../navigation/routes";
-import ForgotPasswordHeader from "../components/ForgotPassword/Header";
+import React from 'react';
+import {Form, FormField, SubmitButton} from '../components/forms';
+import {StyleSheet, View, Text} from 'react-native';
+import Screen from '../components/Screen';
+import defaultStyles from '../config/styles';
+import {Header, HeaderTitle, HeaderCloseIcon} from '../components/headers';
+import * as Yup from 'yup';
+import colors from '../config/colors';
+import routes from '../navigation/routes';
+import ForgotPasswordHeader from '../components/ForgotPassword/Header';
 
-export default function ChangePassword({ navigation }) {
+export default function ChangePassword({navigation}) {
   // determine all the rules for validating our form
   const validationSchema = Yup.object().shape({
-    password1: Yup.string().required().label("Password").min(8),
+    password1: Yup.string().required().label('Password').min(8),
     password2: Yup.string()
       .required()
-      .oneOf([Yup.ref("password1"), null], "Password mismatch")
-      .label("Re-Password")
+      .oneOf([Yup.ref('password1'), null], 'Password mismatch')
+      .label('Re-Password')
       .min(8),
   });
 
-  const handleSubmit = async (userInfo) => {
-    console.log("register ", userInfo);
-  };
+  const handleSubmit = async userInfo => userInfo;
+
   return (
     <Screen style={styles.container}>
       <ForgotPasswordHeader navigation={navigation} />
@@ -31,13 +30,12 @@ export default function ChangePassword({ navigation }) {
       </View>
       <Form
         initialValues={{
-          password1: "",
-          password2: "",
+          password1: '',
+          password2: '',
         }}
         onSubmit={handleSubmit}
-        validationSchema={validationSchema}
-      >
-        <View style={{ marginTop: 10 }}>
+        validationSchema={validationSchema}>
+        <View style={{marginTop: 10}}>
           <FormField
             autoCorrect={false}
             name="password1"
@@ -64,11 +62,11 @@ export default function ChangePassword({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
   },
   submitButton: {
-    alignSelf: "center",
-    width: "60%",
+    alignSelf: 'center',
+    width: '60%',
     paddingTop: 5,
   },
 
@@ -79,15 +77,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textField: {
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   linkButtons: {
     margin: 10,
   },
   userProfilePicture: {
-    alignSelf: "center",
+    alignSelf: 'center',
   },
-  groupsList: { paddingTop: 20 },
+  groupsList: {paddingTop: 20},
   listItem: {
     marginBottom: 13,
     marginHorizontal: 28,
@@ -96,9 +94,9 @@ const styles = StyleSheet.create({
   },
   noteText: {
     fontSize: 12,
-    fontWeight: "600",
+    fontWeight: '600',
     marginTop: 15,
     marginHorizontal: 15,
-    textAlign: "center",
+    textAlign: 'center',
   },
 });

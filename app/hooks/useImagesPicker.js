@@ -14,7 +14,7 @@ export default function useImagePicker() {
       // setImageUri(result.uri);
       setFiles(...files, result.url);
     } catch (error) {
-      console.log('Error reading an image', error);
+      console.error('Error reading an image', error);
     }
     return null;
   };

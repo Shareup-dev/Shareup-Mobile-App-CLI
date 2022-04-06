@@ -35,9 +35,6 @@ class UserService {
   unfollow = (email, followed_id) => AuthAxios.delete(`${email}/unfollow/${followed_id}`);
   blockUser =(uid,bid) => AuthAxios.post(`${uid}/blocks/${bid}`)
   unBlockUser = (uid,bid) => AuthAxios.post(`${uid}/unblocks/${bid}`)
-  likePost = (uid, pid) => AuthAxios.put(`posts/${uid}/like-unlike/${pid}`, {emoji: 'like',});
-  savePost = (uid, pid) => AuthAxios.put(`posts/${uid}/save-unsave/${pid}`);
-
 }
 
 export default new UserService();

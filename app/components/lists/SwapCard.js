@@ -129,11 +129,11 @@ const SwapCard = React.memo(({item, navigation, userId, style}) => {
   ]) 
 
 const deletePost = async () => {
-  //console.log('data before delete: ' + response.data);
+ 
     // const result = await PostService.deletePost(postId)
     // .then(res => setPosts(res.data))
-    // .catch(e => console.log(e));
-  //console.log('data after delete: ' + response.data);
+    // .catch(e => console.error(e));
+  
   //reloadPosts();
 };
   const onLayout = e => {

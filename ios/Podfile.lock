@@ -296,6 +296,11 @@ PODS:
     - RCTTypeSafety
     - React
     - ReactCommon/turbomodule/core
+  - react-native-video (5.2.0):
+    - React-Core
+    - react-native-video/Video (= 5.2.0)
+  - react-native-video/Video (5.2.0):
+    - React-Core
   - React-perflogger (0.67.3)
   - React-RCTActionSheet (0.67.3):
     - React-Core/RCTActionSheetHeaders (= 0.67.3)
@@ -452,6 +457,7 @@ DEPENDENCIES:
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-video (from `../node_modules/react-native-video`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -537,6 +543,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-video:
+    :path: "../node_modules/react-native-video"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -612,6 +620,7 @@ SPEC CHECKSUMS:
   react-native-image-picker: 4e6008ad8c2321622affa2c85432a5ebd02d480c
   react-native-netinfo: 379ba2af7d2abcec0c062267abe1c9a977c72bf9
   react-native-safe-area-context: eec048ba481a7ec7b1bf9d7b7a78fb1103f4806d
+  react-native-video: a4c2635d0802f983594b7057e1bce8f442f0ad28
   React-perflogger: 93d3f142d6d9a46e635f09ba0518027215a41098
   React-RCTActionSheet: 87327c3722203cc79cf79d02fb83e7332aeedd18
   React-RCTAnimation: 009c87c018d50e0b38692699405ebe631ff4872d
@@ -632,6 +641,6 @@ SPEC CHECKSUMS:
   Yoga: 90dcd029e45d8a7c1ff059e8b3c6612ff409061a
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 4ffdcdf4b2122ecf2027e2b8bf24b7f3110ab4ee
+PODFILE CHECKSUM: 59955c5b80cf3bf3b7d6bfc334cdc420f7c532e3
 
 COCOAPODS: 1.11.2

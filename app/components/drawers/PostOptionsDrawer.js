@@ -19,7 +19,7 @@ export default function PostOptionDrawer({
 }) {
   const [optionsList, setOptionsList] = useState(() => options)//.slice(0, -1));
   //const [lastItem, setLastItem] = useState(() => options.slice(-1).pop());
-  // console.log("title: ", postText);
+
   return (
     <DownModal isVisible={isVisible} setIsVisible={setIsVisible}>
       {title && <Text style={styles.title}>{title}</Text>}

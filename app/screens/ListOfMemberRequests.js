@@ -53,7 +53,7 @@ export default function MemberRequest({navigation, route}) {
   };
 
   const Item = ({item}) => {
-    console.log('items', item);
+
     return (
       <View
         style={{

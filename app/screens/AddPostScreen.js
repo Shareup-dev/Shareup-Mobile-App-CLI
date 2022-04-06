@@ -227,7 +227,7 @@ export default function AddPostScreen({navigation, route}) {
     const formData = new FormData();
     formData.append('content', content.text);
     if (content.images.length !== 0) {
-      console.log('Post Images', content.images);
+   
       content.images.forEach(image => {
         const splitPathArr = image.split('/');
         formData.append(`files`, {
@@ -243,7 +243,7 @@ export default function AddPostScreen({navigation, route}) {
     if (content.groupId) {
       formData.append('groupid', content.groupId);
     }
-    console.log('Creating post: ', formData);
+
     return formData;
   };
 
@@ -268,7 +268,7 @@ export default function AddPostScreen({navigation, route}) {
       });
       if (!result.cancelled) onAddImage(uri);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -330,12 +330,12 @@ export default function AddPostScreen({navigation, route}) {
           };
           const formData = createPostFormData(postContent)
             PostService.createPost(user.id, formData).then(resp => {
-            console.log(resp)
+      
             store.dispatch(feedPostsAction.addFeedPost(resp.data));
             setLoading(false);
             dispatch(postFeelingsActions.setDefault());
             navigation.navigate(routes.FEED);
-          }).catch(e => {console.log(e)})
+          }).catch(e => {console.error(e)})
           //setProgress(prog)
         }
       }

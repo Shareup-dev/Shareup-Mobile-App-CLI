@@ -9,11 +9,7 @@ import Text from './Text';
 export default function OfflineNotice() {
   const {type, isInternetReachable} = useNetInfo();
 
-  //   useEffect(() => {
-  //     console.log("type: ", type);
-  //     console.log("isInternetReachable: ", isInternetReachable);
-  //   });
-
+ 
   if (type !== 'unknown' && isInternetReachable === false)
     return (
       <View style={styles.container}>

@@ -11,7 +11,7 @@ const receivedRequestSlice = createSlice({
       return (state = newState.payload);
     },
     cancelRequest: () => {
-      console.log("Request Cancelled");
+
     },
     getList: (state) => {
       return state.payload;

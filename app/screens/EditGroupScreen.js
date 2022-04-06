@@ -20,7 +20,7 @@ export default function EditGroup({navigation, route}) {
   const [privacy, setPrivacy] = useState(groupData?.privacySetting);
   const [isPrivacyDrawerVisible, setIsPrivacyDrawerVisible] = useState(false);
 
-  // console.log(navigation);
+
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required().label('Name'),
@@ -42,7 +42,7 @@ export default function EditGroup({navigation, route}) {
           });
         }
       })
-      .catch(e => console.log(e));
+      .catch(e => console.error(e));
   };
 
   return (

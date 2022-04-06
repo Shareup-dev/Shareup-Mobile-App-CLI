@@ -10,7 +10,7 @@ let authAxios = null;
 const authenticate = async () => {
   await AuthService.getCurrentUser().then(
     res => {
-      // console.log(res.jwt + "  jwt recieved in authenticate")
+
       authAxios = axios.create({
         baseURL: `${baseURL}/api/v1/`,
         headers: {
@@ -20,7 +20,7 @@ const authenticate = async () => {
       });
     },
     error => {
-      console.log(error);
+      console.error(error);
     },
   );
 };
@@ -39,7 +39,7 @@ class PostService {
       const result = await authAxios.get('newsFeed/' + email);
       return result;
     } catch (error) {
-      console.log('error occurred while getting newsfeed: ', error);
+      console.error('error occurred while getting newsfeed: ', error);
       return error;
     }
   };
@@ -50,7 +50,7 @@ class PostService {
       const result = await authAxios.get('/posts/email/' + email);
       return result;
     } catch (error) {
-      console.log('error occurred while getting posts for user: ', error);
+      console.error('error occurred while getting posts for user: ', error);
       return error;
     }
   };
@@ -89,7 +89,7 @@ class PostService {
     let newComment = {
       content: comment.content,
     };
-    console.log('Adding this comment: ', newComment);
+  
 
     try {
       const result = await authAxios.post(
@@ -98,7 +98,7 @@ class PostService {
       );
       return result;
     } catch (error) {
-      console.log('Error occurred while posting comment: ', error);
+      console.error('Error occurred while posting comment: ', error);
     }
   };
 
@@ -118,9 +118,7 @@ class PostService {
     return result;
   };
   addSwapComment = async (userId, swapId, commentText) => {
-    console.log('Comment: ', commentText);
-    console.log('swapId: ', swapId);
-    console.log('userId: ', userId);
+  
     let commentData = new FormData();
     commentData.append('commentText', commentText);
     const result = await authAxios.post(
@@ -140,7 +138,7 @@ class PostService {
     formData.append('content', content.text);
 
     if (content.images.length !== 0) {
-      console.log('Post Images', content.images);
+
 
       content.images.forEach(image => {
         const splitPathArr = image.split('/');
@@ -156,7 +154,7 @@ class PostService {
     if (content.groupId) {
       formData.append('groupid', content.groupId);
     }
-    console.log('Creating post: ', formData);
+
 
     return formData;
   };

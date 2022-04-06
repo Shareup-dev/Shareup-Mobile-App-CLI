@@ -65,9 +65,7 @@ export default function ChatTestScreen({ navigation, route }) {
       },
     ]);
 
-    console.log("Screen hight: ", Dimensions.get("window").height);
 
-    console.log("keyboard Hight:", keyboardHight);
   }, [keyboardHight]);
 
   const onSend = useCallback((messages = []) => {

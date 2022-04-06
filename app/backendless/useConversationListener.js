@@ -10,7 +10,7 @@ export default function useConversationListener() {
     conversation.getConversations(userId);
   };
 
-  const onError = (error) => console.log("An error has occurred /", error);
+  const onError = (error) => console.error("An error has occurred /", error);
 
   const addConversationListener = (userId) => {
     conversationEventHandler.addUpdateListener(
@@ -21,7 +21,7 @@ export default function useConversationListener() {
 
   const removeConversationListener = () => {
     conversationEventHandler.removeUpdateListener();
-    console.log("Listener Removed");
+
   };
 
   return {

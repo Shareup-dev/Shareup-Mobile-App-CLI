@@ -29,7 +29,7 @@ export default function SwapScreen({navigation, route}) {
   //       swapPostId: route.params?.swapPostId,
   //     });
   //   } catch (error) {
-  //     console.log("Error reading an image", error);
+  //  
   //   }
   // };
   return (

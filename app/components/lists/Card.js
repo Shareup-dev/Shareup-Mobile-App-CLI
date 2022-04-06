@@ -7,7 +7,7 @@ import colors from '../../config/colors';
 import defaultStyles from '../../config/styles';
 import authContext from '../../authContext';
 import UserService from '../../services/user.service';
-import PostService from '../../services/old/PostService';
+import PostService from '../../services/post.service';
 
 import PostOptionDrawer from '../drawers/PostOptionsDrawer';
 import fileStorage from '../../config/fileStorage';
@@ -35,6 +35,7 @@ export default function Card({
   navigation,
   postType,
 }) {
+  console.log("PostData.....:",postData)
   const {userState} = useContext(authContext);
   const options = [
     {
@@ -140,12 +141,12 @@ export default function Card({
   const [sliderWidth, setSliderWidth] = useState();
 
   const loadImages = () => {
-    console.log("LoadImages",postData.media)
+
     if (postData.media?.length !== 0) {
       setImages(postData.media?.map(image => fileStorage.baseUrl + image.media + 'g'));
     }
   };
-  console.log("images",images)
+
   const checkIfLiked = () => {
     const result = postData.reactions.filter(reaction => reaction.user.id == user.id);
     if (result.length > 0) {
@@ -154,22 +155,22 @@ export default function Card({
   };
 
   const handleReactions = async () => {
-    PostService.likePost(user.id, postData.id)
+    PostService.likePost(user.id, postData.id,"like")
     .then (res => {
       setIsUserLiked(!isUserLiked)
-      console.log("LikePosts",res)})//need to get likePostIds 
-    .catch(e => console.log(e))
+      })//need to get likePostIds 
+    .catch(e => console.error(e))
     reloadPost();
   };
 
   // rerenders the post when interaction
   const reloadPost = async () => {
-    PostService.getPostById(postData.id)
+    PostService.getPostByPostId(postData.id)
     .then(res => {
       setComments(res.data.comments)
       setNumberOfComments(res.data.comments.length);
       setNumberOfReactions(res.data.reactions.length);})
-    .catch(e => console.log(e))
+    .catch(e => console.error(e))
     
   };
 

@@ -11,7 +11,7 @@ const ReelPlayer = ({route}) => {
 
   const [activityIndicator, setActivityIndicator] = useState(true);
 
-  console.log('video', fileStorage.baseUrl + reelVideo);
+
 
   return (
     <Screen>

@@ -9,7 +9,7 @@ import store from "../redux/store";
 import { swapedImagesAction } from "../redux/swapedImages";
 
 const ShippingAddress = ({ navigation, route }) => {
-  console.log("swapedPostId shipping: ", route.params.swapedPostId);
+
   return (
     <Screen>
       <Header

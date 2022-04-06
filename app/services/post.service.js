@@ -6,7 +6,6 @@ import AuthAxios from './authAxios';
 class PostService {
   getNewsFeed = email =>
     AuthAxios.get(`newsFeed/${email}`)
-
   createPost = (uid,data) => 
      AuthAxios.post(`posts/${uid}`,data,config)
   getPostByEmail = email =>
@@ -19,10 +18,10 @@ class PostService {
     AuthAxios.delete(`posts/${postId}`)
   editPost = postId =>
     AuthAxios.put(`posts/${postId}`)
-  likePost = (uid, pid) => 
-    AuthAxios.put(`posts/${uid}/like-unlike/${pid}`)
   getPosts = () => 
     AuthAxios.get(`posts`)
+  likePost = (uid, pid,emoji) => AuthAxios.put(`posts/${uid}/like-unlike/${pid}`, {emoji: emoji});
+  savePost = (uid, pid) => AuthAxios.put(`posts/${uid}/save-unsave/${pid}`);
 
   /******************** COMMENT *******************/
   addComment = (userid, postid, comment) => 
@@ -31,19 +30,19 @@ class PostService {
     AuthAxios.delete(`comment/${commentid}`)
   replay = (uid,commentId,data) =>
     AuthAxios.post(`reply/${uid}/${commentId}`,data)
-  likeUnlikeComment = (uid,cid) =>
-    AuthAxios.put(`comment/${uid}/like-unlike/${cid}`)
+  likeUnlikeComment = (uid,cid,params) =>
+    AuthAxios.put(`comment/${uid}/like-unlike/${cid}`,params)
   editComment = (cid) => 
     AuthAxios.put(`comment/Edit_comment/${cid}`)
 }
 const config = {
   onUploadProgress: progressEvent => {
     progress = (progressEvent.loaded / progressEvent.total) * 50;
-    console.log(progressEvent.loaded)
+
   },
   onDownloadProgress: progressEvent => {
     progress = 50 + (progressEvent.loaded / progressEvent.total) * 50;
-    console.log(progress);
+
   },
 }
 export default new PostService();

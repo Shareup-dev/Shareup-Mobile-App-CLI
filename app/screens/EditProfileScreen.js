@@ -56,7 +56,7 @@ export default function EditProfileScreen({navigation}) {
   // };
 
   async function EditProfileImagw() {
-    console.log(user.email);
+   
 
     const formData = new FormData();
     formData.append('profilePicture', {
@@ -65,10 +65,10 @@ export default function EditProfileScreen({navigation}) {
       uri: imageFile.uri,
     });
 
-    console.log(formData);
+
     await UserService.uploadProfilePicture(user.email, formData).then(
       async res => {
-        console.log(res.data);
+
         if (res.data) {
           setUser(res.data);
           await EncryptedStorage.setItem('user', JSON.stringify(res.data));
@@ -80,7 +80,7 @@ export default function EditProfileScreen({navigation}) {
   async function EditUser() {
     let storedUser2 = await UserService.editProfile(user.email, user).then(
       async res => {
-        console.log(res.data);
+    
         if (res.data) {
           setUser(res.data);
           await EncryptedStorage.setItem('user', JSON.stringify(res.data));
@@ -102,7 +102,7 @@ export default function EditProfileScreen({navigation}) {
   // getUser();
 
   function sendValues(enteredBio) {
-    console.log(enteredBio);
+  
   }
   function callFun() {
     // addImage();
@@ -142,7 +142,7 @@ export default function EditProfileScreen({navigation}) {
             onAdd={() => {
               user.profilePicturePath = imageVal;
               EditProfileImagw();
-              console.log('Edit Profile ');
+        
             }}>
             <TouchableOpacity onPress={callFun}>
               <Image
@@ -182,7 +182,7 @@ export default function EditProfileScreen({navigation}) {
               user.hometown = enteredhometown;
               user.relationshipstatus = enteredRelation;
               EditUser();
-              console.log('Details ');
+         
             }}>
             <TextField
               placeholder="Current town / city"
@@ -215,7 +215,7 @@ export default function EditProfileScreen({navigation}) {
             onAdd={() => {
               user.interests = enteredinterests;
               EditUser();
-              console.log('Hobbies ');
+       
             }}>
             <TextInput
               placeholder="Add your hobbies..."

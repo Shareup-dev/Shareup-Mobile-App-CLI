@@ -41,7 +41,7 @@ export default function ImageInput({imageUri, onChangeImage, isSwap}) {
       });
       if (!result.cancelled) onChangeImage(result.uri);
     } catch (error) {
-      console.log('Error reading an image', error);
+      console.error('Error reading an image', error);
     }
   };
 

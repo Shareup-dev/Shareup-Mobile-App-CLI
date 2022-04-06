@@ -37,7 +37,7 @@ export default function SentRequests({navigation}) {
     UserService.getFriendRequestSent(userState?.userData?.email).then(resp => {
       setSentto(resp.data);
       resp.data.forEach(request => {
-        console.log('send Request from: ', request.firstName);
+
       });
     });
     }
@@ -45,14 +45,14 @@ export default function SentRequests({navigation}) {
   }, [fetch]);
  
   const redirectToProfile = () => {
-    console.log(sentto)
+
   }
   const onCancelRequest = friend => {
     sentto = sentto.filter(dost => dost.email !== friend.email);
     //store.dispatch(sentRequestsActions.setList(sentto));
     UserService.declineFriendRequest(userState?.userData?.id, friend.id).then(
       resp => {
-        console.log('unsend resp: ', resp.data);
+
       },
     );
     setFetch(true)

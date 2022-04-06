@@ -17,7 +17,7 @@ export default function useImagesPicker() {
       setFile(result.assets);
       return result.assets;
     } catch (error) {
-      console.log("Error reading an image", error);
+      console.error("Error reading an image", error);
     }
   };
 

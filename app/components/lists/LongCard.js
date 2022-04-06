@@ -15,7 +15,7 @@ export default function LongCard({
   subTitle,
   navigation,
 }) {
-  // console.log(navigation);
+
   return (
     <View style={[styles.container, style]}>
       <Image
@@ -31,8 +31,7 @@ export default function LongCard({
         {subTitle && (
           <View style={styles.privacyBadge}>
             <Icon
-              backgroundColor={colors.lighterGray}
-              type={"Ionicons"}
+              backgroundColor={colors.lighterGray}           
               size={30}
               type={subTitle === "Public" ? "Entypo" : "Ionicons"}
               name={subTitle === "Public" ? "globe" : "lock-closed"}

@@ -23,7 +23,7 @@ let authAxios = null;
 const authenticate = async () => {
   await AuthService.getCurrentUser().then(
     res => {
-      // console.log(res.jwt + "  jwt recieved in authenticate")
+
       authAxios = axios.create({
         baseURL: baseURL,
         headers: {
@@ -33,7 +33,7 @@ const authenticate = async () => {
       });
     },
     error => {
-      console.log(error);
+      console.error(error);
     },
   );
 };
@@ -46,7 +46,7 @@ class FriendService {
       const result = await authAxios.get('/friends/' + email);
       return result;
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

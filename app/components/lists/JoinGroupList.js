@@ -33,7 +33,7 @@ export default function JoinGroupList({props, navigation}) {
     const fetchGroups = () => {
       GroupService.groupSuggestion(userData.id)
         .then(res => setallGroups(res.data))
-        .catch(e => console.log(e.message));
+        .catch(e => console.error(e.message));
     };
     fetchGroups();
   }, []);

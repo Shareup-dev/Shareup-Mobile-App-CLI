@@ -16,7 +16,7 @@ export default useAuth = () => {
   const logOut = () => {
     // setUser(null);
     authStorage.removeToken();
-    console.log('logged out in useAuth');
+
     EncryptedStorage.removeItem('user');
   };
 
