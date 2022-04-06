@@ -27,12 +27,11 @@ export default function CommentsScreen({navigation, route}) {
   const [refreshing, setRefreshing] = useState(false);
   const {userState} = useContext(AuthContext);
   //const [frmReply,setFrmReply] = useState(fromReply)
-  console.log('swapId: ', swapId);
+
   const handleCancel = () => {
     navigation.goBack();
   };
-  console.log('comment',comments)
-  console.log('commentContent',commentContent)
+
   const reply = [
     {
         "id": 1648458212510,
@@ -97,17 +96,17 @@ export default function CommentsScreen({navigation, route}) {
 
   const hideReply = () => {
     
-    console.log("reply",fromReply)
+
     //<CommentsScreen route={{params: { comments: reply, userId: comment.user.id, commendId: comment.id, postType: postType, swapId: swapId, fromReply:true }}}/>
   }
   const handleAddComment = async () => {
     console.log("hereee!!!!!!")
     if (isReply){
       if (postType === 'swapPost') {
-      console.log('it is Swap');
+   
       const comment = {content: commentContent};
       PostService.addSwapComment(userState?.userData?.id, swapId, comment.content).then(resp => {
-        console.log('added swap comment success: ', resp.data);
+    
         refreshComments();
         setCommentContent('');
         commentTextFieldRef.current.clear();
@@ -115,9 +114,14 @@ export default function CommentsScreen({navigation, route}) {
         // scrollToListBottom();
       });
     } else {
+
       console.log("hereee!!!!!!")
       const reply = {reply: commentContent};
       console.log('Making comment: ', userId, commentId, reply);
+
+      const comment = {content: commentContent};
+
+
       if (commentContent !== '') {
         PostService.replay(userState?.userData?.id, commentId, reply)
         .then(res => {
@@ -126,17 +130,17 @@ export default function CommentsScreen({navigation, route}) {
           commentTextFieldRef.current.clear();
            Keyboard.dismiss();
         })
-        .catch(e => console.log(e))
+        .catch(e => console.error(e))
         
         // scrollToListBottom();
       }
     }
   }else{
     if (postType === 'swapPost') {
-      console.log('it is Swap');
+
       const comment = {content: commentContent};
       PostService.addSwapComment(userState?.userData?.id, swapId, comment.content).then(resp => {
-        console.log('added swap comment success: ', resp.data);
+  
         refreshComments();
         setCommentContent('');
         commentTextFieldRef.current.clear();
@@ -146,7 +150,7 @@ export default function CommentsScreen({navigation, route}) {
     } else {
       console.log("hereeee")
       const comment = {content: commentContent};
-      console.log('Making comment: ', userId, postId, comment);
+  
       if (commentContent !== '') {
         PostService.addComment(userState?.userData?.id, postId, comment)
         .then(res => {
@@ -155,7 +159,7 @@ export default function CommentsScreen({navigation, route}) {
           commentTextFieldRef.current.clear();
            Keyboard.dismiss();
         })
-        .catch(e => console.log(e))
+        .catch(e => console.error(e))
         
         // scrollToListBottom();
       }
@@ -177,11 +181,11 @@ export default function CommentsScreen({navigation, route}) {
   
   const handleDeleteComment= (itemId,isHide)=> {
     if (postType === 'swapPost') {
-      console.log('it is Swap');
+
       const comment = {content: commentContent};
       
       PostService.addSwapComment(userId, swapId, comment.content).then(resp => {
-        console.log('added swap comment success: ', resp.data);
+    
         refreshComments();
         setCommentContent('');
         commentTextFieldRef.current.clear();
@@ -190,14 +194,14 @@ export default function CommentsScreen({navigation, route}) {
       });
     } else {
       if(!isHide){
-      console.log('deleting comment: ', itemId);
+
         PostService.deleteComment(itemId)
         .then(res => {
-          console.log(res.data)
+     
           refreshComments();
            Keyboard.dismiss();
         })
-        .catch(e => console.log(e))
+        .catch(e => console.error(e))
       }else{
         
       }
@@ -208,19 +212,24 @@ export default function CommentsScreen({navigation, route}) {
   const refreshComments = async () => {
     setRefreshing(true);
     if (postType !== 'swapPost') {
-      console.log('if NOT swapPost');
+
       PostService.getPostByPostId(postId)
       .then(res => {
+
         console.log("response",res.data)
+
+    
+       
+
         setCommentsList(res.data.comments);
        
         
        // setCommentsList(res.data.comments);
       })
-      .catch(e => console.log(e))
+      .catch(e => console.error(e))
       
     } else {
-      console.log('if swapPost');
+
       const response = await PostService.getSwapById(swapId);
       setCommentsList(response.data.comments);
     }
@@ -234,6 +243,7 @@ export default function CommentsScreen({navigation, route}) {
   const scrollToListBottom = () => {
     commentsListRef.current.scrollToEnd({animated: true});
   };
+
   const handleReactions = async (cid,isUserLiked) => {
     console.log(userState?.userData?.id,cid,isUserLiked)
     const params = ({reaction:isUserLiked})
@@ -246,7 +256,7 @@ export default function CommentsScreen({navigation, route}) {
     //refreshComments();
   };
 
-  console.log("isReply",fromReply)
+
   return !fromReply ? (  
     <Screen style={styles.container}>
        <Header

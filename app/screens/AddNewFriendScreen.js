@@ -38,15 +38,12 @@ export default function AddNewFriendScreen({navigation}) {
   }, []);
 
   const onSendRequest = recievedUser => {
-    console.log(
-      'user received in addNewFriendsScreen: ',
-      recievedUser.firstName,
-    );
+ 
     if (!recievedUser.firstName) {
       return;
     }
     if (sentto.filter(user => user.email === recievedUser.email)[0]) {
-      console.log('already sent to this user');
+   
       return;
     }
     setSentto(previousState => {

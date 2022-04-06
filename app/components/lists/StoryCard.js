@@ -6,14 +6,12 @@ import routes from '../../navigation/routes';
 
 import fileStorage from '../../config/fileStorage';
 
-export default function StoryCard({style, navigation, image, data,userName}) {
+export default function StoryCard({style, navigation, data}) {
   const addStoryHandler = () => {
-    navigation.navigate(routes.STORY_VIEW_SCREEN, {
-      image,
-      userName,
-      data
-    });
+    navigation.navigate(routes.STORY_VIEW_SCREEN, data);
   };
+  const {image, user} = data[0];
+
   return (
     <TouchableOpacity onPress={addStoryHandler} activeOpacity={0.8}>
       <View style={[styles.container, style]}>
@@ -21,7 +19,7 @@ export default function StoryCard({style, navigation, image, data,userName}) {
           source={{uri: fileStorage.baseUrl + image}}
           style={{height: '100%', width: '100%'}}
         />
-        <Text style={styles.userName}>{userName}</Text>
+        <Text style={styles.userName}>{user?.firstName}</Text>
       </View>
     </TouchableOpacity>
   );

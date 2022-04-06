@@ -32,10 +32,9 @@ export default function FriendsList({navigation, friends, loading, refresh}) {
         item.id,
       );
 
-      console.log('Created Conversation');
     }
 
-    console.log('CurrentConversation: ', currentConversation);
+ 
 
     navigation.navigate(routes.CHAT_ROOM, {
       contact: item,

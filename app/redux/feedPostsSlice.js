@@ -8,7 +8,6 @@ const feedPostsSlice = createSlice({
       return (previousState = newFeedPost.payload);
     },
     addFeedPost: (previousFeedPosts, newFeedPost) => {
-      console.log("newFeedPost: ", newFeedPost);
       let allFeedPosts = [newFeedPost.payload, ...previousFeedPosts];
       return (previousFeedPosts = allFeedPosts);
     },

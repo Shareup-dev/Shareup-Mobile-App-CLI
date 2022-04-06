@@ -62,7 +62,7 @@ export default function ShareupAuthentication() {
         }),
       )
       .catch(e => {
-        console.log(e.message);
+
         dispatch({
           type: actions.CLEAR_STATE,
         });

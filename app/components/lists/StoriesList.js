@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, StyleSheet, FlatList} from 'react-native';
-import {useSelector} from 'react-redux';
+import {View, StyleSheet, SectionList, Text} from 'react-native';
 import AuthContext from '../../authContext';
 import storiesService from '../../services/story.service';
 import CreateStoryCard from './CreateStoryCard';
@@ -8,38 +7,49 @@ import StoryCard from './StoryCard';
 
 export default function StoriesList({navigation, style}) {
   const {
-    userState: {userData},
+    userState: {userData, username},
   } = useContext(AuthContext);
   const [stories, setStories] = useState([]);
 
   useEffect(() => {
-    const fetchStories = async () => {
-      storiesService
-        .getStories()
-        .then(({data}) => {
-          setStories(data);
-        })
-        .catch(e => console.log(e.message));
+    const fetchStories = () => {
+      Promise.all([
+        storiesService.getStoriesByEmail(username),
+        storiesService.getStoriesOfFriends(userData.id),
+      ])
+        .then(res =>
+          setStories([
+            {
+              title: 'my stories',
+              data: [res[0].data],
+            },
+            {
+              title: 'friends stories',
+              data: [],
+            },
+          ]),
+        )
+        .catch(e => console.error(e.message));
     };
     fetchStories();
   }, []);
 
+
+
   return (
     <View style={[styles.container, style]}>
       <CreateStoryCard navigation={navigation} />
-      <FlatList
-        data={stories}
+      <SectionList
+        sections={stories}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={(item, i) => i.toString()}
         style={styles.list}
         renderItem={({item}) => {
           return (
             <StoryCard
-              image={item.storiesImagePath}
-              data={stories}
+              data={item}
               navigation={navigation}
-              userName={item?.user?.firstName + ' ' + item?.user?.lastName}
             />
           );
         }}

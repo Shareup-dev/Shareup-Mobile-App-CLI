@@ -158,7 +158,7 @@ export default function SwapScreen({navigation}) {
   }, []);
 
   useEffect(() => {
-    // console.log("getting reels");
+
     ReelService.getReels().then(reelsResp => {
       reelsResp.data.forEach(reel => {
         reel.thumbnail =

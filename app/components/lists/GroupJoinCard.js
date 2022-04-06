@@ -28,10 +28,7 @@ export default function GroupJoinCard({item, navigation}) {
   const [joinTitleColor, setJoinTitleColor] = useState(colors.white);
 
   const handleJoin = () => {
-    console.log('Join this group with id: ', id);
-    GroupService.joinGroup(loggedInUser.id, id).then(resp => {
-      console.log('Join group resp: ', resp.data);
-    });
+    GroupService.joinGroup(loggedInUser.id, id).then(resp => resp.data);
     if (joinTitle == 'Join') {
       setJoinBackGroundColor(colors.lighterGray);
       setJoinTitle('Leave');
@@ -59,7 +56,7 @@ export default function GroupJoinCard({item, navigation}) {
       )}
       <TouchableOpacity
         onPress={() => {
-          console.log('navigating to gropu_feed');
+   
           navigation.navigate(routes.GROUP_FEED, item);
         }}>
         <Text numberOfLines={1} style={styles.name}>

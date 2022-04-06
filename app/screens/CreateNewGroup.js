@@ -37,7 +37,7 @@ export default function CreateNewGroup({navigation}) {
       privacySetting: privacy,
     })
       .then(res => navigation.navigate(routes.SET_GROUP_PHOTO, res.data))
-      .catch(e => console.log(e))
+      .catch(e => console.error(e))
       .finally(_ => setLoading(false));
   };
 

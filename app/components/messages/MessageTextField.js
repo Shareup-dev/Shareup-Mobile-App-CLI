@@ -20,7 +20,7 @@ export default function MessageTextField({
 
   const onChangeText = text => {
     setMessage(text);
-    console.log(message);
+
   };
 
   const handelSendMessage = async () => {

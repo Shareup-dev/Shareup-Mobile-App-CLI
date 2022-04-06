@@ -17,7 +17,7 @@ const authenticate = async () => {
       });
     },
     error => {
-      console.log(error);
+      console.error(error);
     },
   );
 };
@@ -29,7 +29,7 @@ class GroupService {
       const result = await authAxios.post(`/${uid}/create`, formdata);
       return result;
     } catch (error) {
-      console.log('An error occured while creating group: ', error);
+      console.error('An error occured while creating group: ', error);
     }
   };
 
@@ -38,7 +38,7 @@ class GroupService {
       const result = await authAxios.post(`/ ${uid} / create`, groupDetails);
       return result;
     } catch (error) {
-      console.log('An error occured while creating group: ', error);
+
       return false;
     }
   };
@@ -64,10 +64,7 @@ class GroupService {
     return result;
   };
   getUserGroups = async email => {
-    console.log(
-      'Sending request to: ',
-      `${settings.apiUrl}/api/v1/${email}/groups`,
-    );
+ 
     const result = await authAxios.get(
       `${settings.apiUrl}/api/v1/${email}/groups`,
     );

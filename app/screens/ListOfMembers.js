@@ -78,7 +78,7 @@ export default function ListOfMembers({navigation, route}) {
           ],
         })),
       )
-      .catch(e => console.log(e))
+      .catch(e => console.error(e))
       .finally(_ => setMembers(prev => ({...prev, loading: 2})));
   };
 
@@ -91,7 +91,7 @@ export default function ListOfMembers({navigation, route}) {
           fetchData();
         }
       })
-      .catch(e => console.log(e));
+      .catch(e => console.error(e));
   };
 
   const removeFromGroup = _ => {

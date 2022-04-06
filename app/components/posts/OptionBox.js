@@ -7,9 +7,7 @@ import colors from '../../config/colors';
 import Icon from '../Icon';
 
 export default function OptionBox({currentOption, onPress}) {
-  useEffect(() => {
-    console.log('Current Option:', currentOption);
-  }, [currentOption]);
+
 
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>

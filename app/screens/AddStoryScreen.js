@@ -105,7 +105,7 @@ export default function AddStoryScreen({navigation}) {
       setStory(result.assets[0]);
       setScreen('view');
     } catch (error) {
-      console.log('Error reading an image', error);
+      console.error('Error reading an image', error);
     }
   };
 
@@ -130,10 +130,8 @@ export default function AddStoryScreen({navigation}) {
 
     storyService
       .addStory(userData.id, storyData)
-      .then(res => {
-        console.log(res);
-      })
-      .catch(e => console.log(e.message))
+      .then(res => res)
+      .catch(e => console.error(e.message))
       .finally(_ => setIsUploading(false));
   };
 
@@ -197,12 +195,12 @@ export default function AddStoryScreen({navigation}) {
           {mode === 'photo' ? (
             <Image
               source={story}
-              resizeMode={'cover'}
-              style={{height: '100%', width: '100%', zIndex: -10}}
+              resizeMode={'contain'}
+              style={{height: '100%', width: '100%', zIndex: -10,backgroundColor:'#000'}}
             />
           ) : (
             <Video
-              resizeMode={'cover'}
+              resizeMode={'contain'}
               style={[styles.backgroundVideo]}
               source={{uri: story.uri}}
               repeat

@@ -49,7 +49,7 @@ const GroupFeedScreen = ({navigation, route}) => {
           setGroup(res[0].data);
           setIsMember(res[1].data);
         })
-        .catch(e => console.log(e))
+        .catch(e => console.error(e))
         .finally(_ => setLoading(false));
     };
     getGroupInfo();
@@ -197,11 +197,12 @@ const GroupFeedScreen = ({navigation, route}) => {
                     </View>
                     <TouchableOpacity
                       activeOpacity={0.6}
+                      disabled={!isMember && !checkOwner()}
                       onPress={() => {
                         navigation.navigate(routes.LIST_OF_MEMBERS, groupData);
                       }}>
                       <Text style={{fontWeight: '600', fontSize: 15}}>
-                        Members{' '}
+                        Members
                       </Text>
                     </TouchableOpacity>
                   </View>

@@ -140,12 +140,12 @@ export default function Card({
   const [sliderWidth, setSliderWidth] = useState();
 
   const loadImages = () => {
-    console.log("LoadImages",postData.media)
+
     if (postData.media?.length !== 0) {
       setImages(postData.media?.map(image => fileStorage.baseUrl + image.media + 'g'));
     }
   };
-  console.log("images",images)
+
   const checkIfLiked = () => {
     const result = postData.reactions.filter(reaction => reaction.user.id == user.id);
     if (result.length > 0) {
@@ -157,8 +157,8 @@ export default function Card({
     PostService.likePost(user.id, postData.id)
     .then (res => {
       setIsUserLiked(!isUserLiked)
-      console.log("LikePosts",res)})//need to get likePostIds 
-    .catch(e => console.log(e))
+      })//need to get likePostIds 
+    .catch(e => console.error(e))
     reloadPost();
   };
 
@@ -169,7 +169,7 @@ export default function Card({
       setComments(res.data.comments)
       setNumberOfComments(res.data.comments.length);
       setNumberOfReactions(res.data.reactions.length);})
-    .catch(e => console.log(e))
+    .catch(e => console.error(e))
     
   };
 

@@ -80,7 +80,7 @@ export default useMessages = (channelName) => {
       ).loadRelations(conversationId, loadRelationsQueryBuilder);
       store.dispatch(messagesAction.updateMessagesList(nextPageMessages));
 
-      console.log("Next Page Messages >>> ", nextPageMessages);
+   
 
       if (nextPageMessages.length === 0) hasNext = false;
     }
@@ -123,7 +123,7 @@ export default useMessages = (channelName) => {
       channelName,
       message,
       publishOptions
-    ).catch((err) => console.log(err));
+    ).catch((err) => console.error(err));
 
     const response = await Backendless.Data.of(TABLE_CHAT_HISTORY).save({
       messageData: message,
