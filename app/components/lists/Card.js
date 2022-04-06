@@ -73,7 +73,7 @@ export default function Card({
       },
     },
     {
-      title: userState?.userData?.id !== user.id ? 'Unfollow' : '',
+      title: userState?.userData?.id !== user?.id ? 'Unfollow' : '',
       icon: {
         image: require('../../assets/post-options-icons/unfollow-icon.png'),
       },
@@ -82,12 +82,12 @@ export default function Card({
       },
     },
     {
-      title: userState?.userData?.id !== user.id ? <Text style={{color:colors.dark}}>Report</Text> : <Text style={{color:colors.red}}>Delete</Text>,
+      title: userState?.userData?.id !== user?.id ? <Text style={{color:colors.dark}}>Report</Text> : <Text style={{color:colors.red}}>Delete</Text>,
       icon: {
-        image:  userState?.userData?.id !== user.id ? require('../../assets/post-options-icons/report-icon.png'): require('../../assets/post-options-icons/delete-red-icon.png'),
+        image:  userState?.userData?.id !== user?.id ? require('../../assets/post-options-icons/report-icon.png'): require('../../assets/post-options-icons/delete-red-icon.png'),
       },
       onPress: () => {
-        userState?.userData?.id !== user.id ? alert('Report'): showDeleteAlert();
+        userState?.userData?.id !== user?.id ? alert('Report'): showDeleteAlert();
       },
     },
   ];
@@ -130,7 +130,7 @@ export default function Card({
     }, [postData.id]),
   );
 
-  const [numberOfReactions, setNumberOfReactions] = useState(postData.reactions.length);
+  const [numberOfReactions, setNumberOfReactions] = useState(postData?.reactions?.length);
   const [numberOfComments, setNumberOfComments] = useState(postData.comments.length);
   const [comment,setComments] =useState(postData.comments)
   const [isUserLiked, setIsUserLiked] = useState(false);

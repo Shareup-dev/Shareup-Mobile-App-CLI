@@ -100,7 +100,6 @@ export default function CommentsScreen({navigation, route}) {
     //<CommentsScreen route={{params: { comments: reply, userId: comment.user.id, commendId: comment.id, postType: postType, swapId: swapId, fromReply:true }}}/>
   }
   const handleAddComment = async () => {
-    console.log("hereee!!!!!!")
     if (isReply){
       if (postType === 'swapPost') {
    
@@ -115,9 +114,7 @@ export default function CommentsScreen({navigation, route}) {
       });
     } else {
 
-      console.log("hereee!!!!!!")
       const reply = {reply: commentContent};
-      console.log('Making comment: ', userId, commentId, reply);
 
       const comment = {content: commentContent};
 
@@ -148,7 +145,6 @@ export default function CommentsScreen({navigation, route}) {
         // scrollToListBottom();
       });
     } else {
-      console.log("hereeee")
       const comment = {content: commentContent};
   
       if (commentContent !== '') {
@@ -216,13 +212,7 @@ export default function CommentsScreen({navigation, route}) {
       PostService.getPostByPostId(postId)
       .then(res => {
 
-        console.log("response",res.data)
-
-    
-       
-
         setCommentsList(res.data.comments);
-       
         
        // setCommentsList(res.data.comments);
       })
@@ -245,14 +235,12 @@ export default function CommentsScreen({navigation, route}) {
   };
 
   const handleReactions = async (cid,isUserLiked) => {
-    console.log(userState?.userData?.id,cid,isUserLiked)
     const params = ({reaction:isUserLiked})
     PostService.likeUnlikeComment(userState?.userData?.id, cid,params)
     .then (res => {
-      console.log(res.data)
       //setIsUserLiked(!isUserLiked)
       })//need to get likePostIds 
-    .catch(e => console.log(e))
+    .catch(e => console.error(e))
     //refreshComments();
   };
 

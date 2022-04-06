@@ -32,7 +32,6 @@ export default function NewsFeedScreen({navigation, route}) {
   const loadNews = async () => {
     postService.getNewsFeed(userState?.userData?.email)
     .then(res =>{ 
-      console.log("News Feed Data",res.data)
       const postArray = res.data.reverse();
       setPosts(postArray)
     })
@@ -49,7 +48,7 @@ export default function NewsFeedScreen({navigation, route}) {
         navigation={navigation}
         route={route}
         item={item}
-        userId={item.user.id}
+        userId={item?.user?.id}
       />
     ) : (
       <Card
@@ -98,7 +97,8 @@ return (
     <Screen style={styles.container} statusPadding={false}>
       <FlatList
         initialNumToRender={10}
-        data={posts}
+        // data={posts}
+        data={[]}
         ListHeaderComponent={ListHeader}
         ListFooterComponent={ActivityIndicatorComponent}
         keyExtractor={post => post.id.toString()}

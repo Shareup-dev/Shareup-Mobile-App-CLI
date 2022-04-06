@@ -17,7 +17,7 @@ export default function StoryCard({style, navigation, data}) {
       <View style={[styles.container, style]}>
         <Image
           source={{uri: fileStorage.baseUrl + stories_List[1]?.image}}
-          style={{height: '100%', width: '100%'}}
+          style={{height: '100%', width: '100%',backgroundColor:'#34343460'}}
         />
         <Text style={styles.userName}>{firstName}</Text>
       </View>
