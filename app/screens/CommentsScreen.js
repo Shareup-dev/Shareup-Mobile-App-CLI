@@ -12,6 +12,8 @@ import { prepareDataForValidation } from 'formik';
 import colors from "../config/colors";
 import AuthContext from '../authContext';
 import { color } from 'react-native-reanimated';
+import EnhancedOptionsDrawer from '../components/drawers/EnhancedOptionsDrawer';
+import { is } from 'immer/dist/internal';
 //import UserService from '../services/UserService';
 export default function CommentsScreen({navigation, route}) {
   const {comments, userId, postId, setNumberOfComments, postType, swapId,fromReply} =
@@ -28,9 +30,30 @@ export default function CommentsScreen({navigation, route}) {
   const {userState} = useContext(AuthContext);
   //const [frmReply,setFrmReply] = useState(fromReply)
 
+  const [isOptionsVisible,setIsOptionsVisible] = useState(false);
+  const options = [ {
+    title:  'Edit',
+    icon: {
+      image: require('../assets/post-options-icons/unfollow-icon.png'),
+    },
+    onPress: () => {
+      alert('Edit');
+    },
+  },
+  {
+    title:<Text style={{color:colors.red}}>Delete</Text>,
+    icon: {
+      image: require('../assets/post-options-icons/delete-red-icon.png'),
+    },
+    onPress: () => {
+       alert('Delete');
+    },
+  },
+];
   const handleCancel = () => {
     navigation.goBack();
   };
+  
 
   const reply = [
     {
@@ -325,9 +348,19 @@ export default function CommentsScreen({navigation, route}) {
          reply = {reply}
          postType={postType}
          fromReply={fromReply}
+         isOptionVisible = {isOptionsVisible}
+         setIsOptionVisible = {setIsOptionsVisible}
        />
      )}
    />
+   <EnhancedOptionsDrawer
+          //source={'comment'}
+         // postId={comment.id}
+         // postText={comment.content}
+          options={options}
+          isVisible={isOptionsVisible}
+          setIsVisible={setIsOptionsVisible}
+        />
  </Screen>);
 }
 
