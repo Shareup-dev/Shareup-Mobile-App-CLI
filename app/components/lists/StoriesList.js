@@ -18,16 +18,17 @@ export default function StoriesList({navigation, style}) {
         storiesService.getStoriesOfFriends(userData.id),
       ])
         .then(res =>
-          setStories([
+         { setStories([
             {
               title: 'my stories',
-              data: [res[0].data],
+              data: [],
             },
             {
               title: 'friends stories',
-              data: [],
+              data: res[1].data,
             },
-          ]),
+          ]);
+        }
         )
         .catch(e => console.error(e.message));
     };

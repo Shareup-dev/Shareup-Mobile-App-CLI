@@ -117,7 +117,7 @@ export default function AddStoryScreen({navigation}) {
     setIsUploading(true);
 
     let storyData = new FormData();
-
+    
     const uniId = new Date().valueOf();
     storyData.append('stryfiles', {
       name:
@@ -200,7 +200,7 @@ export default function AddStoryScreen({navigation}) {
             />
           ) : (
             <Video
-              resizeMode={'contain'}
+              resizeMode={'cover'}
               style={[styles.backgroundVideo]}
               source={{uri: story.uri}}
               repeat

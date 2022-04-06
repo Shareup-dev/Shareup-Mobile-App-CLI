@@ -48,7 +48,7 @@ export default function CameraBottomActions({
       flexDirection: 'row',
       justifyContent: 'space-between',
       position: 'absolute',
-      bottom: 15,
+      bottom: 0,
       zIndex: 1,
       paddingHorizontal: 20,
       height: 120,

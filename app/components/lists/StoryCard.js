@@ -10,16 +10,16 @@ export default function StoryCard({style, navigation, data}) {
   const addStoryHandler = () => {
     navigation.navigate(routes.STORY_VIEW_SCREEN, data);
   };
-  const {image, user} = data[0];
+  const {stories_List, firstName} = data;
 
   return (
     <TouchableOpacity onPress={addStoryHandler} activeOpacity={0.8}>
       <View style={[styles.container, style]}>
         <Image
-          source={{uri: fileStorage.baseUrl + image}}
+          source={{uri: fileStorage.baseUrl + stories_List[1]?.image}}
           style={{height: '100%', width: '100%'}}
         />
-        <Text style={styles.userName}>{user?.firstName}</Text>
+        <Text style={styles.userName}>{firstName}</Text>
       </View>
     </TouchableOpacity>
   );
