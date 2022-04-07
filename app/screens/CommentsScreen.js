@@ -11,8 +11,12 @@ import { prepareDataForValidation } from 'formik';
 import colors from "../config/colors";
 import AuthContext from '../authContext';
 import { color } from 'react-native-reanimated';
+
 import { useFocusEffect } from '@react-navigation/native';
 import postService from '../services/post.service';
+
+import EnhancedOptionsDrawer from '../components/drawers/EnhancedOptionsDrawer';
+
 //import UserService from '../services/UserService';
 
 export default function CommentsScreen({navigation, route}) {
@@ -30,6 +34,7 @@ export default function CommentsScreen({navigation, route}) {
   const [refreshing, setRefreshing] = useState(false);
   const {userState} = useContext(AuthContext);
   //const [frmReply,setFrmReply] = useState(fromReply)
+
  
  
   useFocusEffect(
@@ -50,9 +55,30 @@ const loadComments = async () => {
   })
   .catch(e => console.error(e.message))
 };
+  const [isOptionsVisible,setIsOptionsVisible] = useState(false);
+  const options = [ {
+    title:  'Edit',
+    icon: {
+      image: require('../assets/post-options-icons/unfollow-icon.png'),
+    },
+    onPress: () => {
+      alert('Edit');
+    },
+  },
+  {
+    title:<Text style={{color:colors.red}}>Delete</Text>,
+    icon: {
+      image: require('../assets/post-options-icons/delete-red-icon.png'),
+    },
+    onPress: () => {
+       alert('Delete');
+    },
+  },
+];
   const handleCancel = () => {
     navigation.goBack();
   };
+  
 
   const hideReply = () => {
     
@@ -289,9 +315,19 @@ const loadComments = async () => {
          reply = {replyList}
          postType={postType}
          fromReply={fromReply}
+         isOptionVisible = {isOptionsVisible}
+         setIsOptionVisible = {setIsOptionsVisible}
        />
      )}
    />
+   <EnhancedOptionsDrawer
+          //source={'comment'}
+         // postId={comment.id}
+         // postText={comment.content}
+          options={options}
+          isVisible={isOptionsVisible}
+          setIsVisible={setIsOptionsVisible}
+        />
  </Screen>);
 }
 
