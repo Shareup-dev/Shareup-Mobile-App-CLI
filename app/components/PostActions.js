@@ -45,7 +45,7 @@ const PostActions = ({
     <View style={styles.content}>
       <View style={styles.userInfo}>
         <Image
-          source={{ uri: fileStorage.baseUrl + postData.user.profilePicturePath }}
+          source={{ uri: fileStorage.baseUrl + postData.userdata.profilePicturePath}}
           style={styles.profilePicture}
         />
 
@@ -149,7 +149,7 @@ const PostActions = ({
         </View>
       </View>
 
-      {/* {postData.content !== "" && <Text style={styles.postText}>{postData.content}</Text>} */}
+      {postData.content !== "" && <Text style={styles.postText}>{postData.content}</Text>}
 
       <TouchableOpacity
         style={styles.menuButton}
