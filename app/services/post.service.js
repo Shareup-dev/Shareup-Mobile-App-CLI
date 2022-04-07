@@ -5,7 +5,7 @@ import AuthAxios from './authAxios';
 
 class PostService {
   getNewsFeed = email =>
-    AuthAxios.get(`newsFeed/${email}`)
+    AuthAxios.get(`new_newsFeed/${email}`)
   createPost = (uid,data) => 
      AuthAxios.post(`posts/${uid}`,data,config)
   getPostByEmail = email =>
@@ -34,6 +34,10 @@ class PostService {
     AuthAxios.put(`comment/${uid}/like-unlike/${cid}`,params)
   editComment = (cid) => 
     AuthAxios.put(`comment/Edit_comment/${cid}`)
+  getAllComments = (pid) =>
+    AuthAxios.get(`comment/get_comment/${pid}`)
+  getAllReply = (cid) => 
+    AuthAxios.get(`comment/get_replies/${cid}`)
 }
 const config = {
   onUploadProgress: progressEvent => {

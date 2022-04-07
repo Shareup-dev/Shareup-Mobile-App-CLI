@@ -35,9 +35,12 @@ const PostActions = ({
   const fromReply = false
   const actionsTabSizeRatio = 0.5;
   const [date, setDate] = useState(
-    moment(postData.published, "DD MMMM YYYY hh:mm:ss").fromNow()
+    // moment(postData.published, "DD MMMM YYYY hh:mm:ss").fromNow()
+    null
   );
-console.log("postData....:",postData)
+
+// console.log("postData....:",postData)
+  
   return (
     <View style={styles.content}>
       <View style={styles.userInfo}>
@@ -49,10 +52,14 @@ console.log("postData....:",postData)
         <View style={styles.userNameContainer}>
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate(routes.USER_PROFILE, postData.user.email )
+              navigation.navigate(routes.USER_PROFILE, postData.userdata.email )
             }
           >
-            <Text style={styles.userName}>{postData.user.firstName}</Text>
+
+            <Text style={styles.userName}>{postData.userdata.firstName}</Text>
+
+          
+
           </TouchableOpacity>
 
           <Text style={styles.postDate}>{date}</Text>
@@ -126,7 +133,7 @@ console.log("postData....:",postData)
               navigation.navigate(routes.COMMENTS, {
                 postId,
                 userId,
-                comments,
+                //comments,
                 postType,
                 swapId,
                 fromReply,
@@ -142,7 +149,7 @@ console.log("postData....:",postData)
         </View>
       </View>
 
-      {postData.content !== "" && <Text style={styles.postText}>{postData.content}</Text>}
+      {/* {postData.content !== "" && <Text style={styles.postText}>{postData.content}</Text>} */}
 
       <TouchableOpacity
         style={styles.menuButton}

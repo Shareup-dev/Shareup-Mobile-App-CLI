@@ -1,4 +1,4 @@
-import React, {useState, useRef,useContext} from 'react';
+import React, {useState, useRef,useContext,useCallback} from 'react';
 import {View, StyleSheet, FlatList, Keyboard,Animated,TouchableOpacity,Dimensions,Text} from 'react-native';
 
 import {Header, HeaderCloseIcon, HeaderTitle} from '../components/headers';
@@ -6,20 +6,27 @@ import Screen from '../components/Screen';
 import CommentItem from '../components/comments/CommentItem';
 import CommentTextField from '../components/comments/CommentTextField';
 import EmojiesBar from '../components/comments/EmojiesBar';
-import PostService from '../services/post.service';
 import constants from '../config/constants';
 import { prepareDataForValidation } from 'formik';
 import colors from "../config/colors";
 import AuthContext from '../authContext';
 import { color } from 'react-native-reanimated';
+
+import { useFocusEffect } from '@react-navigation/native';
+import postService from '../services/post.service';
+
+import EnhancedOptionsDrawer from '../components/drawers/EnhancedOptionsDrawer';
+
 //import UserService from '../services/UserService';
+
 export default function CommentsScreen({navigation, route}) {
-  const {comments, userId, postId, setNumberOfComments, postType, swapId,fromReply} =
+  const {userId, postId, setNumberOfComments, postType, swapId,fromReply} =
     route.params;
   const commentsListRef = useRef();
   const commentTextFieldRef = useRef();
   //const [isUserLiked, setIsUserLiked] = useState(false);
-  const [commentsList, setCommentsList] = useState(comments);
+  const [commentsList, setCommentsList] = useState([]);
+  const [replyList,setReplyList] = useState([]);
   const [commentContent, setCommentContent] = useState('');
   const [commentId,setCommentId] = useState('')
   const [isReply,setIsReply] = useState(false)
@@ -28,71 +35,50 @@ export default function CommentsScreen({navigation, route}) {
   const {userState} = useContext(AuthContext);
   //const [frmReply,setFrmReply] = useState(fromReply)
 
+ 
+ 
+  useFocusEffect(
+    useCallback(() => {
+    loadComments();
+    // loadStories();
+    // return setActivityIndicator(false);
+    return;
+  }, [])
+)
+const loadComments = async () => {
+  console.log("postId",postId)
+  postService.getAllComments(postId)
+  .then(res =>{ 
+    console.log("Comment Data",res.data)
+    const commentArray = res.data//.reverse();
+    setCommentsList(commentArray)
+  })
+  .catch(e => console.error(e.message))
+};
+  const [isOptionsVisible,setIsOptionsVisible] = useState(false);
+  const options = [ {
+    title:  'Edit',
+    icon: {
+      image: require('../assets/post-options-icons/unfollow-icon.png'),
+    },
+    onPress: () => {
+      alert('Edit');
+    },
+  },
+  {
+    title:<Text style={{color:colors.red}}>Delete</Text>,
+    icon: {
+      image: require('../assets/post-options-icons/delete-red-icon.png'),
+    },
+    onPress: () => {
+       alert('Delete');
+    },
+  },
+];
   const handleCancel = () => {
     navigation.goBack();
   };
-
-  const reply = [
-    {
-        "id": 1648458212510,
-        "content": "#1 reply",
-        "published": "28 March 2022 12:03:32",
-        "lastEdited": "28 March 2022 12:03:32",
-        "user": {
-            "id": 1648458047559,
-            "email": "woxik36142@f1xm.com",
-            "password": "$2a$10$gOrB0KVRwTiYLhY8xASb9.zNSQxn4JbgzkdHpXbALIR.BXP9X8jYK",
-            "firstName": "UserTwo",
-            "lastName": "Two",
-            "profilePicture": "default.png",
-            "coverPicture": null,
-            "aboutme": null,
-            "job": null,
-            "hometown": null,
-            "currenttown": null,
-            "relationshipstatus": null,
-            "interests": null,
-            "gender": "Female",
-            "verificationCode": null,
-            "profilePicturePath": "/src/main/default.png",
-            "coverPicturePath": null,
-            "numberOfFriends": 0,
-            "numberOfFollowers": 0,
-            "numberOfFollowing": 0,
-            "newUser": true
-        },
-        "commentType": null
-    },
-    {
-      "id": 1648458212511,
-      "content": "#2 reply",
-      "published": "28 March 2022 12:03:32",
-      "lastEdited": "28 March 2022 12:03:32",
-      "user": {
-          "id": 1648458047559,
-          "email": "woxik36142@f1xm.com",
-          "password": "$2a$10$gOrB0KVRwTiYLhY8xASb9.zNSQxn4JbgzkdHpXbALIR.BXP9X8jYK",
-          "firstName": "UserTwo",
-          "lastName": "Two",
-          "profilePicture": "default.png",
-          "coverPicture": null,
-          "aboutme": null,
-          "job": null,
-          "hometown": null,
-          "currenttown": null,
-          "relationshipstatus": null,
-          "interests": null,
-          "gender": "Female",
-          "verificationCode": null,
-          "profilePicturePath": "/src/main/default.png",
-          "coverPicturePath": null,
-          "numberOfFriends": 0,
-          "numberOfFollowers": 0,
-          "numberOfFollowing": 0,
-          "newUser": true
-      },
-      "commentType": null
-  },]
+  
 
   const hideReply = () => {
     
@@ -100,13 +86,11 @@ export default function CommentsScreen({navigation, route}) {
     //<CommentsScreen route={{params: { comments: reply, userId: comment.user.id, commendId: comment.id, postType: postType, swapId: swapId, fromReply:true }}}/>
   }
   const handleAddComment = async () => {
-    console.log("hereee!!!!!!")
+
     if (isReply){
       if (postType === 'swapPost') {
-   
       const comment = {content: commentContent};
-      PostService.addSwapComment(userState?.userData?.id, swapId, comment.content).then(resp => {
-    
+      postService.addSwapComment(userState?.userData?.id, swapId, comment.content).then(resp => {
         refreshComments();
         setCommentContent('');
         commentTextFieldRef.current.clear();
@@ -115,31 +99,27 @@ export default function CommentsScreen({navigation, route}) {
       });
     } else {
 
-      console.log("hereee!!!!!!")
       const reply = {reply: commentContent};
       console.log('Making comment: ', userId, commentId, reply);
 
       const comment = {content: commentContent};
-
-
       if (commentContent !== '') {
-        PostService.replay(userState?.userData?.id, commentId, reply)
+        postService.replay(userState?.userData?.id, commentId, reply)
         .then(res => {
           refreshComments();
           setCommentContent('');
           commentTextFieldRef.current.clear();
            Keyboard.dismiss();
         })
-        .catch(e => console.error(e))
+        .catch(e => console.error("1",e))
         
         // scrollToListBottom();
       }
     }
   }else{
     if (postType === 'swapPost') {
-
       const comment = {content: commentContent};
-      PostService.addSwapComment(userState?.userData?.id, swapId, comment.content).then(resp => {
+      postService.addSwapComment(userState?.userData?.id, swapId, comment.content).then(resp => {
   
         refreshComments();
         setCommentContent('');
@@ -148,18 +128,20 @@ export default function CommentsScreen({navigation, route}) {
         // scrollToListBottom();
       });
     } else {
-      console.log("hereeee")
+
+     
+
       const comment = {content: commentContent};
   
       if (commentContent !== '') {
-        PostService.addComment(userState?.userData?.id, postId, comment)
+        postService.addComment(userState?.userData?.id, postId, comment)
         .then(res => {
           refreshComments();
           setCommentContent('');
           commentTextFieldRef.current.clear();
            Keyboard.dismiss();
         })
-        .catch(e => console.error(e))
+        .catch(e => console.error("3",e))
         
         // scrollToListBottom();
       }
@@ -173,10 +155,16 @@ export default function CommentsScreen({navigation, route}) {
     // commentTextFieldRef.current.focus()
   }
   const handleReplyComment = (commentId) => {
-    setCommentId(commentId)
+    //setCommentId(commentId)
     //setCommentsList(reply)
-    setIsReply(true)
+   postService.getAllReply(commentId)
+    .then(res => {
+      console.log(res)
+      const replyArray = res.data//.reverse();
+      setReplyList(replyArray)})
+    .catch(e => console.error(e))
     commentTextFieldRef.current.focus()
+    setIsReply(true)
   };
   
   const handleDeleteComment= (itemId,isHide)=> {
@@ -184,7 +172,7 @@ export default function CommentsScreen({navigation, route}) {
 
       const comment = {content: commentContent};
       
-      PostService.addSwapComment(userId, swapId, comment.content).then(resp => {
+      postService.addSwapComment(userId, swapId, comment.content).then(resp => {
     
         refreshComments();
         setCommentContent('');
@@ -195,13 +183,13 @@ export default function CommentsScreen({navigation, route}) {
     } else {
       if(!isHide){
 
-        PostService.deleteComment(itemId)
+        postService.deleteComment(itemId)
         .then(res => {
      
           refreshComments();
            Keyboard.dismiss();
         })
-        .catch(e => console.error(e))
+        .catch(e => console.error("2",e))
       }else{
         
       }
@@ -213,24 +201,21 @@ export default function CommentsScreen({navigation, route}) {
     setRefreshing(true);
     if (postType !== 'swapPost') {
 
-      PostService.getPostByPostId(postId)
-      .then(res => {
-
-        console.log("response",res.data)
-
-    
+      loadComments();
+      // postService.getPostByPostId(postId)
+      // .then(res => {
+      //   console.log("response",res.data)
+      //   setCommentsList(res.data.comments);
        
 
-        setCommentsList(res.data.comments);
-       
         
-       // setCommentsList(res.data.comments);
-      })
-      .catch(e => console.error(e))
+      //  // setCommentsList(res.data.comments);
+      // })
+      // .catch(e => console.error(e))
       
     } else {
 
-      const response = await PostService.getSwapById(swapId);
+      const response = await postService.getSwapById(swapId);
       setCommentsList(response.data.comments);
     }
     setRefreshing(false);
@@ -245,14 +230,19 @@ export default function CommentsScreen({navigation, route}) {
   };
 
   const handleReactions = async (cid,isUserLiked) => {
-    console.log(userState?.userData?.id,cid,isUserLiked)
+
+
     const params = ({reaction:isUserLiked})
-    PostService.likeUnlikeComment(userState?.userData?.id, cid,params)
+    postService.likeUnlikeComment(userState?.userData?.id, cid,params)
     .then (res => {
-      console.log(res.data)
+
+      console.log("responseLike",res.data)
       //setIsUserLiked(!isUserLiked)
       })//need to get likePostIds 
-    .catch(e => console.log(e))
+    .catch(e => console.log("4",e))
+
+    .catch(e => console.error(e))
+
     //refreshComments();
   };
 
@@ -283,7 +273,7 @@ export default function CommentsScreen({navigation, route}) {
             onReply={handleReplyComment}
             handleEdit={handleEditComment}
             isReply={isReply}
-            reply = {reply}
+            reply = {replyList}
             postType={postType}
           />
         )}
@@ -322,12 +312,22 @@ export default function CommentsScreen({navigation, route}) {
          onReply={handleReplyComment}
          handleEdit={handleEditComment}
          isReply={isReply}
-         reply = {reply}
+         reply = {replyList}
          postType={postType}
          fromReply={fromReply}
+         isOptionVisible = {isOptionsVisible}
+         setIsOptionVisible = {setIsOptionsVisible}
        />
      )}
    />
+   <EnhancedOptionsDrawer
+          //source={'comment'}
+         // postId={comment.id}
+         // postText={comment.content}
+          options={options}
+          isVisible={isOptionsVisible}
+          setIsVisible={setIsOptionsVisible}
+        />
  </Screen>);
 }
 

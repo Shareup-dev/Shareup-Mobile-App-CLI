@@ -35,7 +35,7 @@ export default function Card({
   navigation,
   postType,
 }) {
-  console.log("PostData.....:",postData)
+  // console.log("PostData.....:",postData.id)
   const {userState} = useContext(authContext);
   const options = [
     {
@@ -73,7 +73,7 @@ export default function Card({
       },
     },
     {
-      title: userState?.userData?.id !== user.id ? 'Unfollow' : '',
+      title: userState?.userData?.id !== user?.id ? 'Unfollow' : '',
       icon: {
         image: require('../../assets/post-options-icons/unfollow-icon.png'),
       },
@@ -82,12 +82,12 @@ export default function Card({
       },
     },
     {
-      title: userState?.userData?.id !== user.id ? <Text style={{color:colors.dark}}>Report</Text> : <Text style={{color:colors.red}}>Delete</Text>,
+      title: userState?.userData?.id !== user?.id ? <Text style={{color:colors.dark}}>Report</Text> : <Text style={{color:colors.red}}>Delete</Text>,
       icon: {
-        image:  userState?.userData?.id !== user.id ? require('../../assets/post-options-icons/report-icon.png'): require('../../assets/post-options-icons/delete-red-icon.png'),
+        image:  userState?.userData?.id !== user?.id ? require('../../assets/post-options-icons/report-icon.png'): require('../../assets/post-options-icons/delete-red-icon.png'),
       },
       onPress: () => {
-        userState?.userData?.id !== user.id ? alert('Report'): showDeleteAlert();
+        userState?.userData?.id !== user?.id ? alert('Report'): showDeleteAlert();
       },
     },
   ];
@@ -130,8 +130,10 @@ export default function Card({
     }, [postData.id]),
   );
 
-  const [numberOfReactions, setNumberOfReactions] = useState(postData.reactions.length);
-  const [numberOfComments, setNumberOfComments] = useState(postData.comments.length);
+
+  const [numberOfReactions, setNumberOfReactions] = useState(postData.numberOfReaction);
+  const [numberOfComments, setNumberOfComments] = useState(postData.numberOfComments);
+
   const [comment,setComments] =useState(postData.comments)
   const [isUserLiked, setIsUserLiked] = useState(false);
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
@@ -148,15 +150,14 @@ export default function Card({
   };
 
   const checkIfLiked = () => {
-    const result = postData.reactions.filter(reaction => reaction.user.id == user.id);
-    if (result.length > 0) {
-      return setIsUserLiked(true);
-    }
+    const result = postData.liked
+      return setIsUserLiked(result);
   };
 
   const handleReactions = async () => {
-    PostService.likePost(user.id, postData.id,"like")
+    PostService.likePost(user.id, postData.id)
     .then (res => {
+      console.log("likeUnliked",res.data)
       setIsUserLiked(!isUserLiked)
       })//need to get likePostIds 
     .catch(e => console.error(e))
@@ -167,9 +168,9 @@ export default function Card({
   const reloadPost = async () => {
     PostService.getPostByPostId(postData.id)
     .then(res => {
-      setComments(res.data.comments)
-      setNumberOfComments(res.data.comments.length);
-      setNumberOfReactions(res.data.reactions.length);})
+      //setComments(res.data.comments)
+      setNumberOfComments(res.data.numberOfComments);
+      setNumberOfReactions(res.data.numberOfReaction);})
     .catch(e => console.error(e))
     
   };
@@ -232,7 +233,7 @@ return (
         )}
 
         <PostActions
-          comments={comment}
+          //comments={comment}
           postData={postData}
           //firstName={firstName}
           navigation={navigation}

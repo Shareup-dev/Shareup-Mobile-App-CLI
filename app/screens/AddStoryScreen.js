@@ -73,7 +73,7 @@ export default function AddStoryScreen({navigation}) {
     if (mode === 'photo') {
       let photo = await cameraRef.takePictureAsync({
         skipProcessing: true,
-        quality: 0.7,
+        quality: 0.5,
       });
       setStory(photo);
     } else if (mode === 'video') {
@@ -102,10 +102,13 @@ export default function AddStoryScreen({navigation}) {
         durationLimit: 10,
       });
 
+      if(result.didCancel === true){
+        return;
+      }
       setStory(result.assets[0]);
       setScreen('view');
     } catch (error) {
-      console.error('Error reading an image', error);
+      console.error('Error reading an image', error.message);
     }
   };
 
@@ -117,7 +120,7 @@ export default function AddStoryScreen({navigation}) {
     setIsUploading(true);
 
     let storyData = new FormData();
-
+    
     const uniId = new Date().valueOf();
     storyData.append('stryfiles', {
       name:
@@ -195,12 +198,12 @@ export default function AddStoryScreen({navigation}) {
           {mode === 'photo' ? (
             <Image
               source={story}
-              resizeMode={'contain'}
+              resizeMode={'cover'}
               style={{height: '100%', width: '100%', zIndex: -10,backgroundColor:'#000'}}
             />
           ) : (
             <Video
-              resizeMode={'contain'}
+              resizeMode={'cover'}
               style={[styles.backgroundVideo]}
               source={{uri: story.uri}}
               repeat

@@ -16,7 +16,7 @@ const SwapCard = React.memo(({item, navigation, userId, style}) => {
   const actionsTabSizeRatio = 0.5;
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [numberOfComments, setNumberOfComments] = useState(
-    item.comments.length,
+    item.numberOfComments,
   );
 
   const [sliderWidth, setSliderWidth] = useState();
@@ -179,15 +179,15 @@ const deletePost = async () => {
       <PostActions
         comments={item.comments}
         swapId={item.id}
-        firstName={item.user.firstName}
-        userEmail={item.user.email}
+        firstName={item.userdata.firstName}
+        //userEmail={item.userdata.email}
         isUserLiked={false}
         navigation={navigation}
         numberOfComments={`${numberOfComments}`}
         numberOfReactions={`${0}`}
         postId={item.id}
         postText={item.content}
-        profileImage={item.user.profilePicturePath}
+        profileImage={item.userdata.profilePicture}
         userId={userId}
         setIsOptionsVisible={setIsOptionsVisible}
         postType={'swapPost'}
