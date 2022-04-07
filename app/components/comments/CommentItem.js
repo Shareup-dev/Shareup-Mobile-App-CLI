@@ -40,6 +40,7 @@ export default function CommentItem({
   setNumberOfComments
 }) {
   //const isReply = false
+  //const [shoereply]
   const { userState } = useContext(authContext);
   const [time, setTime] = useState(
     moment(comment.published, "DD MMMM YYYY hh:mm:ss").fromNow()
