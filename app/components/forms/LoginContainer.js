@@ -27,6 +27,8 @@ export default function LoginContainer({children}) {
 const styles = StyleSheet.create({
   innerContainer: {
     alignItems: 'center',
+    paddingHorizontal: 20,
+
   },
   logo: {
     alignSelf: 'center',

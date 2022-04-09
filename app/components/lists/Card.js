@@ -35,7 +35,7 @@ export default function Card({
   navigation,
   postType,
 }) {
-  // console.log("PostData.....:",postData.id)
+
   const {userState} = useContext(authContext);
   const options = [
     {

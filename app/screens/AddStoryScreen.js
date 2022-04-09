@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   TextInput,
   StatusBar,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 
 import colors from '../config/colors';
@@ -20,7 +22,8 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import AuthContext from '../authContext';
 import Video from 'react-native-video';
 import storyService from '../services/story.service';
-import {date} from 'yup';
+import {load} from 'npm';
+import {ProgressBar} from 'react-native-paper';
 
 export default function AddStoryScreen({navigation}) {
   let cameraRef;
@@ -31,7 +34,6 @@ export default function AddStoryScreen({navigation}) {
   const {userData} = useContext(AuthContext)?.userState;
 
   const [isUploading, setIsUploading] = useState(false);
-  const [timer, setTimer] = useState(0);
   const [screen, setScreen] = useState('capture');
   const [mode, setMode] = useState('photo');
   const [cameraType, setCameraType] = useState('back');
@@ -40,6 +42,16 @@ export default function AddStoryScreen({navigation}) {
   const scale = useRef(new Animated.Value(0)).current;
 
   const [duration, setDuration] = useState(10000);
+  const [caption, setCaption] = useState("");
+
+  // const options = {
+  //   onUploadProgress: e => {
+  //     const {loaded, total} = e;
+  //     const percentage = Math.floor((loaded * 1) / total);
+
+  //     setProgress(percentage - 0.1);
+  //   },
+  // };
 
   let startTime;
   // let pauseTime;
@@ -63,9 +75,6 @@ export default function AddStoryScreen({navigation}) {
   };
 
   const StopProgress = () => {
-    // pauseTime = new Date().valueOf();
-    // setDuration(prev => prev - (pauseTime - startTime));
-
     Animated.timing(scale).reset();
   };
 
@@ -86,7 +95,6 @@ export default function AddStoryScreen({navigation}) {
       const video = await cameraRef.recordAsync({
         maxDuration: 10,
         quality: RNCamera.Constants.VideoQuality['288p'],
-        
       });
 
       setStory(video);
@@ -94,22 +102,34 @@ export default function AddStoryScreen({navigation}) {
     setScreen('view');
   }
 
-  const imagePickHandler = async () => {
-    try {
-      const result = await launchImageLibrary({
-        quality: 0.5,
-        mediaType: 'mixed',
-        durationLimit: 10,
+  const imagePickHandler = () => {
+    launchImageLibrary({
+      quality: 0.5,
+      mediaType: mode,
+      durationLimit: 1,
+      selectionLimit: 1,
+      maxHeight: 500,
+      maxWidth: 320,
+      videoQuality: 'medium',
+    })
+      .then(res => {
+        if (res.didCancel) return;
+        else if (res.assets[0].duration > 30) {
+          Alert.alert('Ops..', "Sorry you can't upload this video", [null], {
+            cancelable: true,
+          });
+        } else {
+          setStory(res.assets[0]);
+          setScreen('view');
+        }
+      })
+      .catch(e => {
+        console.error('Error reading an image', error.message);
       });
 
-      if(result.didCancel === true){
-        return;
-      }
-      setStory(result.assets[0]);
-      setScreen('view');
-    } catch (error) {
-      console.error('Error reading an image', error.message);
-    }
+    // if (result.didCancel === true) {
+    //   return;
+    // }
   };
 
   const handelRevertCamera = () => {
@@ -120,8 +140,9 @@ export default function AddStoryScreen({navigation}) {
     setIsUploading(true);
 
     let storyData = new FormData();
-    
+
     const uniId = new Date().valueOf();
+    storyData.append('caption', caption);
     storyData.append('stryfiles', {
       name:
         mode === 'photo'
@@ -131,11 +152,16 @@ export default function AddStoryScreen({navigation}) {
       uri: story.uri,
     });
 
+
+
     storyService
       .addStory(userData.id, storyData)
       .then(res => res)
       .catch(e => console.error(e.message))
-      .finally(_ => setIsUploading(false));
+      .finally(_ => {
+        setIsUploading(false);
+        navigation.goBack();
+      });
   };
 
   return (
@@ -180,7 +206,7 @@ export default function AddStoryScreen({navigation}) {
             onClosePress={() => setScreen('capture')}
           />
           <View style={styles.forwardArrow}>
-            <TextInput placeholder="Caption" multiline style={styles.caption} />
+            <TextInput placeholder="Caption" value={caption} onChangeText={e => setCaption(e)} multiline style={styles.caption} />
             <TouchableOpacity
               activeOpacity={0.6}
               disabled={isUploading}
@@ -189,8 +215,10 @@ export default function AddStoryScreen({navigation}) {
                 type={'AntDesign'}
                 color={'#333'}
                 name={'arrowright'}
-                size={64}
-                style={{marginLeft: 5}}
+                size={50}
+                style={{
+                  marginLeft: 5,
+                }}
               />
             </TouchableOpacity>
           </View>
@@ -199,7 +227,12 @@ export default function AddStoryScreen({navigation}) {
             <Image
               source={story}
               resizeMode={'cover'}
-              style={{height: '100%', width: '100%', zIndex: -10,backgroundColor:'#000'}}
+              style={{
+                height: '100%',
+                width: '100%',
+                zIndex: -10,
+                backgroundColor: '#000',
+              }}
             />
           ) : (
             <Video
@@ -209,8 +242,12 @@ export default function AddStoryScreen({navigation}) {
               repeat
             />
           )}
+      
+        
+          
         </View>
       )}
+      <ProgressBar indeterminate={isUploading} visible={isUploading} color={'crimson'}  />
     </View>
   );
 }
@@ -220,6 +257,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: 30,
     fontSize: 18,
+    maxHeight: 100,
     width: '85%',
   },
   backgroundVideo: {
@@ -242,7 +280,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    bottom: 35,
+    bottom: 20,
     paddingRight: 15,
     paddingLeft: 10,
   },

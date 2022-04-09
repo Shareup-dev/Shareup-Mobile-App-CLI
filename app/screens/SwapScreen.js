@@ -6,32 +6,51 @@ import Tab from '../components/buttons/Tab';
 import Separator from '../components/Separator';
 import LinkButton from '../components/buttons/LinkButton';
 import colors from '../config/colors';
-import routes from '../navigation/routes';
 import Screen from '../components/Screen';
+import {launchImageLibrary,launchCamera} from 'react-native-image-picker';
+import routes from '../navigation/routes';
 
 export default function SwapScreen({navigation, route}) {
-  const [imageUri, setImageUri] = useState('');
+  // const [imageUri, setImageUri] = useState('');
   const [file, setFile] = useState({});
-  // const imagePickHandler = async () => {
-  //   try {
-  //     const result = await ImagePicker.launchImageLibraryAsync({
-  //       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-  //       quality: 0.5,
-  //     });
-  //     setImageUri(result.uri);
-  //     setFile(result);
-  //     if (!result.uri) {
-  //       return;
-  //     }
-  //     navigation.navigate(routes.SWAP_DISPLAY, {
-  //       swapImage: result.uri,
-  //       returnSwap: route.params?.returnSwap ? route.params.returnSwap : false,
-  //       swapPostId: route.params?.swapPostId,
-  //     });
-  //   } catch (error) {
-  //  
-  //   }
-  // };
+  const imagePickHandler = () => {
+    launchImageLibrary({
+      quality: 0.5,
+      mediaType: 'photo',
+      selectionLimit: 1,
+    }).then(({didCancel, assets}) => {
+      if (!didCancel) {
+        setFile(assets[0]);
+        navigation.navigate(routes.SWAP_DISPLAY, {
+          swapImage: assets[0].uri,
+          returnSwap: route.params?.returnSwap
+            ? route.params.returnSwap
+            : false,
+          swapPostId: route.params?.swapPostId,
+        });
+      }
+    });
+  };
+  const imageCaptureHandler = () => {
+    launchCamera({
+      quality: 0.5,
+      cameraType:'back',
+      mediaType:'photo',
+
+      
+    }).then(({didCancel, assets}) => {
+      if (!didCancel) {
+        setFile(assets[0]);
+        navigation.navigate(routes.SWAP_DISPLAY, {
+          swapImage: assets[0].uri,
+          returnSwap: route.params?.returnSwap
+            ? route.params.returnSwap
+            : false,
+          swapPostId: route.params?.swapPostId,
+        });
+      }
+    });
+  };
   return (
     <Screen>
       {/** Header */}
@@ -54,26 +73,26 @@ export default function SwapScreen({navigation, route}) {
         </View>
 
         <View style={styles.lowerContainer}>
-          {/* <Tab
+          <Tab
             title="Let's take picture"
             color={colors.iondigoDye}
             style={styles.button}
             titleStyle={styles.buttonTitleStyle}
-            onPress={imagePickHandler}
-          /> */}
+            onPress={imageCaptureHandler}
+          />
           <Separator text="or" style={styles.separator} />
           <LinkButton
             title="Already have image?"
             fontSize={14}
             style={styles.linkButton}
           />
-          {/* <Tab
+          <Tab
             title="Continue"
             color={colors.iondigoDye}
             style={styles.button}
             titleStyle={styles.buttonTitleStyle}
             onPress={imagePickHandler}
-          /> */}
+          />
         </View>
         {/* <Tab
           title="Proceed"
