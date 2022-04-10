@@ -35,8 +35,8 @@ const PostActions = ({
   const fromReply = false
   const actionsTabSizeRatio = 0.5;
   const [date, setDate] = useState(
-    // moment(postData.published, "DD MMMM YYYY hh:mm:ss").fromNow()
-    null
+     moment(postData.published, "DD MMMM YYYY hh:mm:ss").fromNow()
+   // null
   );
 
 // console.log("postData....:",postData)
@@ -45,7 +45,7 @@ const PostActions = ({
     <View style={styles.content}>
       <View style={styles.userInfo}>
         <Image
-          source={{ uri: fileStorage.baseUrl + postData.user.profilePicturePath }}
+          source={{ uri: fileStorage.baseUrl + postData.userdata.profilePicturePath }}
           style={styles.profilePicture}
         />
 
@@ -55,11 +55,7 @@ const PostActions = ({
               navigation.navigate(routes.USER_PROFILE, postData.userdata.email )
             }
           >
-
             <Text style={styles.userName}>{postData.userdata.firstName}</Text>
-
-          
-
           </TouchableOpacity>
 
           <Text style={styles.postDate}>{date}</Text>
@@ -149,7 +145,7 @@ const PostActions = ({
         </View>
       </View>
 
-      {/* {postData.content !== "" && <Text style={styles.postText}>{postData.content}</Text>} */}
+      {postData.content !== "" && <Text style={styles.postText}>{postData.content}</Text>}
 
       <TouchableOpacity
         style={styles.menuButton}

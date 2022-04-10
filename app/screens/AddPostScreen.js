@@ -11,7 +11,8 @@ import {
   View,
   Image,
   TextInput,
-  TouchableOpacity,Platform
+  TouchableOpacity,Platform,
+  ActivityIndicator
 } from 'react-native';
 import Icon from '../components/Icon';
 import StackActions from '@react-navigation/routers';
@@ -22,6 +23,7 @@ import IconButton from '../components/buttons/IconButton';
 import Text from '../components/Text';
 import Screen from '../components/Screen';
 import authContext from '../authContext';
+import AuthContext from '../UserContext';
 import PostService from '../services/post.service';
 import routes from '../navigation/routes';
 import {useImagePicker} from '../hooks';
@@ -45,7 +47,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {postFeelingsActions} from '../redux/postFeelings';
 
 export default function AddPostScreen({navigation, route}) {
-
+  const {loadingIndicator, setloadingIndicator } =
+  useContext(AuthContext);
 
   const {userData : user} =
     useContext(authContext)?.userState;
@@ -70,7 +73,7 @@ export default function AddPostScreen({navigation, route}) {
       icon: {
         image: require('../assets/add-post-options-icons/photo-gradient-icon.png'),
       },
-      onPress: () => {
+      onPress: () => {console.log("hereeee")
         handelPickImage();
       },
     },
@@ -284,8 +287,8 @@ export default function AddPostScreen({navigation, route}) {
   };
 
   const handleAddPost = async () => {
-    setLoading(true);
-
+   // setloadingIndicator(true)
+     setLoading(true);
     if (groupPost) {
       const postContent = {
         text,
@@ -295,10 +298,12 @@ export default function AddPostScreen({navigation, route}) {
         postContent.image = file;
       }
       if (postFeel.feeling) postContent.feeling = postFeel.feeling;
+      if(postPrivacyOption) postContent.privacy = postPrivacyOption;
       const formData = createPostFormData(postContent);
       PostService.createPost(user.id, formData).then(resp => {
         let existingPosts = store.getState().groupPosts;
-        setLoading(false);
+       // setloadingIndicator(false)
+        setLoading(false)
         store.dispatch(
           groupPostsActions.setPosts([resp.data, ...existingPosts]),
         );
@@ -316,7 +321,8 @@ export default function AddPostScreen({navigation, route}) {
         };
         PostService.createSwapPost(user.id, swapContent).then(resp => {
           store.dispatch(feedPostsAction.addFeedPost(resp.data));
-          setLoading(false);
+          //setloadingIndicator(false)
+          setLoading(false)
           navigation.navigate(routes.FEED);
         });
       } else {
@@ -332,7 +338,8 @@ export default function AddPostScreen({navigation, route}) {
             PostService.createPost(user.id, formData).then(resp => {
       
             store.dispatch(feedPostsAction.addFeedPost(resp.data));
-            setLoading(false);
+            //setloadingIndicator(false)
+            setLoading(false)
             dispatch(postFeelingsActions.setDefault());
             navigation.navigate(routes.FEED);
           }).catch(e => {console.error(e)})
@@ -418,10 +425,12 @@ export default function AddPostScreen({navigation, route}) {
         /> 
       );
   };
+  console.log("loading",loading)
   return (
-    <Screen>
+    <Screen >
+      
       {renderHeader()}
-      <View style={[styles.topContainer]}>
+      <View style={[styles.topContainer]} pointerEvents={loading?'none':'auto'} >
         {/** User */}
         <View style={styles.row}>
           <Image
@@ -434,12 +443,12 @@ export default function AddPostScreen({navigation, route}) {
             </Text>
             <View style={styles.row}>
               {/**Friends */}
-              {/* <OptionBox
+              <OptionBox
                 currentOption={postPrivacyOption}
-                onPress={() =>
+                onPress={() => {
                   setIsPrivacyOptionsVisible(!isPrivacyOptionsVisible)
-                }
-              /> */}
+                }}
+              />
 
               {postType === postTypes.CREATE_POST && (
                 <View style={[styles.headerTab, styles.row]}>
@@ -533,9 +542,8 @@ export default function AddPostScreen({navigation, route}) {
           isSwap={postType === postTypes.SWAP ? true : false}
           onRemoveImage={onRemoveImage}
         />
-        {/* <ProgressBar visible={loading? true :false} progress={progress} color={Colors.red800}></ProgressBar> */}
+        {loading?<ActivityIndicator style= {styles.topContainer} animating={true} size="large" color={colors.iondigoDye} />:<ActivityIndicator style= {styles.activity} animating={false} size="large" color={colors.iondigoDye} />}
       </View>
-
       {postType === postTypes.CREATE_POST && (
         <EnhancedOptionsDrawer
           options={createPostOptions}
@@ -665,4 +673,8 @@ const styles = StyleSheet.create({
     height: 30,
     marginRight: 5,
   },
+  activity:{
+flex: 1,
+
+  }
 });

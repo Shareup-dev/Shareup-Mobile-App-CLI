@@ -13,14 +13,15 @@ import colors from '../config/colors';
 import Icon from './Icon';
 
 export default function ImageInput({imageUri, onChangeImage, isSwap}) {
-  useEffect(() => {
-    requestPermission();
-  }, []);
+  console.log("imageUrisss",imageUri)
+  // useEffect(() => {
+  //   requestPermission();
+  // }, []);
 
-  const requestPermission = async () => {
-    const {granted} = await ImagePicker.requestCameraPermissionsAsync();
-    if (!granted) alert('You need to enable permission to access the library');
-  };
+  // const requestPermission = async () => {
+  //   const {granted} = await ImagePicker.requestCameraPermissionsAsync();
+  //   if (!granted) alert('You need to enable permission to access the library');
+  // };
 
   const onPress = () => {
     if (!imageUri) selectImage();
@@ -44,7 +45,7 @@ export default function ImageInput({imageUri, onChangeImage, isSwap}) {
       console.error('Error reading an image', error);
     }
   };
-
+  
   return (
     <View style={styles.container}>
       {imageUri ? (
@@ -53,7 +54,7 @@ export default function ImageInput({imageUri, onChangeImage, isSwap}) {
             name="close"
             type="AntDesign"
             style={styles.closeIcon}
-            backgroundColor={colors.lighterGray}
+            backgroundColor={colors.LightGray}
             color={colors.white}
             backgroundSizeRatio={0.8}
             size={25}
