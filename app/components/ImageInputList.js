@@ -11,36 +11,13 @@ export default function ImageInputList({
 }) {
   const scrollView = useRef();
   //const imageUrisSet = imageUris.map((imageUris) => imageUris.replace('file:', ''));
-
+  console.log("imageUris",imageUris)
   return (
-    
-    <View style={styles.container}>
-      <FlatList
-        //ref={scrollView}
+      <View style={styles.container}>
+      <ScrollView
+        ref={scrollView}
         // horizontal
-       // onContentSizeChange={() => scrollView.current.scrollToEnd()}
-       horizontal={true} 
-       showsHorizontalScrollIndicator={false} 
-       data= {imageUris}
-       renderItem={ ({ item, index }) => {
-     
-
-        return(
-         
-         <Image source= {{uri:item}} /* Use item to set the image source */
-           key={index} /* Important to set a key for list items,
-                          but it's wrong to use indexes as keys, see below */
-           style={{
-             width:260,
-             height:300,
-            // borderWidth:2,
-             //borderColor:'#d35647',
-             resizeMode:'contain',
-             margin:2
-           }}
-         />
-      
-       )}}
+        onContentSizeChange={() => scrollView.current.scrollToEnd()}
       >
         {imageUris.map((uri) => (
           <View key={uri} style={isSwap ? null : styles.imagePadding}>
@@ -65,7 +42,7 @@ export default function ImageInputList({
             isSwap={isSwap}
           />
         )}
-      </FlatList>
+      </ScrollView>
     </View>
   );
 }
