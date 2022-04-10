@@ -32,7 +32,8 @@ export default function NewsFeedScreen({navigation, route}) {
   const loadNews = async () => {
     postService.getNewsFeed(userState?.userData?.email)
     .then(res =>{ 
-      console.log("here",res.data)
+
+      console.log("Newsfeed Data",res.data)
       const postArray = res.data.reverse();
       setPosts(postArray)
     })
@@ -101,7 +102,6 @@ return (
       <FlatList
         initialNumToRender={10}
         data={posts}
-       // data={[]}
         ListHeaderComponent={ListHeader}
         ListFooterComponent={ActivityIndicatorComponent}
         keyExtractor={post => post.id.toString()}

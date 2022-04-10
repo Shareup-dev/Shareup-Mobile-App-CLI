@@ -45,7 +45,9 @@ const PostActions = ({
     <View style={styles.content}>
       <View style={styles.userInfo}>
         <Image
-          source={{ uri: fileStorage.baseUrl + postData.userdata.profilePicturePath }}
+
+          source={{ uri: fileStorage.baseUrl + postData.userdata.profilePicturePath}}
+
           style={styles.profilePicture}
         />
 
