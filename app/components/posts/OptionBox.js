@@ -1,13 +1,13 @@
 import React, {useEffect} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 
-
-
+import {FontAwesome5} from 'react-native-vector-icons';
+//import MaterialIcons from 'react-native-vector-icons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
 import colors from '../../config/colors';
 import Icon from '../Icon';
 
 export default function OptionBox({currentOption, onPress}) {
-
 
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>

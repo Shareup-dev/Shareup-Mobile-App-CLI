@@ -5,6 +5,7 @@ import Icon from "../components/Icon";
 
 export default function AddPostButton({ onPress }) {
   let isReelScreen = useSelector((state) => state.reelScreenDetector);
+  let isGroupScreen = useSelector((state) =>state.groupScreenDetector)
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.container}>
