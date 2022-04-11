@@ -98,7 +98,7 @@ console.trace = (function() {
             // Node uses 10, but usually it's not enough for RN app trace
             Error.stackTraceLimit = 30;
             Error.captureStackTrace(err, console.trace);
-            console.log(err.stack);
+            console.error(err.stack);
         } catch (e) {
             console.error(e);
         }

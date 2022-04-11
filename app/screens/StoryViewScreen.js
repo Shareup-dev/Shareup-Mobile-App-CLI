@@ -265,7 +265,7 @@ const StoryViewScreen = ({navigation, route}) => {
             style={{
               width: '100%',
               height: '100%',
-              backgroundColor: '#34343460',
+              backgroundColor: '#000',
             }}
             source={{
               uri: fileStorage.baseUrl + data[activeIndex].video,
@@ -276,7 +276,7 @@ const StoryViewScreen = ({navigation, route}) => {
             style={{
               width: '100%',
               height: '100%',
-              backgroundColor: '#34343460',
+              backgroundColor: '#000',
             }}
             onLoadEnd={_ => setLoaded(true)}
             source={{uri: fileStorage.baseUrl + data[activeIndex].image}}

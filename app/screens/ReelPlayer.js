@@ -7,59 +7,22 @@ import {
   Text,
   Dimensions,
   StatusBar,
-  
+  FlatList,
+  TextInput,
+  KeyboardAvoidingView,
 } from 'react-native';
-
-import Screen from '../components/Screen';
-import fileStorage from '../config/fileStorage';
-import colors from '../config/colors';
 import Icon from '../components/Icon';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Video from 'react-native-video';
-import {SwiperFlatList} from "react-native-swiper-flatlist"
+import routes from '../navigation/routes';
 
 const ReelPlayer = ({navigation, route}) => {
   const {index, data} = route.params;
 
-  const [mute, setMute] = useState(false);
-  const [like, setLike] = useState(false);
-  const [paused, setPaused] = useState(false);
-
   const videoRef = React.useRef(null);
 
-  const Header = () => {
-    return (
-      <View style={styles.Header}>
-        <Text style={styles.HeaderText}>Share Reels</Text>
-        <View style={styles.iconContainer}>
-          <TouchableOpacity
-            style={{marginHorizontal: 10}}
-            onPress={_ => setMute(prev => !prev)}>
-            <Icon
-              noBackground
-              type="MaterialCommunityIcons"
-              size={35}
-              backgroundSizeRatio={0.8}
-              color="#fff"
-              name={mute ? 'volume-off' : 'volume-high'}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={_ => navigation.goBack()}>
-            <Icon
-              noBackground
-              type="MaterialCommunityIcons"
-              size={35}
-              backgroundSizeRatio={1}
-              name={'close'}
-              color="#fff"
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  };
+  const BottomCard = React.memo(() => {
+    const [like, setLike] = useState(false);
 
-  const BottomCard = () => {
     return (
       <View style={styles.card}>
         <View style={styles.reelInfo}>
@@ -128,79 +91,129 @@ const ReelPlayer = ({navigation, route}) => {
               type="FontAwesome"
             />
           </TouchableOpacity>
-          <Icon
-            color="#fff"
-            style={{marginVertical: 5}}
-            name="comment"
-            noBackground
-            backgroundSizeRatio={0.7}
-            type="Octicons"
-          />
-          <Icon
+          <TouchableOpacity
+            onPress={_ => navigation.navigate(routes.ADD_COMMENT_REEL)}>
+            <Icon
+              color="#fff"
+              style={{marginVertical: 5}}
+              name="comment"
+              noBackground
+              backgroundSizeRatio={0.7}
+              type="Octicons"
+            />
+          </TouchableOpacity>
+          {/* <Icon
             color="#fff"
             style={{marginVertical: 5}}
             image={require('../assets/icons/share-icon.png')}
             noBackground
             backgroundSizeRatio={0.7}
             type="Octicons"
-          />
+          /> */}
         </View>
       </View>
     );
-  };
+  });
 
-  const {width, height} = Dimensions.get('screen');
-  return (
-    <>
-      <SwiperFlatList
-       vertical
-        style={{flex: 1}}
-        data={data}
-        keyExtractor={(item, i) => i.toString()}
-        renderItem={({item}) => {
-          return(
-          <TouchableOpacity
-            style={{flex: 1, justifyContent: 'space-between',width:width,height:height,backgroundColor:'#000'}}
-            activeOpacity={1}
-            onPress={_ => setPaused(prev => !prev)}
-            onLongPress={_ => setLike(prev => !prev)}>
-            <Header />
-            {paused && (
+  const {width, height} = Dimensions.get('window');
+
+  const RenderReels = React.memo(({video}) => {
+    const [paused, setPaused] = useState(false);
+    const [mute, setMute] = useState(false);
+
+    return (
+      <KeyboardAvoidingView>
+        <TouchableOpacity
+          style={{
+            justifyContent: 'space-between',
+            width: width,
+            height: height - StatusBar.currentHeight,
+            backgroundColor: '#000',
+          }}
+          activeOpacity={1}
+          onPress={_ => setPaused(prev => !prev)}>
+          <View style={styles.Header}>
+            <Text style={styles.HeaderText}>Share Reels</Text>
+            <View style={styles.iconContainer}>
+              <TouchableOpacity
+                style={{marginHorizontal: 10}}
+                onPress={_ => setMute(prev => !prev)}>
+                <Icon
+                  noBackground
+                  type="MaterialCommunityIcons"
+                  size={35}
+                  backgroundSizeRatio={0.8}
+                  color="#fff"
+                  name={mute ? 'volume-off' : 'volume-high'}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={_ => navigation.goBack()}>
+                <Icon
+                  noBackground
+                  type="MaterialCommunityIcons"
+                  size={35}
+                  backgroundSizeRatio={1}
+                  name={'close'}
+                  color="#fff"
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          {paused && (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
               <View
                 style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  backgroundColor: '#33333320',
+                  padding: 15,
+                  borderRadius: 40,
                 }}>
-                <View
-                  style={{
-                    backgroundColor: '#33333320',
-                    padding: 15,
-                    borderRadius: 40,
-                  }}>
-                  <Icon
-                    name={'pause'}
-                    noBackground
-                    type="Fontisto"
-                    size={35}
-                    backgroundSizeRatio={0.6}
-                    color="#fff"
-                  />
-                </View>
+                <Icon
+                  name={'pause'}
+                  noBackground
+                  type="Fontisto"
+                  size={35}
+                  backgroundSizeRatio={0.6}
+                  color="#fff"
+                />
               </View>
-            )}
-            <View style={styles.video}>
-              <Video
-                style={{width: width, height: height}}
-                source={{uri: item.video}}
-                repeat
-                muted={mute}
-                paused={paused}
-                resizeMode="cover"
-              />
             </View>
-            <BottomCard />
-          </TouchableOpacity>);
+          )}
+          <View style={styles.video}>
+            <Video
+              style={{
+                width: width,
+                height: height - StatusBar.currentHeight,
+              }}
+              source={{uri: video}}
+              repeat
+              muted={mute}
+              paused={paused}
+              resizeMode="cover"
+            />
+          </View>
+          <BottomCard />
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
+    );
+  });
+
+  return (
+    <>
+      <FlatList
+        vertical
+        style={{flex: 1}}
+        initialScrollIndex={index}
+        pagingEnabled
+        data={data}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={(item, i) => i.toString()}
+        renderItem={({item: {video}}) => {
+          return <RenderReels video={video} />;
         }}
       />
     </>
@@ -212,21 +225,37 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  forwardArrow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 5,
+    paddingRight: 15,
+    paddingLeft: 10,
+  },
   card: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
     paddingHorizontal: 10,
-    
+    marginBottom: 15,
+  },
+  caption: {
+    paddingHorizontal: 15,
+    backgroundColor: '#fff',
+    borderRadius: 30,
+    fontSize: 18,
+    maxHeight: 100,
+    width: '85%',
   },
   reelAction: {
     paddingHorizontal: 5,
     alignItems: 'center',
     justifyContent: 'space-evenly',
-    paddingVertical: 20,
+    paddingVertical: 10,
     borderRadius: 35,
     width: '20%',
-    backgroundColor: '#33333335',
+    // backgroundColor: '#33333335',
   },
   reelInfo: {
     paddingHorizontal: 15,
@@ -254,7 +283,6 @@ const styles = StyleSheet.create({
     flex: 1,
     zIndex: -10,
   },
-
 });
 
 export default ReelPlayer;

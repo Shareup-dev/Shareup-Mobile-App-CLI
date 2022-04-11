@@ -17,6 +17,7 @@ import SwapDisplay from '../screens/SwapDisplay';
 import ShippingAddress from '../screens/ShippingAddress';
 import SwapCheckout from '../screens/SwapCheckout';
 import SwapCheckoutComplete from '../screens/SwapCheckoutComplete';
+import AddCommentsOnReels from '../screens/addCommentsOnReels';
 
 export default function NewsFeedNavigator() {
   const Stack = createNativeStackNavigator();
@@ -71,6 +72,7 @@ export default function NewsFeedNavigator() {
           headerShown: false,
         }}
       />
+    
 
       <Stack.Screen
         name={routes.GROUP_FEED}
