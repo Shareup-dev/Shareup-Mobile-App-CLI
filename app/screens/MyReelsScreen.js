@@ -18,9 +18,10 @@ import defaultStyle from '../config/styles';
 import fileStorage from '../config/fileStorage';
 import store from '../redux/store';
 import reelScreenDetector from '../redux/reelScreenDetector';
-import ReelService from '../services/ReelService';
+import StoriesService from '../services/story.service';
 import routes from '../navigation/routes';
 import authContext from '../authContext';
+import axios from 'axios';
 const width = Dimensions.get('window').width / 2 - 15;
 const height = Dimensions.get('window').height / 3;
 
@@ -139,33 +140,59 @@ const explore = [
     id: 6,
   },
 ];
-3;
+const myReels = [
+  {
+    id: 1,
+    name: 'Jane',
+    time: '23 hrs',
+    image: fileStorage.baseUrl + '/data/assets/images/',
+  },
+  {
+    id: 2,
+  },
+  {
+    id: 3,
+  },
+  {
+    id: 4,
+  },
+  {
+    id: 5,
+  },
+  {
+    id: 6,
+  },
+];
+
 export default function SwapScreen({navigation}) {
   const [allReels, setAllReels] = useState([]);
-  const {loadingIndicator, setloadingIndicator} = useContext(authContext);
   const [currentTab, setCurrentTab] = useState(tabes[0].name);
   const handleTabbed = name => {
     setCurrentTab(name);
   };
+
   useEffect(() => {
+    // ReelService.getReels().then(reelsResp => {
+    //   reelsResp.data.forEach(reel => {
+    //     reel.thumbnail =
+    //       dummyThumbnails[Math.floor(Math.random() * dummyThumbnails.length)];
+    //   });
+    //   setAllReels(reelsResp.data);
+    // });
     store.dispatch(reelScreenDetector.actions.setReelScreen());
 
+    
+    // StoriesService.getStories()
+    // .then(({data}) => setAllReels(data))
+    // .catch(e => console.error(e.message));
+
+    axios.get('https://6252a9697f7fa1b1dde87a9c.mockapi.io/api/v1/reels').then(({data})=>setAllReels(data));
+    
     return () => {
       navigation.addListener('blur', () => {
         store.dispatch(reelScreenDetector.actions.unSetReelScreen());
       });
     };
-  }, []);
-
-  useEffect(() => {
-
-    ReelService.getReels().then(reelsResp => {
-      reelsResp.data.forEach(reel => {
-        reel.thumbnail =
-          dummyThumbnails[Math.floor(Math.random() * dummyThumbnails.length)];
-      });
-      setAllReels(reelsResp.data);
-    });
   }, []);
   const renderList = () => {
     if (currentTab === tabes[0].name) return allReels;
@@ -201,14 +228,15 @@ export default function SwapScreen({navigation}) {
         data={renderList()}
         numColumns={2}
         keyExtractor={item => item.id.toString()}
-        renderItem={({item}) => (
+        showsVerticalScrollIndicator={false}
+        renderItem={({item,index}) => (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate(routes.REEL_PLAYER, {reel: item});
+              navigation.navigate(routes.REEL_PLAYER, {index,data:renderList()});
             }}>
             <View style={[styles.container]}>
               <Image
-                source={{uri: fileStorage.baseUrl + '/' + item.thumbnail_url}}
+                source={{uri: fileStorage.baseUrl + item.image}}
                 style={styles.image}
               />
             </View>

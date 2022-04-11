@@ -24,6 +24,7 @@ import defaultStyles from '../config/styles';
 import LoginContainer from '../components/forms/LoginContainer';
 import Loading from '../components/Loading';
 import authService from '../services/auth.service';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label('Email'),
@@ -108,7 +109,9 @@ export default function LoginScreen({navigation}) {
       {loading ? (
         <Loading text="Logging in..." />
       ) : (
+          <ScrollView showsVerticalScrollIndicator={false}>
         <LoginContainer>
+
           <Form
             initialValues={{email: '', password: ''}}
             onSubmit={handleSubmit}
@@ -156,7 +159,9 @@ export default function LoginScreen({navigation}) {
               />
             </View>
           </Form>
+
         </LoginContainer>
+          </ScrollView>
       )}
     </>
   );
