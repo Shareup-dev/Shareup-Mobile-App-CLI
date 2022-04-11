@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState, useContext,useCallback} from 'react';
 import {FlatList, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 
@@ -14,28 +14,92 @@ import store from '../redux/store';
 import {sentRequestsActions} from '../redux/sentRequests';
 import colors from '../config/colors';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function AddNewFriendScreen({navigation}) {
   const [users, setusers] = useState([]);
   const [sentto, setSentto] = useState([]);
   const {user: loggedInUser} = useContext(authContext);
-
+  const {userState} = useContext(authContext);
   let alreadySentTo = useSelector(state => state.sentRequests);
 
-  useEffect(() => {
-    UserService.getUsers().then(resp => {
-      let allUsers = resp.data.filter(person => person.id !== loggedInUser.id);
+  useFocusEffect(
+    useCallback(() => {
+      UserService.getUsers()
+        .then(resp => {
+          let allUsers = resp.data.filter(
+            person => person.id !== userState?.userData?.id,
+          );
+          UserService.getFriendRequestSent(userState?.userData?.email)
+            .then(resp => {
+              let sentRequests = resp.data;
+              store.dispatch(sentRequestsActions.setList(sentRequests));
+              let sendFiltered = allUsers.filter(
+                ({id: id1}) => !sentRequests.some(({id: id2}) => id2 === id1),
+              );
+              UserService.getFriendRequestRecieved(userState?.userData?.email)
+                .then(resp => {
+                  let receivedReq = resp.data;
+                  //store.dispatch(receivedRequestsAction.setList(receivedReq));
+                  let receiveFiltered = sendFiltered.filter(
+                    ({id: id1}) =>
+                      !receivedReq.some(({id: id2}) => id2 === id1),
+                  );
+                  UserService.getFriends(userState?.userData?.email)
+                    .then(res => {
+                      let friends = res.data;
+                      let notFriends = receiveFiltered.filter(
+                        ({id: id1}) =>
+                          !friends.some(({id: id2}) => id2 === id1),
+                      );
+                      setusers(notFriends);
+                    })
+                    .catch(e => console.error('error', e));
+                })
+                .catch(e => console.error('error', e));
+              // differedReqs.forEach(user => {});
+              setSentto(resp.data);
+            })
+            .catch(e => console.error('error', e));
+        })
+        .catch(e => console.error('error', e));
+      return;
+    }, []),
+  );
 
-      UserService.getFriendRequestSent(loggedInUser.email).then(resp => {
-        let sentRequests = resp.data;
+  // const redirectToProfile = (userEmail) => {
 
-        let differedReqs = allUsers.filter(
-          ({id: id1}) => !sentRequests.some(({id: id2}) => id2 === id1),
-        );
-        setusers(differedReqs);
-      });
-    });
-  }, []);
+  //   navigation.navigate(routes.USER_PROFILE, {userEmail:userEmail} )
+  // }
+  // const onSearchFriend = searchKey => {
+  //   if (searchKey == '') {
+  //     setIsSearch(false);
+  //   } else {
+  //     UserService.search(searchKey).then(resp => {
+  //       let filteredResult = resp.data.filter(
+  //         person => person.id !== userState?.userData?.id,
+  //       );
+  //       setSearchResult(filteredResult);
+  //       setIsSearch(true);
+  //     });
+  //   }
+  //   return;
+  // };
+
+  // useEffect(() => {
+  //   UserService.getUsers().then(resp => {
+  //     let allUsers = resp.data.filter(person => person.id !== loggedInUser.id);
+
+  //     UserService.getFriendRequestSent(loggedInUser.email).then(resp => {
+  //       let sentRequests = resp.data;
+
+  //       let differedReqs = allUsers.filter(
+  //         ({id: id1}) => !sentRequests.some(({id: id2}) => id2 === id1),
+  //       );
+  //       setusers(differedReqs);
+  //     });
+  //   });
+  // }, []);
 
   const onSendRequest = recievedUser => {
  
@@ -79,28 +143,40 @@ export default function AddNewFriendScreen({navigation}) {
         keyExtractor={item => item.id.toString()}
         renderItem={({item}) => (
           <ListItem
+            email={item.email}
             user={item}
             image={item.profilePicturePath}
             title={item.firstName}
             tabTitle={
-              sentto.filter(user => user.email === item.email)[0]
-                ? 'Sent'
+              //  sentto.filter(user => user.email === item.email)[0]
+              alreadySentTo.filter(user => user.email === item.email)[0]
+                ? 'Cancel Request'
                 : 'Send Request'
             }
             color={
-              sentto.filter(user => user.email === item.email)[0]
+              alreadySentTo.filter(user => user.email === item.email)[0]
                 ? colors.iondigoDye
                 : colors.lighterGray
             }
             fontColor={
-              sentto.filter(user => user.email === item.email)[0]
+              alreadySentTo.filter(user => user.email === item.email)[0]
                 ? colors.white
                 : colors.dark
             }
-            subTitle="Recommended"
+            subTitle={
+              alreadySentTo.filter(user => user.email === item.email)[0]
+                ? 'Request send'
+                : 'Recommended'
+            }
             onPress={onSendRequest}
+            showCloseButton={false}
+            secondBtn={false}
+            fullWidth={true}
             style={[defaultStyles.listItemStyle, defaultStyles.lightShadow]}
             displayLeft={true}
+            onPressProfile={() =>
+              navigation.navigate(routes.USER_PROFILE, item.email)
+            }
           />
         )}
       />

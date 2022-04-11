@@ -35,7 +35,6 @@ export default function Card({
   navigation,
   postType,
 }) {
-
   const {userState} = useContext(authContext);
   const options = [
     {
@@ -143,9 +142,9 @@ export default function Card({
   const [sliderWidth, setSliderWidth] = useState();
 
   const loadImages = () => {
-
+    
     if (postData.media?.length !== 0) {
-      setImages(postData.media?.map(image => fileStorage.baseUrl + image.media + 'g'));
+      setImages(postData.media?.map(image => fileStorage.baseUrl + image.mediaPath));
     }
   };
 
@@ -157,11 +156,12 @@ export default function Card({
   const handleReactions = async () => {
     PostService.likePost(user.id, postData.id)
     .then (res => {
-      console.log("likeUnliked",res.data)
+      console.log("likeUnlikeResponse:::",res.data)
       setIsUserLiked(!isUserLiked)
+      setNumberOfReactions(res.data.numberOfReaction);
       })//need to get likePostIds 
     .catch(e => console.error(e))
-    reloadPost();
+    //reloadPost();
   };
 
   // rerenders the post when interaction
@@ -169,8 +169,10 @@ export default function Card({
     PostService.getPostByPostId(postData.id)
     .then(res => {
       //setComments(res.data.comments)
+      console.log("postByIdData:::",res.data)
       setNumberOfComments(res.data.numberOfComments);
-      setNumberOfReactions(res.data.numberOfReaction);})
+       setNumberOfReactions(res.data.numberOfReaction);
+    })
     .catch(e => console.error(e))
     
   };
@@ -198,7 +200,7 @@ export default function Card({
   const onLayout = e => {
     setSliderWidth(e.nativeEvent.layout.width);
   };
-
+  
 return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View
