@@ -11,8 +11,7 @@ import {
   View,
   Image,
   TextInput,
-  TouchableOpacity,Platform,
-  ActivityIndicator
+  TouchableOpacity,Platform
 } from 'react-native';
 import Icon from '../components/Icon';
 import StackActions from '@react-navigation/routers';
@@ -23,7 +22,6 @@ import IconButton from '../components/buttons/IconButton';
 import Text from '../components/Text';
 import Screen from '../components/Screen';
 import authContext from '../authContext';
-import AuthContext from '../UserContext';
 import PostService from '../services/post.service';
 import routes from '../navigation/routes';
 import {useImagePicker} from '../hooks';
@@ -47,15 +45,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import {postFeelingsActions} from '../redux/postFeelings';
 import { ScrollView } from 'react-native-gesture-handler';
 
-
 export default function AddPostScreen({navigation, route}) {
-  const {loadingIndicator, setloadingIndicator } =
-  useContext(AuthContext);
+
 
   const {userData : user} =
     useContext(authContext)?.userState;
   const [loading,setLoading] = useState(false)
-  const [tagedUserData,setTagedUserData] = useState([])
 
   const dispatch = useDispatch();
   const postFeel = useSelector(state => state.postFeel);
@@ -219,7 +214,6 @@ export default function AddPostScreen({navigation, route}) {
   const [progress,setProgress] = useState(0);
   const [postPrivacyOption, setPostPrivacyOption] = useState(privacyOptions[0]); // object to present the current privacy option
 
- 
   useEffect(() => {
     if (postType === postTypes.SWAP) {
       setImages([swapImage]);
@@ -230,16 +224,11 @@ export default function AddPostScreen({navigation, route}) {
     return () => clearFields();
   }, [swapImage]);
 
-  const setTagedUser = (userData) => {
-    setTagedUserData(userData)
-  }
-
   const createPostFormData = content => {
-   
     const formData = new FormData();
     formData.append('content', content.text);
     if (content.images.length !== 0) {
-     
+   
       content.images.forEach(image => {
         const splitPathArr = image.split('/');
         formData.append(`files`, {
@@ -296,41 +285,29 @@ export default function AddPostScreen({navigation, route}) {
   };
 
   const handleAddPost = async () => {
-   // setloadingIndicator(true)
-     setLoading(true);
-    
+    setLoading(true);
+
     if (groupPost) {
-   
       const postContent = {
-        text: text,
-        images : images,
-        //feeling: postFeel.feeling ? postFeel.feeling : null,
-        groupId:groupId,
-       // privacy:postPrivacyOption,
-       // tagedUsers:tagedUserData
+        text,
+        groupId,
       };
-      // if (file.uri) {
-      //   postContent.images = file;
-      // }
-      // //if(postFeel.feeling) postContent.feeling = postFeel.feeling;
-      // if(postPrivacyOption) postContent.privacy = postPrivacyOption;
-      // if(tagedUserData) postContent.tagedUsers = tagedUserData;
-     
+      if (file.uri) {
+        postContent.image = file;
+      }
+      if (postFeel.feeling) postContent.feeling = postFeel.feeling;
       const formData = createPostFormData(postContent);
       PostService.createPost(user.id, formData).then(resp => {
-
-         let existingPosts = store.getState().groupPosts;
-       // setloadingIndicator(false)
+        let existingPosts = store.getState().groupPosts;
+        setLoading(false);
         store.dispatch(
           groupPostsActions.setPosts([resp.data, ...existingPosts]),
         );
 
         store.dispatch(feedPostsAction.addFeedPost(resp.data));
-       // const popAction = StackActions.pop(1);
-        setLoading(false)
-    
-        navigation.navigate(routes.GROUP_FEED,resp.data.group);
-       // navigation.dispatch(popAction);
+        const popAction = StackActions.pop(1);
+
+        navigation.dispatch(popAction);
       });
     } else {
       if (postType === postTypes.SWAP) {
@@ -340,27 +317,23 @@ export default function AddPostScreen({navigation, route}) {
         };
         PostService.createSwapPost(user.id, swapContent).then(resp => {
           store.dispatch(feedPostsAction.addFeedPost(resp.data));
-          //setloadingIndicator(false)
-          setLoading(false)
+          setLoading(false);
           navigation.navigate(routes.FEED);
         });
       } else {
         if (text === '' && Object.keys(file).length === 0) {
           setError("Can't Create empty post");
         } else {
-        
           const postContent = {
             text: text,
             images: images,
             feeling: postFeel.feeling ? postFeel.feeling : null,
-            groupId:groupId
           };
           const formData = createPostFormData(postContent)
             PostService.createPost(user.id, formData).then(resp => {
       
             store.dispatch(feedPostsAction.addFeedPost(resp.data));
-            //setloadingIndicator(false)
-            setLoading(false)
+            setLoading(false);
             dispatch(postFeelingsActions.setDefault());
             navigation.navigate(routes.FEED);
           }).catch(e => {console.error(e)})
@@ -374,9 +347,7 @@ export default function AddPostScreen({navigation, route}) {
   // used to change the position of the enhanced drawer,
   // when user click on the text input.
   const handleCreatePostDrawerPosition = () => {
-    if (postType === postTypes.CREATE_POST )
-      createPostDrawerRef.current.snapTo(0);
-      if (postType === postTypes.GROUP_POST)
+    if (postType === postTypes.CREATE_POST)
       createPostDrawerRef.current.snapTo(0);
   };
 
@@ -426,8 +397,7 @@ export default function AddPostScreen({navigation, route}) {
     if (
       postType === postTypes.CREATE_POST ||
       postType === postTypes.SHARE_UP ||
-      postType === postTypes.SWAP ||
-      postType === postTypes.GROUP_POST
+      postType === postTypes.SWAP
     )
       return (
         <Header
@@ -437,7 +407,6 @@ export default function AddPostScreen({navigation, route}) {
               {postType === postTypes.SWAP && 'Swap'}
               {postType === postTypes.CREATE_POST && postTypes.CREATE_POST}
               {postType === postTypes.SHARE_UP && postTypes.SHARE_UP}
-              {postType === postTypes.GROUP_POST && postTypes.GROUP_POST}
             </HeaderTitle>
           }
           right={
@@ -450,13 +419,10 @@ export default function AddPostScreen({navigation, route}) {
         /> 
       );
   };
-  
   return (
-    <Screen >
-      
+    <Screen>
       {renderHeader()}
-      <View style={[styles.topContainer]}> 
-      {/* pointerEvents={loading?'none':'auto'} > */}
+      <View style={[styles.topContainer]}>
         {/** User */}
         <View style={styles.row}>
           <Image
@@ -471,14 +437,12 @@ export default function AddPostScreen({navigation, route}) {
               {/**Friends */}
               <OptionBox
                 currentOption={postPrivacyOption}
-                onPress={() => {
+                onPress={() =>
                   setIsPrivacyOptionsVisible(!isPrivacyOptionsVisible)
-
-                }}
-
+                }
               />
 
-              {postType === postTypes.CREATE_POST || postTypes.GROUP_POST && (
+              {postType === postTypes.CREATE_POST && (
                 <View style={[styles.headerTab, styles.row]}>
                   <Icon
                     type="MaterialCommunityIcons"
@@ -570,20 +534,16 @@ export default function AddPostScreen({navigation, route}) {
           isSwap={postType === postTypes.SWAP ? true : false}
           onRemoveImage={onRemoveImage}
         />
-        {loading?<ActivityIndicator style= {styles.topContainer} animating={true} size="large" color={colors.iondigoDye} />:<ActivityIndicator style= {styles.activity} animating={false} size="large" color={colors.iondigoDye} />}
+        {/* <ProgressBar visible={loading? true :false} progress={progress} color={Colors.red800}></ProgressBar> */}
       </View>
+
       {postType === postTypes.CREATE_POST && (
         <EnhancedOptionsDrawer
           options={createPostOptions}
           forwardedRef={createPostDrawerRef}
         />
       )}
-        {postType === postTypes.GROUP_POST && (
-        <EnhancedOptionsDrawer
-          options={createPostOptions}
-          forwardedRef={createPostDrawerRef}
-        />
-      )}
+
       {postType === postTypes.SHARE_UP && (
         <OptionsDrawer
           options={shareUpOptions}
@@ -706,8 +666,4 @@ const styles = StyleSheet.create({
     height: 30,
     marginRight: 5,
   },
-  activity:{
-flex: 1,
-
-  }
 });

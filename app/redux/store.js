@@ -11,7 +11,6 @@ import swapedImages from "./swapedImages";
 import imagesPickerReducer from "./imagesPickerSlice";
 import stories from "./stories";
 import reelScreenDetector from "./reelScreenDetector";
-import groupScreenDetector from "./groupScreenDetector";
 import feedPostsReducer from "./feedPostsSlice";
 import messagesReducer from "./messagesSlice";
 import ConversationsSlice from "./ConversationsSlice";
@@ -30,7 +29,6 @@ export default store = configureStore({
     imagesPicker: imagesPickerReducer,
     stories: stories.reducer,
     reelScreenDetector: reelScreenDetector.reducer,
-    groupScreenDetector:groupScreenDetector.reducer,
     feedPosts: feedPostsReducer,
     messages: messagesReducer,
     conversations: ConversationsSlice,

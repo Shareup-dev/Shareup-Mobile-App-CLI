@@ -94,6 +94,8 @@ export default function AllFriendsScreen({navigation}) {
               color={colors.iondigoDye}
               fontColor={colors.white}
               subTitle="Connected"
+              showCloseButton={false}
+              fullWidth={true}
               onPress={UnfriendConfirmationDialog}
               style={[defaultStyles.listItemStyle, defaultStyles.lightShadow]}
               displayLeft={true}
