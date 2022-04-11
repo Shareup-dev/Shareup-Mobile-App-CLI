@@ -1,11 +1,14 @@
 import AuthAxios from "./authAxios";
 
 class ReelService {
-  getAllReels = () => AuthAxios.get(`/api/v1/reels`); 
-  addComment = (uid,rid,comment) => AuthAxios.post(`/api/v1/comment_on_reel/${uid}/${rid}`,comment);
-  addReel = (uid,reel) => AuthAxios.post(`/api/v1/reels/${uid}`,reel);
-  getReelsByUser = (uid) => AuthAxios.get(`/api/v1/reels/user/${uid}`);
-  getReelById = (rid) => AuthAxios.get(`/api/v1/reels/reel-by-id/${rid}`);
+  getAllReels = () => AuthAxios.get(`reels`); 
+  addComment = (uid,rid,comment) => AuthAxios.post(`comment_on_reel/${uid}/${rid}`,comment);
+  addReel = (uid,reel) => AuthAxios.post(`reels/${uid}`,reel);
+  getReelsByUser = (uid) => AuthAxios.get(`reels/user/${uid}`);
+  getReelById = (rid) => AuthAxios.get(`reels/reel-by-id/${rid}`);
+
+  getFriendsReels = (uid) => AuthAxios.get(`Explore_reels/${uid}`);
+  exploreReels = (uid) => AuthAxios.get(`Explore_myfriends_reels/${uid}`);
 }
 
 export default new ReelService();

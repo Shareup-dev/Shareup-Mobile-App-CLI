@@ -4,6 +4,7 @@ import {
   FlatList,
   Image,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -22,172 +23,47 @@ import StoriesService from '../services/story.service';
 import routes from '../navigation/routes';
 import authContext from '../authContext';
 import axios from 'axios';
+import ReelsService from '../services/Reels.service';
+import AuthContext from '../authContext';
 const width = Dimensions.get('window').width / 2 - 15;
 const height = Dimensions.get('window').height / 3;
 
 const tabes = [{name: 'My Reels'}, {name: 'Followed'}, {name: 'Explore'}];
-const dummyThumbnails = [
-  require('../assets/images/reel1.png'),
-  require('../assets/images/2.jpg'),
-  require('../assets/images/3.jpg'),
-  require('../assets/images/4.jpg'),
-  require('../assets/images/5.jpg'),
-  require('../assets/images/6.jpg'),
-  require('../assets/images/7.jpg'),
-  require('../assets/images/8.jpg'),
-  require('../assets/images/9.jpg'),
-  require('../assets/images/10.jpg'),
-  require('../assets/images/11.jpg'),
-  require('../assets/images/12.jpg'),
-  require('../assets/images/13.jpg'),
-  require('../assets/images/14.jpg'),
-  require('../assets/images/15.jpg'),
-];
-const reels = [
-  {
-    id: 1,
-    name: 'Jane',
-    time: '23 hrs',
-    image: require('../assets/images/reel1.png'),
-  },
-  {
-    id: 2,
-    name: 'Jane',
-    time: '23 hrs',
-    image: require('../assets/images/2.jpg'),
-  },
-  {
-    id: 3,
-    name: 'Jane',
-    time: '23 hrs',
-    image: require('../assets/images/3.jpg'),
-  },
-  {
-    id: 4,
-    name: 'Jane',
-    time: '23 hrs',
-    image: require('../assets/images/4.jpg'),
-  },
-  {
-    id: 5,
-    name: 'Jane',
-    time: '23 hrs',
-    image: require('../assets/images/5.jpg'),
-  },
-  {
-    id: 6,
-    name: 'Jane',
-    time: '23 hrs',
-    image: require('../assets/images/6.jpg'),
-  },
-  {
-    id: 7,
-    name: 'Jane',
-    time: '23 hrs',
-    image: require('../assets/images/7.jpg'),
-  },
-  {
-    id: 8,
-    name: 'Jane',
-    time: '23 hrs',
-    image: require('../assets/images/8.jpg'),
-  },
-];
-
-const followed = [
-  {
-    id: 1,
-    name: 'Jane',
-    time: '23 hrs',
-    image: fileStorage.baseUrl + '/data/assets/images/reel2.png',
-  },
-  {
-    id: 2,
-  },
-  {
-    id: 3,
-  },
-  {
-    id: 4,
-  },
-  {
-    id: 5,
-  },
-  {
-    id: 6,
-  },
-];
-const explore = [
-  {
-    id: 1,
-    name: 'Jane',
-    time: '23 hrs',
-    image: fileStorage.baseUrl + '/data/assets/images/',
-  },
-  {
-    id: 2,
-  },
-  {
-    id: 3,
-  },
-  {
-    id: 4,
-  },
-  {
-    id: 5,
-  },
-  {
-    id: 6,
-  },
-];
-const myReels = [
-  {
-    id: 1,
-    name: 'Jane',
-    time: '23 hrs',
-    image: fileStorage.baseUrl + '/data/assets/images/',
-  },
-  {
-    id: 2,
-  },
-  {
-    id: 3,
-  },
-  {
-    id: 4,
-  },
-  {
-    id: 5,
-  },
-  {
-    id: 6,
-  },
-];
 
 export default function SwapScreen({navigation}) {
-  const [allReels, setAllReels] = useState([]);
+  const {
+    userState: {userData},
+  } = useContext(AuthContext);
+
+  const [Loading, setLoading] = useState(0);
+  const [MyReels, setMyReels] = useState([]);
+  const [ExploreReels, setExploreReels] = useState([]);
+  const [FriendsReels, setFriendsReels] = useState([]);
   const [currentTab, setCurrentTab] = useState(tabes[0].name);
   const handleTabbed = name => {
     setCurrentTab(name);
   };
 
   useEffect(() => {
-    // ReelService.getReels().then(reelsResp => {
-    //   reelsResp.data.forEach(reel => {
-    //     reel.thumbnail =
-    //       dummyThumbnails[Math.floor(Math.random() * dummyThumbnails.length)];
-    //   });
-    //   setAllReels(reelsResp.data);
-    // });
-    store.dispatch(reelScreenDetector.actions.setReelScreen());
+    const fetchReels = () => {
+      setLoading(1);
+      Promise.all([
+        ReelsService.getReelsByUser(userData.id),
+        ReelsService.getFriendsReels(userData.id),
+        ReelsService.exploreReels(userData.id),
+      ])
+        .then(res => {
+          setMyReels(res[0].data);
+          setFriendsReels(res[1].data);
+          setExploreReels(res[2].data);
+        })
+        .catch(e => console.error(e))
+        .finally(_ => {
+          setLoading(2);
+        });
+    };
+    fetchReels();
 
-    
-    // StoriesService.getStories()
-    // .then(({data}) => setAllReels(data))
-    // .catch(e => console.error(e.message));
-
-    axios.get('https://6252a9697f7fa1b1dde87a9c.mockapi.io/api/v1/reels').then(({data})=>setAllReels(data));
-    
     return () => {
       navigation.addListener('blur', () => {
         store.dispatch(reelScreenDetector.actions.unSetReelScreen());
@@ -195,9 +71,9 @@ export default function SwapScreen({navigation}) {
     };
   }, []);
   const renderList = () => {
-    if (currentTab === tabes[0].name) return allReels;
-    if (currentTab === tabes[1].name) return followed;
-    if (currentTab === tabes[2].name) return explore;
+    if (currentTab === tabes[0].name) return MyReels;
+    if (currentTab === tabes[1].name) return FriendsReels;
+    if (currentTab === tabes[2].name) return ExploreReels;
   };
 
   return (
@@ -229,10 +105,21 @@ export default function SwapScreen({navigation}) {
         numColumns={2}
         keyExtractor={item => item.id.toString()}
         showsVerticalScrollIndicator={false}
-        renderItem={({item,index}) => (
+        ListEmptyComponent={
+          <View style={{width:'100%', alignItems:'center'}}>
+
+          <Text style={{ alignItems:'center'}}  >
+           {Loading === 2 ? `There is no reels to display`:`Loading..`}
+          </Text>
+          </View>
+        }
+        renderItem={({item, index}) => (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate(routes.REEL_PLAYER, {index,data:renderList()});
+              navigation.navigate(routes.REEL_PLAYER, {
+                index,
+                data: renderList(),
+              });
             }}>
             <View style={[styles.container]}>
               <Image

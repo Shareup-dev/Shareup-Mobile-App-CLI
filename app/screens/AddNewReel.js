@@ -26,10 +26,6 @@ import {ProgressBar} from 'react-native-paper';
 
 export default function AddReelScreen({navigation}) {
   let cameraRef;
-  let playerRef = useRef();
-
-  const windowWidth = Dimensions.get('screen').width;
-
   const {userData} = useContext(AuthContext)?.userState;
 
   const [isUploading, setIsUploading] = useState(false);
@@ -45,7 +41,6 @@ export default function AddReelScreen({navigation}) {
   async function StopRecording() {
     // stopInterval();
     await cameraRef.stopRecording();
-    setCapturing(false);
   }
 
   // const startInterval = _ =>
@@ -68,10 +63,17 @@ export default function AddReelScreen({navigation}) {
     cameraRef.recordAsync({
       maxDuration: 10,
       quality: RNCamera.Constants.VideoQuality['288p'],
-    }).then(res => console.log(res))
+      
+    }).then(res => {
+  
+      console.log(res);
+      setReel(res);
+    setCapturing(false);
 
-    // setReel(video);
-    setScreen('view');
+      setScreen('view');
+    }).finally(props => console.log(props))
+
+
   }
 
   // useEffect(() => {
@@ -80,7 +82,7 @@ export default function AddReelScreen({navigation}) {
   //   };
   // }, []);
 
-  const imagePickHandler = () => {
+  const videoPickHandler = () => {
     launchImageLibrary({
       quality: 0.5,
       mediaType: 'video',
@@ -116,15 +118,14 @@ export default function AddReelScreen({navigation}) {
     let reelData = new FormData();
 
     const uniId = new Date().valueOf();
-    reelData.append('caption', caption);
-    reelData.append('stryfiles', {
-      name: `story-video-${uniId}.mp4`,
+    reelData.append('content', caption);
+    reelData.append('reelfiles', {
+      name: `reel-video-${uniId}.mp4`,
       type: 'video/mp4',
       uri: story.uri,
     });
 
-    ReelService.addStory(userData.id, reelData)
-      .then(res => res)
+    ReelService.addReel(userData.id,reelData).then(res => console.log(res))
       .catch(e => console.error(e.message))
       .finally(_ => {
         setIsUploading(false);
@@ -153,7 +154,7 @@ export default function AddReelScreen({navigation}) {
           <CameraBottomActions
             onlyVideo={true}
             title="Reels"
-            onPickFile={imagePickHandler}
+            onPickFile={videoPickHandler}
             navigation={navigation}
             onCapture={onCapture}
             onRevertCamera={handelRevertCamera}
@@ -187,7 +188,7 @@ export default function AddReelScreen({navigation}) {
       ) : (
         <View style={styles.storyImgViewer}>
           <CameraHeader
-            title="Story"
+            title="Reels"
             onClosePress={() => setScreen('capture')}
           />
           <View style={styles.forwardArrow}>
