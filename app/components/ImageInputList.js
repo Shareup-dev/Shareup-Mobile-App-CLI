@@ -19,17 +19,24 @@ export default function ImageInputList({
 }) {
   const scrollView = useRef();
   //const imageUrisSet = imageUris.map((imageUris) => imageUris.replace('file:', ''));
-
-  console.log("imageUris",imageUris)
+  const {width, height} = Dimensions.get('screen');
   return (
-      <View style={styles.container}>
-      <ScrollView
-        ref={scrollView}
-        // horizontal
-        onContentSizeChange={() => scrollView.current.scrollToEnd()}
-      >
-        {imageUris.map((uri) => (
-
+    <View style={styles.container}>
+      <FlatList
+        //ref={scrollView}
+        // onContentSizeChange={() => scrollView.current.scrollToEnd()}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        data={imageUris}
+        keyExtractor={(item, i) => i.toString()}
+        renderItem={({item, index}) => {
+          return (
+        
+              <Image source={{uri:item}} style={{width: width, height: height / 2,  }} />
+         
+          );
+        }}>
+        {imageUris.map(uri => (
           <View key={uri} style={isSwap ? null : styles.imagePadding}>
             <ImageInput
               imageUri={uri}
@@ -47,13 +54,9 @@ export default function ImageInputList({
         ))}
 
         {isSwap && imageUris.length < 2 && (
-
-          <ImageInput
-            onChangeImage={(uri) => onAddImage(uri)}
-            isSwap={isSwap}
-          />
-        )}
-      </ScrollView>
+          <ImageInput onChangeImage={uri => onAddImage(uri)} isSwap={isSwap} />
+          )}
+          </FlatList>
     </View>
   );
 }
