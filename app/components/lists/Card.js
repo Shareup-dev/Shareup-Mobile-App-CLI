@@ -145,7 +145,7 @@ export default function Card({
   const loadImages = () => {
     
     if (postData.media?.length !== 0) {
-      setImages(postData.media?.map(image => fileStorage.baseUrl + image.media + 'g'));
+      setImages(postData.media?.map(image => fileStorage.baseUrl + image.mediaPath));
     }
   };
 
