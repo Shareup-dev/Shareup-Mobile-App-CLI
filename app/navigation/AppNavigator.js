@@ -37,7 +37,7 @@ const Tab = createBottomTabNavigator();
 export default function AppNavigator() {
   // useNotifications();
   let isReelScreen = useSelector(state => state.reelScreenDetector);
-  let isGroupScreen = useSelector(state => state.groupScreenDetector);
+
   const [isVisible, setIsVisible] = useState(false);
 
   const handleAddPost = () => {
@@ -95,12 +95,7 @@ export default function AppNavigator() {
                 onPress={() => {
                   if (isReelScreen) {
                     navigation.navigate(routes.ADD_NEW_REEL);
-                  // } else if (isGroupScreen){
-                  //   navigation.navigate(routes.ADD_POST, {
-                  //     postType: postTypes.GROUP_POST,
-                  //   });
-                  }
-                  else {
+                  } else {
                     navigation.navigate(routes.ADD_POST, {
                       postType: postTypes.CREATE_POST,
                     });

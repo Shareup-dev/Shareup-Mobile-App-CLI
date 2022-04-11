@@ -25,19 +25,18 @@ import fileStorage from '../config/fileStorage';
 
 import AuthContext from '../authContext';
 import DownModal from '../components/drawers/DownModal';
-import groupScreenDetector from '../redux/groupScreenDetector';
 
 const windowWidth = Dimensions.get('screen').width;
 const GroupFeedScreen = ({navigation, route}) => {
   const posts = useSelector(state => state.groupPosts);
   const {userData} = useContext(AuthContext).userState;
   const {params: groupData} = route;
+
   const [group, setGroup] = useState(groupData);
   const [isMember, setIsMember] = useState(false);
   const [requested, setRequested] = useState(false);
   const [loading, setLoading] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
- 
 
   useEffect(() => {
     const getGroupInfo = async () => {
@@ -45,12 +44,10 @@ const GroupFeedScreen = ({navigation, route}) => {
       await Promise.all([
         GroupService.getGroupById(groupData.id),
         GroupService.checkIsMember(groupData.id, userData.id),
-        GroupService.getGroupPost(groupData.id)
       ])
         .then(res => {
           setGroup(res[0].data);
           setIsMember(res[1].data);
-       
         })
         .catch(e => console.error(e))
         .finally(_ => setLoading(false));
@@ -58,15 +55,6 @@ const GroupFeedScreen = ({navigation, route}) => {
     getGroupInfo();
   }, [route.params]);
 
-  useEffect(() => {
-    store.dispatch(groupScreenDetector.actions.setGroupScreen());
-
-    return () => {
-      navigation.addListener('blur', () => {
-        store.dispatch(groupScreenDetector.actions.unSetGroupScreen());
-      });
-    };
-  }, []);
   const deleteGroup = _ => {
     Alert.alert('Delete group?', 'Are you sure to this group?', [
       {text: 'Cancel', style: 'cancel', onPress: () => {}},
@@ -100,9 +88,8 @@ const GroupFeedScreen = ({navigation, route}) => {
   };
 
   const checkOwner = () => {
-   // if (userData.id === groupData.owner?.id) return true;
-   // else 
-   return true;
+    if (userData.id === groupData.owner?.id) return true;
+    else return false;
   };
   const DropDownMenu = () => {
     return (
@@ -306,13 +293,11 @@ const GroupFeedScreen = ({navigation, route}) => {
         showsVerticalScrollIndicator={false}
         renderItem={({item}) => (
           <Card
-            user={item.userdata}
-            postData={item}
             postId={item.id}
-            userId={item.userdata.id}
-            firstName={item.userdata.firstName}
-            lastName={item.userdata.lastName}
-            profileImage={item.userdata.profilePicturePath}
+            userId={item.user.id}
+            firstName={item.user.firstName}
+            lastName={item.user.lastName}
+            profileImage={item.user.profilePicturePath}
             date={item.lastEdited}
             postText={item.content}
             imageURL={item.imagePath}
