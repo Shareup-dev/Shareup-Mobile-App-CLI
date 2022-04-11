@@ -198,7 +198,7 @@ export default function Card({
   const onLayout = e => {
     setSliderWidth(e.nativeEvent.layout.width);
   };
-  console.log("hereeee",images)
+  
 return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View

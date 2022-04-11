@@ -16,11 +16,18 @@ export default function WritePost({ navigation, style, groupPost, groupId }) {
     <View style={[styles.container, style]}>
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate(routes.ADD_POST, {
+          {console.log("groupPost   ",groupPost); groupPost
+          ?navigation.navigate(routes.ADD_POST, {
+            postType: postTypes.GROUP_POST,
+            groupPost:groupPost,
+            groupId:groupId,
+          })
+          :navigation.navigate(routes.ADD_POST, {
             postType: postTypes.CREATE_POST,
             groupPost,
             groupId,
           })
+        }
         }
       >
         <View style={styles.writePostContainer}>

@@ -25,6 +25,7 @@ import fileStorage from '../config/fileStorage';
 
 import AuthContext from '../authContext';
 import DownModal from '../components/drawers/DownModal';
+import groupScreenDetector from '../redux/groupScreenDetector';
 
 const windowWidth = Dimensions.get('screen').width;
 const GroupFeedScreen = ({navigation, route}) => {
@@ -44,10 +45,12 @@ const GroupFeedScreen = ({navigation, route}) => {
       await Promise.all([
         GroupService.getGroupById(groupData.id),
         GroupService.checkIsMember(groupData.id, userData.id),
+        GroupService.getGroupPost(groupData.id)
       ])
         .then(res => {
           setGroup(res[0].data);
           setIsMember(res[1].data);
+          console.log("getGroupPost:::",res[2].data)
         })
         .catch(e => console.error(e))
         .finally(_ => setLoading(false));
@@ -55,6 +58,15 @@ const GroupFeedScreen = ({navigation, route}) => {
     getGroupInfo();
   }, [route.params]);
 
+  useEffect(() => {
+    store.dispatch(groupScreenDetector.actions.setGroupScreen());
+
+    return () => {
+      navigation.addListener('blur', () => {
+        store.dispatch(groupScreenDetector.actions.unSetGroupScreen());
+      });
+    };
+  }, []);
   const deleteGroup = _ => {
     Alert.alert('Delete group?', 'Are you sure to this group?', [
       {text: 'Cancel', style: 'cancel', onPress: () => {}},
