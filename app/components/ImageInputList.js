@@ -1,7 +1,15 @@
-import React, { useRef, useEffect } from "react";
-import { View, StyleSheet, ScrollView, Image, FlatList } from "react-native";
-import Icon from "./Icon";
-import ImageInput from "./ImageInput";
+import React, {useRef, useEffect} from 'react';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Image,
+  FlatList,
+  ImageBackground,
+  Dimensions,
+} from 'react-native';
+import Icon from './Icon';
+import ImageInput from './ImageInput';
 
 export default function ImageInputList({
   imageUris,
@@ -11,6 +19,7 @@ export default function ImageInputList({
 }) {
   const scrollView = useRef();
   //const imageUrisSet = imageUris.map((imageUris) => imageUris.replace('file:', ''));
+
   console.log("imageUris",imageUris)
   return (
       <View style={styles.container}>
@@ -20,6 +29,7 @@ export default function ImageInputList({
         onContentSizeChange={() => scrollView.current.scrollToEnd()}
       >
         {imageUris.map((uri) => (
+
           <View key={uri} style={isSwap ? null : styles.imagePadding}>
             <ImageInput
               imageUri={uri}
@@ -29,14 +39,15 @@ export default function ImageInputList({
               imageUris.indexOf(uri) == 0 &&
               imageUris.length === 2 && (
                 <Icon
-                  image={require("../assets/icons/swap-icon.png")}
-                  style={styles.swapIcon}
+                image={require('../assets/icons/swap-icon.png')}
+                style={styles.swapIcon}
                 />
-              )}
+                )}
           </View>
         ))}
 
         {isSwap && imageUris.length < 2 && (
+
           <ImageInput
             onChangeImage={(uri) => onAddImage(uri)}
             isSwap={isSwap}
@@ -49,16 +60,17 @@ export default function ImageInputList({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
+    flexDirection: 'row',
+    flex: 1,
   },
   imagePadding: {
     marginBottom: 10,
   },
   swapIcon: {
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   Image: {
-        width: '100%',
-        height: '100%',
-      },
+    width: '100%',
+    height: '100%',
+  },
 });

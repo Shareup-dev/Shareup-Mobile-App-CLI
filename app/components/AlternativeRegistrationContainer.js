@@ -6,7 +6,7 @@ import React from 'react';
 export default function AlternativeRegistrationContainer() {
   return (
     <View style={styles.container}>
-      {/* <IconButton
+      <IconButton
         image={require("../assets/google-icon.png")}
         style={styles.iconButton}
       />
@@ -19,7 +19,7 @@ export default function AlternativeRegistrationContainer() {
       <IconButton
         image={require("../assets/facebook-icon.png")}
         style={styles.iconButton}
-      /> */}
+      />
     </View>
   );
 }

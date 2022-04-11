@@ -33,6 +33,7 @@ export default function NewsFeedScreen({navigation, route}) {
     postService.getNewsFeed(userState?.userData?.email)
     .then(res =>{ 
 
+
       console.log("Newsfeed Data",res.data)
       const postArray = res.data.reverse();
       setPosts(postArray)

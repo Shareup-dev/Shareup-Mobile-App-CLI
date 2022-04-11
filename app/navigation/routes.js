@@ -13,6 +13,7 @@ export default Object.freeze({
   USER_PROFILE: 'UserProfile',
   MESSAGES: 'Messages',
   MY_REELS: 'MyReels',
+  ADD_COMMENT_REEL: 'ADD_COMMENT_REEL', 
   SWAP: 'Swap',
   EDIT_PROFILE: 'EditProfile',
   ACTIVITY: 'Activity',

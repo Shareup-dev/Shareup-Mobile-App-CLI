@@ -21,7 +21,10 @@ export default function CameraBottomActions({
   onRevertCamera,
   mode,
   setMode,
+  title,
   capturing = false,
+  navigation,
+  onlyVideo = false,
 }) {
   const styles = StyleSheet.create({
     modeContainer: {
@@ -31,6 +34,23 @@ export default function CameraBottomActions({
       // width: '100%',
       // position: 'absolute',
       // bottom: 0,
+    },
+    Header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: 15,
+      borderBottomColor: '#cacaca',
+      borderBottomWidth: 1,
+      paddingVertical: 10,
+      backgroundColor: '#33333325',
+    },
+    HeaderText: {
+      color: '#fff',
+      fontSize: 25,
+      fontWeight: '600',
+    },
+    iconContainer: {
+      flexDirection: 'row',
     },
     modeActive: {
       fontWeight: '800',
@@ -47,6 +67,7 @@ export default function CameraBottomActions({
       width: '100%',
       flexDirection: 'row',
       justifyContent: 'space-between',
+      alignItems:'baseline',
       position: 'absolute',
       bottom: 0,
       zIndex: 1,
@@ -114,12 +135,29 @@ export default function CameraBottomActions({
           <Icon type={'Ionicons'} name={'camera-reverse-outline'} size={64} />
         </TouchableOpacity>
       </View>
+      <View style={styles.Header}>
+        <Text style={styles.HeaderText}>{title}</Text>
+        <View style={styles.iconContainer}>
+         
+          <TouchableOpacity onPress={_ => navigation.goBack()}>
+            <Icon
+              noBackground
+              type="MaterialCommunityIcons"
+              size={35}
+              backgroundSizeRatio={1}
+              name={'close'}
+              color="#fff"
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
       {capturing ? (
         <View style={styles.recordingContainer}>
           {/* <View style={styles.recordingIcon} /> */}
           {/* <Text style={styles.recordingText}>{` Recording..`}</Text> */}
         </View>
-      ) : (
+      ) : !onlyVideo && (
+
         <View style={styles.modeContainer}>
           <TouchableOpacity
             style={styles.bottomBtn}
@@ -158,6 +196,7 @@ export default function CameraBottomActions({
           </TouchableOpacity>
         </View>
       )}
+
     </>
   );
 }

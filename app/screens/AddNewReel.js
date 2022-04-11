@@ -1,298 +1,271 @@
-import React, {useState, useEffect, useContext, useRef} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
-  Text,
   View,
-  TouchableOpacity,
   Dimensions,
   Image,
-  ActivityIndicator,
+  Animated,
+  TouchableOpacity,
+  TextInput,
+  StatusBar,
+  Alert,
+  Text,
 } from 'react-native';
 
-import {FontAwesome} from 'react-native-vector-icons';
-import {StackActions} from '@react-navigation/native';
-
-import defaultStyles from '../config/styles';
 import colors from '../config/colors';
-import Icon from '../components/Icon';
-import authContext from '../authContext';
-import {storiesAction} from '../redux/stories';
-import store from '../redux/store';
-import {useImagePicker} from '../hooks';
-import ReelService from '../services/ReelService';
-import CameraHeader from '../components/headers/CameraHeader';
+
+import {RNCamera} from 'react-native-camera';
 import CameraBottomActions from '../components/CameraBottomActions';
+import CameraHeader from '../components/headers/CameraHeader';
+import Icon from '../components/Icon';
+import {launchImageLibrary} from 'react-native-image-picker';
+import AuthContext from '../authContext';
+import Video from 'react-native-video';
+import ReelService from '../services/Reels.service';
+import {ProgressBar} from 'react-native-paper';
 
-export default function AddNewReel({navigation}) {
+export default function AddReelScreen({navigation}) {
   let cameraRef;
-  const [reelPhoto, setreelPhoto] = useState({});
-  const [mode, setMode] = useState('capture');
-  const [hasPermission, setHasPermission] = useState(null);
-  const [type, setType] = useState(Camera.Constants.Type.back);
+  let playerRef = useRef();
+
+  const windowWidth = Dimensions.get('screen').width;
+
+  const {userData} = useContext(AuthContext)?.userState;
+
   const [isUploading, setIsUploading] = useState(false);
-  const [cameraImg, setCameraImg] = useState(false);
-  let thumbnail;
-  let loadingBarRef = useRef();
-  // const imagePickHandler = async () => {
-  //   try {
-  //     const result = await ImagePicker.launchImageLibraryAsync({
-  //       mediaTypes: ImagePicker.MediaTypeOptions.Videos,
-  //       // quality: 0.1,
-  //       videoQuality: 0.1,
-  //     });
-  //     setreelPhoto(result);
-  //     setCameraImg(false);
-  //     setMode('view');
-  //     if (!result.uri) {
-  //       return;
+  const [screen, setScreen] = useState('capture');
+  const [cameraType, setCameraType] = useState('back');
+  const [capturing, setCapturing] = useState(false);
+  const [story, setReel] = useState({});
+
+  // const [timer, setTimer] = useState(0);
+  // const [duration, setDuration] = useState(20000);
+  const [caption, setCaption] = useState('');
+
+  async function StopRecording() {
+    // stopInterval();
+    await cameraRef.stopRecording();
+    setCapturing(false);
+  }
+
+  // const startInterval = _ =>
+  //   setInterval(() => {
+  //     if(timer === 30) {
+  //       return StopRecording();
   //     }
+  //     setTimer(prev => prev + 1);
+  //   }, 1000);
 
-  //     // video.current.presentFullscreenPlayer();
-  //   } catch (error) {
-  //     console.error('Error reading an image', error);
-  //   }
-  // };
+  // const stopInterval = _ => clearInterval(startInterval);
 
-  const {
-    user: loggedInUser,
-    setloadingIndicator,
-    loadingIndicator,
-  } = useContext(authContext);
-  useEffect(() => {
-    (async () => {
-      const {status} = await Camera.requestPermissionsAsync();
-      setHasPermission(status === 'granted');
-    })();
-  }, []);
+  async function onCapture() {
+    if (capturing) {
+      return StopRecording();
+    }
+    setCapturing(true);
 
-  // async function captureImage() {
-  //   let editedResult;
-  //   let photo = await cameraRef.takePictureAsync({
-  //     skipProcessing: true,
-  //   });
-  //   setCameraImg(true);
+    // startInterval();
+    cameraRef.recordAsync({
+      maxDuration: 10,
+      quality: RNCamera.Constants.VideoQuality['288p'],
+    }).then(res => console.log(res))
 
-  //   try {
-  //     editedResult = await ImageManipulator.manipulateAsync(
-  //       photo.uri,
-  //       [{resize: {width: 960}}],
-  //       {compress: 0.5},
-  //     );
-  //   } catch (error) {
-  //     console.error('Edited error: ', error);
-  //   }
-  //   setMode('view');
-  //   setreelPhoto(editedResult);
-  // }
-  // const addreelHandler = async () => {
-  //   setIsUploading(true);
-  //   video.current.pauseAsync();
-  //   if (isUploading) {
-  //     return;
-  //   }
-  //   try {
-  //     thumbnail = await VideoThumbnails.getThumbnailAsync(reelPhoto.uri, {
-  //       time: 15000,
-  //     });
-  //   } catch (e) {
-  //     console.warn('Error occurred while generating thumbnail: ', e);
-  //   }
-  //   let reelData = new FormData();
+    // setReel(video);
+    setScreen('view');
+  }
 
-  //   reelData.append('reelfiles', {
-  //     name: 'reelFiles',
-  //     type: 'video/mp4',
-  //     uri: reelPhoto.uri,
-  //   });
-  //   reelData.append('thumbnail', {
-  //     name: 'thumbnail',
-  //     type: 'image/jpg',
-  //     uri: thumbnail.uri,
-  //   });
-  //   reelData.append('content', 'Sample caption');
-  //   // let progress = 0;
-  //   // let progressInterval = setInterval(() => {
-  //   //   progress += 2;
-  //   //   loadingBarRef?.current?.setNativeProps({
-  //   //     style: {
-  //   //       left: progress + "%",
-  //   //     },
-  //   //   });
-  //   //   if (progress > 80) {
-  //   //     progress = 0;
-  //   //   }
-  //   // }, 30);
-  //   ReelService.addReel(loggedInUser.id, reelData)
-  //     .then(resp => {
-  //       console.error('reel add resp: ', resp.data);
-  //       setIsUploading(false);
-  //       navigation.popToTop();
-  //     })
-  //     .catch(error => {
-  //       console.error('Error occurred while posting reel');
-  //       setIsUploading(false);
-  //     });
-  // };
+  // useEffect(() => {
+  //   return () => {
+  //     stopInterval();
+  //   };
+  // }, []);
 
-  const handelCloseCamera = () => {
-    const popAction = StackActions.pop(1);
-    navigation.dispatch(popAction);
+  const imagePickHandler = () => {
+    launchImageLibrary({
+      quality: 0.5,
+      mediaType: 'video',
+      durationLimit: 1,
+      selectionLimit: 1,
+      maxHeight: 500,
+      maxWidth: 320,
+      videoQuality: 'medium',
+    })
+      .then(res => {
+        if (res.didCancel) return;
+        else if (res.assets[0].duration > 30) {
+          Alert.alert('Ops..', "Sorry you can't upload this video", [null], {
+            cancelable: true,
+          });
+        } else {
+          setReel(res.assets[0]);
+          setScreen('view');
+        }
+      })
+      .catch(e => {
+        console.error('Error reading an image', error.message);
+      });
   };
 
   const handelRevertCamera = () => {
-    setType(
-      type === Camera.Constants.Type.back
-        ? Camera.Constants.Type.front
-        : Camera.Constants.Type.back,
-    );
+    setCameraType(prev => (prev === 'back' ? 'front' : 'back'));
   };
 
-  if (hasPermission === null) {
-    return <View />;
+  const addReelHandler = async () => {
+    setIsUploading(true);
+
+    let reelData = new FormData();
+
+    const uniId = new Date().valueOf();
+    reelData.append('caption', caption);
+    reelData.append('stryfiles', {
+      name: `story-video-${uniId}.mp4`,
+      type: 'video/mp4',
+      uri: story.uri,
+    });
+
+    ReelService.addStory(userData.id, reelData)
+      .then(res => res)
+      .catch(e => console.error(e.message))
+      .finally(_ => {
+        setIsUploading(false);
+        navigation.goBack();
+      });
+  };
+
+  function timeConvert(num) {
+    var hours = Math.floor(num / 60);
+    var minutes = num % 60 < 10 ? '0' + (num % 60) : num % 60;
+    return hours + ' : ' + minutes;
   }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
+
   return (
     <View style={styles.container}>
-      <View>
-        {isUploading && (
-          <View
+      <StatusBar backgroundColor="#000" barStyle="light-content" />
+      {screen === 'capture' ? (
+        <RNCamera
+          style={styles.camera}
+          ratio={'16:9'}
+          captureAudio={true}
+          ref={ref => {
+            cameraRef = ref;
+          }}
+          type={cameraType}>
+          <CameraBottomActions
+            onlyVideo={true}
+            title="Reels"
+            onPickFile={imagePickHandler}
+            navigation={navigation}
+            onCapture={onCapture}
+            onRevertCamera={handelRevertCamera}
+            mode={'video'}
+            capturing={capturing}
+          />
+          {/* <Animated.View
             style={{
-              flex: 1,
-              height: Dimensions.get('screen').height,
-              width: Dimensions.get('screen').width,
-              zIndex: 2,
+              backgroundColor: 'crimson',
               position: 'absolute',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+              bottom: 0,
+             
+              width: 1,
+              height: 6,
+            }}
+          /> */}
+          {/* <View style={{alignItems: 'flex-start', margin: 10}}>
             <View
               style={{
-                backgroundColor: 'white',
-                borderRadius: 30,
-                width: 220,
-                paddingVertical: 2,
-                paddingHorizontal: 20,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                // paddingBottom: 5,
+                backgroundColor: 'crimson',
+                paddingHorizontal: 10,
+                paddingVertical: 5,
+                borderRadius: 10,
               }}>
-              <View
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}>
-                <Text style={{fontSize: 16, marginBottom: 5, marginRight: 10}}>
-                  Processing Reel...
-                  <ActivityIndicator size="small" color={colors.iondigoDye} />
-                </Text>
-              </View>
+              <Text style={{color: '#fff', fontWeight: '700'}}>
+                {timeConvert(timer)}
+              </Text>
             </View>
-          </View>
-        )}
-      </View>
-      <View
-        style={{
-          flex: 1,
-          opacity: isUploading ? 0.3 : 1,
-          backgroundColor: isUploading ? 'black' : null,
-        }}>
-        {mode === 'capture' ? (
-          <View>
-            {/* <Camera
-              ratio={'16:9'}
-              ref={ref => {
-                cameraRef = ref;
-              }}
-              style={styles.camera}
-              type={type}>
-              <CameraHeader title="Reels" onClosePress={handelCloseCamera} />
-
-              <CameraBottomActions
-                onPickFile={imagePickHandler}
-                onCapture={captureImage}
-                onRevertCamera={handelRevertCamera}
-              />
-            </Camera> */}
-          </View>
-        ) : (
-          <View style={styles.reelImgViewer}>
-            <CameraHeader
-              title="Reels"
-              onClosePress={() => setMode('capture')}
+          </View> */}
+        </RNCamera>
+      ) : (
+        <View style={styles.storyImgViewer}>
+          <CameraHeader
+            title="Story"
+            onClosePress={() => setScreen('capture')}
+          />
+          <View style={styles.forwardArrow}>
+            <TextInput
+              placeholder="Caption"
+              value={caption}
+              onChangeText={e => setCaption(e)}
+              multiline
+              style={styles.caption}
             />
-            {/* <Video
-              ref={video}
-              onReadyForDisplay={() => {
-                setTimeout(() => {
-                  video.current.playAsync();
-                  video.current.setNativeProps({
-                    useNativeControls: true,
-                  });
-                }, 200);
-              }}
-              useNativeControls={true}
-              source={reelPhoto}
-              resizeMode={cameraImg ? 'cover' : 'contain'}
-              style={{
-                height: '100%',
-                width: '100%',
-              }}
-            /> */}
-
             <TouchableOpacity
-              style={styles.forwardArrow}
-              // onPress={addreelHandler}
-            >
-              <Icon type={'AntDesign'} name={'arrowright'} size={64} />
+              activeOpacity={0.6}
+              disabled={isUploading}
+              onPress={addReelHandler}>
+              <Icon
+                type={'AntDesign'}
+                color={'#333'}
+                name={'arrowright'}
+                size={50}
+                style={{
+                  marginLeft: 5,
+                }}
+              />
             </TouchableOpacity>
           </View>
-        )}
-      </View>
+
+          <Video
+            resizeMode={'cover'}
+            style={[styles.backgroundVideo]}
+            source={{uri: story.uri}}
+            repeat
+          />
+        </View>
+      )}
+      <ProgressBar
+        indeterminate={isUploading}
+        visible={isUploading}
+        color={'crimson'}
+      />
     </View>
   );
 }
 const styles = StyleSheet.create({
+  caption: {
+    paddingHorizontal: 15,
+    backgroundColor: colors.white,
+    borderRadius: 30,
+    fontSize: 18,
+    maxHeight: 100,
+    width: '85%',
+  },
+  backgroundVideo: {
+    flex: 1,
+    zIndex: -5,
+  },
   container: {
     flex: 1,
   },
   camera: {
+    flex: 1,
     height: Dimensions.get('screen').height,
     width: Dimensions.get('screen').width,
   },
-  captureButton: {
-    height: 86,
-    width: 86,
-    backgroundColor: colors.white,
-    position: 'absolute',
-    bottom: 150,
-    left: Dimensions.get('screen').width / 2 - 43,
-    borderRadius: 60,
-    borderWidth: 5,
-    borderColor: colors.LightGray,
-  },
-  reelImgViewer: {
+  storyImgViewer: {
     flex: 1,
   },
   forwardArrow: {
     position: 'absolute',
-    bottom: 50,
-    right: 50,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    bottom: 20,
+    paddingRight: 15,
+    paddingLeft: 10,
   },
-  reverseIcon: {
-    height: 86,
-    width: 86,
-    position: 'absolute',
-    bottom: 100,
-    right: 40,
-    zIndex: 1,
-    borderRadius: 60,
-  },
-  fileOpenerIcon: {
-    right: null,
-    left: 50,
+  title: {
+    fontSize: 32,
+    fontWeight: '500',
+    color: colors.white,
   },
 });

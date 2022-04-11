@@ -67,7 +67,7 @@ export default function GroupJoinCard({item, navigation}) {
         </Text>
       </TouchableOpacity>
       <View style={styles.tabsContainer}>
-        {/* <Tab
+        <Tab
           title={joinTitle}
           style={styles.tab}
           height={20}
@@ -76,14 +76,14 @@ export default function GroupJoinCard({item, navigation}) {
           color={joinBackGroundColor}
           width="45%"
           onPress={handleJoin}
-        /> */}
+        />
         <Tab
           title="View"
           style={styles.tab}
           height={20}
           sizeRatio={resizeRatio}
           color={colors.lighterGray}
-          width="85%"
+          width="45%"
           fontColor={colors.dark}
           onPress={() => {
             navigation.navigate(routes.GROUP_FEED, item);

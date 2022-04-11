@@ -39,7 +39,6 @@ const PostActions = ({
    // null
   );
 
-// console.log("postData....:",postData)
   
   return (
     <View style={styles.content}>

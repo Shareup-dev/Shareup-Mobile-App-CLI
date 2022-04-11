@@ -17,6 +17,7 @@ import FeelingAndActivity from '../screens/feelingAndActivity';
 import {getStatusBarHeight} from 'react-native-iphone-x-helper';
 import {useHeaderHeight} from '@react-navigation/stack';
 import GroupFeedScreen from '../screens/GroupFeedScreen';
+import AddCommentsOnReels from '../screens/addCommentsOnReels';
 const Stack = createNativeStackNavigator();
 const headerHeight = useHeaderHeight;
 export default function HomeNavigator(props) {
@@ -31,7 +32,13 @@ export default function HomeNavigator(props) {
         component={StoryViewScreen}
       />
       <Stack.Screen name={routes.ADDS_STORY} component={AddStoryScreen} />
-
+      <Stack.Screen
+        name={routes.ADD_COMMENT_REEL}
+        component={AddCommentsOnReels}
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen name={routes.TAG_PEOPLE} component={TagPeople} />
       <Stack.Screen name={routes.COMMENTS} component={CommentsScreen} />
       <Stack.Screen name={routes.ADD_NEW_REEL} component={AddNewReel} />

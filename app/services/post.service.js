@@ -7,7 +7,7 @@ class PostService {
   getNewsFeed = email =>
     AuthAxios.get(`new_newsFeed/${email}`)
   createPost = (uid,data) => 
-     AuthAxios.post(`posts/${uid}`,data,config)
+     AuthAxios.post(`new_post/${uid}`,data,config)
   getPostByEmail = email =>
     AuthAxios.get(`posts/email/${email}`)
   getPostByPostId = pid =>

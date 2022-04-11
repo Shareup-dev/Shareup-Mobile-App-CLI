@@ -35,7 +35,6 @@ export default function Card({
   navigation,
   postType,
 }) {
-  // console.log("PostData.....:",postData.media)
   const {userState} = useContext(authContext);
   const options = [
     {
@@ -145,7 +144,7 @@ export default function Card({
   const loadImages = () => {
     
     if (postData.media?.length !== 0) {
-      setImages(postData.media?.map(image => fileStorage.baseUrl + image.media + 'g'));
+      setImages(postData.media?.map(image => fileStorage.baseUrl + image.mediaPath));
     }
   };
 
@@ -201,7 +200,7 @@ export default function Card({
   const onLayout = e => {
     setSliderWidth(e.nativeEvent.layout.width);
   };
-  console.log("hereeee",images)
+  
 return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View

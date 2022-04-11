@@ -26,7 +26,7 @@ const StoryViewScreen = ({navigation, route}) => {
     profilePicture,
   } = route.params;
 
-  const [menuOpen, setMenuOpen] = useState(false);
+  // const [menuOpen, setMenuOpen] = useState(false);
   const [paused, setPaused] = useState(false);
   const [Loaded, setLoaded] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -101,73 +101,71 @@ const StoryViewScreen = ({navigation, route}) => {
     Animated.timing(width[activeIndex]).stop();
   };
 
-  const handleCloseModel = () => {
-    setMenuOpen(false);
-    startProgress();
-  };
+  // const handleCloseModel = () => {
+  //   setMenuOpen(false);
+  //   startProgress();
+  // };
 
-  const handleDelete = () => {
-    Alert.alert('Delete this?', 'Are you sure to delete this story?', [
-      {text: "Don't delete", style: 'cancel', onPress: () => {}},
-      {
-        text: 'Delete',
-        style: 'destructive',
-        onPress: () => {},
-      },
-    ]);
-  };
+  // const handleDelete = () => {
+  //   Alert.alert('Delete this?', 'Are you sure to delete this story?', [
+  //     {text: "Don't delete", style: 'cancel', onPress: () => {}},
+  //     {
+  //       text: 'Delete',
+  //       style: 'destructive',
+  //       onPress: () => {},
+  //     },
+  //   ]);
+  // };
 
   useEffect(() => {
     if (Loaded) {
       startProgress();
     }
-    return () => {
-      Animated.timing(width[activeIndex]).stop();
-    };
-  }, [activeIndex, Loaded]);
+    // return () => {
+    //   Animated.timing(width[activeIndex]).stop();
+    // };
+  }, [Loaded]);
 
-
-
-  const DropDownMenu = () => {
-    return (
-      <View style={styles.menuContainer}>
-        <View style={{alignItems: 'center'}}>
-          <View
-            style={{
-              backgroundColor: '#cacaca',
-              width: 80,
-              height: 6,
-              borderRadius: 6,
-            }}
-          />
-        </View>
-        <TouchableOpacity style={styles.menu}>
-          <View>
-            <Text style={styles.menuText}>Edit</Text>
-            <Text>Edit the Caption</Text>
-          </View>
-          <Icon size={45} name={'edit'} type="Entypo" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menu} onPress={handleDelete}>
-          <View>
-            <Text style={styles.menuText}>Delete</Text>
-            <Text>Delete your story</Text>
-          </View>
-          <Icon size={45} name={'delete'} color="crimson" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menu}>
-          <View>
-            <Text style={styles.menuText}>Hide this story</Text>
-            <Text
-              style={{
-                maxWidth: windowWidth / 2,
-              }}>{`Posted by @${route.params?.userName}`}</Text>
-          </View>
-          <Icon size={45} name={'eye-with-line'} type="Entypo" />
-        </TouchableOpacity>
-      </View>
-    );
-  };
+  // const DropDownMenu = () => {
+  //   return (
+  //     <View style={styles.menuContainer}>
+  //       <View style={{alignItems: 'center'}}>
+  //         <View
+  //           style={{
+  //             backgroundColor: '#cacaca',
+  //             width: 80,
+  //             height: 6,
+  //             borderRadius: 6,
+  //           }}
+  //         />
+  //       </View>
+  //       <TouchableOpacity style={styles.menu}>
+  //         <View>
+  //           <Text style={styles.menuText}>Edit</Text>
+  //           <Text>Edit the Caption</Text>
+  //         </View>
+  //         <Icon size={45} name={'edit'} type="Entypo" />
+  //       </TouchableOpacity>
+  //       <TouchableOpacity style={styles.menu} onPress={handleDelete}>
+  //         <View>
+  //           <Text style={styles.menuText}>Delete</Text>
+  //           <Text>Delete your story</Text>
+  //         </View>
+  //         <Icon size={45} name={'delete'} color="crimson" />
+  //       </TouchableOpacity>
+  //       <TouchableOpacity style={styles.menu}>
+  //         <View>
+  //           <Text style={styles.menuText}>Hide this story</Text>
+  //           <Text
+  //             style={{
+  //               maxWidth: windowWidth / 2,
+  //             }}>{`Posted by @${route.params?.userName}`}</Text>
+  //         </View>
+  //         <Icon size={45} name={'eye-with-line'} type="Entypo" />
+  //       </TouchableOpacity>
+  //     </View>
+  //   );
+  // };
 
   const StorySlides = memo(() => {
     return (
@@ -210,7 +208,7 @@ const StoryViewScreen = ({navigation, route}) => {
             <Text style={styles.userName}>{`${firstName} ${lastName}`}</Text>
           </View>
           <View style={{flexDirection: 'row'}}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.closeIcon}
               onPress={() => {
                 setMenuOpen(true);
@@ -223,7 +221,7 @@ const StoryViewScreen = ({navigation, route}) => {
                 backgroundColor={'unset'}
                 noBackground={true}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
               style={[styles.closeIcon, styles.shadow]}
               onPress={() => {
@@ -237,15 +235,14 @@ const StoryViewScreen = ({navigation, route}) => {
                 noBackground={true}
               />
             </TouchableOpacity>
-            <DownModal isVisible={menuOpen} setIsVisible={handleCloseModel}>
+            {/* <DownModal isVisible={menuOpen} setIsVisible={handleCloseModel}>
               <DropDownMenu />
-            </DownModal>
+            </DownModal> */}
           </View>
         </View>
       </View>
     );
   }, []);
-
   return (
     <>
       <TouchableOpacity
@@ -268,7 +265,7 @@ const StoryViewScreen = ({navigation, route}) => {
             style={{
               width: '100%',
               height: '100%',
-              backgroundColor: '#34343460',
+              backgroundColor: '#000',
             }}
             source={{
               uri: fileStorage.baseUrl + data[activeIndex].video,
@@ -279,12 +276,24 @@ const StoryViewScreen = ({navigation, route}) => {
             style={{
               width: '100%',
               height: '100%',
-              backgroundColor: '#34343460',
+              backgroundColor: '#000',
             }}
             onLoadEnd={_ => setLoaded(true)}
             source={{uri: fileStorage.baseUrl + data[activeIndex].image}}
           />
         )}
+        <Text
+          style={{
+            zIndex: 100,
+            position: 'absolute',
+            bottom: 20,
+            left: 15,
+            fontSize: 16,
+            fontWeight: '600',
+            color: '#fff',
+          }}>
+      { data[activeIndex].caption}
+        </Text>
       </TouchableOpacity>
     </>
   );
