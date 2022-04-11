@@ -6,6 +6,8 @@ import {
   Image,
   Text,
   Dimensions,
+  StatusBar,
+  
 } from 'react-native';
 
 import Screen from '../components/Screen';
@@ -13,12 +15,15 @@ import fileStorage from '../config/fileStorage';
 import colors from '../config/colors';
 import Icon from '../components/Icon';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import Video from 'react-native-video';
+import {SwiperFlatList} from "react-native-swiper-flatlist"
 
 const ReelPlayer = ({navigation, route}) => {
-  const reelVideo = route.params;
+  const {index, data} = route.params;
 
   const [mute, setMute] = useState(false);
   const [like, setLike] = useState(false);
+  const [paused, setPaused] = useState(false);
 
   const videoRef = React.useRef(null);
 
@@ -144,15 +149,61 @@ const ReelPlayer = ({navigation, route}) => {
     );
   };
 
+  const {width, height} = Dimensions.get('screen');
   return (
-    <TouchableOpacity style={{flex: 1, justifyContent: 'space-between'}} activeOpacity={1} onLongPress={_ => setLike(prev => !prev)}>
-      <Header />
-      <Image
-        style={styles.video}
-        source={{uri: fileStorage.baseUrl + reelVideo.image}}
+    <>
+      <SwiperFlatList
+       vertical
+        style={{flex: 1}}
+        data={data}
+        keyExtractor={(item, i) => i.toString()}
+        renderItem={({item}) => {
+          return(
+          <TouchableOpacity
+            style={{flex: 1, justifyContent: 'space-between',width:width,height:height,backgroundColor:'#000'}}
+            activeOpacity={1}
+            onPress={_ => setPaused(prev => !prev)}
+            onLongPress={_ => setLike(prev => !prev)}>
+            <Header />
+            {paused && (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <View
+                  style={{
+                    backgroundColor: '#33333320',
+                    padding: 15,
+                    borderRadius: 40,
+                  }}>
+                  <Icon
+                    name={'pause'}
+                    noBackground
+                    type="Fontisto"
+                    size={35}
+                    backgroundSizeRatio={0.6}
+                    color="#fff"
+                  />
+                </View>
+              </View>
+            )}
+            <View style={styles.video}>
+              <Video
+                style={{width: width, height: height}}
+                source={{uri: item.video}}
+                repeat
+                muted={mute}
+                paused={paused}
+                resizeMode="cover"
+              />
+            </View>
+            <BottomCard />
+          </TouchableOpacity>);
+        }}
       />
-      <BottomCard />
-    </TouchableOpacity>
+    </>
   );
 };
 
@@ -165,8 +216,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
-    marginBottom: 10,
     paddingHorizontal: 10,
+    
   },
   reelAction: {
     paddingHorizontal: 5,
@@ -200,20 +251,10 @@ const styles = StyleSheet.create({
   },
   video: {
     position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
+    flex: 1,
     zIndex: -10,
   },
-  activityIndicator: {
-    position: 'absolute',
-    zIndex: 2,
-    top: '50%',
-    bottom: '50%',
-    left: '50%',
-    right: '50%',
-  },
+
 });
 
 export default ReelPlayer;

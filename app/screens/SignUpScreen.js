@@ -11,6 +11,7 @@ import RegistrationContainer from '../components/forms/RegistrationContainer';
 import LinkButton from '../components/buttons/LinkButton';
 import authService from '../services/auth.service';
 import colors from '../config/colors';
+import AlternativeRegistrationContainer from '../components/AlternativeRegistrationContainer';
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().required().label('First Name'),
@@ -90,8 +91,8 @@ export default function SignUpScreen({navigation}) {
           dis
           style={styles.submitButton}
         />
-
         <Separator text="or" />
+<AlternativeRegistrationContainer />
 
         <LinkButton
           title="Do you have an existing account?"
@@ -111,6 +112,5 @@ const styles = StyleSheet.create({
   submitButton: {
     alignSelf: 'center',
     width: '60%',
-    paddingTop: '10%',
   },
 });

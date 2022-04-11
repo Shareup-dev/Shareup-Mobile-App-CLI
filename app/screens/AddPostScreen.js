@@ -43,6 +43,7 @@ import RadioOptionDrawer from '../components/drawers/RadioOptionDrawer';
 import OptionBox from '../components/posts/OptionBox';
 import {useDispatch, useSelector} from 'react-redux';
 import {postFeelingsActions} from '../redux/postFeelings';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function AddPostScreen({navigation, route}) {
 
@@ -434,12 +435,12 @@ export default function AddPostScreen({navigation, route}) {
             </Text>
             <View style={styles.row}>
               {/**Friends */}
-              {/* <OptionBox
+              <OptionBox
                 currentOption={postPrivacyOption}
                 onPress={() =>
                   setIsPrivacyOptionsVisible(!isPrivacyOptionsVisible)
                 }
-              /> */}
+              />
 
               {postType === postTypes.CREATE_POST && (
                 <View style={[styles.headerTab, styles.row]}>

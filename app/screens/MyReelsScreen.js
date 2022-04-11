@@ -21,6 +21,7 @@ import reelScreenDetector from '../redux/reelScreenDetector';
 import StoriesService from '../services/story.service';
 import routes from '../navigation/routes';
 import authContext from '../authContext';
+import axios from 'axios';
 const width = Dimensions.get('window').width / 2 - 15;
 const height = Dimensions.get('window').height / 3;
 
@@ -181,9 +182,11 @@ export default function SwapScreen({navigation}) {
     store.dispatch(reelScreenDetector.actions.setReelScreen());
 
     
-    StoriesService.getStories()
-    .then(({data}) => setAllReels(data))
-    .catch(e => console.error(e.message));
+    // StoriesService.getStories()
+    // .then(({data}) => setAllReels(data))
+    // .catch(e => console.error(e.message));
+
+    axios.get('https://6252a9697f7fa1b1dde87a9c.mockapi.io/api/v1/reels').then(({data})=>setAllReels(data));
     
     return () => {
       navigation.addListener('blur', () => {
@@ -226,10 +229,10 @@ export default function SwapScreen({navigation}) {
         numColumns={2}
         keyExtractor={item => item.id.toString()}
         showsVerticalScrollIndicator={false}
-        renderItem={({item}) => (
+        renderItem={({item,index}) => (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate(routes.REEL_PLAYER, item);
+              navigation.navigate(routes.REEL_PLAYER, {index,data:renderList()});
             }}>
             <View style={[styles.container]}>
               <Image

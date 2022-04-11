@@ -1,7 +1,15 @@
-import React, { useRef, useEffect } from "react";
-import { View, StyleSheet, ScrollView, Image, FlatList } from "react-native";
-import Icon from "./Icon";
-import ImageInput from "./ImageInput";
+import React, {useRef, useEffect} from 'react';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Image,
+  FlatList,
+  ImageBackground,
+  Dimensions,
+} from 'react-native';
+import Icon from './Icon';
+import ImageInput from './ImageInput';
 
 export default function ImageInputList({
   imageUris,
@@ -11,38 +19,24 @@ export default function ImageInputList({
 }) {
   const scrollView = useRef();
   //const imageUrisSet = imageUris.map((imageUris) => imageUris.replace('file:', ''));
-
+  const {width, height} = Dimensions.get('screen');
   return (
-    
     <View style={styles.container}>
       <FlatList
         //ref={scrollView}
-        // horizontal
-       // onContentSizeChange={() => scrollView.current.scrollToEnd()}
-       horizontal={true} 
-       showsHorizontalScrollIndicator={false} 
-       data= {imageUris}
-       renderItem={ ({ item, index }) => {
-     
-
-        return(
+        // onContentSizeChange={() => scrollView.current.scrollToEnd()}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        data={imageUris}
+        keyExtractor={(item, i) => i.toString()}
+        renderItem={({item, index}) => {
+          return (
+        
+              <Image source={{uri:item}} style={{width: width, height: height / 2,  }} />
          
-         <Image source= {{uri:item}} /* Use item to set the image source */
-           key={index} /* Important to set a key for list items,
-                          but it's wrong to use indexes as keys, see below */
-           style={{
-             width:260,
-             height:300,
-            // borderWidth:2,
-             //borderColor:'#d35647',
-             resizeMode:'contain',
-             margin:2
-           }}
-         />
-      
-       )}}
-      >
-        {imageUris.map((uri) => (
+          );
+        }}>
+        {imageUris.map(uri => (
           <View key={uri} style={isSwap ? null : styles.imagePadding}>
             <ImageInput
               imageUri={uri}
@@ -52,36 +46,34 @@ export default function ImageInputList({
               imageUris.indexOf(uri) == 0 &&
               imageUris.length === 2 && (
                 <Icon
-                  image={require("../assets/icons/swap-icon.png")}
-                  style={styles.swapIcon}
+                image={require('../assets/icons/swap-icon.png')}
+                style={styles.swapIcon}
                 />
-              )}
+                )}
           </View>
         ))}
 
         {isSwap && imageUris.length < 2 && (
-          <ImageInput
-            onChangeImage={(uri) => onAddImage(uri)}
-            isSwap={isSwap}
-          />
-        )}
-      </FlatList>
+          <ImageInput onChangeImage={uri => onAddImage(uri)} isSwap={isSwap} />
+          )}
+          </FlatList>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
+    flexDirection: 'row',
+    flex: 1,
   },
   imagePadding: {
     marginBottom: 10,
   },
   swapIcon: {
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   Image: {
-        width: '100%',
-        height: '100%',
-      },
+    width: '100%',
+    height: '100%',
+  },
 });

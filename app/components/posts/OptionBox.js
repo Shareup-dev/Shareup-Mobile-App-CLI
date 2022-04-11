@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
-import {FontAwesome5} from 'react-native-vector-icons';
-import {MaterialIcons} from 'react-native-vector-icons';
+
+
 
 import colors from '../../config/colors';
 import Icon from '../Icon';
@@ -14,14 +14,17 @@ export default function OptionBox({currentOption, onPress}) {
       {currentOption.icon && (
         <Icon
           image={currentOption.icon}
+          type='FontAwesome5'
           backgroundSizeRatio={1}
           size={15}
           color={colors.dimGray}
         />
       )}
 
+   
       <Text style={styles.text}>{currentOption.value}</Text>
-      <MaterialIcons
+      <Icon
+      type='MaterialIcons'
         name="keyboard-arrow-down"
         size={15}
         color={colors.dimGray}

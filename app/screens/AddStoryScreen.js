@@ -177,12 +177,14 @@ export default function AddStoryScreen({navigation}) {
           }}
           type={cameraType}>
           <CameraBottomActions
+          title={'Story'}
             onPickFile={imagePickHandler}
             onCapture={onCapture}
             onRevertCamera={handelRevertCamera}
             mode={mode}
             capturing={capturing}
             setMode={setMode}
+            navigation={navigation}
           />
           <Animated.View
             style={{
