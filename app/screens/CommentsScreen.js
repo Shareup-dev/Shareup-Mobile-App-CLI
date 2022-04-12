@@ -55,7 +55,7 @@ const loadComments = async () => {
   })
   .catch(e => console.error(e.message))
 };
-  const [isOptionsVisible,setIsOptionsVisible] = useState(false);
+  //const [isOptionsVisible,setIsOptionsVisible] = useState(false);
   const options = [ {
     title:  'Edit',
     icon: {
@@ -98,13 +98,11 @@ const loadComments = async () => {
         // scrollToListBottom();
       });
     } else {
-
-      const reply = {reply: commentContent};
-      console.log('Making comment: ', userId, commentId, reply);
-
+      //const reply = {reply: commentContent};
+      console.log('Making comment: ', userId, commentId, comment);
       const comment = {content: commentContent};
       if (commentContent !== '') {
-        postService.replay(userState?.userData?.id, commentId, reply)
+        postService.replay(userState?.userData?.id, commentId, comment)
         .then(res => {
           refreshComments();
           setCommentContent('');
@@ -128,11 +126,8 @@ const loadComments = async () => {
         // scrollToListBottom();
       });
     } else {
-
-     
-
       const comment = {content: commentContent};
-  
+
       if (commentContent !== '') {
         postService.addComment(userState?.userData?.id, postId, comment)
         .then(res => {
@@ -155,14 +150,15 @@ const loadComments = async () => {
     // commentTextFieldRef.current.focus()
   }
   const handleReplyComment = (commentId) => {
-    //setCommentId(commentId)
-    //setCommentsList(reply)
+    setCommentId(commentId)
+    
+    console.log("commentId:::",commentId)
    postService.getAllReply(commentId)
     .then(res => {
-      console.log(res)
+      console.log("Reply",res.data)
       const replyArray = res.data//.reverse();
       setReplyList(replyArray)})
-    .catch(e => console.error(e))
+    .catch(e => console.log(e))
     commentTextFieldRef.current.focus()
     setIsReply(true)
   };
@@ -294,7 +290,7 @@ const loadComments = async () => {
   ) : ( <Screen style={styles.replayContainer}>
     <Text style={{color:colors.iondigoDye,fontSize:12}} onPress={hideReply}>-- Hide replies</Text>
    <FlatList
-     data={commentsList}
+     data={replyList}
      keyExtractor={comment => comment.id.toString()}
      ref={commentsListRef}
      onContentSizeChange={scrollToListBottom}
@@ -315,19 +311,19 @@ const loadComments = async () => {
          reply = {replyList}
          postType={postType}
          fromReply={fromReply}
-         isOptionVisible = {isOptionsVisible}
-         setIsOptionVisible = {setIsOptionsVisible}
+         //isOptionVisible = {isOptionsVisible}
+        // setIsOptionVisible = {setIsOptionsVisible}
        />
      )}
    />
-   <EnhancedOptionsDrawer
+   {/* <EnhancedOptionsDrawer
           //source={'comment'}
          // postId={comment.id}
          // postText={comment.content}
           options={options}
-          isVisible={isOptionsVisible}
-          setIsVisible={setIsOptionsVisible}
-        />
+          //isVisible={isOptionsVisible}
+         // setIsVisible={setIsOptionsVisible}
+        /> */}
  </Screen>);
 }
 
