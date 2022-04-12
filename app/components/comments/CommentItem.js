@@ -35,8 +35,8 @@ export default function CommentItem({
   reply,
   postType,
   swapId,
-  setIsOptionsVisible,
-  isOptionsVisible,
+  //setIsOptionsVisible,
+  //isOptionsVisible,
   setNumberOfComments
 }) {
   //const isReply = false
@@ -47,7 +47,7 @@ export default function CommentItem({
   );
   return (
     <>
-     <TouchableWithoutFeedback onLongPress={setIsOptionsVisible(true)}>
+     {/* <TouchableWithoutFeedback onLongPress={()=>{}}> */}
         <View style={!fromReply?styles.container:styles.replyContainer}>
           {/** Left */}
           <View>
@@ -115,7 +115,7 @@ export default function CommentItem({
           <CommentsScreen route={{params: { comments: reply, userId: comment.user.id, commendId: comment.id, postType: postType, swapId: swapId, fromReply:true }}}/>
         ) : (<Text />)}
         {/* <Separator style={styles.separator} /> */}
-        </TouchableWithoutFeedback>
+        {/* </TouchableWithoutFeedback> */}
     </>
   );
 }

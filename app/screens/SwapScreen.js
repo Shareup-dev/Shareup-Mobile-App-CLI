@@ -9,6 +9,7 @@ import colors from '../config/colors';
 import Screen from '../components/Screen';
 import {launchImageLibrary,launchCamera} from 'react-native-image-picker';
 import routes from '../navigation/routes';
+import * as ImagePicker from 'react-native-image-picker';
 
 export default function SwapScreen({navigation, route}) {
   // const [imageUri, setImageUri] = useState('');
@@ -32,7 +33,8 @@ export default function SwapScreen({navigation, route}) {
     });
   };
   const imageCaptureHandler = () => {
-    launchCamera({
+    console.log("camera")
+    ImagePicker.launchCamera({
       quality: 0.5,
       cameraType:'back',
       mediaType:'photo',

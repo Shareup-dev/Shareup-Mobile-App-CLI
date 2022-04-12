@@ -29,7 +29,7 @@ import groupScreenDetector from '../redux/groupScreenDetector';
 
 const windowWidth = Dimensions.get('screen').width;
 const GroupFeedScreen = ({navigation, route}) => {
-  const posts = useSelector(state => state.groupPosts);
+ // const posts = useSelector(state => state.groupPosts);
   const {userData} = useContext(AuthContext).userState;
   const {params: groupData} = route;
   const [group, setGroup] = useState(groupData);
@@ -37,6 +37,7 @@ const GroupFeedScreen = ({navigation, route}) => {
   const [requested, setRequested] = useState(false);
   const [loading, setLoading] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [posts,setPosts] = useState([]);
  
 
   useEffect(() => {
@@ -50,7 +51,7 @@ const GroupFeedScreen = ({navigation, route}) => {
         .then(res => {
           setGroup(res[0].data);
           setIsMember(res[1].data);
-       
+          setPosts(res[2].data);
         })
         .catch(e => console.error(e))
         .finally(_ => setLoading(false));
