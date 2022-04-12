@@ -14,9 +14,11 @@ import {
 import Icon from '../components/Icon';
 import Video from 'react-native-video';
 import routes from '../navigation/routes';
+import fileStorage from '../config/fileStorage';
 
 const ReelPlayer = ({navigation, route}) => {
   const {index, data} = route.params;
+  console.log("data",data)
 
   const videoRef = React.useRef(null);
 
@@ -121,6 +123,8 @@ const ReelPlayer = ({navigation, route}) => {
     const [paused, setPaused] = useState(false);
     const [mute, setMute] = useState(false);
 
+    console.log(fileStorage.baseUrl + video)
+
     return (
       <KeyboardAvoidingView>
         <TouchableOpacity
@@ -189,7 +193,7 @@ const ReelPlayer = ({navigation, route}) => {
                 width: width,
                 height: height - StatusBar.currentHeight,
               }}
-              source={{uri: video}}
+              source={{uri: fileStorage.baseUrl + video}}
               repeat
               muted={mute}
               paused={paused}
@@ -212,8 +216,8 @@ const ReelPlayer = ({navigation, route}) => {
         data={data}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, i) => i.toString()}
-        renderItem={({item: {video}}) => {
-          return <RenderReels video={video} />;
+        renderItem={({item: {media}}) => {
+          return <RenderReels video={media[0].media} />;
         }}
       />
     </>

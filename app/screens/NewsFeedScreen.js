@@ -5,6 +5,7 @@ import {
   Dimensions,
   ActivityIndicator,
   View,
+  Text,
 } from 'react-native';
 import authContext from '../authContext';
 import Screen from '../components/Screen';
@@ -104,14 +105,14 @@ return (
         initialNumToRender={10}
         data={posts}
         ListHeaderComponent={ListHeader}
-        ListFooterComponent={ActivityIndicatorComponent}
+        // ListFooterComponent={ActivityIndicatorComponent}
         keyExtractor={post => post.id.toString()}
         showsVerticalScrollIndicator={false}
         renderItem={renderItem}
         onEndReached={hideActivityIndicator}
-        // ListEmptyComponent={() => (
-        //   <Text style={{ alignSelf: "center" }}>No posts Available</Text>
-        // )}
+        ListEmptyComponent={() => (
+          <Text style={{ alignSelf: "center" , marginVertical:50}}>No posts Available</Text>
+        )}
       />
     </Screen>
   );
