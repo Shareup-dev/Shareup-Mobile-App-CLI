@@ -85,7 +85,7 @@ export default function GroupsScreen({navigation}) {
         }}>
         <TouchableOpacity
           activeOpacity={0.6}
-
+          onPress={_ => navigation.navigate(routes.GROUP_FEED, item)}
           // navigation.navigate(routes.GROUP_FEED, item)}
         >
           <View
@@ -268,7 +268,7 @@ export default function GroupsScreen({navigation}) {
               Groups you manage
             </Text>
             <FlatList
-              data={groups}        
+              data={groups}
               keyExtractor={(item, i) => i.toString()}
               renderItem={({item}) => <ManageGroupCard item={item} />}
             />

@@ -19,7 +19,6 @@ import defaultStyle from '../config/styles';
 import fileStorage from '../config/fileStorage';
 import store from '../redux/store';
 import reelScreenDetector from '../redux/reelScreenDetector';
-import StoriesService from '../services/story.service';
 import routes from '../navigation/routes';
 import authContext from '../authContext';
 import axios from 'axios';
@@ -62,14 +61,16 @@ export default function SwapScreen({navigation}) {
           setLoading(2);
         });
     };
-    fetchReels();
-
+    navigation.addListener('focus', async e => fetchReels())
+    // fetchReels();
+    store.dispatch(reelScreenDetector.actions.setReelScreen());
     return () => {
       navigation.addListener('blur', () => {
         store.dispatch(reelScreenDetector.actions.unSetReelScreen());
       });
     };
-  }, []);
+
+  }, [navigation]);
   const renderList = () => {
     if (currentTab === tabes[0].name) return MyReels;
     if (currentTab === tabes[1].name) return FriendsReels;

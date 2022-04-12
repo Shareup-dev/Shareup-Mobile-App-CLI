@@ -36,10 +36,12 @@ export default function StoriesList({navigation, style}) {
         )
         .catch(e => console.error(e.message));
     };
-    fetchStories();
-  }, []);
+    // fetchStories()
+    navigation.addListener('focus', async e => fetchStories())
+    
+  }, [navigation]);
 
-
+  console.log("stories",stories);
 
   return (
     <View style={[styles.container, style]}>
@@ -51,9 +53,11 @@ export default function StoriesList({navigation, style}) {
         keyExtractor={(item, i) => i.toString()}
         style={styles.list}
         renderItem={({item}) => {
+  
           return (
             <StoryCard
               data={item}
+              setStories={setStories}
               navigation={navigation}
             />
           );

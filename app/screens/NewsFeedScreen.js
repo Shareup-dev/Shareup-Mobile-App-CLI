@@ -35,7 +35,6 @@ export default function NewsFeedScreen({navigation, route}) {
     .then(res =>{ 
 
 
-      console.log("Newsfeed Data",res.data)
       const postArray = res.data.reverse();
       setPosts(postArray)
     })

@@ -153,7 +153,7 @@ export default function ListOfMembers({navigation, route}) {
           />
           <View style={styles.item}>
             <Text style={styles.title}>{`${item.firstName}`}</Text>
-            <Text> {`@${item.lastName}-${item.id}`}</Text>
+            <Text> {`@${item.lastName}`}</Text>
           </View>
         </View>
       </TouchableOpacity>
