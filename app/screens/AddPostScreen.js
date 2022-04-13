@@ -67,7 +67,7 @@ export default function AddPostScreen({navigation, route}) {
   const {groupId} = route.params;
   const {swapImage} = route.params;
 
-  const SWAP_DEFAULT_TEXT = 'Hi all \nI want to Swap ...';
+  const SWAP_DEFAULT_TEXT = 'Hi all \n I want to Swap ...';
 
   const textInputRef = useRef();
   const createPostDrawerRef = useRef(null); // reference for the enhanced drawer.
@@ -333,6 +333,7 @@ export default function AddPostScreen({navigation, route}) {
        // navigation.dispatch(popAction);
       });
     } else {
+
       if (postType === postTypes.SWAP) {
         const swapContent = {
           text: text === '' ? SWAP_DEFAULT_TEXT : text,
@@ -345,7 +346,10 @@ export default function AddPostScreen({navigation, route}) {
           //setloadingIndicator(false)
           setLoading(false)
           navigation.navigate(routes.FEED);
-        });
+        }).catch((e)=>{
+          setLoading(false)
+          console.log("ERROR:::",e);
+        })
       } else {
         if (text === '' && Object.keys(file).length === 0) {
           setError("Can't Create empty post");

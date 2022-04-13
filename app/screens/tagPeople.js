@@ -22,6 +22,9 @@ export default function TagPeople({ navigation,TagedUserData }) {
   const [removed, setremoved] = useState([]);
   const {userData: loggedInUser} = useContext(authContext).userState;
   const [isButtonActive, setIsButtonActive] = useState(false);
+  const [searchResult, setSearchResult] = useState([]);
+  const [isSearch, setIsSearch] = useState(false);
+
  
   useEffect(() => {
     UserService.getFriends(loggedInUser.email).then(resp => {
@@ -29,6 +32,18 @@ export default function TagPeople({ navigation,TagedUserData }) {
       setFriends(resp.data);
     });
   }, []);
+  const onSearchFriend = searchKey => {
+    if (searchKey == '') {
+      setIsSearch(false);
+    } else {
+      UserService.searchFriends(loggedInUser.id,searchKey).then(resp => {
+        let filteredResult = resp.data
+        setSearchResult(filteredResult);
+        setIsSearch(true);
+      });
+    }
+    return;
+  };
   const TagUserCard = (props) => {
      const name = props.data.firstName + props.data?.lastName;
      const img = props.data?.profilePicturePath
@@ -36,7 +51,7 @@ export default function TagPeople({ navigation,TagedUserData }) {
     const CheckIfChecked = (name) => {
       return tagPeople.find((item) => item === name);
     };
-   
+    
     return (
       
       <TouchableOpacity
@@ -68,7 +83,7 @@ export default function TagPeople({ navigation,TagedUserData }) {
           <Text style={styles.title}>Tag Friends</Text>
         }
         rightComponent={
-          <HeaderButton title="Done" isActive={isButtonActive} onPress={()=>{TagedUserData(tagPeople),navigation.goBack()}}/>
+          <HeaderButton title="Done" isActive={isButtonActive} onPress={()=>{navigation.goBack()}}/>
         }
       />
       <View style={styles.titleContainer}>
@@ -77,10 +92,15 @@ export default function TagPeople({ navigation,TagedUserData }) {
             iconName="search1"
             iconType="AntDesign"
             style={styles.searchbar}
+            onChangeText={text => {
+              onSearchFriend(text);
+            }}
           />
       </View>
 
-      {friends.map((data, i) => (
+      {!isSearch ? friends.map((data, i) => (
+        <TagUserCard data={data} key={i} />
+      )):searchResult.map((data, i) => (
         <TagUserCard data={data} key={i} />
       ))}
     </Screen>
