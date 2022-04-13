@@ -10,6 +10,7 @@ class ReelService {
   getFriendsReels = (uid) => AuthAxios.get(`Explore_reels/${uid}`);
   exploreReels = (uid) => AuthAxios.get(`Explore_myfriends_reels/${uid}`);
   likeUnLike = (uid,rid,data) => AuthAxios.put(`reels/${uid}/like-unlike/${rid}`,data);
+  deleteReel = (rid) => AuthAxios.delete(`reels/${rid}`);
 }
 
 export default new ReelService();

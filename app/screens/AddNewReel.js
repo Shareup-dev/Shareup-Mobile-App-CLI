@@ -65,6 +65,7 @@ export default function AddReelScreen({navigation}) {
       .recordAsync({
         maxDuration: 10,
         quality: RNCamera.Constants.VideoQuality['288p'],
+        
       })
       .then(res => {
         setReel(res);
@@ -89,11 +90,11 @@ export default function AddReelScreen({navigation}) {
       selectionLimit: 1,
       maxHeight: 500,
       maxWidth: 320,
-      videoQuality: 'medium',
+      videoQuality: 'low',
     })
       .then(res => {
         if (res.didCancel) return;
-        else if (res.assets[0].duration > 30) {
+        else if (res.assets[0].duration > 15) {
           Alert.alert('Ops..', "Sorry you can't upload this video", [null], {
             cancelable: true,
           });
