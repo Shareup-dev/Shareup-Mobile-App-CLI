@@ -1,5 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {
+  Alert,
   Dimensions,
   FlatList,
   Image,
@@ -61,7 +62,7 @@ export default function SwapScreen({navigation}) {
           setLoading(2);
         });
     };
-    navigation.addListener('focus', async e => fetchReels())
+    navigation.addListener('focus', async e => fetchReels());
     // fetchReels();
     store.dispatch(reelScreenDetector.actions.setReelScreen());
     return () => {
@@ -69,13 +70,45 @@ export default function SwapScreen({navigation}) {
         store.dispatch(reelScreenDetector.actions.unSetReelScreen());
       });
     };
-
   }, [navigation]);
   const renderList = () => {
     if (currentTab === tabes[0].name) return MyReels;
     if (currentTab === tabes[1].name) return FriendsReels;
     if (currentTab === tabes[2].name) return ExploreReels;
   };
+
+  const deleteReel = rid => {
+    ReelsService.deleteReel(rid)
+      .then(({status}) => {
+        if (status === 200) {
+          setMyReels(prev => prev.filter(({id}) => id !== rid))
+        }
+      })
+      .catch(e => console.error(e.message));
+  };
+
+  function deleteReelsHandler(item) {
+    const {
+      userdata: {id},
+      id: rid,
+    } = item;
+    if (userData.id === id) {
+      Alert.alert('Delete Reels', 'Are you sure want to delete this reel?', [
+        {
+          text: 'Delete',
+          onPress: _ => deleteReel(rid),
+          style: 'default',
+        },
+        {
+          text: 'Cancel',
+          onPress: _ => {},
+          style: 'cancel',
+        },
+      ]);
+    } else {
+      return;
+    }
+  }
 
   return (
     <Screen style={styles.container}>
@@ -107,15 +140,15 @@ export default function SwapScreen({navigation}) {
         keyExtractor={item => item.id.toString()}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
-          <View style={{width:'100%', alignItems:'center'}}>
-
-          <Text style={{ alignItems:'center'}}  >
-           {Loading === 2 ? `There is no reels to display`:`Loading..`}
-          </Text>
+          <View style={{width: '100%', alignItems: 'center'}}>
+            <Text style={{alignItems: 'center'}}>
+              {Loading === 2 ? `There is no reels to display` : `Loading..`}
+            </Text>
           </View>
         }
         renderItem={({item, index}) => (
           <TouchableOpacity
+            onLongPress={_ => deleteReelsHandler(item)}
             onPress={() => {
               navigation.navigate(routes.REEL_PLAYER, {
                 index,

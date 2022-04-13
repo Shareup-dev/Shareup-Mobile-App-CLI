@@ -10,6 +10,7 @@ import {
   StatusBar,
   Alert,
   ActivityIndicator,
+  KeyboardAvoidingView,
 } from 'react-native';
 
 import colors from '../config/colors';
@@ -202,7 +203,8 @@ export default function AddStoryScreen({navigation}) {
           />
         </RNCamera>
       ) : (
-        <View style={styles.storyImgViewer}>
+        <KeyboardAvoidingView style={styles.storyImgViewer}>
+
           <CameraHeader
             title="Story"
             onClosePress={() => setScreen('capture')}
@@ -247,7 +249,8 @@ export default function AddStoryScreen({navigation}) {
       
         
           
-        </View>
+        </KeyboardAvoidingView>
+
       )}
       <ProgressBar indeterminate={isUploading} visible={isUploading} color={'crimson'}  />
     </View>

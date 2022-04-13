@@ -25,7 +25,9 @@ const ReelPlayer = ({navigation, route}) => {
   } = useContext(AuthContext);
   const videoRef = React.useRef(null);
 
-  const BottomCard = React.memo(({rid, reactions}) => {
+  const BottomCard = React.memo(({rid, reactions,user}) => {
+    const {firstName,lastName} = user;
+    console.log("user",user);
     const [like, setLike] = useState(
       Boolean(reactions.filter(({user}) => user.id === userData.id).length),
     );
@@ -134,7 +136,7 @@ const ReelPlayer = ({navigation, route}) => {
 
   const {width, height} = Dimensions.get('window');
 
-  const RenderReels = React.memo(({video, id, reactions}) => {
+  const RenderReels = React.memo(({video, id, reactions,user}) => {
     const [paused, setPaused] = useState(false);
     const [mute, setMute] = useState(false);
 
@@ -213,7 +215,7 @@ const ReelPlayer = ({navigation, route}) => {
               resizeMode="cover"
             />
           </View>
-          <BottomCard rid={id} reactions={reactions} />
+          <BottomCard rid={id} reactions={reactions} user={user} />
         </TouchableOpacity>
       </KeyboardAvoidingView>
     );
@@ -229,9 +231,10 @@ const ReelPlayer = ({navigation, route}) => {
         data={data}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, i) => i.toString()}
-        renderItem={({item: {media, id, reactions}}) => {
+        renderItem={({item: {media, id, reactions,userdata,...rest}}) => {
+          console.log({...rest});
           return (
-            <RenderReels video={media[0].media} reactions={reactions} id={id} />
+            <RenderReels video={media[0].media} reactions={reactions}  id={id} user={userdata} />
           );
         }}
       />
