@@ -25,6 +25,7 @@ import Screen from '../components/Screen';
 import authContext from '../authContext';
 import AuthContext from '../UserContext';
 import PostService from '../services/post.service';
+import swapService from '../services/swap.service'; 
 import routes from '../navigation/routes';
 import {useImagePicker} from '../hooks';
 import Header from '../components/headers/Header';
@@ -239,7 +240,7 @@ export default function AddPostScreen({navigation, route}) {
     const formData = new FormData();
     formData.append('content', content.text);
     if (content.images.length !== 0) {
-     
+     console.log("content.image::",content.images)
       content.images.forEach(image => {
         const splitPathArr = image.split('/');
         formData.append(`files`, {
@@ -333,12 +334,15 @@ export default function AddPostScreen({navigation, route}) {
        // navigation.dispatch(popAction);
       });
     } else {
+      console.log("here:::",swapImage,user.id)
       if (postType === postTypes.SWAP) {
         const swapContent = {
           text: text === '' ? SWAP_DEFAULT_TEXT : text,
-          images: images,
+          images: swapImage,
         };
-        PostService.createSwapPost(user.id, swapContent).then(resp => {
+        const formData = createPostFormData(swapContent)
+        swapService.createSwap(user.id, formData).then(resp => {
+          console.log("SwapResponse:::",resp)
           store.dispatch(feedPostsAction.addFeedPost(resp.data));
           //setloadingIndicator(false)
           setLoading(false)

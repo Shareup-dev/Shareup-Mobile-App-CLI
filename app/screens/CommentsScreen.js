@@ -149,18 +149,24 @@ const loadComments = async () => {
     //commentTextFieldRef.current.value = "hello" //defaultValue = comment.content
     // commentTextFieldRef.current.focus()
   }
-  const handleReplyComment = (commentId) => {
+  const handleReplyComment = (commentId,showReply) => {
+    console.log("showReply:::",showReply)
+    if (showReply){
     setCommentId(commentId)
-    
     console.log("commentId:::",commentId)
-   postService.getAllReply(commentId)
-    .then(res => {
-      console.log("Reply",res.data)
-      const replyArray = res.data//.reverse();
-      setReplyList(replyArray)})
-    .catch(e => console.log(e))
+  //  postService.getAllReply(commentId)
+  //   .then(res => {
+  //     console.log("Reply",res.data)
+  //     const replyArray = res.data//.reverse();
+  //     setReplyList(replyArray)})
+  //   .catch(e => console.log(e))
     commentTextFieldRef.current.focus()
-    setIsReply(true)
+     setIsReply(true)
+    }else{
+       commentTextFieldRef.current.blur();
+       setIsReply(false)
+     }
+       
   };
   
   const handleDeleteComment= (itemId,isHide)=> {
@@ -243,7 +249,7 @@ const loadComments = async () => {
   };
 
 
-  return !fromReply ? (  
+  return (  
     <Screen style={styles.container}>
        <Header
         left={<HeaderCloseIcon onPress={handleCancel} />}
@@ -287,44 +293,45 @@ const loadComments = async () => {
       </View>
       </View> 
     </Screen>
-  ) : ( <Screen style={styles.replayContainer}>
-    <Text style={{color:colors.iondigoDye,fontSize:12}} onPress={hideReply}>-- Hide replies</Text>
-   <FlatList
-     data={replyList}
-     keyExtractor={comment => comment.id.toString()}
-     ref={commentsListRef}
-     onContentSizeChange={scrollToListBottom}
-     refreshing={refreshing}
-     onRefresh={refreshComments}
-     renderItem={({item}) => (
-       <CommentItem
-         comment={item}
-         reactionsLength={
-           item?.reactions?.length ? item?.reactions?.length : 0
-         }
-        // isUserLiked ={isUserLiked}
-         onInteraction={handleReactions}
-         handleDelete={handleDeleteComment}
-         onReply={handleReplyComment}
-         handleEdit={handleEditComment}
-         isReply={isReply}
-         reply = {replyList}
-         postType={postType}
-         fromReply={fromReply}
-         //isOptionVisible = {isOptionsVisible}
-        // setIsOptionVisible = {setIsOptionsVisible}
-       />
-     )}
-   />
-   {/* <EnhancedOptionsDrawer
-          //source={'comment'}
-         // postId={comment.id}
-         // postText={comment.content}
-          options={options}
-          //isVisible={isOptionsVisible}
-         // setIsVisible={setIsOptionsVisible}
-        /> */}
- </Screen>);
+//   ) : ( <Screen style={styles.replayContainer}>
+//     <Text style={{color:colors.iondigoDye,fontSize:12}} onPress={hideReply}>-- Hide replies</Text>
+//    <FlatList
+//      data={replyList}
+//      keyExtractor={comment => comment.id.toString()}
+//      ref={commentsListRef}
+//      onContentSizeChange={scrollToListBottom}
+//      refreshing={refreshing}
+//      onRefresh={refreshComments}
+//      renderItem={({item}) => (
+//        <CommentItem
+//          comment={item}
+//          reactionsLength={
+//            item?.reactions?.length ? item?.reactions?.length : 0
+//          }
+//         // isUserLiked ={isUserLiked}
+//          onInteraction={handleReactions}
+//          handleDelete={handleDeleteComment}
+//          onReply={handleReplyComment}
+//          handleEdit={handleEditComment}
+//          isReply={isReply}
+//          reply = {replyList}
+//          postType={postType}
+//          fromReply={fromReply}
+//          //isOptionVisible = {isOptionsVisible}
+//         // setIsOptionVisible = {setIsOptionsVisible}
+//        />
+//      )}
+//    />
+//    {/* <EnhancedOptionsDrawer
+//           //source={'comment'}
+//          // postId={comment.id}
+//          // postText={comment.content}
+//           options={options}
+//           //isVisible={isOptionsVisible}
+//          // setIsVisible={setIsOptionsVisible}
+//         /> */}
+//  </Screen>
+);
 }
 
 const styles = StyleSheet.create({
