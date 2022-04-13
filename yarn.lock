@@ -6899,6 +6899,11 @@ react-native-communications@^2.2.1:
   resolved "https://registry.yarnpkg.com/react-native-communications/-/react-native-communications-2.2.1.tgz#7883b56b20a002eeb790c113f8616ea8692ca795"
   integrity sha1-eIO1ayCgAu63kMET+GFuqGksp5U=
 
+react-native-create-thumbnail@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/react-native-create-thumbnail/-/react-native-create-thumbnail-1.5.1.tgz#3473360acf5fceb812bda0dae6fe77dc5ce0b7a8"
+  integrity sha512-ML9tzRRxyTJFptEZdTbRQ1TKLGdBa7ynCc2KdPpyeNT/XmD6pBUq0E/EJtvQpMMlz8ZRq7q4KJHW4dCZc365/A==
+
 react-native-date-picker@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/react-native-date-picker/-/react-native-date-picker-4.2.0.tgz#c47521112f15b9d68333602373d112fc84257d97"

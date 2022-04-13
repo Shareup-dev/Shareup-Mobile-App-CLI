@@ -1,4 +1,11 @@
-import React, {memo, useEffect, useReducer, useRef, useState} from 'react';
+import React, {
+  memo,
+  useContext,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 import {
   View,
   Text,
@@ -15,18 +22,22 @@ import Icon from '../components/Icon';
 import colors from '../config/colors';
 import fileStorage from '../config/fileStorage';
 import DownModal from '../components/drawers/DownModal';
+import storyService from '../services/story.service';
+import AuthContext from '../authContext';
 
 const windowWidth = Dimensions.get('screen').width;
 
 const StoryViewScreen = ({navigation, route}) => {
   const {
-    stories_List: data,
-    firstName,
-    lastName,
-    profilePicture,
+    data: {stories_List: data, firstName, lastName, profilePicture, id: userID},
+    setStories,
   } = route.params;
 
-  // const [menuOpen, setMenuOpen] = useState(false);
+  const {
+    userState: {userData},
+  } = useContext(AuthContext);
+
+  const [menuOpen, setMenuOpen] = useState(false);
   const [paused, setPaused] = useState(false);
   const [Loaded, setLoaded] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -101,21 +112,28 @@ const StoryViewScreen = ({navigation, route}) => {
     Animated.timing(width[activeIndex]).stop();
   };
 
-  // const handleCloseModel = () => {
-  //   setMenuOpen(false);
-  //   startProgress();
-  // };
+  const handleCloseModel = () => {
+    setMenuOpen(false);
+    startProgress();
+  };
 
-  // const handleDelete = () => {
-  //   Alert.alert('Delete this?', 'Are you sure to delete this story?', [
-  //     {text: "Don't delete", style: 'cancel', onPress: () => {}},
-  //     {
-  //       text: 'Delete',
-  //       style: 'destructive',
-  //       onPress: () => {},
-  //     },
-  //   ]);
-  // };
+  const deleteStory = () => {
+    storyService
+      .deleteStory(data[activeIndex].id)
+      .then(({status}) => status === 200 && navigation.goBack())
+      .catch(e => console.error(e.message));
+  };
+
+  const handleDelete = () => {
+    Alert.alert('Delete this?', 'Are you sure to delete this story?', [
+      {text: "Don't delete", style: 'cancel', onPress: () => {}},
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: deleteStory,
+      },
+    ]);
+  };
 
   useEffect(() => {
     if (Loaded) {
@@ -126,46 +144,46 @@ const StoryViewScreen = ({navigation, route}) => {
     // };
   }, [Loaded]);
 
-  // const DropDownMenu = () => {
-  //   return (
-  //     <View style={styles.menuContainer}>
-  //       <View style={{alignItems: 'center'}}>
-  //         <View
-  //           style={{
-  //             backgroundColor: '#cacaca',
-  //             width: 80,
-  //             height: 6,
-  //             borderRadius: 6,
-  //           }}
-  //         />
-  //       </View>
-  //       <TouchableOpacity style={styles.menu}>
-  //         <View>
-  //           <Text style={styles.menuText}>Edit</Text>
-  //           <Text>Edit the Caption</Text>
-  //         </View>
-  //         <Icon size={45} name={'edit'} type="Entypo" />
-  //       </TouchableOpacity>
-  //       <TouchableOpacity style={styles.menu} onPress={handleDelete}>
-  //         <View>
-  //           <Text style={styles.menuText}>Delete</Text>
-  //           <Text>Delete your story</Text>
-  //         </View>
-  //         <Icon size={45} name={'delete'} color="crimson" />
-  //       </TouchableOpacity>
-  //       <TouchableOpacity style={styles.menu}>
-  //         <View>
-  //           <Text style={styles.menuText}>Hide this story</Text>
-  //           <Text
-  //             style={{
-  //               maxWidth: windowWidth / 2,
-  //             }}>{`Posted by @${route.params?.userName}`}</Text>
-  //         </View>
-  //         <Icon size={45} name={'eye-with-line'} type="Entypo" />
-  //       </TouchableOpacity>
-  //     </View>
-  //   );
-  // };
+  const DropDownMenu = () => {
+    return (
+      <View style={styles.menuContainer}>
+        <View style={{alignItems: 'center'}}>
+          <View
+            style={{
+              backgroundColor: '#cacaca',
+              width: 80,
+              height: 6,
+              borderRadius: 6,
+            }}
+          />
+        </View>
+        {/* <TouchableOpacity style={styles.menu}>
+          <View>
+            <Text style={styles.menuText}>Edit</Text>
+            <Text>Edit the Caption</Text>
+          </View>
+          <Icon size={45} name={'edit'} type="Entypo" />
+        </TouchableOpacity> */}
+        <TouchableOpacity style={styles.menu} onPress={handleDelete}>
+          <View>
+            <Text style={styles.menuText}>Delete</Text>
+            <Text>Delete your story</Text>
+          </View>
+          <Icon size={45} name={'delete'} color="crimson" />
+        </TouchableOpacity>
+        {/* <TouchableOpacity style={styles.menu}>
+          <View>
+            <Text style={styles.menuText}>Hide this story</Text>
+            <Text
+              style={{
+                maxWidth: windowWidth / 2,
+              }}>{`Posted by @${route.params?.userName}`}</Text>
+          </View>
+          <Icon size={45} name={'eye-with-line'} type="Entypo" />
+        </TouchableOpacity> */}
+      </View>
+    );
+  };
 
   const StorySlides = memo(() => {
     return (
@@ -208,20 +226,23 @@ const StoryViewScreen = ({navigation, route}) => {
             <Text style={styles.userName}>{`${firstName} ${lastName}`}</Text>
           </View>
           <View style={{flexDirection: 'row'}}>
-            {/* <TouchableOpacity
-              style={styles.closeIcon}
-              onPress={() => {
-                setMenuOpen(true);
-                pauseProgress();
-              }}>
-              <Icon
-                name={'options'}
-                type={'SimpleLineIcons'}
-                size={54}
-                backgroundColor={'unset'}
-                noBackground={true}
-              />
-            </TouchableOpacity> */}
+            {userData.id === userID && (
+              <TouchableOpacity
+                style={styles.closeIcon}
+                onPress={() => {
+                  setMenuOpen(true);
+                  pauseProgress();
+                }}>
+                <Icon
+                  name={'options'}
+                  type={'SimpleLineIcons'}
+                  size={54}
+                  backgroundColor={'unset'}
+                  noBackground={true}
+                />
+              </TouchableOpacity>
+            )}
+
             <TouchableOpacity
               style={[styles.closeIcon, styles.shadow]}
               onPress={() => {
@@ -235,14 +256,15 @@ const StoryViewScreen = ({navigation, route}) => {
                 noBackground={true}
               />
             </TouchableOpacity>
-            {/* <DownModal isVisible={menuOpen} setIsVisible={handleCloseModel}>
+            <DownModal isVisible={menuOpen} setIsVisible={handleCloseModel}>
               <DropDownMenu />
-            </DownModal> */}
+            </DownModal>
           </View>
         </View>
       </View>
     );
   }, []);
+
   return (
     <>
       <TouchableOpacity
@@ -292,7 +314,7 @@ const StoryViewScreen = ({navigation, route}) => {
             fontWeight: '600',
             color: '#fff',
           }}>
-      { data[activeIndex].caption}
+          {data[activeIndex].caption}
         </Text>
       </TouchableOpacity>
     </>

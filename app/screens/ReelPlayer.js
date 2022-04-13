@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -15,15 +15,30 @@ import Icon from '../components/Icon';
 import Video from 'react-native-video';
 import routes from '../navigation/routes';
 import fileStorage from '../config/fileStorage';
+import ReelsService from '../services/Reels.service';
+import AuthContext from '../authContext';
 
 const ReelPlayer = ({navigation, route}) => {
   const {index, data} = route.params;
-  console.log("data",data)
-
+  const {
+    userState: {userData},
+  } = useContext(AuthContext);
   const videoRef = React.useRef(null);
 
-  const BottomCard = React.memo(() => {
-    const [like, setLike] = useState(false);
+  const BottomCard = React.memo(({rid, reactions}) => {
+    const [like, setLike] = useState(
+      Boolean(reactions.filter(({user}) => user.id === userData.id).length),
+    );
+
+    const toggleLike = () => {
+      ReelsService.likeUnLike(userData.id, rid, {})
+        .then(({status}) => {
+          if (status === 200) {
+            setLike(prev => !prev);
+          }
+        })
+        .catch(e => console.error(e.message));
+    };
 
     return (
       <View style={styles.card}>
@@ -83,7 +98,7 @@ const ReelPlayer = ({navigation, route}) => {
           </View>
         </View>
         <View style={styles.reelAction}>
-          <TouchableOpacity onPress={_ => setLike(prev => !prev)}>
+          <TouchableOpacity onPress={toggleLike}>
             <Icon
               color={like ? '#FFCE45' : '#fff'}
               name={like ? 'star' : 'star-o'}
@@ -119,11 +134,9 @@ const ReelPlayer = ({navigation, route}) => {
 
   const {width, height} = Dimensions.get('window');
 
-  const RenderReels = React.memo(({video}) => {
+  const RenderReels = React.memo(({video, id, reactions}) => {
     const [paused, setPaused] = useState(false);
     const [mute, setMute] = useState(false);
-
-    console.log(fileStorage.baseUrl + video)
 
     return (
       <KeyboardAvoidingView>
@@ -200,7 +213,7 @@ const ReelPlayer = ({navigation, route}) => {
               resizeMode="cover"
             />
           </View>
-          <BottomCard />
+          <BottomCard rid={id} reactions={reactions} />
         </TouchableOpacity>
       </KeyboardAvoidingView>
     );
@@ -216,8 +229,10 @@ const ReelPlayer = ({navigation, route}) => {
         data={data}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, i) => i.toString()}
-        renderItem={({item: {media}}) => {
-          return <RenderReels video={media[0].media} />;
+        renderItem={({item: {media, id, reactions}}) => {
+          return (
+            <RenderReels video={media[0].media} reactions={reactions} id={id} />
+          );
         }}
       />
     </>

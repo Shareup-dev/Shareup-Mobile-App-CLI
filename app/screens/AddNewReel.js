@@ -23,6 +23,7 @@ import AuthContext from '../authContext';
 import Video from 'react-native-video';
 import ReelService from '../services/Reels.service';
 import {ProgressBar} from 'react-native-paper';
+import {createThumbnail} from 'react-native-create-thumbnail';
 
 export default function AddReelScreen({navigation}) {
   let cameraRef;
@@ -32,7 +33,7 @@ export default function AddReelScreen({navigation}) {
   const [screen, setScreen] = useState('capture');
   const [cameraType, setCameraType] = useState('back');
   const [capturing, setCapturing] = useState(false);
-  const [story, setReel] = useState({});
+  const [reel, setReel] = useState({});
 
   // const [timer, setTimer] = useState(0);
   // const [duration, setDuration] = useState(20000);
@@ -60,20 +61,18 @@ export default function AddReelScreen({navigation}) {
     setCapturing(true);
 
     // startInterval();
-    cameraRef.recordAsync({
-      maxDuration: 10,
-      quality: RNCamera.Constants.VideoQuality['288p'],
-      
-    }).then(res => {
-  
-      console.log(res);
-      setReel(res);
-    setCapturing(false);
+    cameraRef
+      .recordAsync({
+        maxDuration: 10,
+        quality: RNCamera.Constants.VideoQuality['288p'],
+      })
+      .then(res => {
+        setReel(res);
+        setCapturing(false);
 
-      setScreen('view');
-    }).finally(props => console.log(props))
-
-
+        setScreen('view');
+      })
+      .finally(props => console.log(props));
   }
 
   // useEffect(() => {
@@ -116,13 +115,31 @@ export default function AddReelScreen({navigation}) {
     setIsUploading(true);
 
     let reelData = new FormData();
+    const uniId = new Date().valueOf(); // create unique id
 
-    const uniId = new Date().valueOf();
+    // create video thumbnail -
+
+    createThumbnail({
+      url: reel.uri,
+      timeStamp: 2000,
+      format: 'jpeg',
+    })
+      .then(res => {
+        reelData.append('thumbnail', {
+          name: `reel-thumbnail-${uniId}.jpeg`,
+          type: res.mime,
+          uri: res.path           
+        });
+      })
+      .catch(e => {
+       return console.error('thumbnail error', e.message)
+      });
+
     reelData.append('content', caption);
     reelData.append('reelfiles', {
       name: `reel-video-${uniId}.mp4`,
       type: 'video/mp4',
-      uri: story.uri,
+      uri: reel.uri,
     });
 
     ReelService.addReel(userData.id,reelData).then(res => console.log(res))
@@ -186,7 +203,7 @@ export default function AddReelScreen({navigation}) {
           </View> */}
         </RNCamera>
       ) : (
-        <View style={styles.storyImgViewer}>
+        <View style={styles.reelImgViewer}>
           <CameraHeader
             title="Reels"
             onClosePress={() => setScreen('capture')}
@@ -218,7 +235,7 @@ export default function AddReelScreen({navigation}) {
           <Video
             resizeMode={'cover'}
             style={[styles.backgroundVideo]}
-            source={{uri: story.uri}}
+            source={{uri: reel.uri}}
             repeat
           />
         </View>
@@ -252,7 +269,7 @@ const styles = StyleSheet.create({
     height: Dimensions.get('screen').height,
     width: Dimensions.get('screen').width,
   },
-  storyImgViewer: {
+  reelImgViewer: {
     flex: 1,
   },
   forwardArrow: {
