@@ -213,7 +213,10 @@ export default function AddStoryScreen({navigation}) {
             onClosePress={() => setScreen('capture')}
           />
           <View style={styles.forwardArrow}>
-            <TextInput placeholder="Caption" value={caption} onChangeText={e => setCaption(e)} multiline style={styles.caption} />
+            <View style={styles.caption}>
+
+            <TextInput placeholder="Caption" value={caption} onChangeText={e => setCaption(e)} multiline  />
+            </View>
             <TouchableOpacity
               activeOpacity={0.6}
               disabled={isUploading}
@@ -266,6 +269,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     backgroundColor: colors.white,
     borderRadius: 30,
+    justifyContent:'center',
     fontSize: 18,
     maxHeight: 100,
     height:'100%',
@@ -287,10 +291,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   forwardArrow: {
-    marginBottom:'5%',    
+    marginBottom:'8%',    
     position: 'absolute',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems:'center',
     width: '100%',
     bottom: 20,
     paddingRight: 15,
