@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     fontSize: 18,
     maxHeight: 100,
-    marginBottom:10,
+    height:'100%',
     width: '85%',
   },
   backgroundVideo: {
@@ -287,6 +287,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   forwardArrow: {
+    marginBottom:'5%',    
     position: 'absolute',
     flexDirection: 'row',
     justifyContent: 'space-between',
