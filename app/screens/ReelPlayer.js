@@ -25,9 +25,11 @@ const ReelPlayer = ({navigation, route}) => {
   } = useContext(AuthContext);
   const videoRef = React.useRef(null);
 
-  const BottomCard = React.memo(({rid, reactions,user}) => {
-    const {firstName,lastName} = user;
-    console.log("user",user);
+  const BottomCard = React.memo(({rid, reactions, user, content,publishedDate}) => {
+    const {firstName, lastName} = user;
+
+    const date =new Date(publishedDate);
+
     const [like, setLike] = useState(
       Boolean(reactions.filter(({user}) => user.id === userData.id).length),
     );
@@ -62,7 +64,7 @@ const ReelPlayer = ({navigation, route}) => {
               />
               <View>
                 <Text style={{color: '#fff', marginTop: 2, fontSize: 14}}>
-                  Username
+                  {`${firstName} ${lastName}`}
                 </Text>
                 <View
                   style={{
@@ -94,8 +96,7 @@ const ReelPlayer = ({navigation, route}) => {
                 marginBottom: 10,
                 fontSize: 14,
               }}>
-              Loram separator service setCurrentTab swapId
-              listContentContainerStyle
+              {content}
             </Text>
           </View>
         </View>
@@ -136,7 +137,7 @@ const ReelPlayer = ({navigation, route}) => {
 
   const {width, height} = Dimensions.get('window');
 
-  const RenderReels = React.memo(({video, id, reactions,user}) => {
+  const RenderReels = React.memo(({video, id, reactions, user, content,publishedDate}) => {
     const [paused, setPaused] = useState(false);
     const [mute, setMute] = useState(false);
 
@@ -215,7 +216,13 @@ const ReelPlayer = ({navigation, route}) => {
               resizeMode="cover"
             />
           </View>
-          <BottomCard rid={id} reactions={reactions} user={user} />
+          <BottomCard
+            rid={id}
+            reactions={reactions}
+            user={user}
+            content={content}
+            publishedDate={publishedDate}
+          />
         </TouchableOpacity>
       </KeyboardAvoidingView>
     );
@@ -231,10 +238,19 @@ const ReelPlayer = ({navigation, route}) => {
         data={data}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, i) => i.toString()}
-        renderItem={({item: {media, id, reactions,userdata,...rest}}) => {
+        renderItem={({
+          item: {media, id, reactions, userdata, content,published, ...rest},
+        }) => {
           console.log({...rest});
           return (
-            <RenderReels video={media[0].media} reactions={reactions}  id={id} user={userdata} />
+            <RenderReels
+              video={media[0].media}
+              reactions={reactions}
+              id={id}
+              user={userdata}
+              content={content}
+              publishedDate={published}
+            />
           );
         }}
       />

@@ -37,7 +37,7 @@ export default function StoriesList({navigation, style}) {
         .catch(e => console.error(e.message));
     };
     fetchStories()
-    // navigation.addListener('focus', async e => fetchStories())
+    navigation.addListener('focus', async e => fetchStories())
     
   }, [navigation]);
 
