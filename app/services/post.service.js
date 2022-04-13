@@ -29,7 +29,7 @@ class PostService {
   deleteComment = commentid => 
     AuthAxios.delete(`comment/${commentid}`)
   replay = (uid,commentId,data) =>
-    AuthAxios.post(`reply/${uid}/${commentId}`,data)
+    AuthAxios.post(`comment/reply/${uid}/${commentId}`,data)
   likeUnlikeComment = (uid,cid,params) =>
     AuthAxios.put(`comment/${uid}/like-unlike/${cid}`,params)
   editComment = (cid) => 

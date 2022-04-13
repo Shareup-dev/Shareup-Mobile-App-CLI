@@ -21,9 +21,9 @@ export default function UserProfilePicture({
   return (
     <View>
       <Image
-        source={{
-          uri: fileStorage.baseUrl + picture,
-        }}
+        source={require('../assets/default-profile-picture.png')
+          //uri: fileStorage.baseUrl + picture,
+        }
         style={[{width: size, height: size, borderRadius: size / 2}, style]}
       />
 

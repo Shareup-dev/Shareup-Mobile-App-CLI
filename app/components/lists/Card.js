@@ -142,12 +142,12 @@ export default function Card({
   const [sliderWidth, setSliderWidth] = useState();
 
   const loadImages = () => {
-    
     if (postData.media?.length !== 0) {
-      setImages(postData.media?.map(image => fileStorage.baseUrl + image.mediaPath));
+      setImages(postData.media?.map(image => fileStorage.baseUrl + image.media));
     }
+    
   };
-
+  console.log("ImagePath:::",images)
   const checkIfLiked = () => {
     const result = postData.liked
       return setIsUserLiked(result);
