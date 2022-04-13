@@ -30,7 +30,6 @@ export default function TagPeople({ navigation,TagedUserData }) {
     });
   }, []);
   const TagUserCard = (props) => {
-    console.log(props)
      const name = props.data.firstName + props.data?.lastName;
      const img = props.data?.profilePicturePath
 
@@ -80,7 +79,7 @@ export default function TagPeople({ navigation,TagedUserData }) {
             style={styles.searchbar}
           />
       </View>
-      {console.log("Friends:::",friends)}
+
       {friends.map((data, i) => (
         <TagUserCard data={data} key={i} />
       ))}

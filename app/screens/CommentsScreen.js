@@ -46,10 +46,8 @@ export default function CommentsScreen({navigation, route}) {
   }, [])
 )
 const loadComments = async () => {
-  console.log("postId",postId)
   postService.getAllComments(postId)
   .then(res =>{ 
-    console.log("Comment Data",res.data)
     const commentArray = res.data//.reverse();
     setCommentsList(commentArray)
   })
@@ -99,7 +97,6 @@ const loadComments = async () => {
       });
     } else {
       //const reply = {reply: commentContent};
-      console.log('Making comment: ', userId, commentId, comment);
       const comment = {content: commentContent};
       if (commentContent !== '') {
         postService.replay(userState?.userData?.id, commentId, comment)
@@ -150,10 +147,8 @@ const loadComments = async () => {
     // commentTextFieldRef.current.focus()
   }
   const handleReplyComment = (commentId,showReply) => {
-    console.log("showReply:::",showReply)
     if (showReply){
     setCommentId(commentId)
-    console.log("commentId:::",commentId)
   //  postService.getAllReply(commentId)
   //   .then(res => {
   //     console.log("Reply",res.data)
@@ -238,7 +233,6 @@ const loadComments = async () => {
     postService.likeUnlikeComment(userState?.userData?.id, cid,params)
     .then (res => {
 
-      console.log("responseLike",res.data)
       //setIsUserLiked(!isUserLiked)
       })//need to get likePostIds 
     .catch(e => console.log("4",e))

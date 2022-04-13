@@ -20,7 +20,6 @@ export default function ImageInputList({
   const scrollView = useRef();
   //const imageUrisSet = imageUris.map((imageUris) => imageUris.replace('file:', ''));
 
-  console.log("imageUris",imageUris)
   return (
       <View style={styles.container}>
       <ScrollView

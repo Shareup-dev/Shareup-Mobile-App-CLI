@@ -147,7 +147,6 @@ export default function Card({
     }
     
   };
-  console.log("ImagePath:::",images)
   const checkIfLiked = () => {
     const result = postData.liked
       return setIsUserLiked(result);
@@ -156,7 +155,6 @@ export default function Card({
   const handleReactions = async () => {
     PostService.likePost(user.id, postData.id)
     .then (res => {
-      console.log("likeUnlikeResponse:::",res.data)
       setIsUserLiked(!isUserLiked)
       setNumberOfReactions(res.data.numberOfReaction);
       })//need to get likePostIds 
@@ -169,7 +167,6 @@ export default function Card({
     PostService.getPostByPostId(postData.id)
     .then(res => {
       //setComments(res.data.comments)
-      console.log("postByIdData:::",res.data)
       setNumberOfComments(res.data.numberOfComments);
        setNumberOfReactions(res.data.numberOfReaction);
     })

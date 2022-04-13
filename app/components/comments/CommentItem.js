@@ -54,10 +54,9 @@ export default function CommentItem({
     setshowReply(true)
     postService.getAllReply(commentId)
     .then(res => {
-      console.log("Reply",res.data)
       const replyArray = res.data//.reverse();
       setReplyList(replyArray)})
-    .catch(e => console.log(e))
+    .catch(e => console.error(e))
   }
   const hideReply = () =>{
     setshowReply(false)

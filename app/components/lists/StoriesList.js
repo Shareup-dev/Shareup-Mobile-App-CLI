@@ -41,7 +41,6 @@ export default function StoriesList({navigation, style}) {
     
   }, [navigation]);
 
-  console.log("stories",stories);
 
   return (
     <View style={[styles.container, style]}>

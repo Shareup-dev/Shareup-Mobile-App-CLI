@@ -28,7 +28,9 @@ const ReelPlayer = ({navigation, route}) => {
   const BottomCard = React.memo(({rid, reactions, user, content,publishedDate}) => {
     const {firstName, lastName} = user;
 
-    const date =new Date(publishedDate);
+    const date  =  publishedDate.split(" ");
+
+    
 
     const [like, setLike] = useState(
       Boolean(reactions.filter(({user}) => user.id === userData.id).length),
@@ -93,10 +95,19 @@ const ReelPlayer = ({navigation, route}) => {
                 color: '#fff',
                 marginTop: 2,
                 marginHorizontal: 15,
+                fontSize: 14,
+              }}>
+                {`Posted on: ${date[0]} ${date[1]} ${date[2]}`}
+            </Text>
+            <Text  style={{
+                color: '#fff',
+                marginTop: 2,
+                marginHorizontal: 15,
                 marginBottom: 10,
                 fontSize: 14,
               }}>
-              {content}
+                        {content}
+
             </Text>
           </View>
         </View>
@@ -137,9 +148,11 @@ const ReelPlayer = ({navigation, route}) => {
 
   const {width, height} = Dimensions.get('window');
 
-  const RenderReels = React.memo(({video, id, reactions, user, content,publishedDate}) => {
+  const RenderReels = React.memo(({video, id, reactions, user, content,publishedDate , thumbnail_name}) => {
     const [paused, setPaused] = useState(false);
     const [mute, setMute] = useState(false);
+    // const [loaded,setLoaded] = useState(false);
+
 
     return (
       <KeyboardAvoidingView>
@@ -204,10 +217,12 @@ const ReelPlayer = ({navigation, route}) => {
             </View>
           )}
           <View style={styles.video}>
-            <Video
+     
+              <Video
               style={{
                 width: width,
                 height: height - StatusBar.currentHeight,
+                zIndex:-10
               }}
               source={{uri: fileStorage.baseUrl + video}}
               repeat
@@ -215,6 +230,7 @@ const ReelPlayer = ({navigation, route}) => {
               paused={paused}
               resizeMode="cover"
             />
+            
           </View>
           <BottomCard
             rid={id}
@@ -239,12 +255,12 @@ const ReelPlayer = ({navigation, route}) => {
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, i) => i.toString()}
         renderItem={({
-          item: {media, id, reactions, userdata, content,published, ...rest},
+          item: {media, id, reactions, userdata,video_name, content,published,thumbnail_name,...rest},
         }) => {
-          console.log({...rest});
           return (
             <RenderReels
-              video={media[0].media}
+              video={video_name}
+              thumbnail_name={thumbnail_name}
               reactions={reactions}
               id={id}
               user={userdata}

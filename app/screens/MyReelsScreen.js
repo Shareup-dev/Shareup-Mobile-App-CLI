@@ -147,6 +147,7 @@ export default function SwapScreen({navigation}) {
           </View>
         }
         renderItem={({item, index}) => (
+
           <TouchableOpacity
             onLongPress={_ => deleteReelsHandler(item)}
             onPress={() => {
@@ -155,9 +156,10 @@ export default function SwapScreen({navigation}) {
                 data: renderList(),
               });
             }}>
+        
             <View style={[styles.container]}>
               <Image
-                source={{uri: fileStorage.baseUrl + item.image}}
+                source={{uri: fileStorage.baseUrl + item.thumbnail_name}}
                 style={styles.image}
               />
             </View>

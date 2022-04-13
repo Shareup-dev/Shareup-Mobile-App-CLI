@@ -39,7 +39,6 @@ const PostActions = ({
    // null
   );
 
-  console.log("ImagePath:::",fileStorage.baseUrl + postData.userdata.profilePicture)
   return (
     <View style={styles.content}>
       <View style={styles.userInfo}>

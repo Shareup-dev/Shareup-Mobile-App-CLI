@@ -13,7 +13,6 @@ import colors from '../config/colors';
 import Icon from './Icon';
 
 export default function ImageInput({imageUri, onChangeImage, isSwap}) {
-  console.log("imageUrisss",imageUri)
   // useEffect(() => {
   //   requestPermission();
   // }, []);

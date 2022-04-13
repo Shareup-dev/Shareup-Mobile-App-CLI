@@ -73,7 +73,6 @@ export default function AddReelScreen({navigation}) {
 
         setScreen('view');
       })
-      .finally(props => console.log(props));
   }
 
   // useEffect(() => {
@@ -120,7 +119,7 @@ export default function AddReelScreen({navigation}) {
 
     // create video thumbnail -
 
-    createThumbnail({
+    await createThumbnail({
       url: reel.uri,
       timeStamp: 2000,
       format: 'jpeg',

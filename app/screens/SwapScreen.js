@@ -33,7 +33,6 @@ export default function SwapScreen({navigation, route}) {
     });
   };
   const imageCaptureHandler = () => {
-    console.log("camera")
     launchCamera({
       quality: 0.5,
       cameraType:'back',

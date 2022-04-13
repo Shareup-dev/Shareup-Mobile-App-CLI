@@ -240,7 +240,6 @@ export default function AddPostScreen({navigation, route}) {
     const formData = new FormData();
     formData.append('content', content.text);
     if (content.images.length !== 0) {
-     console.log("content.image::",content.images)
       content.images.forEach(image => {
         const splitPathArr = image.split('/');
         formData.append(`files`, {
@@ -334,15 +333,14 @@ export default function AddPostScreen({navigation, route}) {
        // navigation.dispatch(popAction);
       });
     } else {
-      console.log("here:::",swapImage,user.id)
       if (postType === postTypes.SWAP) {
         const swapContent = {
           text: text === '' ? SWAP_DEFAULT_TEXT : text,
           images: swapImage,
         };
+        console.log("works here");
         const formData = createPostFormData(swapContent)
         swapService.createSwap(user.id, formData).then(resp => {
-          console.log("SwapResponse:::",resp)
           store.dispatch(feedPostsAction.addFeedPost(resp.data));
           //setloadingIndicator(false)
           setLoading(false)
