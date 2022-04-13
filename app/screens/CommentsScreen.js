@@ -15,7 +15,7 @@ import { color } from 'react-native-reanimated';
 import { useFocusEffect } from '@react-navigation/native';
 import postService from '../services/post.service';
 
-import EnhancedOptionsDrawer from '../components/drawers/EnhancedOptionsDrawer';
+
 
 //import UserService from '../services/UserService';
 
@@ -55,26 +55,7 @@ const loadComments = async () => {
   })
   .catch(e => console.error(e.message))
 };
-  //const [isOptionsVisible,setIsOptionsVisible] = useState(false);
-  const options = [ {
-    title:  'Edit',
-    icon: {
-      image: require('../assets/post-options-icons/unfollow-icon.png'),
-    },
-    onPress: () => {
-      alert('Edit');
-    },
-  },
-  {
-    title:<Text style={{color:colors.red}}>Delete</Text>,
-    icon: {
-      image: require('../assets/post-options-icons/delete-red-icon.png'),
-    },
-    onPress: () => {
-       alert('Delete');
-    },
-  },
-];
+  
   const handleCancel = () => {
     navigation.goBack();
   };
@@ -169,34 +150,18 @@ const loadComments = async () => {
        
   };
   
-  const handleDeleteComment= (itemId,isHide)=> {
-    if (postType === 'swapPost') {
-
-      const comment = {content: commentContent};
-      
-      postService.addSwapComment(userId, swapId, comment.content).then(resp => {
-    
-        refreshComments();
-        setCommentContent('');
-        commentTextFieldRef.current.clear();
-        Keyboard.dismiss();
-        // scrollToListBottom();
-      });
-    } else {
-      if(!isHide){
-
+  const handleDeleteComment= (itemId)=> {
+    console.log("RESPONSE:::",itemId)
         postService.deleteComment(itemId)
         .then(res => {
-     
+          console.log("RESPONSE:::",res.data)
           refreshComments();
            Keyboard.dismiss();
         })
         .catch(e => console.error("2",e))
-      }else{
-        
-      }
+     
         // scrollToListBottom();
-    }
+    
   };
 
   const refreshComments = async () => {
@@ -293,44 +258,6 @@ const loadComments = async () => {
       </View>
       </View> 
     </Screen>
-//   ) : ( <Screen style={styles.replayContainer}>
-//     <Text style={{color:colors.iondigoDye,fontSize:12}} onPress={hideReply}>-- Hide replies</Text>
-//    <FlatList
-//      data={replyList}
-//      keyExtractor={comment => comment.id.toString()}
-//      ref={commentsListRef}
-//      onContentSizeChange={scrollToListBottom}
-//      refreshing={refreshing}
-//      onRefresh={refreshComments}
-//      renderItem={({item}) => (
-//        <CommentItem
-//          comment={item}
-//          reactionsLength={
-//            item?.reactions?.length ? item?.reactions?.length : 0
-//          }
-//         // isUserLiked ={isUserLiked}
-//          onInteraction={handleReactions}
-//          handleDelete={handleDeleteComment}
-//          onReply={handleReplyComment}
-//          handleEdit={handleEditComment}
-//          isReply={isReply}
-//          reply = {replyList}
-//          postType={postType}
-//          fromReply={fromReply}
-//          //isOptionVisible = {isOptionsVisible}
-//         // setIsOptionVisible = {setIsOptionsVisible}
-//        />
-//      )}
-//    />
-//    {/* <EnhancedOptionsDrawer
-//           //source={'comment'}
-//          // postId={comment.id}
-//          // postText={comment.content}
-//           options={options}
-//           //isVisible={isOptionsVisible}
-//          // setIsVisible={setIsOptionsVisible}
-//         /> */}
-//  </Screen>
 );
 }
 

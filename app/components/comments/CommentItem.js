@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState,useCallback } from "react";
 import {
   View,
   StyleSheet,
@@ -23,14 +23,16 @@ import { Button } from "react-native-paper";
 import CommentsScreen from "../../screens/CommentsScreen";
 import PostOptionDrawer from "../drawers/PostOptionsDrawer";
 import postService from "../../services/post.service";
+import { useFocusEffect } from "@react-navigation/native";
+import OptionsDrawer from "../drawers/OptionsDrawer";
 export default function CommentItem({
   fromReply,
   comment,
   reactionsLength,
-  isUserLiked,
-  onInteraction,
+  //isUserLiked,
+  //onInteraction,
   handleDelete,
-  handleLongPress,
+  //handleLongPress,
   onReply,
   isReply,
   reply,
@@ -38,20 +40,57 @@ export default function CommentItem({
   swapId,
   //setIsOptionsVisible,
   //isOptionsVisible,
-  setNumberOfComments
+  setNumberOfComments,
+  refreshreply,
 }) {
   //const isReply = false
   //const [shoereply]
+  const [isOptionsVisible,setIsOptionsVisible] = useState(false);
+  const [isUserLiked, setIsUserLiked] = useState(false);
   const [replyList,setReplyList] = useState([]);
   const [showReply,setshowReply] = useState(false)
   const { userState } = useContext(authContext);
   const [time, setTime] = useState(
     moment(comment.published, "DD MMMM YYYY hh:mm:ss").fromNow()
   );
+  useEffect(() => {
+   
+    loadReply();
+    // loadStories();
+    // return setActivityIndicator(false);
+    return;
+  },[refreshreply])
 
-  const handleReply = (commentId) =>{
-    onReply(commentId,true)
-    setshowReply(true)
+  
+  const options = [ {
+    title:  'Edit',
+    icon: {
+      image: require('../../assets/post-options-icons/unfollow-icon.png'),
+    },
+    onPress: () => {
+      alert('Edit');
+    },
+  },
+  {
+    title:<Text style={{color:colors.red}}>Delete</Text>,
+    icon: {
+      image: require('../../assets/post-options-icons/delete-red-icon.png'),
+    },
+    onPress: () => {alert('Edit');
+    //handleDelete(comment.id)
+      
+    },
+  },
+];
+  const onInteraction = (isLike) =>{
+    setIsUserLiked(isLike)
+  }
+
+  const handleLongPress = (commendId) =>{
+    setIsOptionsVisible(true)
+  }
+
+  const loadReply = (commentId) =>{
     postService.getAllReply(commentId)
     .then(res => {
       console.log("Reply",res.data)
@@ -59,13 +98,19 @@ export default function CommentItem({
       setReplyList(replyArray)})
     .catch(e => console.log(e))
   }
+
+  const handleReply = (commentId) =>{
+    onReply(commentId,true);
+    setshowReply(true);
+    loadReply(commentId);
+  }
   const hideReply = () =>{
     setshowReply(false)
     onReply(comment.id,false)
   }
   return (
     <>
-     {/* <TouchableWithoutFeedback onLongPress={()=>{}}> */}
+     <TouchableWithoutFeedback onLongPress={()=>{handleLongPress(comment.id)}}>
         <View style={styles.commentContainer}>
           {/** Left */}
           <View>
@@ -90,7 +135,7 @@ export default function CommentItem({
               <Text style={styles.stars}>
                 {reactionsLength} {reactionsLength < 2 ? "Star" : "Stars"}
               </Text>
-              <LinkButton title="Reply" style={styles.reply} onPress={() => handleReply(comment.id)} />
+              <LinkButton title="Reply" style={styles.reply} onPress={() => !comment.comment ?  handleReply(comment.id):{}} />
             </View>
           </View>
 
@@ -104,9 +149,9 @@ export default function CommentItem({
               size={20}
               backgroundSizeRatio={1}
             />
-          </TouchableWithoutFeedback> */}
+          /</TouchableWithoutFeedback> */}
             {isUserLiked ? (
-              <TouchableWithoutFeedback onPress={() => onInteraction(comment.id)}>
+              <TouchableWithoutFeedback onPress={() =>  onInteraction(false)}>
                 <Icon
                   name="star"
                   type="AntDesign"
@@ -116,7 +161,7 @@ export default function CommentItem({
                 />
               </TouchableWithoutFeedback>
             ) : (
-              <TouchableWithoutFeedback onPress={() => onInteraction(comment.id)}>
+              <TouchableWithoutFeedback onPress={() =>  onInteraction(true)}>
                 <Icon
                   name="staro"
                   type="AntDesign"
@@ -128,6 +173,7 @@ export default function CommentItem({
             )}
           </View>
           </View>
+          </TouchableWithoutFeedback>
           {showReply && (  
           <View style={styles.replayContainer}>
           <Text style={{color:colors.iondigoDye,fontSize:12}} onPress={hideReply}>-- Hide replies</Text>
@@ -165,7 +211,11 @@ export default function CommentItem({
           <CommentsScreen route={{params: { comments: reply, userId: comment.user.id, commendId: comment.id, postType: postType, swapId: swapId, fromReply:true }}}/>
         ) : (<Text />)} */}
         {/* <Separator style={styles.separator} /> */}
-        {/* </TouchableWithoutFeedback> */}
+        <OptionsDrawer
+          options={options}
+          isVisible={isOptionsVisible}
+          setIsVisible={setIsOptionsVisible}
+        />
     </>
   );
 }
