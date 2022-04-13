@@ -11,6 +11,7 @@ import {
   Alert,
   ActivityIndicator,
   KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 
 import colors from '../config/colors';
@@ -25,6 +26,7 @@ import Video from 'react-native-video';
 import storyService from '../services/story.service';
 import {load} from 'npm';
 import {ProgressBar} from 'react-native-paper';
+import { TouchableWithoutFeedback } from 'react-native';
 
 export default function AddStoryScreen({navigation}) {
   let cameraRef;
@@ -203,12 +205,13 @@ export default function AddStoryScreen({navigation}) {
           />
         </RNCamera>
       ) : (
-        <KeyboardAvoidingView style={styles.storyImgViewer}>
+        <KeyboardAvoidingView behavior={'height'} style={styles.storyImgViewer}>
 
           <CameraHeader
             title="Story"
             onClosePress={() => setScreen('capture')}
           />
+          <TouchableWithoutFeedback>
           <View style={styles.forwardArrow}>
             <TextInput placeholder="Caption" value={caption} onChangeText={e => setCaption(e)} multiline style={styles.caption} />
             <TouchableOpacity
@@ -247,6 +250,7 @@ export default function AddStoryScreen({navigation}) {
             />
           )}
       
+      </TouchableWithoutFeedback>
         
           
         </KeyboardAvoidingView>
