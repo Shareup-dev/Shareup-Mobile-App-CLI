@@ -19,8 +19,8 @@ class SwapService {
 
     /*******Comment *******/
     createSwapcomment = (uid,sid,data) =>
-        AuthAxios.post(`comment/swaps/${uid}/${sid}`,data)
+        AuthAxios.post(`comment/swap/${uid}/${sid}`,data)
     getSwapComment = (sid) =>
-        AuthAxios.get(`comment/swaps/${sid}`)
+        AuthAxios.get(`comment/swap/${sid}`)
 }
 export default new SwapService();
