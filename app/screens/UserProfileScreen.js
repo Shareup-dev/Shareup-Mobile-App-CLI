@@ -28,9 +28,8 @@ const tabs = [
 
 export default function UserProfileScreen({navigation, route}) {
   const [currentTab, setCurrentTab] = useState(POSTS);
-  const {userState} = useContext(authContext);
+  const {userState:{userData}} = useContext(authContext);
   const [posts, setPosts] = useState([]);
-  const [userData,setUserData] = useState([]);
   const [imagesAndVideos, setImagesAndVideos] = useState([]);
   const [tags, setTags] = useState([]);
 
@@ -40,29 +39,8 @@ export default function UserProfileScreen({navigation, route}) {
     setCurrentTab(name);
   };
 
-  const getUserPosts = () => {
-    // PostService.getPostsForUser(userEmail)
-    //   .then(res => {
-    //     setPosts(res.data);
+  console.log(userData);
 
-    //   })
-    //   .catch(err => console.error(err));
-  };
-  const getUserData = () => {
-
-    UserService.getUserByEmail(userEmail)
-      .then(res => {
-    
-        setUserData(res.data);
-      
-      })
-      .catch(err => console.error(err));
-  };
-
-  useEffect(() => {
-    getUserData();
-    getUserPosts();
-  }, []);
 
   const ListHeader = () => (
     <ProfileTop

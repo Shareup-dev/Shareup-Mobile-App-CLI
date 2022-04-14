@@ -14,6 +14,7 @@ import {
 import Icon from '../components/Icon';
 import Video from 'react-native-video';
 import routes from '../navigation/routes';
+import moment  from 'moment';
 import fileStorage from '../config/fileStorage';
 import ReelsService from '../services/Reels.service';
 import AuthContext from '../authContext';
@@ -27,19 +28,34 @@ const ReelPlayer = ({navigation, route}) => {
   const videoRef = React.useRef(null);
 
   const BottomCard = React.memo(
-    ({rid, reactions, user, content, publishedDate}) => {
+    ({
+      rid,
+      reactions,
+      user,
+      content,
+      publishedDate,
+      numberOfComments,
+      numberOfReaction,
+      reelLiked,
+    }) => {
       const {firstName, lastName} = user;
 
-      const date = publishedDate.split(' ');
-
-      const [like, setLike] = useState(
-        Boolean(reactions.filter(({user}) => user.id === userData.id).length),
-      );
+      const [date, setDate] = useState(
+        moment(publishedDate, "DD MMMM YYYY hh:mm:ss").fromNow()
+      // null
+     );
+          const [like, setLike] = useState(Boolean(reelLiked));
+      const [totalLikes, setTotalLikes] = useState(numberOfReaction? numberOfReaction : 0);
+      const [totalComments, setTotalComments] = useState(numberOfComments? numberOfComments : 0);
 
       const toggleLike = () => {
+
+        
         ReelsService.likeUnLike(userData.id, rid, {})
-          .then(({status}) => {
-            if (status === 200) {
+        .then(({status}) => {
+          if (status === 200) {
+              if(like) setTotalLikes(prev => prev - 1);
+              else setTotalLikes(prev => prev + 1);
               setLike(prev => !prev);
             }
           })
@@ -79,14 +95,14 @@ const ReelPlayer = ({navigation, route}) => {
                       noBackground
                       type="FontAwesome"
                     />
-                    <Text style={{color: '#fff'}}>56</Text>
+                    <Text style={{color: '#fff'}}>{totalLikes}</Text>
                     <Icon
                       color="#fff"
                       name="comment"
                       noBackground
                       type="Octicons"
                     />
-                    <Text style={{color: '#fff'}}>56</Text>
+                    <Text style={{color: '#fff'}}>{totalComments}</Text>
                   </View>
                 </View>
               </View>
@@ -97,7 +113,7 @@ const ReelPlayer = ({navigation, route}) => {
                   marginHorizontal: 15,
                   fontSize: 14,
                 }}>
-                {`Posted on: ${date[0]} ${date[1]} ${date[2]}`}
+                {`Posted on: ${date}`}
               </Text>
               <Text
                 style={{
@@ -123,7 +139,7 @@ const ReelPlayer = ({navigation, route}) => {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={_ => navigation.navigate(routes.ADD_COMMENT_REEL)}>
+              onPress={_ => navigation.navigate(routes.ADD_COMMENT_REEL,{reelId : rid})}>
               <Icon
                 color="#fff"
                 style={{marginVertical: 5}}
@@ -150,11 +166,21 @@ const ReelPlayer = ({navigation, route}) => {
   const {width, height} = Dimensions.get('window');
 
   const RenderReels = React.memo(
-    ({video, id, reactions, user, content, publishedDate, thumbnail_name}) => {
+    ({
+      video,
+      id,
+      reactions,
+      user,
+      content,
+      publishedDate,
+      thumbnail_name,
+      numberOfComments,
+      numberOfReaction,
+      reelLiked,
+    }) => {
       const [paused, setPaused] = useState(false);
       const [mute, setMute] = useState(false);
       const [loaded, setLoaded] = useState(false);
- 
 
       return (
         <KeyboardAvoidingView>
@@ -229,8 +255,14 @@ const ReelPlayer = ({navigation, route}) => {
                 //   source={{uri: fileStorage.baseUrl + thumbnail_name}}
                 //   resizeMode="cover"
                 // />
-                <View style={{width:width,height:height, justifyContent:'center',alignItems:'center'}}>
-                <Loading noBackground/>
+                <View
+                  style={{
+                    width: width,
+                    height: height,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Loading noBackground />
                 </View>
               )}
               <Video
@@ -240,17 +272,18 @@ const ReelPlayer = ({navigation, route}) => {
                   zIndex: -10,
                 }}
                 onLoadStart={_ => setLoaded(false)}
-
                 source={{uri: fileStorage.baseUrl + video}}
                 repeat
                 onLoad={_ => setLoaded(true)}
-              
                 muted={mute}
                 paused={paused}
                 resizeMode="cover"
               />
             </View>
             <BottomCard
+              numberOfComments={numberOfComments}
+              numberOfReaction={numberOfReaction}
+              reelLiked={reelLiked}
               rid={id}
               reactions={reactions}
               user={user}
@@ -275,7 +308,6 @@ const ReelPlayer = ({navigation, route}) => {
         keyExtractor={(item, i) => i.toString()}
         renderItem={({
           item: {
-            media,
             id,
             reactions,
             userdata,
@@ -283,6 +315,10 @@ const ReelPlayer = ({navigation, route}) => {
             content,
             published,
             thumbnail_name,
+            numberOfComments,
+            numberOfReaction,
+            reelLiked,
+            ...rest
           },
         }) => {
           return (
@@ -292,6 +328,9 @@ const ReelPlayer = ({navigation, route}) => {
               reactions={reactions}
               id={id}
               user={userdata}
+              numberOfComments={numberOfComments}
+              numberOfReaction={numberOfReaction}
+              reelLiked={reelLiked}
               content={content}
               publishedDate={published}
             />
