@@ -17,8 +17,7 @@ const SwapCard = React.memo(({item, navigation, userId, style}) => {
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [numberOfComments, setNumberOfComments] = useState(
     item.numberOfComments,
-  );
-
+  ); 
   const [sliderWidth, setSliderWidth] = useState();
   const [currentImage, setCurrentImage] = useState();
   const [images, setImages] = useState([]);
@@ -48,7 +47,7 @@ const SwapCard = React.memo(({item, navigation, userId, style}) => {
     useContext(AuthContext)?.userState;
   const loadImages = () => {
     if (item.media.length !== 0) {
-      setImages(item.media.map(image => fileStorage.baseUrl + image.mediaPath));
+      setImages(item.media.map(image => fileStorage.baseUrl + image.media));
     }
   };
 
@@ -160,7 +159,7 @@ const deletePost = async () => {
             images={images}
             ImageComponentStyle={styles.image}
             imageLoadingColor={colors.iondigoDye}
-            parentWidth={sliderWidth}
+            //parentWidth={sliderWidth}
             onCurrentImagePressed={index => {
               setCurrentImage(images[index]);
               setImageViewerVisible(true);
@@ -179,18 +178,26 @@ const deletePost = async () => {
       <PostActions
         comments={item.comments}
         swapId={item.id}
-        firstName={item.userdata.firstName}
+        //firstName={item.userdata.firstName}
         //userEmail={item.userdata.email}
         isUserLiked={false}
         navigation={navigation}
-        numberOfComments={`${numberOfComments}`}
+        numberOfComments={`${item.numberOfComments}`}
         numberOfReactions={`${0}`}
         postId={item.id}
         postText={item.content}
-        profileImage={item.userdata.profilePicture}
+       // profileImage={item.userdata.profilePicture}
         userId={userId}
         setIsOptionsVisible={setIsOptionsVisible}
-        postType={'swapPost'}
+        postType={item.allPostsType}
+        postData={item}
+        //profileImage={profileImage}
+       
+       // isVisible={isOptionsVisible}
+       // setIsVisible={setIsOptionsVisible}
+       
+        //onInteraction={handleReactions}
+        
       />
 
       <View style={{flexDirection: 'row'}}>

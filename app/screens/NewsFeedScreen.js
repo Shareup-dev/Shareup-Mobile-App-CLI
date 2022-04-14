@@ -40,7 +40,8 @@ export default function NewsFeedScreen({navigation, route}) {
   };
 
   const renderItem = ({item}) => {
-    return item.hasOwnProperty('swaped') ? (
+   // return item.hasOwnProperty('swaped') ? (
+    return item.allPostsType == "swap" ? (
       /**
        * The Swap Should from backend as instance of post
        */
@@ -49,7 +50,6 @@ export default function NewsFeedScreen({navigation, route}) {
         navigation={navigation}
         route={route}
         item={item}
-
         userId={item.userdata.id}
 
 
@@ -71,7 +71,7 @@ export default function NewsFeedScreen({navigation, route}) {
         //comments={item.comments}
         navigation={navigation}
         reloadPosts={loadNews}
-        postType={item.hasOwnProperty('swaped') ? 'swap' : 'regularPost'}
+        postType={item.allPostsType}
       />
     );
   };

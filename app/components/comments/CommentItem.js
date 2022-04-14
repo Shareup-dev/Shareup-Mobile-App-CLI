@@ -29,8 +29,8 @@ export default function CommentItem({
   fromReply,
   comment,
   reactionsLength,
-  //isUserLiked,
-  //onInteraction,
+  isUserLiked,
+  onInteraction,
   handleDelete,
   //handleLongPress,
   onReply,
@@ -46,7 +46,7 @@ export default function CommentItem({
   //const isReply = false
   //const [shoereply]
   const [isOptionsVisible,setIsOptionsVisible] = useState(false);
-  const [isUserLiked, setIsUserLiked] = useState(false);
+  //const [isUserLiked, setIsUserLiked] = useState(false);
   const [replyList,setReplyList] = useState([]);
   const [showReply,setshowReply] = useState(false)
   const { userState } = useContext(authContext);
@@ -55,7 +55,7 @@ export default function CommentItem({
   );
   useEffect(() => {
    
-    loadReply();
+    //loadReply();
     // loadStories();
     // return setActivityIndicator(false);
     return;
@@ -82,9 +82,7 @@ export default function CommentItem({
     },
   },
 ];
-  const onInteraction = (isLike) =>{
-    setIsUserLiked(isLike)
-  }
+ 
 
   const handleLongPress = (commendId) =>{
     setIsOptionsVisible(true)
@@ -150,7 +148,7 @@ export default function CommentItem({
             />
           /</TouchableWithoutFeedback> */}
             {isUserLiked ? (
-              <TouchableWithoutFeedback onPress={() =>  onInteraction(false)}>
+              <TouchableWithoutFeedback onPress={() =>  onInteraction(comment.id)}>
                 <Icon
                   name="star"
                   type="AntDesign"
@@ -160,7 +158,7 @@ export default function CommentItem({
                 />
               </TouchableWithoutFeedback>
             ) : (
-              <TouchableWithoutFeedback onPress={() =>  onInteraction(true)}>
+              <TouchableWithoutFeedback onPress={() =>  onInteraction(comment.id)}>
                 <Icon
                   name="staro"
                   type="AntDesign"
