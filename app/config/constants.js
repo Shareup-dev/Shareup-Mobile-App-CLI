@@ -3,7 +3,7 @@ export default {
     HANG_SHARE: "Hang Share",
     CREATE_POST: "Create Post",
     SHARE_UP: "Share Up",
-    SWAP: "swapPost",
+    SWAP: "swap",
     GROUP_POST: "Group Post",
   },
 };

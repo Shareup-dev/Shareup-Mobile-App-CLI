@@ -55,7 +55,7 @@ export default function CommentItem({
   );
   useEffect(() => {
    
-    loadReply();
+    //loadReply();
     // loadStories();
     // return setActivityIndicator(false);
     return;

@@ -236,7 +236,6 @@ export default function AddPostScreen({navigation, route}) {
   }
 
   const createPostFormData = content => {
-   
     const formData = new FormData();
     formData.append('content', content.text);
     if (content.images.length !== 0) {
@@ -255,7 +254,6 @@ export default function AddPostScreen({navigation, route}) {
     if (content.groupId) {
       formData.append('groupid', content.groupId);
     }
-
     return formData;
   };
 
@@ -337,18 +335,19 @@ export default function AddPostScreen({navigation, route}) {
       if (postType === postTypes.SWAP) {
         const swapContent = {
           text: text === '' ? SWAP_DEFAULT_TEXT : text,
-          images: swapImage,
+          images: [swapImage],
         };
-        console.log("works here");
+        
         const formData = createPostFormData(swapContent)
         swapService.createSwap(user.id, formData).then(resp => {
+          console.log(resp.data)
           store.dispatch(feedPostsAction.addFeedPost(resp.data));
           //setloadingIndicator(false)
           setLoading(false)
           navigation.navigate(routes.FEED);
         }).catch((e)=>{
           setLoading(false)
-          console.log("ERROR:::",e);
+          console.log(e);
         })
       } else {
         if (text === '' && Object.keys(file).length === 0) {

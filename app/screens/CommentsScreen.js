@@ -14,6 +14,7 @@ import { color } from 'react-native-reanimated';
 
 import { useFocusEffect } from '@react-navigation/native';
 import postService from '../services/post.service';
+import SwapService from '../services/swap.service'
 
 
 
@@ -33,6 +34,7 @@ export default function CommentsScreen({navigation, route}) {
   // needed to setup list refreshing
   const [refreshing, setRefreshing] = useState(false);
   const {userState} = useContext(AuthContext);
+  const { postTypes } = constants;
   //const [frmReply,setFrmReply] = useState(fromReply)
 
  
@@ -46,7 +48,7 @@ export default function CommentsScreen({navigation, route}) {
   }, [])
 )
 const loadComments = async () => {
-  postService.getAllComments(postId)
+  postService.getAllComments(userState?.userData?.id,postId)
   .then(res =>{ 
     const commentArray = res.data//.reverse();
     setCommentsList(commentArray)
@@ -67,7 +69,7 @@ const loadComments = async () => {
   const handleAddComment = async () => {
 
     if (isReply){
-      if (postType === 'swapPost') {
+      if (postType === postTypes.SWAP) {
       const comment = {content: commentContent};
       postService.addSwapComment(userState?.userData?.id, swapId, comment.content).then(resp => {
         refreshComments();
@@ -93,19 +95,20 @@ const loadComments = async () => {
       }
     }
   }else{
-    if (postType === 'swapPost') {
+    console.log("::::",postType,postTypes.SWAP)
+    if (postType === postTypes.SWAP) {
+      console.log("works here",userState?.userData?.id, swapId, comment.content);
       const comment = {content: commentContent};
-      postService.addSwapComment(userState?.userData?.id, swapId, comment.content).then(resp => {
-  
+      SwapService.createSwapcomment(userState?.userData?.id, swapId, comment.content).then(resp => {
+        console.log("works here",resp.data);
         refreshComments();
         setCommentContent('');
         commentTextFieldRef.current.clear();
         Keyboard.dismiss();
         // scrollToListBottom();
-      });
+      }).catch(console.error(e))
     } else {
       const comment = {content: commentContent};
-
       if (commentContent !== '') {
         postService.addComment(userState?.userData?.id, postId, comment)
         .then(res => {
@@ -153,7 +156,7 @@ const loadComments = async () => {
           refreshComments();
            Keyboard.dismiss();
         })
-        .catch(e => console.error("2",e))
+        .catch(e => console.error(e))
      
         // scrollToListBottom();
     
@@ -161,7 +164,7 @@ const loadComments = async () => {
 
   const refreshComments = async () => {
     setRefreshing(true);
-    if (postType !== 'swapPost') {
+    if (postType !== postTypes.SWAP) {
 
       loadComments();
       // postService.getPostByPostId(postId)
@@ -177,7 +180,9 @@ const loadComments = async () => {
       
     } else {
 
-      const response = await postService.getSwapById(swapId);
+      SwapService.getSwapById(swapId).then((res)=>{
+        console.log(res);
+      }).catch(console.error(e))
       setCommentsList(response.data.comments);
     }
     setRefreshing(false);

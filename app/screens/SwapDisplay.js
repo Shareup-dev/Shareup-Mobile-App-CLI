@@ -74,7 +74,7 @@ const SwapDisplay = ({navigation, route}) => {
               navigation.navigate(routes.FEED, {...route.params});
             } else {
               navigation.navigate(routes.ADD_POST, {
-                postType: 'swapPost',
+                postType: 'swap',
                 swapImage: route.params.swapImage,
               });
             }

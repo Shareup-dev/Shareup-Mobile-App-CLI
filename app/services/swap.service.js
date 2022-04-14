@@ -18,7 +18,7 @@ class SwapService {
         AuthAxios.get(`swaps/email/${email}`)
 
     /*******Comment *******/
-    createSwapcomment = (sid,uid,data) =>
+    createSwapcomment = (uid,sid,data) =>
         AuthAxios.post(`comment/swaps/${uid}/${sid}`,data)
     getSwapComment = (sid) =>
         AuthAxios.get(`comment/swaps/${sid}`)
