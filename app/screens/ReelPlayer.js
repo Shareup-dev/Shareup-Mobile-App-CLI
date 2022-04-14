@@ -17,6 +17,7 @@ import routes from '../navigation/routes';
 import fileStorage from '../config/fileStorage';
 import ReelsService from '../services/Reels.service';
 import AuthContext from '../authContext';
+import Loading from '../components/Loading';
 
 const ReelPlayer = ({navigation, route}) => {
   const {index, data} = route.params;
@@ -25,115 +26,114 @@ const ReelPlayer = ({navigation, route}) => {
   } = useContext(AuthContext);
   const videoRef = React.useRef(null);
 
-  const BottomCard = React.memo(({rid, reactions, user, content,publishedDate}) => {
-    const {firstName, lastName} = user;
+  const BottomCard = React.memo(
+    ({rid, reactions, user, content, publishedDate}) => {
+      const {firstName, lastName} = user;
 
-    const date  =  publishedDate.split(" ");
+      const date = publishedDate.split(' ');
 
-    
+      const [like, setLike] = useState(
+        Boolean(reactions.filter(({user}) => user.id === userData.id).length),
+      );
 
-    const [like, setLike] = useState(
-      Boolean(reactions.filter(({user}) => user.id === userData.id).length),
-    );
+      const toggleLike = () => {
+        ReelsService.likeUnLike(userData.id, rid, {})
+          .then(({status}) => {
+            if (status === 200) {
+              setLike(prev => !prev);
+            }
+          })
+          .catch(e => console.error(e.message));
+      };
 
-    const toggleLike = () => {
-      ReelsService.likeUnLike(userData.id, rid, {})
-        .then(({status}) => {
-          if (status === 200) {
-            setLike(prev => !prev);
-          }
-        })
-        .catch(e => console.error(e.message));
-    };
-
-    return (
-      <View style={styles.card}>
-        <View style={styles.reelInfo}>
-          <View
-            style={{
-              backgroundColor: '#33333345',
-              borderRadius: 35,
-            }}>
-            <View style={styles.reelsInfo}>
-              <Image
-                source={require('../assets/default-profile-picture.png')}
-                style={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: 50,
-                  margin: 5,
-                }}
-              />
-              <View>
-                <Text style={{color: '#fff', marginTop: 2, fontSize: 14}}>
-                  {`${firstName} ${lastName}`}
-                </Text>
-                <View
+      return (
+        <View style={styles.card}>
+          <View style={styles.reelInfo}>
+            <View
+              style={{
+                backgroundColor: '#33333345',
+                borderRadius: 35,
+              }}>
+              <View style={styles.reelsInfo}>
+                <Image
+                  source={require('../assets/default-profile-picture.png')}
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Icon
-                    color={like ? '#FFCE45' : '#fff'}
-                    name={like ? 'star' : 'star-o'}
-                    noBackground
-                    type="FontAwesome"
-                  />
-                  <Text style={{color: '#fff'}}>56</Text>
-                  <Icon
-                    color="#fff"
-                    name="comment"
-                    noBackground
-                    type="Octicons"
-                  />
-                  <Text style={{color: '#fff'}}>56</Text>
+                    width: 50,
+                    height: 50,
+                    borderRadius: 50,
+                    margin: 5,
+                  }}
+                />
+                <View>
+                  <Text style={{color: '#fff', marginTop: 2, fontSize: 14}}>
+                    {`${firstName} ${lastName}`}
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <Icon
+                      color={like ? '#FFCE45' : '#fff'}
+                      name={like ? 'star' : 'star-o'}
+                      noBackground
+                      type="FontAwesome"
+                    />
+                    <Text style={{color: '#fff'}}>56</Text>
+                    <Icon
+                      color="#fff"
+                      name="comment"
+                      noBackground
+                      type="Octicons"
+                    />
+                    <Text style={{color: '#fff'}}>56</Text>
+                  </View>
                 </View>
               </View>
-            </View>
-            <Text
-              style={{
-                color: '#fff',
-                marginTop: 2,
-                marginHorizontal: 15,
-                fontSize: 14,
-              }}>
+              <Text
+                style={{
+                  color: '#fff',
+                  marginTop: 2,
+                  marginHorizontal: 15,
+                  fontSize: 14,
+                }}>
                 {`Posted on: ${date[0]} ${date[1]} ${date[2]}`}
-            </Text>
-            <Text  style={{
-                color: '#fff',
-                marginTop: 2,
-                marginHorizontal: 15,
-                marginBottom: 10,
-                fontSize: 14,
-              }}>
-                        {content}
-
-            </Text>
+              </Text>
+              <Text
+                style={{
+                  color: '#fff',
+                  marginTop: 2,
+                  marginHorizontal: 15,
+                  marginBottom: 10,
+                  fontSize: 14,
+                }}>
+                {content}
+              </Text>
+            </View>
           </View>
-        </View>
-        <View style={styles.reelAction}>
-          <TouchableOpacity onPress={toggleLike}>
-            <Icon
-              color={like ? '#FFCE45' : '#fff'}
-              name={like ? 'star' : 'star-o'}
-              style={{marginVertical: 5}}
-              backgroundSizeRatio={0.7}
-              noBackground
-              type="FontAwesome"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={_ => navigation.navigate(routes.ADD_COMMENT_REEL)}>
-            <Icon
-              color="#fff"
-              style={{marginVertical: 5}}
-              name="comment"
-              noBackground
-              backgroundSizeRatio={0.7}
-              type="Octicons"
-            />
-          </TouchableOpacity>
-          {/* <Icon
+          <View style={styles.reelAction}>
+            <TouchableOpacity onPress={toggleLike}>
+              <Icon
+                color={like ? '#FFCE45' : '#fff'}
+                name={like ? 'star' : 'star-o'}
+                style={{marginVertical: 5}}
+                backgroundSizeRatio={0.7}
+                noBackground
+                type="FontAwesome"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={_ => navigation.navigate(routes.ADD_COMMENT_REEL)}>
+              <Icon
+                color="#fff"
+                style={{marginVertical: 5}}
+                name="comment"
+                noBackground
+                backgroundSizeRatio={0.7}
+                type="Octicons"
+              />
+            </TouchableOpacity>
+            {/* <Icon
             color="#fff"
             style={{marginVertical: 5}}
             image={require('../assets/icons/share-icon.png')}
@@ -141,108 +141,127 @@ const ReelPlayer = ({navigation, route}) => {
             backgroundSizeRatio={0.7}
             type="Octicons"
           /> */}
+          </View>
         </View>
-      </View>
-    );
-  });
+      );
+    },
+  );
 
   const {width, height} = Dimensions.get('window');
 
-  const RenderReels = React.memo(({video, id, reactions, user, content,publishedDate , thumbnail_name}) => {
-    const [paused, setPaused] = useState(false);
-    const [mute, setMute] = useState(false);
-    // const [loaded,setLoaded] = useState(false);
+  const RenderReels = React.memo(
+    ({video, id, reactions, user, content, publishedDate, thumbnail_name}) => {
+      const [paused, setPaused] = useState(false);
+      const [mute, setMute] = useState(false);
+      const [loaded, setLoaded] = useState(false);
+ 
 
-
-    return (
-      <KeyboardAvoidingView>
-        <TouchableOpacity
-          style={{
-            justifyContent: 'space-between',
-            width: width,
-            height: height - StatusBar.currentHeight,
-            backgroundColor: '#000',
-          }}
-          activeOpacity={1}
-          onPress={_ => setPaused(prev => !prev)}>
-          <View style={styles.Header}>
-            <Text style={styles.HeaderText}>Share Reels</Text>
-            <View style={styles.iconContainer}>
-              <TouchableOpacity
-                style={{marginHorizontal: 10}}
-                onPress={_ => setMute(prev => !prev)}>
-                <Icon
-                  noBackground
-                  type="MaterialCommunityIcons"
-                  size={35}
-                  backgroundSizeRatio={0.8}
-                  color="#fff"
-                  name={mute ? 'volume-off' : 'volume-high'}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={_ => navigation.goBack()}>
-                <Icon
-                  noBackground
-                  type="MaterialCommunityIcons"
-                  size={35}
-                  backgroundSizeRatio={1}
-                  name={'close'}
-                  color="#fff"
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-          {paused && (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <View
-                style={{
-                  backgroundColor: '#33333320',
-                  padding: 15,
-                  borderRadius: 40,
-                }}>
-                <Icon
-                  name={'pause'}
-                  noBackground
-                  type="Fontisto"
-                  size={35}
-                  backgroundSizeRatio={0.6}
-                  color="#fff"
-                />
+      return (
+        <KeyboardAvoidingView>
+          <TouchableOpacity
+            style={{
+              justifyContent: 'space-between',
+              width: width,
+              height: height - StatusBar.currentHeight,
+              backgroundColor: '#000',
+            }}
+            activeOpacity={1}
+            onPress={_ => setPaused(prev => !prev)}>
+            <View style={styles.Header}>
+              <Text style={styles.HeaderText}>Share Reels</Text>
+              <View style={styles.iconContainer}>
+                <TouchableOpacity
+                  style={{marginHorizontal: 10}}
+                  onPress={_ => setMute(prev => !prev)}>
+                  <Icon
+                    noBackground
+                    type="MaterialCommunityIcons"
+                    size={35}
+                    backgroundSizeRatio={0.8}
+                    color="#fff"
+                    name={mute ? 'volume-off' : 'volume-high'}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={_ => navigation.goBack()}>
+                  <Icon
+                    noBackground
+                    type="MaterialCommunityIcons"
+                    size={35}
+                    backgroundSizeRatio={1}
+                    name={'close'}
+                    color="#fff"
+                  />
+                </TouchableOpacity>
               </View>
             </View>
-          )}
-          <View style={styles.video}>
-     
+            {paused && (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <View
+                  style={{
+                    backgroundColor: '#33333320',
+                    padding: 15,
+                    borderRadius: 40,
+                  }}>
+                  <Icon
+                    name={'pause'}
+                    noBackground
+                    type="Fontisto"
+                    size={35}
+                    backgroundSizeRatio={0.6}
+                    color="#fff"
+                  />
+                </View>
+              </View>
+            )}
+            <View style={styles.video}>
+              {!loaded && (
+                // <Image
+                //   style={{
+                //     width: width,
+                //     height: height - StatusBar.currentHeight,
+                //     zIndex: 10,
+                //   }}
+                //   source={{uri: fileStorage.baseUrl + thumbnail_name}}
+                //   resizeMode="cover"
+                // />
+                <View style={{width:width,height:height, justifyContent:'center',alignItems:'center'}}>
+                <Loading noBackground/>
+                </View>
+              )}
               <Video
-              style={{
-                width: width,
-                height: height - StatusBar.currentHeight,
-                zIndex:-10
-              }}
-              source={{uri: fileStorage.baseUrl + video}}
-              repeat
-              muted={mute}
-              paused={paused}
-              resizeMode="cover"
+                style={{
+                  width: width,
+                  height: height - StatusBar.currentHeight,
+                  zIndex: -10,
+                }}
+                onLoadStart={_ => setLoaded(false)}
+
+                source={{uri: fileStorage.baseUrl + video}}
+                repeat
+                onLoad={_ => setLoaded(true)}
+              
+                muted={mute}
+                paused={paused}
+                resizeMode="cover"
+              />
+            </View>
+            <BottomCard
+              rid={id}
+              reactions={reactions}
+              user={user}
+              content={content}
+              publishedDate={publishedDate}
             />
-            
-          </View>
-          <BottomCard
-            rid={id}
-            reactions={reactions}
-            user={user}
-            content={content}
-            publishedDate={publishedDate}
-          />
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
-    );
-  });
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      );
+    },
+  );
 
   return (
     <>
@@ -255,7 +274,16 @@ const ReelPlayer = ({navigation, route}) => {
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, i) => i.toString()}
         renderItem={({
-          item: {media, id, reactions, userdata,video_name, content,published,thumbnail_name,...rest},
+          item: {
+            media,
+            id,
+            reactions,
+            userdata,
+            video_name,
+            content,
+            published,
+            thumbnail_name,
+          },
         }) => {
           return (
             <RenderReels
