@@ -19,6 +19,7 @@ export default function ShareupAuthentication() {
   };
   const actions = {
     SET_STATE: 'SET_STATE',
+    UPDATE_USER: 'UPDATE_USER',
     CLEAR_STATE: 'CLEAR_STATE',
   };
 
@@ -30,6 +31,12 @@ export default function ShareupAuthentication() {
           ...prevState,
           username: action.username,
           userToken: action.userToken,
+          userData: action.userData,
+          isLoading: false,
+        };
+      case actions.UPDATE_USER:
+        return {
+          ...prevState,
           userData: action.userData,
           isLoading: false,
         };
@@ -114,6 +121,13 @@ export default function ShareupAuthentication() {
         setTokenForAxios(userToken);
         // getting user information
         await gettingUserInfo(username, userToken);
+      },
+      // updating user information
+      updateUserInfo: (userData) => {
+        dispatch({
+          type: actions.UPDATE_USER,
+          userData,
+        })
       },
     }),
     [],

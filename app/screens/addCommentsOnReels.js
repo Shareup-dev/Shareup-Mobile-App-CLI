@@ -86,11 +86,13 @@ export default function AddCommentsOnReels({navigation, route}) {
               maxWidth: '90%',
               minWidth:'50%'
             }}>
-            <Text style={{fontWeight: '600', color: '#000000', fontSize: 13}}>
+            <Text style={{fontSize: 13,fontWeight: '600',color: '#0000009',marginVertical:3}}>
               {`${firstName} ${lastName}`}
+              </Text>
+            <Text style={{fontWeight: '600', color: '#333', fontSize: 13}}>
+              {content}
             </Text>
 
-            <Text style={{fontSize: 13,marginVertical:3}}>{content}</Text>
           </View>
           <Text style={{fontSize: 11}}>{date}</Text>
         </View>

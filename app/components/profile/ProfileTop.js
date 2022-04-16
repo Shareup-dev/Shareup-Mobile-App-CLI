@@ -20,7 +20,7 @@ export default function ProfileTop({
   tabs,
   numberOfPosts,
 }) {
-  const {userData} = useContext(authContext)?.userState;
+  const {userData:{aboutme,firstName, lastName}} = useContext(authContext)?.userState;
 
   return (
     <View style={styles.container}>
@@ -53,10 +53,9 @@ export default function ProfileTop({
 
         {/** Row 2 */}
         <View style={styles.row2}>
-          <Text style={styles.username}>{userData.firstName}</Text>
+          <Text style={styles.username}>{`${firstName} ${lastName}`}</Text>
           <Text>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Varius
-            tellus placerat leo mi quis.
+          {aboutme}
           </Text>
           <Tab
             title="Edit Profile"

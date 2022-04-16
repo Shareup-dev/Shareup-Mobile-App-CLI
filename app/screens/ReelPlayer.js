@@ -19,6 +19,7 @@ import fileStorage from '../config/fileStorage';
 import ReelsService from '../services/Reels.service';
 import AuthContext from '../authContext';
 import Loading from '../components/Loading';
+import UserProfilePicture from '../components/UserProfilePicture';
 
 const ReelPlayer = ({navigation, route}) => {
   const {index, data} = route.params;
@@ -71,15 +72,8 @@ const ReelPlayer = ({navigation, route}) => {
                 borderRadius: 35,
               }}>
               <View style={styles.reelsInfo}>
-                <Image
-                  source={require('../assets/default-profile-picture.png')}
-                  style={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: 50,
-                    margin: 5,
-                  }}
-                />
+                <UserProfilePicture size={50} />
+               
                 <View>
                   <Text style={{color: '#fff', marginTop: 2, fontSize: 14}}>
                     {`${firstName} ${lastName}`}

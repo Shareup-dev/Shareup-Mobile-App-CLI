@@ -11,12 +11,13 @@ import {
   View,
   Image,
   TextInput,
-  TouchableOpacity,Platform,
-  ActivityIndicator
+  TouchableOpacity,
+  Platform,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from '../components/Icon';
 import StackActions from '@react-navigation/routers';
-import { ProgressBar, Colors } from 'react-native-paper';
+import {ProgressBar, Colors} from 'react-native-paper';
 import {groupPostsActions} from '../redux/groupPosts';
 import EnhancedOptionsDrawer from '../components/drawers/EnhancedOptionsDrawer';
 import IconButton from '../components/buttons/IconButton';
@@ -25,7 +26,7 @@ import Screen from '../components/Screen';
 import authContext from '../authContext';
 import AuthContext from '../UserContext';
 import PostService from '../services/post.service';
-import swapService from '../services/swap.service'; 
+import swapService from '../services/swap.service';
 import routes from '../navigation/routes';
 import {useImagePicker} from '../hooks';
 import Header from '../components/headers/Header';
@@ -46,17 +47,15 @@ import RadioOptionDrawer from '../components/drawers/RadioOptionDrawer';
 import OptionBox from '../components/posts/OptionBox';
 import {useDispatch, useSelector} from 'react-redux';
 import {postFeelingsActions} from '../redux/postFeelings';
-import { ScrollView } from 'react-native-gesture-handler';
-
+import {ScrollView} from 'react-native-gesture-handler';
+import fileStorage from '../config/fileStorage';
 
 export default function AddPostScreen({navigation, route}) {
-  const {loadingIndicator, setloadingIndicator } =
-  useContext(AuthContext);
+  const {loadingIndicator, setloadingIndicator} = useContext(AuthContext);
 
-  const {userData : user} =
-    useContext(authContext)?.userState;
-  const [loading,setLoading] = useState(false)
-  const [tagedUserData,setTagedUserData] = useState([])
+  const {userData: user} = useContext(authContext)?.userState;
+  const [loading, setLoading] = useState(false);
+  const [tagedUserData, setTagedUserData] = useState([]);
 
   const dispatch = useDispatch();
   const postFeel = useSelector(state => state.postFeel);
@@ -217,10 +216,9 @@ export default function AddPostScreen({navigation, route}) {
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [isPrivacyOptionsVisible, setIsPrivacyOptionsVisible] = useState(false);
   const [images, setImages] = useState([]);
-  const [progress,setProgress] = useState(0);
+  const [progress, setProgress] = useState(0);
   const [postPrivacyOption, setPostPrivacyOption] = useState(privacyOptions[0]); // object to present the current privacy option
 
- 
   useEffect(() => {
     if (postType === postTypes.SWAP) {
       setImages([swapImage]);
@@ -231,9 +229,9 @@ export default function AddPostScreen({navigation, route}) {
     return () => clearFields();
   }, [swapImage]);
 
-  const setTagedUser = (userData) => {
-    setTagedUserData(userData)
-  }
+  const setTagedUser = userData => {
+    setTagedUserData(userData);
+  };
 
   const createPostFormData = content => {
     const formData = new FormData();
@@ -244,9 +242,7 @@ export default function AddPostScreen({navigation, route}) {
         formData.append(`files`, {
           name: String(splitPathArr.slice(-1).pop()),
           type: 'image/jpg',
-          uri: Platform.OS === 'ios' ? 
-          image.replace('file://', '')
-          : image,
+          uri: Platform.OS === 'ios' ? image.replace('file://', '') : image,
         });
       });
     }
@@ -263,7 +259,6 @@ export default function AddPostScreen({navigation, route}) {
   };
 
   const handleButtonActivation = (text, images) => {
-   
     if (text !== '' || text !== undefined) setIsButtonActive(true);
     if (images?.length > 0) setIsButtonActive(true);
     if (images?.length === 0 && text === '') setIsButtonActive(false);
@@ -273,7 +268,7 @@ export default function AddPostScreen({navigation, route}) {
   const handelPickImage = async () => {
     try {
       const result = await pickImage();
-      const uri = result.map((item) => {
+      const uri = result.map(item => {
         return item.uri;
       });
       if (!result.cancelled) onAddImage(uri);
@@ -294,18 +289,17 @@ export default function AddPostScreen({navigation, route}) {
   };
 
   const handleAddPost = async () => {
-   // setloadingIndicator(true)
-     setLoading(true);
-    
+    // setloadingIndicator(true)
+    setLoading(true);
+
     if (groupPost) {
-   
       const postContent = {
         text: text,
-        images : images,
+        images: images,
         //feeling: postFeel.feeling ? postFeel.feeling : null,
-        groupId:groupId,
-       // privacy:postPrivacyOption,
-       // tagedUsers:tagedUserData
+        groupId: groupId,
+        // privacy:postPrivacyOption,
+        // tagedUsers:tagedUserData
       };
       // if (file.uri) {
       //   postContent.images = file;
@@ -313,62 +307,65 @@ export default function AddPostScreen({navigation, route}) {
       // //if(postFeel.feeling) postContent.feeling = postFeel.feeling;
       // if(postPrivacyOption) postContent.privacy = postPrivacyOption;
       // if(tagedUserData) postContent.tagedUsers = tagedUserData;
-     
+
       const formData = createPostFormData(postContent);
       PostService.createPost(user.id, formData).then(resp => {
-
-         let existingPosts = store.getState().groupPosts;
-       // setloadingIndicator(false)
+        let existingPosts = store.getState().groupPosts;
+        // setloadingIndicator(false)
         store.dispatch(
           groupPostsActions.setPosts([resp.data, ...existingPosts]),
         );
 
         store.dispatch(feedPostsAction.addFeedPost(resp.data));
-       // const popAction = StackActions.pop(1);
-        setLoading(false)
-    
-        navigation.navigate(routes.GROUP_FEED,resp.data.group);
-       // navigation.dispatch(popAction);
+        // const popAction = StackActions.pop(1);
+        setLoading(false);
+
+        navigation.navigate(routes.GROUP_FEED, resp.data.group);
+        // navigation.dispatch(popAction);
       });
     } else {
-
       if (postType === postTypes.SWAP) {
         const swapContent = {
           text: text === '' ? SWAP_DEFAULT_TEXT : text,
           images: [swapImage],
         };
-        
-        const formData = createPostFormData(swapContent)
-        swapService.createSwap(user.id, formData).then(resp => {
-          console.log(resp.data)
-          store.dispatch(feedPostsAction.addFeedPost(resp.data));
-          //setloadingIndicator(false)
-          setLoading(false)
-          navigation.navigate(routes.FEED);
-        }).catch((e)=>{
-          setLoading(false)
-          console.log(e);
-        })
+
+        const formData = createPostFormData(swapContent);
+        swapService
+          .createSwap(user.id, formData)
+          .then(resp => {
+            console.log(resp.data);
+            store.dispatch(feedPostsAction.addFeedPost(resp.data));
+            //setloadingIndicator(false)
+            setLoading(false);
+            navigation.navigate(routes.FEED);
+          })
+          .catch(e => {
+            setLoading(false);
+            console.log(e);
+          });
       } else {
         if (text === '' && Object.keys(file).length === 0) {
           setError("Can't Create empty post");
         } else {
-        
           const postContent = {
             text: text,
             images: images,
             feeling: postFeel.feeling ? postFeel.feeling : null,
-            groupId:groupId
+            groupId: groupId,
           };
-          const formData = createPostFormData(postContent)
-            PostService.createPost(user.id, formData).then(resp => {
-      
-            store.dispatch(feedPostsAction.addFeedPost(resp.data));
-            //setloadingIndicator(false)
-            setLoading(false)
-            dispatch(postFeelingsActions.setDefault());
-            navigation.navigate(routes.FEED);
-          }).catch(e => {console.error(e)})
+          const formData = createPostFormData(postContent);
+          PostService.createPost(user.id, formData)
+            .then(resp => {
+              store.dispatch(feedPostsAction.addFeedPost(resp.data));
+              //setloadingIndicator(false)
+              setLoading(false);
+              dispatch(postFeelingsActions.setDefault());
+              navigation.navigate(routes.FEED);
+            })
+            .catch(e => {
+              console.error(e);
+            });
           //setProgress(prog)
         }
       }
@@ -379,9 +376,9 @@ export default function AddPostScreen({navigation, route}) {
   // used to change the position of the enhanced drawer,
   // when user click on the text input.
   const handleCreatePostDrawerPosition = () => {
-    if (postType === postTypes.CREATE_POST )
+    if (postType === postTypes.CREATE_POST)
       createPostDrawerRef.current.snapTo(0);
-      if (postType === postTypes.GROUP_POST)
+    if (postType === postTypes.GROUP_POST)
       createPostDrawerRef.current.snapTo(0);
   };
 
@@ -392,7 +389,6 @@ export default function AddPostScreen({navigation, route}) {
   };
 
   const clearFields = () => {
-  
     setText('');
     clearFile();
     setDisplayImage(false);
@@ -452,20 +448,23 @@ export default function AddPostScreen({navigation, route}) {
               isActive={isButtonActive}
             />
           }
-        /> 
+        />
       );
   };
-  
+
   return (
-    <Screen >
-      
+    <Screen>
       {renderHeader()}
-      <View style={[styles.topContainer]}> 
-      {/* pointerEvents={loading?'none':'auto'} > */}
+      <View style={[styles.topContainer]}>
+        {/* pointerEvents={loading?'none':'auto'} > */}
         {/** User */}
         <View style={styles.row}>
           <Image
-            source={require('../assets/default-profile-picture.png')}
+            source={
+              user.profilePicture
+                ? {uri: fileStorage.baseUrl + user.profilePicture}
+                : require('../assets/default-profile-picture.png')
+            }
             style={defaultStyles.circledProfilePicture}
           />
           <View style={styles.column}>
@@ -477,29 +476,28 @@ export default function AddPostScreen({navigation, route}) {
               <OptionBox
                 currentOption={postPrivacyOption}
                 onPress={() => {
-                  setIsPrivacyOptionsVisible(!isPrivacyOptionsVisible)
-
+                  setIsPrivacyOptionsVisible(!isPrivacyOptionsVisible);
                 }}
-
               />
 
-              {postType === postTypes.CREATE_POST || postTypes.GROUP_POST && (
-                <View style={[styles.headerTab, styles.row]}>
-                  <Icon
-                    type="MaterialCommunityIcons"
-                    name="plus"
-                    size={15}
-                    color={colors.dimGray}
-                  />
-                  <Text style={styles.headerTabText}>Albums</Text>
-                  <Icon
-                    type="MaterialIcons"
-                    name="keyboard-arrow-down"
-                    size={15}
-                    color={colors.dimGray}
-                  />
-                </View>
-              )}
+              {postType === postTypes.CREATE_POST ||
+                (postTypes.GROUP_POST && (
+                  <View style={[styles.headerTab, styles.row]}>
+                    <Icon
+                      type="MaterialCommunityIcons"
+                      name="plus"
+                      size={15}
+                      color={colors.dimGray}
+                    />
+                    <Text style={styles.headerTabText}>Albums</Text>
+                    <Icon
+                      type="MaterialIcons"
+                      name="keyboard-arrow-down"
+                      size={15}
+                      color={colors.dimGray}
+                    />
+                  </View>
+                ))}
               {/*** // Todo: Create swap category! */}
             </View>
           </View>
@@ -575,7 +573,21 @@ export default function AddPostScreen({navigation, route}) {
           isSwap={postType === postTypes.SWAP ? true : false}
           onRemoveImage={onRemoveImage}
         />
-        {loading?<ActivityIndicator style= {styles.topContainer} animating={true} size="large" color={colors.iondigoDye} />:<ActivityIndicator style= {styles.activity} animating={false} size="large" color={colors.iondigoDye} />}
+        {loading ? (
+          <ActivityIndicator
+            style={styles.topContainer}
+            animating={true}
+            size="large"
+            color={colors.iondigoDye}
+          />
+        ) : (
+          <ActivityIndicator
+            style={styles.activity}
+            animating={false}
+            size="large"
+            color={colors.iondigoDye}
+          />
+        )}
       </View>
       {postType === postTypes.CREATE_POST && (
         <EnhancedOptionsDrawer
@@ -583,7 +595,7 @@ export default function AddPostScreen({navigation, route}) {
           forwardedRef={createPostDrawerRef}
         />
       )}
-        {postType === postTypes.GROUP_POST && (
+      {postType === postTypes.GROUP_POST && (
         <EnhancedOptionsDrawer
           options={createPostOptions}
           forwardedRef={createPostDrawerRef}
@@ -614,7 +626,6 @@ export default function AddPostScreen({navigation, route}) {
         initialValue={privacyOptions[0].value}
         onSubmit={handelPrivacySetting}
       />
-      
     </Screen>
   );
 }
@@ -711,8 +722,7 @@ const styles = StyleSheet.create({
     height: 30,
     marginRight: 5,
   },
-  activity:{
-flex: 1,
-
-  }
+  activity: {
+    flex: 1,
+  },
 });
