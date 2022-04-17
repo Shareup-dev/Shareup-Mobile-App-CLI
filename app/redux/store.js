@@ -16,6 +16,7 @@ import feedPostsReducer from "./feedPostsSlice";
 import messagesReducer from "./messagesSlice";
 import ConversationsSlice from "./ConversationsSlice";
 import postFeelings from "./postFeelings";
+import recentSearch from "./recentSearch";
 
 export default store = configureStore({
   reducer: {
@@ -35,5 +36,6 @@ export default store = configureStore({
     messages: messagesReducer,
     conversations: ConversationsSlice,
     postFeel: postFeelings,
+    recentSearch:recentSearch.reducer
   },
 });

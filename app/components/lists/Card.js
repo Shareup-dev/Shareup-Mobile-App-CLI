@@ -36,6 +36,17 @@ export default function Card({
   postType,
 }) {
   const {userState} = useContext(authContext);
+  const [numberOfReactions, setNumberOfReactions] = useState(postData.numberOfReaction);
+  const [numberOfComments, setNumberOfComments] = useState(postData.numberOfComments);
+
+  const [comment,setComments] =useState(postData.comments)
+  const [isUserLiked, setIsUserLiked] = useState(false);
+  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
+  const [images, setImages] = useState([]);
+  const [currentImage, setCurrentImage] = useState();
+  const [imageViewerVisible, setImageViewerVisible] = useState(false);
+  const [sliderWidth, setSliderWidth] = useState();
+
   const options = [
     {
       title: 'Save post',
@@ -43,7 +54,7 @@ export default function Card({
         image: require('../../assets/post-options-icons/save-post-icon.png'),
       },
       onPress: () => {
-        alert('Save post');
+       savePost(postData.id)
       },
     },
     {
@@ -52,7 +63,7 @@ export default function Card({
         image: require('../../assets/post-options-icons/hide-profile-icon.png'),
       },
       onPress: () => {
-        alert('Save post');
+        savePost(postData.id);
       },
     },
     {
@@ -128,19 +139,13 @@ export default function Card({
       reloadPost();
     }, [postData.id]),
   );
-
-
-  const [numberOfReactions, setNumberOfReactions] = useState(postData.numberOfReaction);
-  const [numberOfComments, setNumberOfComments] = useState(postData.numberOfComments);
-
-  const [comment,setComments] =useState(postData.comments)
-  const [isUserLiked, setIsUserLiked] = useState(false);
-  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
-  const [images, setImages] = useState([]);
-  const [currentImage, setCurrentImage] = useState();
-  const [imageViewerVisible, setImageViewerVisible] = useState(false);
-  const [sliderWidth, setSliderWidth] = useState();
-
+//.................... POST ACTION METHOD .............................//
+const savePost = (itemId) => {
+  PostService.savePost(userState?.userData?.id,itemId) .then((res) => {
+    console.log("res",res.data);
+    alert("Post saved...")
+  })
+}
   const loadImages = () => {
     if (postData.media?.length !== 0) {
       setImages(postData.media?.map(image => fileStorage.baseUrl + image.media));

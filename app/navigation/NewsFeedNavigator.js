@@ -18,6 +18,7 @@ import ShippingAddress from '../screens/ShippingAddress';
 import SwapCheckout from '../screens/SwapCheckout';
 import SwapCheckoutComplete from '../screens/SwapCheckoutComplete';
 import AddCommentsOnReels from '../screens/addCommentsOnReels';
+import SearchScreen from '../screens/SearchScreen';
 
 export default function NewsFeedNavigator() {
   const Stack = createNativeStackNavigator();
@@ -136,6 +137,13 @@ export default function NewsFeedNavigator() {
         options={{
           headerShown: false,
           gestureEnabled: false,
+        }}
+      />
+      <Stack.Screen
+        name={routes.SEARCH_SCREEN}
+        component={SearchScreen}
+        options={{
+          headerShown: false,
         }}
       />
     </Stack.Navigator>

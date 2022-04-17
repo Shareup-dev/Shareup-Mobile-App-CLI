@@ -9,7 +9,7 @@ import {View, TextInput, StyleSheet} from 'react-native';
 import Icon from '../components/Icon';
 import colors from '../config/colors.js';
 
-export default function AppTextField({
+export default React.forwardRef(function AppTextField({
   iconName,
   iconType,
   iconImage,
@@ -45,7 +45,7 @@ export default function AppTextField({
       {endComponent}
     </View>
   );
-}
+})
 
 const styles = StyleSheet.create({
   text: {

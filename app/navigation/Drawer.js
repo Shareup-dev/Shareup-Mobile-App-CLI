@@ -21,62 +21,105 @@ import routes from './routes';
 import {useNavigation} from '@react-navigation/native';
 import {ScrollView} from 'react-native-gesture-handler';
 
-const listItems = [
-  {
-    title: 'Share Feed',
-    icon: require('../assets/icons/share-feed-icon.png'),
-  },
-  {
-    title: 'Swap Point',
-    icon: require('../assets/icons/swap-point-icon.png'),
-  },
-  {
-    title: 'Share Time',
-    icon: require('../assets/icons/share-time-icon.png'),
-  },
-  {
-    title: 'Share Point',
-    icon: require('../assets/icons/share-point-icon.png'),
-  },
-  {
-    title: 'Share Friends',
-    icon: require('../assets/icons/share-feed-icon.png'),
-  },
-  {
-    title: 'Add Friends',
-    icon: require('../assets/icons/add-friends-icon.png'),
-  },
-  {
-    title: 'Share Groups',
-    icon: require('../assets/icons/foundation_social-skillshare.png'),
-  },
-  {
-    title: 'Message',
-    icon: require('../assets/icons/message.png'),
-  },
 
-  {
-    title: 'Reels',
-    icon: require('../assets/icons/reels-colored-icon.png'),
-  },
-  {
-    title: 'Saved Posts',
-    icon: require('../assets/post-options-icons/save-post-icon.png'),
-  },
-  {
-    title: 'Discover',
-    icon: require('../assets/icons/search-icon-colored2.png'),
-  },
-  {
-    title: 'Saved Swaps',
-    icon: require('../assets/icons/saved-swap-colored-icon.png'),
-  },
-];
 
 export default function Drawer({isVisible, setIsVisible}) {
   const {userState, authActions} = useContext(authContext);
 
   const navigation = useNavigation();
+  const listItems = [
+    {
+      title: 'Share Feed',
+      icon: require('../assets/icons/share-feed-icon.png'),
+      onPress: () => {
+        navigation.navigate(routes.FEED)
+        setIsVisible(false)
+       },
+    },
+    {
+      title: 'Swap Point',
+      icon: require('../assets/icons/swap-point-icon.png'),
+      onPress: () => {
+        navigation.navigate(routes.SWAP)
+        setIsVisible(false)
+       },
+    },
+    {
+      title: 'Share Time',
+      icon: require('../assets/icons/share-time-icon.png'),
+      onPress: () => {
+        alert("savedPost")
+       },
+    },
+    {
+      title: 'Share Point',
+      icon: require('../assets/icons/share-point-icon.png'),
+      onPress: () => {
+        alert("savedPost")
+       },
+    },
+    {
+      title: 'Share Friends',
+      icon: require('../assets/icons/share-feed-icon.png'),
+      onPress: () => {
+        alert("savedPost")
+       },
+    },
+    {
+      title: 'Add Friends',
+      icon: require('../assets/icons/add-friends-icon.png'),
+      onPress: () => {
+        navigation.navigate(routes.ACTIVITY_NAVIGATOR)
+        setIsVisible(false)
+       },
+    },
+    {
+      title: 'Share Groups',
+      icon: require('../assets/icons/foundation_social-skillshare.png'),
+      onPress: () => {
+        navigation.navigate(routes.GROUPS)
+        setIsVisible(false)
+       },
+    },
+    {
+      title: 'Message',
+      icon: require('../assets/icons/message.png'),
+      onPress: () => {
+        alert("savedPost")
+       },
+    },
+  
+    {
+      title: 'Reels',
+      icon: require('../assets/icons/reels-colored-icon.png'),
+      onPress: () => {
+        navigation.navigate(routes.MY_REELS)
+        setIsVisible(false)
+       },
+    },
+    {
+      title: 'Saved Posts',
+      icon: require('../assets/post-options-icons/save-post-icon.png'),
+      onPress: () => {
+        alert("savedPost")
+       },
+    },
+    {
+      title: 'Discover',
+      icon: require('../assets/icons/search-icon-colored2.png'),
+      onPress: () => {
+        navigation.navigate(routes.SEARCH_SCREEN)
+        setIsVisible(false)
+       },
+    },
+    {
+      title: 'Saved Swaps',
+      icon: require('../assets/icons/saved-swap-colored-icon.png'),
+      onPress: () => {
+        alert("savedPost")
+       },
+    },
+  ];
   return (
     <Modal
       isVisible={isVisible}
@@ -104,7 +147,7 @@ export default function Drawer({isVisible, setIsVisible}) {
               keyExtractor={item => item.title}
               numColumns={2}
               renderItem={({item}) => (
-                <DrawerButtons title={item.title} iconImage={item.icon} />
+                <DrawerButtons title={item.title} iconImage={item.icon} onPress={item.onPress}/>
               )}
             />
           </View>

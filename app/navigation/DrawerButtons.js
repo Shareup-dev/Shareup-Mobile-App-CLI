@@ -1,15 +1,18 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import Icon from "../components/Icon";
 import colors from "../config/colors";
 import defaultStyles from "../config/styles";
 
-export default function DrawerButtons({ iconImage, title }) {
+export default function DrawerButtons({ iconImage, title,onPress }) {
   return (
+    <TouchableWithoutFeedback onPress={onPress}>
     <View style={[styles.container, defaultStyles.lightShadow]}>
       <Icon image={iconImage} backgroundSizeRatio={1} size={23} />
       <Text style={styles.title}>{title}</Text>
     </View>
+    </TouchableWithoutFeedback>
   );
 }
 
