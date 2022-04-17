@@ -23,6 +23,7 @@ import LoadingComponent from '../components/Loading';
 import Icon from '../components/Icon';
 import {launchImageLibrary} from 'react-native-image-picker';
 import fileStorage from '../config/fileStorage';
+import routes from '../navigation/routes';
 
 export default function EditProfileScreen({navigation}) {
   const {
@@ -103,7 +104,7 @@ export default function EditProfileScreen({navigation}) {
       <KeyboardAvoidingView style={styles.container}>
         {Loading && <LoadingComponent text="Saving..." modal />}
         {uploading && <LoadingComponent text="Uploading" modal />}
-        <Formik initialValues={initValues} onSubmit={handleSubmit}>
+        <Formik initialValues={initValues} enableReinitialize={true} onSubmit={handleSubmit}>
           {({handleSubmit, values, handleChange, handleBlur}) => (
             <>
               {/** Header */}
@@ -281,6 +282,9 @@ export default function EditProfileScreen({navigation}) {
                   <Separator />
 
                   <LinkButton
+                    onPress={_ =>
+                      navigation.navigate(routes.PERSONAL_INFORMATION)
+                    }
                     title=" Professional information settings"
                     fontSize={18}
                     style={styles.linkButtons}

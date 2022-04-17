@@ -71,7 +71,9 @@ export default function GroupsScreen({navigation}) {
     setSearch(initSearchVal);
   };
 
+  
   const ManageGroupCard = ({item}) => {
+    console.log("img",fileStorage.baseUrl + item.image);
     return (
       <View
         style={{
