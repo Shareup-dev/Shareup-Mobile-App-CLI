@@ -18,7 +18,15 @@ import ShippingAddress from '../screens/ShippingAddress';
 import SwapCheckout from '../screens/SwapCheckout';
 import SwapCheckoutComplete from '../screens/SwapCheckoutComplete';
 import AddCommentsOnReels from '../screens/addCommentsOnReels';
+<<<<<<< Updated upstream
 import SearchScreen from '../screens/SearchScreen';
+=======
+import PersonalInfoSettings from '../screens/PersonalInfoSettings';
+import UpdateName from '../screens/PERSONAL_INFO/UpdateName';
+import UpdateGender from '../screens/PERSONAL_INFO/updateGender';
+import UpdateDOB from '../screens/PERSONAL_INFO/updateDOB';
+import UpdateEmail from '../screens/PERSONAL_INFO/updateEmail';
+>>>>>>> Stashed changes
 
 export default function NewsFeedNavigator() {
   const Stack = createNativeStackNavigator();
@@ -39,6 +47,41 @@ export default function NewsFeedNavigator() {
       <Stack.Screen
         name={routes.USER_PROFILE}
         component={UserProfileScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={routes.PERSONAL_INFORMATION}
+        component={PersonalInfoSettings}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={routes.UPDATE_NAME}
+        component={UpdateName}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={routes.UPDATE_GENDER}
+        component={UpdateGender}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={routes.UPDATE_DOB}
+        component={UpdateDOB}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={routes.UPDATE_EMAIL}
+        component={UpdateEmail}
         options={{
           headerShown: false,
         }}

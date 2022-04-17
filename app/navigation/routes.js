@@ -49,5 +49,14 @@ export default Object.freeze({
   APP_NAVIGATOR: 'AppNavigator',
   TAG_PEOPLE: 'TagPeople',
   FEELING_ACTIVITY: 'feelingAndActivity',
+<<<<<<< Updated upstream
   SEARCH_SCREEN:'SearchScreen'
+=======
+  PERSONAL_INFORMATION:"PERSONAL_INFORMATION",
+  UPDATE_NAME:'UPDATE_NAME',
+  UPDATE_EMAIL:'UPDATE_EMAIL',
+  UPDATE_PHONE_NUMBER:'UPDATE_PHONE_NUMBER',
+  UPDATE_DOB:'UPDATE_DOB',
+  UPDATE_GENDER:'UPDATE_GENDER'
+>>>>>>> Stashed changes
 });
