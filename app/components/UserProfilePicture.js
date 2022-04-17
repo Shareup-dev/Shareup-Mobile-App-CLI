@@ -16,13 +16,14 @@ export default function UserProfilePicture({
 }) {
   const {userState} = useContext(AuthContext);
   const [picture, setPicture] = useState(
-    profilePicture ? profilePicture : userState?.userData?.profilePicturePath,
+    profilePicture ? profilePicture : userState?.userData?.profilePicture,
   );
   return (
     <View>
       <Image
-        source={require('../assets/default-profile-picture.png')
-          //uri: fileStorage.baseUrl + picture,
+        source={
+          // require('../assets/default-profile-picture.png')
+          {uri: fileStorage.baseUrl + picture,}
         }
         style={[{width: size, height: size, borderRadius: size / 2}, style]}
       />

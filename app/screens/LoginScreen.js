@@ -106,9 +106,9 @@ export default function LoginScreen({navigation}) {
   // ToDO: Fix the layout
   return (
     <>
-      {loading ? (
-        <Loading text="Logging in..." />
-      ) : (
+      {loading && (
+        <Loading modal text="Logging in..." />
+        )}
           <ScrollView showsVerticalScrollIndicator={false}>
         <LoginContainer>
 
@@ -162,7 +162,7 @@ export default function LoginScreen({navigation}) {
 
         </LoginContainer>
           </ScrollView>
-      )}
+     
     </>
   );
 }

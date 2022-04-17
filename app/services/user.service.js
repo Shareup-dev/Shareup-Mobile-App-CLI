@@ -10,7 +10,7 @@ class UserService {
   getUserById = userId => AuthAxios.get(`users/${userId}`);
 
   /*..............UserProfile..............*/
-  editProfile = (email, user) => AuthAxios.put(`users/${email}/edit_profile`, user);
+  editProfile = (email, data) => AuthAxios.put(`users/${email}/edit_profile`, data);
   uploadProfilePicture = (email, formdata) => AuthAxios.post(`users/${email}/upload_profile_picture`, formdata);
   uploadCoverPicture = (email, formdata) => AuthAxios.post(`users/${email}/upload_cover_picture`, formdata);
 
