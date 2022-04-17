@@ -57,7 +57,7 @@ export default function SearchScreen({navigation}) {
 return (
     <Screen>
       <HeaderWithBackArrow
-        onBackButton={() => navigation.navigate(routes.FEED)}
+        onBackButton={() => navigation.goBack()}
         
         component={
         <View style={styles.searchContainer}>

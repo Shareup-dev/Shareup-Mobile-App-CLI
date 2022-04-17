@@ -195,6 +195,7 @@ const savePost = (itemId) => {
   const deletePost = async () => {
     const response = await PostService.deletePost(postData.id);
     reloadPosts();
+    setIsOptionsVisible(false)
   };
 
   const actionsTabSizeRatio = 0.5;

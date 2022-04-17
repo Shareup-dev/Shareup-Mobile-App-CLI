@@ -48,7 +48,8 @@ export default function Drawer({isVisible, setIsVisible}) {
       title: 'Share Time',
       icon: require('../assets/icons/share-time-icon.png'),
       onPress: () => {
-        alert("savedPost")
+        navigation.navigate(routes.USER_PROFILE)
+        setIsVisible(false)
        },
     },
     {
@@ -62,14 +63,15 @@ export default function Drawer({isVisible, setIsVisible}) {
       title: 'Share Friends',
       icon: require('../assets/icons/share-feed-icon.png'),
       onPress: () => {
-        alert("savedPost")
+        navigation.navigate(routes.ALL_FRIENDS)
+        setIsVisible(false)
        },
     },
     {
       title: 'Add Friends',
       icon: require('../assets/icons/add-friends-icon.png'),
       onPress: () => {
-        navigation.navigate(routes.ACTIVITY_NAVIGATOR)
+        navigation.navigate(routes.Add_NEW_FRIEND)
         setIsVisible(false)
        },
     },
@@ -77,7 +79,7 @@ export default function Drawer({isVisible, setIsVisible}) {
       title: 'Share Groups',
       icon: require('../assets/icons/foundation_social-skillshare.png'),
       onPress: () => {
-        navigation.navigate(routes.GROUPS)
+        navigation.navigate(routes.GROUP_NAVIGATOR)
         setIsVisible(false)
        },
     },
@@ -85,7 +87,8 @@ export default function Drawer({isVisible, setIsVisible}) {
       title: 'Message',
       icon: require('../assets/icons/message.png'),
       onPress: () => {
-        alert("savedPost")
+        navigation.navigate(routes.MESSAGES_NAVIGATOR)
+        setIsVisible(false)
        },
     },
   
@@ -101,7 +104,8 @@ export default function Drawer({isVisible, setIsVisible}) {
       title: 'Saved Posts',
       icon: require('../assets/post-options-icons/save-post-icon.png'),
       onPress: () => {
-        alert("savedPost")
+        navigation.navigate(routes.SAVED_POST_SCREEN)
+        setIsVisible(false)
        },
     },
     {

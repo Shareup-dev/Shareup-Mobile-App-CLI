@@ -18,6 +18,7 @@ import {getStatusBarHeight} from 'react-native-iphone-x-helper';
 import {useHeaderHeight} from '@react-navigation/stack';
 import GroupFeedScreen from '../screens/GroupFeedScreen';
 import AddCommentsOnReels from '../screens/addCommentsOnReels';
+import SavedPostsScreen from '../screens/SavedPostsScreen';
 const Stack = createNativeStackNavigator();
 const headerHeight = useHeaderHeight;
 export default function HomeNavigator(props) {
@@ -51,8 +52,8 @@ export default function HomeNavigator(props) {
         name={routes.MESSAGES_NAVIGATOR}
         component={MessagesNavigator}
       />
-
       <Stack.Screen name={routes.REEL_PLAYER} component={ReelPlayer} />
+      <Stack.Screen name={routes.SAVED_POST_SCREEN} component={SavedPostsScreen} />
     </Stack.Navigator>
   );
 }

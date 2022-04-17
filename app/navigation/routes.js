@@ -49,5 +49,6 @@ export default Object.freeze({
   APP_NAVIGATOR: 'AppNavigator',
   TAG_PEOPLE: 'TagPeople',
   FEELING_ACTIVITY: 'feelingAndActivity',
-  SEARCH_SCREEN:'SearchScreen'
+  SEARCH_SCREEN:'SearchScreen',
+  SAVED_POST_SCREEN: 'SavedPostsScreen'
 });

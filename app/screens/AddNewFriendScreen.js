@@ -15,6 +15,7 @@ import {sentRequestsActions} from '../redux/sentRequests';
 import colors from '../config/colors';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
+import routes from '../navigation/routes';
 
 export default function AddNewFriendScreen({navigation}) {
   const [users, setusers] = useState([]);
@@ -136,6 +137,14 @@ export default function AddNewFriendScreen({navigation}) {
           </TouchableWithoutFeedback>
         }
         middle={<HeaderTitle>Add New Friends</HeaderTitle>}
+        right={<TouchableWithoutFeedback onPress={() => navigation.navigate(routes.SEARCH_SCREEN)}>
+        <Icon
+          name="search1"
+          type="AntDesign"
+          size={25}
+          backgroundSizeRatio={1}
+        />
+      </TouchableWithoutFeedback>}
       />
       <FlatList
         contentContainerStyle={styles.groupsList}
