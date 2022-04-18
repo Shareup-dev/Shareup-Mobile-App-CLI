@@ -102,7 +102,7 @@ return (
         initialNumToRender={10}
         data={posts}
         ListHeaderComponent={ListHeader}
-        // ListFooterComponent={ActivityIndicatorComponent}
+         ListFooterComponent={ActivityIndicatorComponent}
         keyExtractor={post => post.id.toString()}
         showsVerticalScrollIndicator={false}
         renderItem={renderItem}

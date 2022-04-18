@@ -21,7 +21,7 @@ import SwapService from '../services/swap.service'
 //import UserService from '../services/UserService';
 
 export default function CommentsScreen({ navigation, route }) {
-  const { userId, postId, setNumberOfComments, postType, swapId, fromReply } =
+  const { userId, postId, setNumberOfComments, postType, swapId,fromDetailScreen } =
     route.params;
   const commentsListRef = useRef();
   const commentTextFieldRef = useRef();
@@ -203,10 +203,10 @@ export default function CommentsScreen({ navigation, route }) {
 
   return (
     <Screen style={styles.container}>
-      <Header
+      {!fromDetailScreen && <Header
         left={<HeaderCloseIcon onPress={handleCancel} />}
         middle={<HeaderTitle>Comments</HeaderTitle>}
-      />
+      />}
 
       <FlatList
         data={commentsList}
