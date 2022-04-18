@@ -94,6 +94,7 @@ export default function SavedPostsScreen({ navigation, route }) {
                 navigation={navigation}
                 //reloadPosts={loadNews}
                 postType={item.allPostsType}
+                onPress={()=>{navigation.navigate(routes.POST_DETAILS_SCREEN)}}
             />
         );
     };

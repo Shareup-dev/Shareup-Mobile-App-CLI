@@ -43,10 +43,7 @@ const PostActions = ({
     <View style={styles.content}>
       <View style={styles.userInfo}>
         <Image
-
-          source={require('../assets/default-profile-picture.png')}
-          //{{uri: fileStorage.baseUrl + postData.userdata.profilePicture}}
-
+          source={{uri: fileStorage.baseUrl + postData.userdata.profilePicture}}
           style={styles.profilePicture}
         />
 
@@ -169,7 +166,7 @@ const PostActions = ({
 const borderRadius = 10;
 const styles = StyleSheet.create({
   profilePicture: {
-    borderRadius: 15,
+    borderRadius: 25,
     marginRight: 10,
     width: 50,
     height: 50,

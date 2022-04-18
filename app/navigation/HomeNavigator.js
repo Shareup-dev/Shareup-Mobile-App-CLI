@@ -19,6 +19,8 @@ import {useHeaderHeight} from '@react-navigation/stack';
 import GroupFeedScreen from '../screens/GroupFeedScreen';
 import AddCommentsOnReels from '../screens/addCommentsOnReels';
 import SavedPostsScreen from '../screens/SavedPostsScreen';
+import PostDetailScreen from '../screens/PostDetailScreen';
+
 const Stack = createNativeStackNavigator();
 const headerHeight = useHeaderHeight;
 export default function HomeNavigator(props) {
@@ -54,6 +56,7 @@ export default function HomeNavigator(props) {
       />
       <Stack.Screen name={routes.REEL_PLAYER} component={ReelPlayer} />
       <Stack.Screen name={routes.SAVED_POST_SCREEN} component={SavedPostsScreen} />
+      <Stack.Screen name={routes.POST_DETAILS_SCREEN} component={PostDetailScreen} />
     </Stack.Navigator>
   );
 }

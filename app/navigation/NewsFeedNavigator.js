@@ -25,6 +25,7 @@ import UpdateGender from '../screens/PERSONAL_INFO/updateGender';
 import UpdateDOB from '../screens/PERSONAL_INFO/updateDOB';
 import UpdateEmail from '../screens/PERSONAL_INFO/updateEmail';
 
+
 export default function NewsFeedNavigator() {
   const Stack = createNativeStackNavigator();
 
