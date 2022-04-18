@@ -21,7 +21,7 @@ import SwapService from '../services/swap.service'
 //import UserService from '../services/UserService';
 
 export default function CommentsScreen({ navigation, route }) {
-  const { userId, postId, setNumberOfComments, postType, swapId,fromDetailScreen } =
+  const { userId, postId, setNumberOfComments, postType, swapId,fromDetailScreen,writeComment } =
     route.params;
   const commentsListRef = useRef();
   const commentTextFieldRef = useRef();
@@ -35,6 +35,7 @@ export default function CommentsScreen({ navigation, route }) {
   const [refreshing, setRefreshing] = useState(false);
   const { userState } = useContext(AuthContext);
   const { postTypes } = constants;
+ 
   //const [frmReply,setFrmReply] = useState(fromReply)
 
 
@@ -42,6 +43,9 @@ export default function CommentsScreen({ navigation, route }) {
   useFocusEffect(
     useCallback(() => {
       loadComments();
+      if (writeComment){
+        commentTextFieldRef.current.focus();
+      }
       // loadStories();
       // return setActivityIndicator(false);
       return;
@@ -134,11 +138,10 @@ export default function CommentsScreen({ navigation, route }) {
       }
     }
   };
-
-  const handleEditComment = (comment) => {
+  const handleEditComment = (status) => {
     //<CommentTextField value={comment.content}/>
     //commentTextFieldRef.current.value = "hello" //defaultValue = comment.content
-    // commentTextFieldRef.current.focus()
+    //commentTextFieldRef.current.focus()
   }
   const handleReplyComment = (commentId, showReply) => {
     if (showReply) {

@@ -40,7 +40,7 @@ export default function Card({
   const [numberOfComments, setNumberOfComments] = useState(postData.numberOfComments);
 
   const [comment,setComments] =useState(postData.comments)
-  const [isUserLiked, setIsUserLiked] = useState(false);
+  const [isUserLiked, setIsUserLiked] = useState(postData.liked);
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [images, setImages] = useState([]);
   const [currentImage, setCurrentImage] = useState();

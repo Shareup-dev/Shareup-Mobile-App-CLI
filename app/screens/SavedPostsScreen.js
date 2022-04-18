@@ -94,7 +94,7 @@ export default function SavedPostsScreen({ navigation, route }) {
                 navigation={navigation}
                 //reloadPosts={loadNews}
                 postType={item.allPostsType}
-                onPress={()=>{navigation.navigate(routes.POST_DETAILS_SCREEN)}}
+                onPress={()=>{navigation.navigate(routes.POST_DETAILS_SCREEN,{postData:item})}}
             />
         );
     };
@@ -129,7 +129,7 @@ export default function SavedPostsScreen({ navigation, route }) {
 
             <FlatList
                 initialNumToRender={10}
-                data={data}
+                data={savedData}
                 // ListFooterComponent={ActivityIndicatorComponent}
                 keyExtractor={post => post.id.toString()}
                 showsVerticalScrollIndicator={false}

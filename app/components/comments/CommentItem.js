@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     paddingTop: 25,
     paddingBottom: 6,
     justifyContent: "center",
-    alignSelf:"center",
+    //alignSelf:"center",
     //backgroundColor:colors.LightGray
     
   },
