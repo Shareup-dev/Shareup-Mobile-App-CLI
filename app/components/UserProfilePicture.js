@@ -18,7 +18,6 @@ export default function UserProfilePicture({
   const [picture, setPicture] = useState(
     profilePicture ? profilePicture : userState?.userData?.profilePicture,
   );
-  console.log(fileStorage.baseUrl + picture);
   return (
     <View>
       <Image

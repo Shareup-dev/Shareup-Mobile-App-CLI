@@ -24,6 +24,7 @@ import fileStorage from '../config/fileStorage';
 import DownModal from '../components/drawers/DownModal';
 import storyService from '../services/story.service';
 import AuthContext from '../authContext';
+import UserProfilePicture from '../components/UserProfilePicture';
 
 const windowWidth = Dimensions.get('screen').width;
 
@@ -126,11 +127,11 @@ const StoryViewScreen = ({navigation, route}) => {
 
   const handleDelete = () => {
     Alert.alert('Delete this?', 'Are you sure to delete this story?', [
-      {text: "Delete", style: 'cancel', onPress: deleteStoryx},
+      {text: 'Delete', style: 'cancel', onPress: deleteStoryx},
       {
         text: 'Cancel',
         style: 'destructive',
-        onPress: _=> {},
+        onPress: _ => {},
       },
     ]);
   };
@@ -217,10 +218,13 @@ const StoryViewScreen = ({navigation, route}) => {
         <View style={styles.container}>
           <View style={styles.profileContainer}>
             <View style={styles.profileImg}>
-              <Image
-                source={require('../assets/icons/user-icon.png')}
-                resizeMode={'center'}
-                style={styles.userProfileImg}
+              <UserProfilePicture
+                profilePicture={
+                  data[activeIndex].user?.profilePicture
+                    ? data[activeIndex].user?.profilePicture
+                    : require('../assets/icons/user-icon.png')
+                }
+                size={55}
               />
             </View>
             <Text style={styles.userName}>{`${firstName} ${lastName}`}</Text>
@@ -382,6 +386,7 @@ const styles = StyleSheet.create({
     maxWidth: windowWidth / 2,
     color: '#fdfdfd',
     textShadowColor: 'black',
+
     textShadowOffset: {width: 0, height: 0},
     textShadowRadius: 8,
     fontWeight: '800',

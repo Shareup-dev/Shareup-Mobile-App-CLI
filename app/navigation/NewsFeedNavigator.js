@@ -18,15 +18,12 @@ import ShippingAddress from '../screens/ShippingAddress';
 import SwapCheckout from '../screens/SwapCheckout';
 import SwapCheckoutComplete from '../screens/SwapCheckoutComplete';
 import AddCommentsOnReels from '../screens/addCommentsOnReels';
-<<<<<<< Updated upstream
 import SearchScreen from '../screens/SearchScreen';
-=======
 import PersonalInfoSettings from '../screens/PersonalInfoSettings';
 import UpdateName from '../screens/PERSONAL_INFO/UpdateName';
 import UpdateGender from '../screens/PERSONAL_INFO/updateGender';
 import UpdateDOB from '../screens/PERSONAL_INFO/updateDOB';
 import UpdateEmail from '../screens/PERSONAL_INFO/updateEmail';
->>>>>>> Stashed changes
 
 export default function NewsFeedNavigator() {
   const Stack = createNativeStackNavigator();
