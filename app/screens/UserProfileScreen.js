@@ -6,7 +6,6 @@ import Icon from '../components/Icon';
 import Screen from '../components/Screen';
 import colors from '../config/colors';
 import authContext from '../authContext';
-import UserService from '../services/user.service';
 import Card from '../components/lists/Card';
 
 import {
@@ -15,6 +14,7 @@ import {
   ProfileTop,
 } from '../components/profile';
 import SwapCard from '../components/lists/SwapCard';
+import postService from '../services/post.service';
 
 const POSTS = 'posts';
 const IMAGE_VIDEOS = 'images&videos';
@@ -28,19 +28,26 @@ const tabs = [
 
 export default function UserProfileScreen({navigation, route}) {
   const [currentTab, setCurrentTab] = useState(POSTS);
-  const {userState:{userData}} = useContext(authContext);
+  const {
+    userState: {userData},
+  } = useContext(authContext);
   const [posts, setPosts] = useState([]);
   const [imagesAndVideos, setImagesAndVideos] = useState([]);
   const [tags, setTags] = useState([]);
-
-  const userEmail = route.params;
 
   const handleTapped = name => {
     setCurrentTab(name);
   };
 
-  console.log(userData);
-
+  useEffect(() => {
+    const fetchPosts = () => {
+      postService
+        .getPostByEmail(userData.email)
+        .then(({data}) => setPosts(data))
+        .catch(e => console.error(e.message));
+    };
+    fetchPosts();
+  }, []);
 
   const ListHeader = () => (
     <ProfileTop

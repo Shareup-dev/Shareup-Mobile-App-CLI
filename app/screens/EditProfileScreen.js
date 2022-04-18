@@ -45,6 +45,9 @@ export default function EditProfileScreen({navigation}) {
   }, []);
 
   const changeProfileImage = () => {
+    if(!profileImage){
+      return;
+    }
     setUploading(true);
     const image = new FormData();
     const uniId = new Date().valueOf();

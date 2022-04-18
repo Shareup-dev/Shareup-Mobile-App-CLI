@@ -72,7 +72,7 @@ const ReelPlayer = ({navigation, route}) => {
                 borderRadius: 35,
               }}>
               <View style={styles.reelsInfo}>
-                <UserProfilePicture size={50} />
+                <UserProfilePicture profilePicture={user?.profilePicture}  size={50} />
                
                 <View>
                   <Text style={{color: '#fff', marginTop: 2, fontSize: 14}}>
