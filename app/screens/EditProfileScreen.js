@@ -41,7 +41,7 @@ export default function EditProfileScreen({navigation}) {
     JSON.stringify(userData).replace(/:null/gi, ':""'),
   );
   useEffect(() => {
-    setHobbies(userData.interests.split(','));
+    setHobbies(userData.interests?.split(','));
   }, []);
 
   const changeProfileImage = () => {
@@ -51,7 +51,7 @@ export default function EditProfileScreen({navigation}) {
 
     image.append('profilePicture', {
       name: `profile-image-${username}-${uniId}.jpg`,
-      type: profileImage.type,
+      type: profileImage?.type,
       uri: profileImage.uri,
     });
 
@@ -243,7 +243,7 @@ export default function EditProfileScreen({navigation}) {
                       flexWrap: 'wrap',
                       marginHorizontal: 5,
                     }}>
-                    {hobbies.map((item, i) => {
+                    {hobbies?.map((item, i) => {
                       return (
                         <View
                           key={i}
