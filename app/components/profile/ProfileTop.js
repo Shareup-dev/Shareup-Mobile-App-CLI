@@ -11,7 +11,7 @@ import authContext from '../../authContext';
 import Posts from './Posts';
 import StoriesList from '../lists/StoriesList';
 
-const profilePictureSize = 80;
+const profilePictureSize = 70;
 
 export default function ProfileTop({
   navigation,
@@ -20,7 +20,16 @@ export default function ProfileTop({
   tabs,
   numberOfPosts,
 }) {
-  const {userData:{aboutme,firstName, lastName}} = useContext(authContext)?.userState;
+  const {
+    userData: {
+      aboutme,
+      firstName,
+      lastName,
+      numberOfFriends,
+      numberOfFollowers,
+      numberOfFollowing,
+    },
+  } = useContext(authContext)?.userState;
 
   return (
     <View style={styles.container}>
@@ -42,11 +51,15 @@ export default function ProfileTop({
             <Text>Posts</Text>
           </View>
           <View style={styles.counterWrapper}>
-            <Text>0</Text>
+            <Text>{numberOfFriends}</Text>
+            <Text>Friends </Text>
+          </View>
+          <View style={styles.counterWrapper}>
+            <Text>{numberOfFollowers}</Text>
             <Text>Followers </Text>
           </View>
           <View style={styles.counterWrapper}>
-            <Text>0</Text>
+            <Text>{numberOfFollowing}</Text>
             <Text>Following</Text>
           </View>
         </View>
@@ -54,9 +67,7 @@ export default function ProfileTop({
         {/** Row 2 */}
         <View style={styles.row2}>
           <Text style={styles.username}>{`${firstName} ${lastName}`}</Text>
-          <Text>
-          {aboutme}
-          </Text>
+          <Text>{aboutme}</Text>
           <Tab
             title="Edit Profile"
             color={colors.LightGray}
@@ -99,7 +110,7 @@ const styles = StyleSheet.create({
   counterWrapper: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 10,
+    marginHorizontal: 6,
   },
   row2: {
     marginTop: 30,

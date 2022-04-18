@@ -31,6 +31,9 @@ export default function UserProfileScreen({navigation, route}) {
   const {
     userState: {userData},
   } = useContext(authContext);
+
+  console.log('userData', userData);
+
   const [posts, setPosts] = useState([]);
   const [imagesAndVideos, setImagesAndVideos] = useState([]);
   const [tags, setTags] = useState([]);
@@ -65,29 +68,10 @@ export default function UserProfileScreen({navigation, route}) {
        * The Swap Should from backend as instance of post
        */
       // ToDO: Refactor to use one component for posts and swap.
-      <SwapCard
-        navigation={navigation}
-        // route={route}
-        item={item}
-        userId={item.user.id}
-      />
+      <SwapCard navigation={navigation} item={item} userId={item.user.id} />
     ) : (
-      <Card
-        user={item.user}
-        postId={item.id}
-        userId={item.user.id}
-        firstName={item.user.firstName}
-        lastName={item.user.lastName}
-        profileImage={item.user.profilePicturePath}
-        date={item.lastEdited}
-        postText={item.content}
-        postImages={item.media}
-        reactions={item.reactions}
-        comments={item.comments}
-        navigation={navigation}
-      />
+      <Card user={item.userdata} postData={item} navigation={navigation} />
     );
-
   const ImagesAndVideosItem = ({item}) => <View></View>;
   const TagsItems = ({item}) => <View></View>;
 
@@ -110,9 +94,10 @@ export default function UserProfileScreen({navigation, route}) {
       {currentTab == POSTS && (
         <FlatList
           data={posts}
-          renderItem={PostsItem}
+          renderItem={({item}) => <PostsItem item={item} />}
           keyExtractor={post => post.id.toString()}
           ListHeaderComponent={ListHeader}
+          showsVerticalScrollIndicator={false}
           ListEmptyComponent={() => (
             <Text style={styles.listEmptyText}>Start adding your posts!</Text>
           )}
@@ -123,6 +108,7 @@ export default function UserProfileScreen({navigation, route}) {
       {currentTab == IMAGE_VIDEOS && (
         <FlatList
           data={imagesAndVideos}
+          showsVerticalScrollIndicator={false}
           renderItem={ImagesAndVideosItem}
           keyExtractor={item => item.id.toString()}
           ListHeaderComponent={ListHeader}
@@ -134,6 +120,7 @@ export default function UserProfileScreen({navigation, route}) {
       {currentTab == TAGS && (
         <FlatList
           data={tags}
+          showsVerticalScrollIndicator={false}
           renderItem={TagsItems}
           keyExtractor={item => item.id.toString()}
           ListHeaderComponent={ListHeader}
