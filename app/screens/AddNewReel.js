@@ -65,14 +65,13 @@ export default function AddReelScreen({navigation}) {
       .recordAsync({
         maxDuration: 10,
         quality: RNCamera.Constants.VideoQuality['288p'],
-        
       })
       .then(res => {
         setReel(res);
         setCapturing(false);
 
         setScreen('view');
-      })
+      });
   }
 
   // useEffect(() => {
@@ -128,11 +127,11 @@ export default function AddReelScreen({navigation}) {
         reelData.append('thumbnail', {
           name: `reel-thumbnail-${uniId}.jpeg`,
           type: res.mime,
-          uri: res.path           
+          uri: res.path,
         });
       })
       .catch(e => {
-       return console.error('thumbnail error', e.message)
+        return console.error('thumbnail error', e.message);
       });
 
     reelData.append('content', caption);
@@ -142,7 +141,8 @@ export default function AddReelScreen({navigation}) {
       uri: reel.uri,
     });
 
-    ReelService.addReel(userData.id,reelData).then(res => console.log(res))
+    ReelService.addReel(userData.id, reelData)
+      .then(res => console.log(res))
       .catch(e => console.error(e.message))
       .finally(_ => {
         setIsUploading(false);
@@ -209,13 +209,14 @@ export default function AddReelScreen({navigation}) {
             onClosePress={() => setScreen('capture')}
           />
           <View style={styles.forwardArrow}>
-            <TextInput
-              placeholder="Caption"
-              value={caption}
-              onChangeText={e => setCaption(e)}
-              multiline
-              style={styles.caption}
-            />
+            <View style={styles.caption}>
+              <TextInput
+                placeholder="Caption"
+                value={caption}
+                onChangeText={e => setCaption(e)}
+                multiline
+              />
+            </View>
             <TouchableOpacity
               activeOpacity={0.6}
               disabled={isUploading}
@@ -253,8 +254,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     backgroundColor: colors.white,
     borderRadius: 30,
+    justifyContent:'center',
     fontSize: 18,
     maxHeight: 100,
+    height:'100%',
     width: '85%',
   },
   backgroundVideo: {
