@@ -142,7 +142,7 @@ export default function AddReelScreen({navigation}) {
     });
 
     ReelService.addReel(userData.id, reelData)
-      .then(res => console.log(res))
+      .then(res => res)
       .catch(e => console.error(e.message))
       .finally(_ => {
         setIsUploading(false);

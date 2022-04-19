@@ -98,7 +98,6 @@ export default function PostDetailScreen({ navigation, route }) {
             },
         },
     ];
-    console.log("postDate:::",postData);
     useFocusEffect(
         useCallback(() => {
             loadImages();

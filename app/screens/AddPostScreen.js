@@ -68,7 +68,6 @@ export default function AddPostScreen({navigation, route}) {
   const {postTypes} = constants;
   const {postType, groupPost, groupId, swapImage, postData} = route.params;
 
-  console.log('Post data', postData);
 
   const SWAP_DEFAULT_TEXT = 'Hi all \n I want to Swap ...';
   const HANG_SHARE_TEXT = "Please anyone want this,can have it"
@@ -369,7 +368,6 @@ export default function AddPostScreen({navigation, route}) {
         swapService
           .createSwap(user.id, formData)
           .then(resp => {
-            console.log(resp.data);
             store.dispatch(feedPostsAction.addFeedPost(resp.data));
             //setloadingIndicator(false)
             setLoading(false);
@@ -377,7 +375,7 @@ export default function AddPostScreen({navigation, route}) {
           })
           .catch(e => {
             setLoading(false);
-            console.log(e);
+            console.error(e);
           });
       } else if (postType === postTypes.HANG_SHARE) {
 

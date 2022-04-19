@@ -73,7 +73,6 @@ export default function GroupsScreen({navigation}) {
 
   
   const ManageGroupCard = ({item}) => {
-    console.log("img",fileStorage.baseUrl + item.image);
     return (
       <View
         style={{

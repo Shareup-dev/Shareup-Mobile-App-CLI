@@ -82,7 +82,6 @@ export default function SavedPostsScreen({ navigation, route }) {
     );
     const getSavedPost = (userEmail) => {
         postService.getSavedPost(userEmail).then((res)=> {
-            console.log("RESPONSE:::",res.data);
             setSavedData(res.data)
         })
     }

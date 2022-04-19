@@ -53,9 +53,7 @@ export default function CommentsScreen({ navigation, route }) {
   )
   const loadComments = async () => {
     if (postType === postTypes.SWAP) {
-      console.log(swapId)
       SwapService.getSwapComment(swapId).then((res) => {
-        console.log(res.data);
         const commentArray = res.data//.reverse();
         setCommentsList(commentArray)
       }).catch(e => console.error(e.message))
@@ -109,12 +107,9 @@ export default function CommentsScreen({ navigation, route }) {
         }
       }
     } else {
-      console.log("::::", postType, postTypes.SWAP)
       if (postType === 'swap') {
-        console.log("works here", userState?.userData?.id, swapId, comment.content);
         const comment = { content: commentContent };
         SwapService.createSwapcomment(userState?.userData?.id, swapId, comment.content).then(resp => {
-          console.log("works here", resp.data);
           refreshComments();
           setCommentContent('');
           commentTextFieldRef.current.clear();
@@ -148,10 +143,9 @@ export default function CommentsScreen({ navigation, route }) {
       setCommentId(commentId)
       //  postService.getAllReply(commentId)
       //   .then(res => {
-      //     console.log("Reply",res.data)
       //     const replyArray = res.data//.reverse();
       //     setReplyList(replyArray)})
-      //   .catch(e => console.log(e))
+      //   .catch(e => console.error(e))
       commentTextFieldRef.current.focus()
       setIsReply(true)
     } else {
@@ -162,10 +156,8 @@ export default function CommentsScreen({ navigation, route }) {
   };
 
   const handleDeleteComment = (itemId) => {
-    console.log("RESPONSE:::", itemId)
     postService.deleteComment(itemId)
       .then(res => {
-        console.log("RESPONSE:::", res.data)
         refreshComments();
         Keyboard.dismiss();
       })
@@ -194,7 +186,6 @@ export default function CommentsScreen({ navigation, route }) {
     const params = ({ reaction: "null" })
     postService.likeUnlikeComment(userState?.userData?.id, cid, params)
       .then(res => {
-        console.log("RES:::", res.data);
         refreshComments();
         //setIsUserLiked(!isUserLiked)
       })//need to get likePostIds 

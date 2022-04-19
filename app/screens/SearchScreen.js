@@ -35,7 +35,6 @@ export default function SearchScreen({navigation}) {
 
     useEffect(() => {
         const recent = store.dispatch(recentSearchActions.getList())
-        console.log("Recent:::",recent);
         setRecentList(recent)
         return;
       },[])

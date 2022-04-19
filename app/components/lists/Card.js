@@ -168,7 +168,6 @@ export default function Card({
   //.................... POST ACTION METHOD .............................//
   const savePost = itemId => {
     PostService.savePost(userState?.userData?.id, itemId).then(res => {
-      console.log('res', res.data);
       alert('Post saved...');
     });
   };

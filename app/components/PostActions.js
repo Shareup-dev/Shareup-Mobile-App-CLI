@@ -38,7 +38,6 @@ const PostActions = ({
      moment(postData.published, "DD MMMM YYYY hh:mm:ss").fromNow()
    // null
   );
-    console.log("postData:::",postData.numberOfComments)
   return (
     <View style={styles.content}>
       <View style={styles.userInfo}>
