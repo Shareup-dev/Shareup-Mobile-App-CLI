@@ -127,10 +127,10 @@ const StoryViewScreen = ({navigation, route}) => {
 
   const handleDelete = () => {
     Alert.alert('Delete this?', 'Are you sure to delete this story?', [
-      {text: 'Delete', style: 'cancel', onPress: deleteStoryx},
+      {text: 'Delete', style: 'destructive', onPress: deleteStory},
       {
         text: 'Cancel',
-        style: 'destructive',
+        style: 'cancel',
         onPress: _ => {},
       },
     ]);

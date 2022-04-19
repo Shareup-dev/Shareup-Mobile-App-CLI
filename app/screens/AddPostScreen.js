@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   Platform,
   ActivityIndicator,
+  Dimensions,
 } from 'react-native';
 import Icon from '../components/Icon';
 import StackActions from '@react-navigation/routers';
@@ -49,6 +50,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {postFeelingsActions} from '../redux/postFeelings';
 import {ScrollView} from 'react-native-gesture-handler';
 import fileStorage from '../config/fileStorage';
+import UserProfilePicture from '../components/UserProfilePicture';
 
 export default function AddPostScreen({navigation, route}) {
   const {loadingIndicator, setloadingIndicator} = useContext(AuthContext);
@@ -61,14 +63,37 @@ export default function AddPostScreen({navigation, route}) {
   const postFeel = useSelector(state => state.postFeel);
 
   const {postTypes} = constants;
-  const {postType} = route.params;
-  const {groupPost} = route.params;
-  const {groupId} = route.params;
-  const {swapImage} = route.params;
+  const {postType, groupPost, groupId, swapImage, postData} = route.params;
+
+  console.log('Post data', postData);
 
   const SWAP_DEFAULT_TEXT = 'Hi all \n I want to Swap ...';
 
   const textInputRef = useRef();
+
+  const sharePostDrawerRef = useRef(null); // reference for the enhanced drawer.
+  const sharePostOptions = [
+    {
+      title: 'Tag People',
+      icon: {
+        image: require('../assets/add-post-options-icons/tag-people-gradient-icon.png'),
+      },
+      onPress: () => {
+        navigation.navigate(routes.TAG_PEOPLE);
+      },
+    },
+
+    {
+      title: 'Feeling/Activity',
+      icon: {
+        image: require('../assets/add-post-options-icons/feeling-gradient-icon.png'),
+      },
+      onPress: () => {
+        navigation.navigate(routes.FEELING_ACTIVITY);
+      },
+    },
+  ];
+
   const createPostDrawerRef = useRef(null); // reference for the enhanced drawer.
   const createPostOptions = [
     {
@@ -428,7 +453,8 @@ export default function AddPostScreen({navigation, route}) {
       postType === postTypes.CREATE_POST ||
       postType === postTypes.SHARE_UP ||
       postType === postTypes.SWAP ||
-      postType === postTypes.GROUP_POST
+      postType === postTypes.GROUP_POST ||
+      postType === postTypes.SHARE_POST
     )
       return (
         <Header
@@ -439,18 +465,21 @@ export default function AddPostScreen({navigation, route}) {
               {postType === postTypes.CREATE_POST && postTypes.CREATE_POST}
               {postType === postTypes.SHARE_UP && postTypes.SHARE_UP}
               {postType === postTypes.GROUP_POST && postTypes.GROUP_POST}
+              {postType === postTypes.SHARE_POST && 'Share post'}
             </HeaderTitle>
           }
           right={
             <HeaderButton
               onPress={handleAddPost}
-              title="Post"
+              title="Share"
               isActive={isButtonActive}
             />
           }
         />
       );
   };
+
+  const {width, height} = Dimensions.get('window');
 
   return (
     <Screen>
@@ -567,6 +596,37 @@ export default function AddPostScreen({navigation, route}) {
           onTouchEnd={handleCreatePostDrawerPosition}
         />
 
+        {postType === postTypes.SHARE_POST && (
+          <View
+            style={{
+              borderColor: '#cacaca60',
+              borderWidth: 1,
+              paddingTop: 10,
+              borderRadius: 10,
+            }}>
+            <View style={{flexDirection:'row',alignItems:'center',marginHorizontal:5}} >
+              <UserProfilePicture
+                profilePicture={postData.profilePicture}
+                size={35}
+              />
+              <Text
+                style={{fontSize: 15, marginHorizontal: 5, fontWeight: '600'}}>
+                {`${postData.userdata?.firstName} ${postData.userdata?.lastName}`}
+              </Text>
+            </View>
+            {postData.content && <Text style={{fontSize: 14, margin: 5}}>{postData.content}</Text> }
+            <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
+              {postData.media.map(({media},index) => (
+                <Image
+                key={index}
+                  style={{width: width - 42, height: 200}}
+                  resizeMode={'cover'}
+                  source={{uri: fileStorage.baseUrl + media}}
+                />
+              ))}
+            </ScrollView>
+          </View>
+        )}
         <ImageInputList
           imageUris={images}
           onAddImage={onAddImage}
@@ -614,6 +674,13 @@ export default function AddPostScreen({navigation, route}) {
           options={[createPostOptions[0]]}
           isVisible={isOptionsVisible}
           setIsVisible={setIsOptionsVisible}
+        />
+      )}
+      {postType === postTypes.SHARE_POST && (
+        <EnhancedOptionsDrawer
+        snap={[125, 100, 100, 100]}
+          options={sharePostOptions}
+          forwardedRef={sharePostDrawerRef}
         />
       )}
 

@@ -182,7 +182,7 @@ const ReelPlayer = ({navigation, route}) => {
             style={{
               justifyContent: 'space-between',
               width: width,
-              height: height - StatusBar.currentHeight,
+              height: height,
               backgroundColor: '#000',
             }}
             activeOpacity={1}
@@ -262,7 +262,7 @@ const ReelPlayer = ({navigation, route}) => {
               <Video
                 style={{
                   width: width,
-                  height: height - StatusBar.currentHeight,
+                  height: height ,
                   zIndex: -10,
                 }}
                 onLoadStart={_ => setLoaded(false)}
@@ -320,6 +320,7 @@ const ReelPlayer = ({navigation, route}) => {
               video={video_name}
               thumbnail_name={thumbnail_name}
               reactions={reactions}
+              
               id={id}
               user={userdata}
               numberOfComments={numberOfComments}

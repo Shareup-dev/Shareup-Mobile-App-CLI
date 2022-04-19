@@ -1,5 +1,11 @@
-import React, {useState, useEffect, useCallback,useContext} from 'react';
-import {StyleSheet, View, TouchableWithoutFeedback, Alert,Text} from 'react-native';
+import React, {useState, useEffect, useCallback, useContext} from 'react';
+import {
+  StyleSheet,
+  View,
+  TouchableWithoutFeedback,
+  Alert,
+  Text,
+} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {SliderBox} from 'react-native-image-slider-box';
 
@@ -13,7 +19,9 @@ import PostOptionDrawer from '../drawers/PostOptionsDrawer';
 import fileStorage from '../../config/fileStorage';
 import ImageView from 'react-native-image-viewing';
 import PostActions from '../PostActions';
-import { color } from 'react-native-reanimated';
+import {color} from 'react-native-reanimated';
+import routes from '../../navigation/routes';
+import constants from '../../config/constants';
 export default function Card({
   user,
   //postId,
@@ -36,11 +44,16 @@ export default function Card({
   postType,
 }) {
   const {userState} = useContext(authContext);
-  const [numberOfReactions, setNumberOfReactions] = useState(postData.numberOfReaction);
-  const [numberOfComments, setNumberOfComments] = useState(postData.numberOfComments);
+  const [numberOfReactions, setNumberOfReactions] = useState(
+    postData.numberOfReaction,
+  );
+  const [numberOfComments, setNumberOfComments] = useState(
+    postData.numberOfComments,
+  );
 
-  const [comment,setComments] =useState(postData.comments)
+  
   const [isUserLiked, setIsUserLiked] = useState(postData.liked);
+  const [comment, setComments] = useState(postData.comments);
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [images, setImages] = useState([]);
   const [currentImage, setCurrentImage] = useState();
@@ -54,7 +67,7 @@ export default function Card({
         image: require('../../assets/post-options-icons/save-post-icon.png'),
       },
       onPress: () => {
-       savePost(postData.id)
+        savePost(postData.id);
       },
     },
     {
@@ -79,7 +92,10 @@ export default function Card({
         image: require('../../assets/post-options-icons/share-friends-icon.png'),
       },
       onPress: () => {
-        alert('Share friends');
+        navigation.navigate(routes.ADD_POST, {
+          postType: constants.postTypes.SHARE_POST,
+          postData
+        });
       },
     },
     {
@@ -92,12 +108,22 @@ export default function Card({
       },
     },
     {
-      title: userState?.userData?.id !== user?.id ? <Text style={{color:colors.dark}}>Report</Text> : <Text style={{color:colors.red}}>Delete</Text>,
+      title:
+        userState?.userData?.id !== user?.id ? (
+          <Text style={{color: colors.dark}}>Report</Text>
+        ) : (
+          <Text style={{color: colors.red}}>Delete</Text>
+        ),
       icon: {
-        image:  userState?.userData?.id !== user?.id ? require('../../assets/post-options-icons/report-icon.png'): require('../../assets/post-options-icons/delete-red-icon.png'),
+        image:
+          userState?.userData?.id !== user?.id
+            ? require('../../assets/post-options-icons/report-icon.png')
+            : require('../../assets/post-options-icons/delete-red-icon.png'),
       },
       onPress: () => {
-        userState?.userData?.id !== user?.id ? alert('Report'): showDeleteAlert();
+        userState?.userData?.id !== user?.id
+          ? alert('Report')
+          : showDeleteAlert();
       },
     },
   ];
@@ -139,44 +165,44 @@ export default function Card({
       reloadPost();
     }, [postData.id]),
   );
-//.................... POST ACTION METHOD .............................//
-const savePost = (itemId) => {
-  PostService.savePost(userState?.userData?.id,itemId) .then((res) => {
-    console.log("res",res.data);
-    alert("Post saved...")
-  })
-}
+  //.................... POST ACTION METHOD .............................//
+  const savePost = itemId => {
+    PostService.savePost(userState?.userData?.id, itemId).then(res => {
+      console.log('res', res.data);
+      alert('Post saved...');
+    });
+  };
   const loadImages = () => {
     if (postData.media?.length !== 0) {
-      setImages(postData.media?.map(image => fileStorage.baseUrl + image.media));
+      setImages(
+        postData.media?.map(image => fileStorage.baseUrl + image.media),
+      );
     }
-    
   };
   const checkIfLiked = () => {
-    const result = postData.liked
-      return setIsUserLiked(result);
+    const result = postData.liked;
+    return setIsUserLiked(result);
   };
 
   const handleReactions = async () => {
     PostService.likePost(user.id, postData.id)
-    .then (res => {
-      setIsUserLiked(!isUserLiked)
-      setNumberOfReactions(res.data.numberOfReaction);
-      })//need to get likePostIds 
-    .catch(e => console.error(e))
+      .then(res => {
+        setIsUserLiked(!isUserLiked);
+        setNumberOfReactions(res.data.numberOfReaction);
+      }) //need to get likePostIds
+      .catch(e => console.error(e));
     //reloadPost();
   };
 
   // rerenders the post when interaction
   const reloadPost = async () => {
     PostService.getPostByPostId(postData.id)
-    .then(res => {
-      //setComments(res.data.comments)
-      setNumberOfComments(res.data.numberOfComments);
-       setNumberOfReactions(res.data.numberOfReaction);
-    })
-    .catch(e => console.error(e))
-    
+      .then(res => {
+        //setComments(res.data.comments)
+        setNumberOfComments(res.data.numberOfComments);
+        setNumberOfReactions(res.data.numberOfReaction);
+      })
+      .catch(e => console.error(e));
   };
 
   const showDeleteAlert = () =>
@@ -195,7 +221,7 @@ const savePost = (itemId) => {
   const deletePost = async () => {
     const response = await PostService.deletePost(postData.id);
     reloadPosts();
-    setIsOptionsVisible(false)
+    setIsOptionsVisible(false);
   };
 
   const actionsTabSizeRatio = 0.5;
@@ -203,8 +229,8 @@ const savePost = (itemId) => {
   const onLayout = e => {
     setSliderWidth(e.nativeEvent.layout.width);
   };
-  
-return (
+
+  return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View
         style={[styles.card, defaultStyles.cardBorder, style]}
@@ -255,7 +281,7 @@ return (
           setIsVisible={setIsOptionsVisible}
           setIsOptionsVisible={setIsOptionsVisible}
           onInteraction={handleReactions}
-          postType = {postType}
+          postType={postType}
         />
 
         <PostOptionDrawer

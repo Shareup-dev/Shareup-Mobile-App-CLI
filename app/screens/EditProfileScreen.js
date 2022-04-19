@@ -60,7 +60,9 @@ export default function EditProfileScreen({navigation}) {
 
     userService
       .uploadProfilePicture(username, image)
-      .then(res => console.log(res))
+      .then(({data}) => {
+        authActions.updateUserInfo(data);
+      })
       .catch(e => console.error(e))
       .finally(_ => setUploading(false));
   };
@@ -68,7 +70,7 @@ export default function EditProfileScreen({navigation}) {
   const handleSubmit = values => {
     setLoading(true);
     userService
-      .editProfile(username, {...values, interests: hobbies.toString()})
+      .editProfile(username, {...values, interests: hobbies?.toString()})
       .then(({status, data}) => {
         if (status === 200) {
           authActions.updateUserInfo(data);
@@ -305,6 +307,7 @@ export default function EditProfileScreen({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginBottom:25
   },
   headerActionBtn: {
     color: colors.iondigoDye,

@@ -166,7 +166,7 @@ const PostActions = ({
 const borderRadius = 10;
 const styles = StyleSheet.create({
   profilePicture: {
-    borderRadius: 25,
+    borderRadius: 15,
     marginRight: 10,
     width: 50,
     height: 50,

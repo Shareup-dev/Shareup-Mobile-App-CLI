@@ -25,13 +25,15 @@ class PostService {
   addComment = (userid, postid, comment) => 
     AuthAxios.post(`comment/${userid}/${postid}`,comment)
   deleteComment = commentid => 
-    AuthAxios.delete(`comment/${commentid}`)
+    AuthAxios.delete(`comment/delete/${commentid}`)
   replay = (uid,commentId,data) =>
     AuthAxios.post(`comment/reply/${uid}/${commentId}`,data)
   likeUnlikeComment = (uid,cid,params) =>
     AuthAxios.put(`comment/${uid}/like-unlike/${cid}`,params)
-  editComment = (cid) => 
-    AuthAxios.put(`comment/Edit_comment/${cid}`)
+  editComment = (cid,comment) => 
+    AuthAxios.put(`comment/Edit_comment/${cid}`,comment)
+  
+
   getAllComments = (uid,pid) =>
     AuthAxios.get(`comment/${uid}/get_comments/${pid}`)
   getAllReply = (cid) => 

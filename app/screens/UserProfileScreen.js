@@ -32,7 +32,7 @@ export default function UserProfileScreen({navigation, route}) {
     userState: {userData},
   } = useContext(authContext);
 
-  console.log('userData', userData);
+ console.log(userData)
 
   const [posts, setPosts] = useState([]);
   const [imagesAndVideos, setImagesAndVideos] = useState([]);

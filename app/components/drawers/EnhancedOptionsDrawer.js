@@ -8,7 +8,7 @@ import colors from '../../config/colors';
 
 const height = Dimensions.get('window').height;
 
-export default function EnhancedOptionsDrawer({options, forwardedRef}) {
+export default function EnhancedOptionsDrawer({options, forwardedRef,snap=[140, 100, 200, 320]}) {
   const renderHeader = () => (
     <View style={[styles.header]}>
       <View style={defaultStyle.tip} />
@@ -23,15 +23,14 @@ export default function EnhancedOptionsDrawer({options, forwardedRef}) {
 
   return (
     <BottomSheet
-      ref={forwardedRef}
-      snapPoints={[140, 100, 200, 320]}
+      ref={forwardedRef}    
+      snapPoints={snap}
       enabledBottomClamp
       enabledBottomInitialAnimation
       renderHeader={renderHeader}
       renderContent={renderContent}
     />
   );
-  // return <Text>works</Text>;
 }
 
 const styles = StyleSheet.create({
