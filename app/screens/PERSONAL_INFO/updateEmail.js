@@ -42,21 +42,26 @@ export default function UpdateEmail({navigation}) {
       .catch(e => console.error(e.message));
   };
 
-  const validation = Yup.object().shape({
-    email: Yup.string().required().label('First name').email(),
-  });
+  // const validation = Yup.object().shape({
+  //   email: Yup.string().required().label('First name').email(),
+  // });
 
   const Stepper = () => {
     switch (step) {
       case 0:
         return (
           <View style={styles.card}>
+            <View style={{marginVertical:10}} >
+
             <Text style={styles.label}>Primary Email</Text>
-            <Text>{}</Text>
+            <Text >{userData.email}</Text>
+            </View>
+
+            <Text style={styles.label}>Secondary Email</Text>
             <TextInput
               style={[
                 styles.input,
-                {borderColor: errors['email'] ? 'crimson' : '#cacaca'},
+                {borderColor: '#cacaca'},
               ]}
             />
 
@@ -69,7 +74,7 @@ export default function UpdateEmail({navigation}) {
                   setStep(1);
                 }, 2000);
               }}>
-              <Text style={styles.btnText}>Change</Text>
+              <Text style={styles.btnText}>Update</Text>
             </TouchableOpacity>
           </View>
         );
@@ -174,8 +179,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   label: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 15,
+    color: '#242424',
+    fontWeight: '800',
   },
   input: {
     // borderColor: '#cacaca',

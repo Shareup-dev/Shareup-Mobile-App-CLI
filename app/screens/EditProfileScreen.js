@@ -54,11 +54,14 @@ export default function EditProfileScreen({navigation}) {
     const image = new FormData();
     const uniId = new Date().valueOf();
 
+    const fileType = profileImage.fileName.split('.')?.[1];
+
     image.append('profilePicture', {
-      name: `profile-image-${username}-${uniId}.jpg`,
+      name: `profile-image-${username}-${uniId}.${fileType}`,
       type: profileImage?.type,
       uri: profileImage.uri,
     });
+
 
     userService
       .uploadProfilePicture(username, image)
@@ -104,6 +107,8 @@ export default function EditProfileScreen({navigation}) {
     })
       .then(({assets, didCancel}) => !didCancel && setProfileImage(assets[0]))
       .catch(e => console.error(e));
+
+
   };
 
   return (

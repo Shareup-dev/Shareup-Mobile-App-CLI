@@ -67,7 +67,7 @@ export default function UserProfileScreen({navigation, route}) {
        * The Swap Should from backend as instance of post
        */
       // ToDO: Refactor to use one component for posts and swap.
-      <SwapCard navigation={navigation} item={item} userId={item.user.id} />
+      <SwapCard navigation={navigation} item={item} userId={item.userdata.id} />
     ) : (
       <Card user={item.userdata} postData={item} navigation={navigation} />
     );
