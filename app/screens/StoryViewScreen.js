@@ -304,6 +304,7 @@ const StoryViewScreen = ({navigation, route}) => {
               height: '100%',
               backgroundColor: '#000',
             }}
+            resizeMode={'contain'}
             onLoadEnd={_ => setLoaded(true)}
             source={{uri: fileStorage.baseUrl + data[activeIndex].image}}
           />

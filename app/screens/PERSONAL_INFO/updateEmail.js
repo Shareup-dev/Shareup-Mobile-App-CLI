@@ -46,6 +46,81 @@ export default function UpdateEmail({navigation}) {
     email: Yup.string().required().label('First name').email(),
   });
 
+  const Stepper = () => {
+    switch (step) {
+      case 0:
+        return (
+          <View style={styles.card}>
+            <Text style={styles.label}>Primary Email</Text>
+            <Text>{}</Text>
+            <TextInput
+              style={[
+                styles.input,
+                {borderColor: errors['email'] ? 'crimson' : '#cacaca'},
+              ]}
+            />
+
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={_ => {
+                setVerifying(true);
+                setTimeout(_ => {
+                  setVerifying(false);
+                  setStep(1);
+                }, 2000);
+              }}>
+              <Text style={styles.btnText}>Change</Text>
+            </TouchableOpacity>
+          </View>
+        );
+      case 1:
+        return (
+          <View style={styles.card}>
+            <Text style={{textAlign: 'center', marginVertical: 10}}>
+              Shareup has sent you a verification code to the email
+            </Text>
+            <View style={{alignItems: 'center'}}>
+              <Text style={styles.label}>Verification code</Text>
+              <TextInput
+                style={[
+                  styles.input,
+                  {
+                    borderColor: '#cacaca',
+                    minWidth: 150,
+                    textAlign: 'center',
+                  },
+                ]}
+              />
+            </View>
+
+            <Text style={{textAlign: 'center'}}>
+              Verification code will expire after 5 minutes
+            </Text>
+            <TouchableOpacity
+              activeOpacity={0.6}
+              style={{
+                marginVertical: 5,
+                backgroundColor: '#cacaca60',
+                paddingHorizontal: 15,
+                paddingVertical: 6,
+                borderRadius: 30,
+                width: 100,
+                alignSelf: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={{color: colors.iondigoDye, fontWeight: '700'}}>
+                Re-send
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
+              <Text style={styles.btnText}>Verify</Text>
+            </TouchableOpacity>
+          </View>
+        );
+    }
+  };
+
   return (
     <KeyboardAvoidingView style={styles.container}>
       <HeaderWithBackArrow
@@ -54,97 +129,17 @@ export default function UpdateEmail({navigation}) {
       />
       {loading ||
         (verifying && (
-          <Loading text={verifying ? 'Verifying your Email' : 'Saving..'} modal />
+          <Loading
+            text={verifying ? 'Verifying your Email' : 'Saving..'}
+            modal
+          />
         ))}
       <TouchableOpacity
         activeOpacity={1}
         style={{flex: 1}}
         onPress={_ => Keyboard.dismiss()}>
-        <Formik
-          initialValues={userData}
-          onSubmit={handleSubmit}
-          validationSchema={validation}>
-          {({values, handleChange, handleSubmit, handleBlur, errors}) => {
-            switch (step) {
-              case 0:
-                return (
-                  <View style={styles.card}>
-                    <Text style={styles.label}>Primary Email</Text>
-                    <TextInput
-                      value={values['email']}
-                      onBlur={handleBlur('email')}
-                      onChangeText={handleChange('email')}
-                      style={[
-                        styles.input,
-                        {borderColor: errors['email'] ? 'crimson' : '#cacaca'},
-                      ]}
-                    />
-
-                    <TouchableOpacity
-                      style={styles.btn}
-                      onPress={_ => {
-                        setVerifying(true);
-                        setTimeout(_ => {
-                          setVerifying(false);
-                          setStep(1);
-                        }, 2000);
-                      }}>
-                      <Text style={styles.btnText}>Change</Text>
-                    </TouchableOpacity>
-                  </View>
-                );
-              case 1:
-                return (
-                  <View style={styles.card}>
-                    <Text style={{textAlign: 'center', marginVertical: 10}}>
-                      Shareup has sent you a verification code to the email
-                    </Text>
-                    <View style={{alignItems: 'center'}}>
-                      <Text style={styles.label}>Verification code</Text>
-                      <TextInput
-                        style={[
-                          styles.input,
-                          {
-                            borderColor: errors['email']
-                              ? 'crimson'
-                              : '#cacaca',
-                            minWidth: 150,
-                            textAlign: 'center',
-                          },
-                        ]}
-                      />
-                    </View>
-
-                    <Text style={{textAlign: 'center'}}>
-                      Verification code will expire after 5 minutes
-                    </Text>
-                    <TouchableOpacity
-                      activeOpacity={0.6}
-                      style={{
-                        marginVertical: 5,
-                        backgroundColor: '#cacaca60',
-                        paddingHorizontal: 15,
-                        paddingVertical: 6,
-                        borderRadius: 30,
-                        width: 100,
-                        alignSelf: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <Text
-                        style={{color: colors.iondigoDye, fontWeight: '700'}}>
-                        Re-send
-                      </Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
-                      <Text style={styles.btnText}>Verify</Text>
-                    </TouchableOpacity>
-                  </View>
-                );
-            }
-          }}
-        </Formik>
-      </TouchableOpacity>
+          <Stepper />
+        </TouchableOpacity>
     </KeyboardAvoidingView>
   );
 }

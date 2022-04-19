@@ -41,11 +41,13 @@ export default function EditProfileScreen({navigation}) {
     JSON.stringify(userData).replace(/:null/gi, ':""'),
   );
   useEffect(() => {
-    setHobbies(userData.interests?.split(','));
+    if (userData.interests) {
+      setHobbies(userData.interests?.split(','));
+    }
   }, []);
 
   const changeProfileImage = () => {
-    if(!profileImage){
+    if (!profileImage) {
       return;
     }
     setUploading(true);
@@ -82,7 +84,7 @@ export default function EditProfileScreen({navigation}) {
   };
 
   const addHobbiesHandler = () => {
-    if (hobbie !== '') {
+    if (hobbie) {
       setHobbies(prev => [...prev, hobbie]);
       setHobbie('');
     }
@@ -109,7 +111,10 @@ export default function EditProfileScreen({navigation}) {
       <KeyboardAvoidingView style={styles.container}>
         {Loading && <LoadingComponent text="Saving..." modal />}
         {uploading && <LoadingComponent text="Uploading" modal />}
-        <Formik initialValues={initValues} enableReinitialize={true} onSubmit={handleSubmit}>
+        <Formik
+          initialValues={initValues}
+          enableReinitialize={true}
+          onSubmit={handleSubmit}>
           {({handleSubmit, values, handleChange, handleBlur}) => (
             <>
               {/** Header */}
@@ -307,7 +312,7 @@ export default function EditProfileScreen({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom:25
+    marginBottom: 25,
   },
   headerActionBtn: {
     color: colors.iondigoDye,
