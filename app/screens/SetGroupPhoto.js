@@ -14,7 +14,7 @@ import Screen from '../components/Screen';
 import Icon from '../components/Icon';
 import AppButton from '../components/buttons/Button';
 import useImagePicker from '../hooks/useImagePicker';
-import GroupService from '../services/GroupService';
+import GroupService from '../services/group.service';
 import authContext from '../authContext';
 import routes from '../navigation/routes';
 import defautlStyles from '../config/styles';
