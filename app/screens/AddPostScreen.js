@@ -248,6 +248,7 @@ export default function AddPostScreen({navigation, route}) {
   const [progress, setProgress] = useState(0);
   const [postPrivacyOption, setPostPrivacyOption] = useState(privacyOptions[0]); // object to present the current privacy option
 
+  console.log("postType",postType);
   useFocusEffect(
     useCallback(() => {
     if (postType === postTypes.SWAP) {
@@ -310,8 +311,10 @@ export default function AddPostScreen({navigation, route}) {
   };
 
   const onAddImage = uri => {
-   // if(postType === postTypes.HANG_SHARE){setPlaceHolder(HANG_SHARE_TEXT)}
-    //setIsOptionsVisible(false)
+    if(postType === postTypes.HANG_SHARE){
+      setPlaceHolder(HANG_SHARE_TEXT)
+      setIsOptionsVisible(false)
+    }
     setImages(images.concat(uri));
     handleButtonActivation(text, images.concat(uri));
   };
@@ -483,7 +486,7 @@ export default function AddPostScreen({navigation, route}) {
           right={
             <HeaderButton
               onPress={handleAddPost}
-              title="Share"
+              title={postType === postTypes.SHARE_POST ? "Share" : "Post"}
               isActive={isButtonActive}
             />
           }
@@ -521,8 +524,8 @@ export default function AddPostScreen({navigation, route}) {
                 }}
               />
 
-              {postType === postTypes.CREATE_POST ||
-                (postTypes.GROUP_POST && (
+              {/* {postType === postTypes.CREATE_POST ||
+                (postTypes.GROUP_POST && ( */}
                   <View style={[styles.headerTab, styles.row]}>
                     <Icon
                       type="MaterialCommunityIcons"
@@ -538,7 +541,7 @@ export default function AddPostScreen({navigation, route}) {
                       color={colors.dimGray}
                     />
                   </View>
-                ))}
+                {/* ))} */}
               {/*** // Todo: Create swap category! */}
             </View>
           </View>
