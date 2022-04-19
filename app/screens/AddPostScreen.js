@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useMemo,
   Component,
+  useCallback
 } from 'react';
 import {
   StyleSheet,
@@ -51,6 +52,7 @@ import {postFeelingsActions} from '../redux/postFeelings';
 import {ScrollView} from 'react-native-gesture-handler';
 import fileStorage from '../config/fileStorage';
 import UserProfilePicture from '../components/UserProfilePicture';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function AddPostScreen({navigation, route}) {
   const {loadingIndicator, setloadingIndicator} = useContext(AuthContext);
@@ -58,6 +60,7 @@ export default function AddPostScreen({navigation, route}) {
   const {userData: user} = useContext(authContext)?.userState;
   const [loading, setLoading] = useState(false);
   const [tagedUserData, setTagedUserData] = useState([]);
+  const [placeholder,setPlaceHolder] = useState("We Share, Do you?")
 
   const dispatch = useDispatch();
   const postFeel = useSelector(state => state.postFeel);
@@ -68,6 +71,8 @@ export default function AddPostScreen({navigation, route}) {
   console.log('Post data', postData);
 
   const SWAP_DEFAULT_TEXT = 'Hi all \n I want to Swap ...';
+  const HANG_SHARE_TEXT = "Please anyone want this,can have it"
+
 
   const textInputRef = useRef();
 
@@ -244,15 +249,18 @@ export default function AddPostScreen({navigation, route}) {
   const [progress, setProgress] = useState(0);
   const [postPrivacyOption, setPostPrivacyOption] = useState(privacyOptions[0]); // object to present the current privacy option
 
-  useEffect(() => {
+  useFocusEffect(
+    useCallback(() => {
     if (postType === postTypes.SWAP) {
+      setPlaceHolder(SWAP_DEFAULT_TEXT)
       setImages([swapImage]);
       handleButtonActivation(text, [swapImage]);
     } else {
+      setPlaceHolder("We Share,Do you ?")
       handleButtonActivation(text, images);
     }
     return () => clearFields();
-  }, [swapImage]);
+  }, [swapImage]))
 
   const setTagedUser = userData => {
     setTagedUserData(userData);
@@ -303,6 +311,8 @@ export default function AddPostScreen({navigation, route}) {
   };
 
   const onAddImage = uri => {
+   // if(postType === postTypes.HANG_SHARE){setPlaceHolder(HANG_SHARE_TEXT)}
+    //setIsOptionsVisible(false)
     setImages(images.concat(uri));
     handleButtonActivation(text, images.concat(uri));
   };
@@ -369,7 +379,9 @@ export default function AddPostScreen({navigation, route}) {
             setLoading(false);
             console.log(e);
           });
-      } else {
+      } else if (postType === postTypes.HANG_SHARE) {
+
+      }else {
         if (text === '' && Object.keys(file).length === 0) {
           setError("Can't Create empty post");
         } else {
@@ -432,7 +444,7 @@ export default function AddPostScreen({navigation, route}) {
   useEffect(() => {}, [postPrivacyOption]);
 
   const renderHeader = () => {
-    if (postType === postTypes.HANG_SHARE)
+    if ((postType === postTypes.HANG_SHARE) && images.length === 0 )
       return (
         <Header
           left={<HeaderCloseIcon onPress={handleCancel} />}
@@ -447,14 +459,15 @@ export default function AddPostScreen({navigation, route}) {
               onPress={() => navigation.navigate(routes.KEEP_HANG)}
             />
           }
-        />
+        /> 
       );
     if (
       postType === postTypes.CREATE_POST ||
       postType === postTypes.SHARE_UP ||
       postType === postTypes.SWAP ||
       postType === postTypes.GROUP_POST ||
-      postType === postTypes.SHARE_POST
+      postType === postTypes.SHARE_POST ||
+      postType === postTypes.HANG_SHARE
     )
       return (
         <Header
@@ -466,6 +479,7 @@ export default function AddPostScreen({navigation, route}) {
               {postType === postTypes.SHARE_UP && postTypes.SHARE_UP}
               {postType === postTypes.GROUP_POST && postTypes.GROUP_POST}
               {postType === postTypes.SHARE_POST && 'Share post'}
+              {postType === postTypes.HANG_SHARE && postTypes.HANG_SHARE}
             </HeaderTitle>
           }
           right={
@@ -544,7 +558,8 @@ export default function AddPostScreen({navigation, route}) {
               }
               style={styles.plusIcon}
             />
-          )}
+            
+            )}
         </View>
 
         {/**Content */}
@@ -570,6 +585,7 @@ export default function AddPostScreen({navigation, route}) {
                     <Text>{' - '}</Text>
                     <TextInput
                       placeholder={
+                        
                         (postFeel.feeling !== 'Travelling to'
                           ? `What do you `
                           : `Where do you `) + postFeel.feeling
@@ -582,11 +598,11 @@ export default function AddPostScreen({navigation, route}) {
           </TouchableOpacity>
         ) : null}
         <TextInput
-          placeholder={
-            postType === postTypes.SWAP
-              ? SWAP_DEFAULT_TEXT
-              : 'We Share, Do you?'
-          }
+          placeholder={placeholder}
+          //   postType === postTypes.SWAP 
+          //     ? SWAP_DEFAULT_TEXT
+          //     : postType === postTypes.HANG_SHARE ? 'Please Anyone want it,can have it' :'We Share, Do you?'
+          // }
           placeholderTextColor={colors.dimGray}
           style={styles.textInput}
           numberOfLines={10}

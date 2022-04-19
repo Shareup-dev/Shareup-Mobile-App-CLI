@@ -15,6 +15,9 @@ import {StackActions} from '@react-navigation/native';
 import routes from '../navigation/routes';
 import store from '../redux/store';
 import {swapedImagesAction} from '../redux/swapedImages';
+import constants from '../config/constants';
+
+const {postTypes} = constants;
 const SwapDisplay = ({navigation, route}) => {
   return (
     <ImageBackground
@@ -74,7 +77,7 @@ const SwapDisplay = ({navigation, route}) => {
               navigation.navigate(routes.FEED, {...route.params});
             } else {
               navigation.navigate(routes.ADD_POST, {
-                postType: 'swap',
+                postType: postTypes.SWAP,
                 swapImage: route.params.swapImage,
               });
             }
