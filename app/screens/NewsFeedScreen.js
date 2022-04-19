@@ -58,17 +58,6 @@ export default function NewsFeedScreen({navigation, route}) {
       <Card
         user={item.userdata}
         postData={item}
-        //postId={item.id}
-        //userId={item.user.id}
-        //userEmail={item.user.email}
-        //firstName={item.user.firstName}
-        //lastName={item.user.lastName}
-        //profileImage={item.user.profilePicturePath}
-        //date={item.lastEdited}
-        //postText={item.content}
-        //postImages={item.media}
-        //reactions={item.reactions}
-        //comments={item.comments}
         navigation={navigation}
         reloadPosts={loadNews}
         postType={item.allPostsType}
