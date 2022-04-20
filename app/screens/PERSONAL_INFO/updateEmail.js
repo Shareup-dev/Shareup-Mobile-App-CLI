@@ -16,6 +16,8 @@ import colors from '../../config/colors';
 import * as Yup from 'yup';
 import Loading from '../../components/Loading';
 import userService from '../../services/user.service';
+import Icon from '../../components/Icon';
+import profileService from '../../services/profile.service';
 
 export default function UpdateEmail({navigation}) {
   const {
@@ -25,11 +27,16 @@ export default function UpdateEmail({navigation}) {
 
   const [loading, setLoading] = useState(false);
   const [verifying, setVerifying] = useState(false);
+  const [optionalEmail, setOptionalEmail] = useState('');
   const [step, setStep] = useState(0);
+
+  const Validation = Yup.object().shape({
+    email: Yup.string().email().label('Email').required()
+  })
 
   const handleSubmit = values => {
     setLoading(true);
-    Keyboard.dismiss();
+    // Keyboard.dismiss();
     userService
       .editProfile(username, values)
       .then(({status, data}) => {
@@ -42,40 +49,78 @@ export default function UpdateEmail({navigation}) {
       .catch(e => console.error(e.message));
   };
 
-  // const validation = Yup.object().shape({
-  //   email: Yup.string().required().label('First name').email(),
-  // });
+  const sendOtp = ({email}) => {
+    if (!email) {
+      return;
+    }
+    setVerifying(true);
+    console.log('works', email);
+    profileService
+      .sendOTPtoVerifyEmail(userData.id, email)
+      .then(res => console.log(res))
+      .catch(e => console.error(e))
+      .finally(_ => setVerifying(false));
+  };
 
   const Stepper = () => {
     switch (step) {
       case 0:
         return (
           <View style={styles.card}>
-            <View style={{marginVertical:10}} >
-
-            <Text style={styles.label}>Primary Email</Text>
-            <Text >{userData.email}</Text>
-            </View>
-
-            <Text style={styles.label}>Secondary Email</Text>
-            <TextInput
-              style={[
-                styles.input,
-                {borderColor: '#cacaca'},
-              ]}
-            />
-
             <TouchableOpacity
-              style={styles.btn}
-              onPress={_ => {
-                setVerifying(true);
-                setTimeout(_ => {
-                  setVerifying(false);
-                  setStep(1);
-                }, 2000);
+              style={{
+                marginVertical: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
               }}>
-              <Text style={styles.btnText}>Update</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Icon name={'email'} color="#fff" backgroundColor="#333333" />
+                <View style={{marginLeft: 10}}>
+                  <Text style={styles.label}>Primary Email</Text>
+                  <Text>{userData.email}</Text>
+                </View>
+              </View>
+              <Icon name={'chevron-right'} noBackground size={55} />
             </TouchableOpacity>
+
+            {userData.optional_email ? (
+              <TouchableOpacity
+                style={{
+                  marginVertical: 10,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                <View style={{flexDirection: 'row'}}>
+                  <Icon name={'email'} color="#fff" backgroundColor="#333333" />
+                  <View style={{marginLeft: 10}}>
+                    <Text style={styles.label}>Secondary Email</Text>
+                    <Text>{userData.optional_email}</Text>
+                  </View>
+                </View>
+                <Icon name={'chevron-right'} noBackground size={55} />
+              </TouchableOpacity>
+            ) : (
+              <Formik initialValues={{email: ''}} onSubmit={sendOtp} validationSchema={Validation}>
+                {({handleChange, handleBlur, values, handleSubmit,errors}) => (
+                  <>
+                    <Text style={styles.label}>Secondary Email</Text>
+                    <TextInput
+                      style={[styles.input, {borderColor: errors['email'] ? 'crimson' :'#cacaca'}]}
+                      value={values['email']}
+                      onBlur={handleBlur('email')}
+                      keyboardType="email-address"
+                      onChangeText={handleChange('email')}
+                    />
+
+                    <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
+                      <Text style={styles.btnText}>Add Email</Text>
+                    </TouchableOpacity>
+                  </>
+                )}
+              </Formik>
+            )}
           </View>
         );
       case 1:
@@ -127,7 +172,7 @@ export default function UpdateEmail({navigation}) {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container}>
+    <View style={styles.container}>
       <HeaderWithBackArrow
         onBackButton={_ => navigation.goBack()}
         title="Email"
@@ -139,13 +184,10 @@ export default function UpdateEmail({navigation}) {
             modal
           />
         ))}
-      <TouchableOpacity
-        activeOpacity={1}
-        style={{flex: 1}}
-        onPress={_ => Keyboard.dismiss()}>
-          <Stepper />
-        </TouchableOpacity>
-    </KeyboardAvoidingView>
+      <TouchableOpacity activeOpacity={1} style={{flex: 1}}>
+        <Stepper />
+      </TouchableOpacity>
+    </View>
   );
 }
 
