@@ -24,6 +24,7 @@ import UpdateName from '../screens/PERSONAL_INFO/UpdateName';
 import UpdateGender from '../screens/PERSONAL_INFO/updateGender';
 import UpdateDOB from '../screens/PERSONAL_INFO/updateDOB';
 import UpdateEmail from '../screens/PERSONAL_INFO/updateEmail';
+import ManageEmail from '../screens/PERSONAL_INFO/manageEmail';
 
 
 export default function NewsFeedNavigator() {
@@ -80,6 +81,13 @@ export default function NewsFeedNavigator() {
       <Stack.Screen
         name={routes.UPDATE_EMAIL}
         component={UpdateEmail}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={routes.MANAGE_EMAIL}
+        component={ManageEmail}
         options={{
           headerShown: false,
         }}

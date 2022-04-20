@@ -5,6 +5,7 @@ import {
   TouchableWithoutFeedback,
   Alert,
   Text,
+  Share,
 } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {SliderBox} from 'react-native-image-slider-box';
@@ -60,6 +61,10 @@ export default function Card({
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [sliderWidth, setSliderWidth] = useState();
 
+  const onShareHandler = async () =>{
+    const result = await Share.share({message:"hello world",title:"hello",url:'www.google.qa'});
+  }
+
   const options = [
     {
       title: 'Save post',
@@ -97,6 +102,13 @@ export default function Card({
           postData
         });
       },
+    },
+    {
+      title: 'Share via',
+      icon: {
+        image: require('../../assets/icons/share-point-icon.png'),
+      },
+      onPress: () =>{ onShareHandler(); },
     },
     {
       title: userState?.userData?.id !== user?.id ? 'Unfollow' : '',

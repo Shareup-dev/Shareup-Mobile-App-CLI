@@ -21,6 +21,8 @@ class PostService {
   likePost = (uid, pid,emoji) => AuthAxios.put(`posts/${uid}/like-unlike/${pid}`, {emoji: emoji});
   savePost = (uid, pid) => AuthAxios.put(`posts/${uid}/save-unsave/${pid}`);
 
+  sharePost = (uid,pid,data) => AuthAxios.post(`share/${uid}/${pid}`,data);
+
   /******************** COMMENT *******************/
   addComment = (userid, postid, comment) => 
     AuthAxios.post(`comment/${userid}/${postid}`,comment)
