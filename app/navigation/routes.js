@@ -50,7 +50,7 @@ export default Object.freeze({
   TAG_PEOPLE: 'TagPeople',
   FEELING_ACTIVITY: 'feelingAndActivity',
   SEARCH_SCREEN:'SearchScreen',
-  SAVED_POST_SCREEN: 'SavedPostsScreen',
+  SAVED_POST_SCREEN: 'HangFlowScreen',
   PERSONAL_INFORMATION:"PERSONAL_INFORMATION",
   UPDATE_NAME:'UPDATE_NAME',
   UPDATE_EMAIL:'UPDATE_EMAIL',

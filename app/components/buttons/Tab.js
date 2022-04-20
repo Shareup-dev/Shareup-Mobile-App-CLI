@@ -23,6 +23,7 @@ export default function AppButton({
   fontWeight = 'normal',
   titleStyle,
   disabled = false,
+  
 }) {
   const renderIcon = () => {
     if (iconName)

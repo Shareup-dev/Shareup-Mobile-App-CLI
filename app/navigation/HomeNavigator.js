@@ -20,6 +20,7 @@ import GroupFeedScreen from '../screens/GroupFeedScreen';
 import AddCommentsOnReels from '../screens/addCommentsOnReels';
 import SavedPostsScreen from '../screens/SavedPostsScreen';
 import PostDetailScreen from '../screens/PostDetailScreen';
+import HangFlowScreen from '../screens/HangFlowScreen';
 
 const Stack = createNativeStackNavigator();
 const headerHeight = useHeaderHeight;
@@ -55,7 +56,7 @@ export default function HomeNavigator(props) {
         component={MessagesNavigator}
       />
       <Stack.Screen name={routes.REEL_PLAYER} component={ReelPlayer} />
-      <Stack.Screen name={routes.SAVED_POST_SCREEN} component={SavedPostsScreen} />
+      <Stack.Screen name={routes.SAVED_POST_SCREEN} component={HangFlowScreen} />
       <Stack.Screen name={routes.POST_DETAILS_SCREEN} component={PostDetailScreen} />
     </Stack.Navigator>
   );

@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
+  Button
 } from "react-native";
 import moment from "moment";
 import colors from "../config/colors";
@@ -13,15 +14,14 @@ import Tab from "../components/buttons/Tab";
 import Icon from "../components/Icon";
 import routes from "../navigation/routes";
 import fileStorage from "../config/fileStorage";
+import AppButton from "../components/buttons/Tab";
+import { BaseButton, RawButton } from "react-native-gesture-handler";
+import constants from "../config/constants";
 
 const PostActions = ({
   postId,
   postData,
   userId,
-  //userEmail,
-  //firstName,
-  //postText,
-  //profileImage,
   comments,
   navigation,
   isUserLiked,
@@ -34,6 +34,7 @@ const PostActions = ({
 }) => {
   const fromReply = false
   const actionsTabSizeRatio = 0.5;
+  const {postTypes} = constants;
   const [date, setDate] = useState(
      moment(postData.published, "DD MMMM YYYY hh:mm:ss").fromNow()
    // null
@@ -143,7 +144,6 @@ const PostActions = ({
       </View>
 
       {postData.content !== "" && <Text style={styles.postText}>{postData.content}</Text>}
-
       <TouchableOpacity
         style={styles.menuButton}
         onPress={() => {
@@ -203,6 +203,8 @@ const styles = StyleSheet.create({
   actionTab: {
     paddingHorizontal: 5,
     marginHorizontal: 5,
+    borderRadius:10,
+    marginTop:10,
   },
   actionsBar: {
     flexDirection: "row",

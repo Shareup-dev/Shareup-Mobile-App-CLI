@@ -14,7 +14,17 @@ export default function SwapActionContainer(props) {
         </Text>
         <Text style={styles.description}>lapTop</Text>
       </View>
-      <Text>"Swap"</Text>
+      {/* <Text
+          style={[
+            styles.title,
+            {
+              fontSize: 15,
+              color: colors.iondigoDye,
+              fontWeight: "bold",
+            }
+          ]}>
+          Swap
+        </Text> */}
       <Tab
         title="Swap"
         color={colors.iondigoDye}
