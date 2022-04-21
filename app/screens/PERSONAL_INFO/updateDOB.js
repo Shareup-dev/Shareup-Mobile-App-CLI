@@ -24,13 +24,15 @@ export default function UpdateDOB({navigation}) {
   } = useContext(AuthContext);
 
   const [loading, setLoading] = useState(false);
-  const [dob, setDOB] = useState(new Date());
+  const [dob, setDOB] = useState(
+    userData.birthday_date ? new Date(userData.birthday_date) : new Date(),
+  );
 
-  const handleSubmit = values => {
+  const handleSubmit = _ => {
     setLoading(true);
     Keyboard.dismiss();
     userService
-      .editProfile(username, values)
+      .editProfile(username, {...userData, birthday_date: dob})
       .then(({status, data}) => {
         if (status === 200) {
           authActions.updateUserInfo(data);
@@ -52,7 +54,7 @@ export default function UpdateDOB({navigation}) {
   };
 
   const handleConfirm = date => {
-    setDOB(date)
+    setDOB(date);
     hideDatePicker();
   };
 
@@ -74,8 +76,8 @@ export default function UpdateDOB({navigation}) {
             isVisible={isDatePickerVisible}
             mode="date"
             onConfirm={handleConfirm}
-             date={dob}
-             maximumDate={new Date()}            
+            date={dob}
+            maximumDate={new Date()}
             onCancel={hideDatePicker}
           />
           <View

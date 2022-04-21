@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useMemo,
   Component,
-  useCallback
+  useCallback,
 } from 'react';
 import {
   StyleSheet,
@@ -16,6 +16,7 @@ import {
   Platform,
   ActivityIndicator,
   Dimensions,
+  FlatList,
 } from 'react-native';
 import Icon from '../components/Icon';
 import StackActions from '@react-navigation/routers';
@@ -52,17 +53,20 @@ import {postFeelingsActions} from '../redux/postFeelings';
 import {ScrollView} from 'react-native-gesture-handler';
 import fileStorage from '../config/fileStorage';
 import UserProfilePicture from '../components/UserProfilePicture';
-import { useFocusEffect } from '@react-navigation/native';
 import hangShareService from '../services/hangShare.service';
 import { swap } from 'formik';
+import {useFocusEffect} from '@react-navigation/native';
+import postService from '../services/post.service';
+
 
 export default function AddPostScreen({navigation, route}) {
+  const flatListRef = useRef();
   const {loadingIndicator, setloadingIndicator} = useContext(AuthContext);
 
   const {userData: user} = useContext(authContext)?.userState;
   const [loading, setLoading] = useState(false);
   const [tagedUserData, setTagedUserData] = useState([]);
-  const [placeholder,setPlaceHolder] = useState("We Share, Do you?")
+  const [placeholder, setPlaceHolder] = useState('We Share, Do you?');
 
   const dispatch = useDispatch();
   const postFeel = useSelector(state => state.postFeel);
@@ -70,10 +74,8 @@ export default function AddPostScreen({navigation, route}) {
   const {postTypes} = constants;
   const {postType, groupPost, groupId, swapImage, postData} = route.params;
 
-
   const SWAP_DEFAULT_TEXT = 'Hi all \n I want to Swap ...';
-  const HANG_SHARE_TEXT = "Please anyone want this,can have it"
-
+  const HANG_SHARE_TEXT = 'Please anyone want this,can have it';
 
   const textInputRef = useRef();
 
@@ -250,19 +252,20 @@ export default function AddPostScreen({navigation, route}) {
   const [progress, setProgress] = useState(0);
   const [postPrivacyOption, setPostPrivacyOption] = useState(privacyOptions[0]); // object to present the current privacy option
 
-  console.log("postType",postType);
+  console.log('postType', postType);
   useFocusEffect(
     useCallback(() => {
-    if (postType === postTypes.SWAP) {
-      setPlaceHolder(SWAP_DEFAULT_TEXT)
-      setImages([swapImage]);
-      handleButtonActivation(text, [swapImage]);
-    } else {
-      setPlaceHolder("We Share,Do you ?")
-      handleButtonActivation(text, images);
-    }
-    return () => clearFields();
-  }, [swapImage]))
+      if (postType === postTypes.SWAP) {
+        setPlaceHolder(SWAP_DEFAULT_TEXT);
+        setImages([swapImage]);
+        handleButtonActivation(text, [swapImage]);
+      } else {
+        setPlaceHolder('We Share,Do you ?');
+        handleButtonActivation(text, images);
+      }
+      return () => clearFields();
+    }, [swapImage]),
+  );
 
   const setTagedUser = userData => {
     setTagedUserData(userData);
@@ -302,6 +305,7 @@ export default function AddPostScreen({navigation, route}) {
     if (images?.length > 0) setIsButtonActive(true);
     if (images?.length === 0 && text === '') setIsButtonActive(false);
     if (images?.length === 0 && text === undefined) setIsButtonActive(false);
+    if (postType === postTypes.SHARE_POST) setIsButtonActive(true);
   };
 
   const handelPickImage = async () => {
@@ -317,9 +321,9 @@ export default function AddPostScreen({navigation, route}) {
   };
 
   const onAddImage = uri => {
-    if(postType === postTypes.HANG_SHARE){
-      setPlaceHolder(HANG_SHARE_TEXT)
-      setIsOptionsVisible(false)
+    if (postType === postTypes.HANG_SHARE) {
+      setPlaceHolder(HANG_SHARE_TEXT);
+      setIsOptionsVisible(false);
     }
     setImages(images.concat(uri));
     handleButtonActivation(text, images.concat(uri));
@@ -394,7 +398,21 @@ export default function AddPostScreen({navigation, route}) {
       });
   }
   const sharePost = () => {
+     // const postContent = {
+        //   content: text,
+        // };
 
+        const formData = new FormData();
+        formData.append('content', text);
+
+        postService
+          .sharePost(user.id, postData.id, formData)
+          .then(res => {
+            store.dispatch(feedPostsAction.addFeedPost(res.data));
+            navigation.navigate(routes.FEED);
+          })
+          .catch(e => console.error(e.message))
+          .finally(_ => setLoading(false));
   }
   const createPost = () => {
     const postContent = {
@@ -421,6 +439,9 @@ export default function AddPostScreen({navigation, route}) {
   const handleAddPost = async () => {
     // setloadingIndicator(true)
     setLoading(true);
+    if (text === '' && Object.keys(file).length === 0) {
+      setError("Can't Create empty post");
+    } else {
     switch(postType){
       case postTypes.GROUP_POST:
         group();
@@ -433,24 +454,28 @@ export default function AddPostScreen({navigation, route}) {
       case postTypes.CREATE_POST:  
         createPost();
     }
+    clearFields();
+  }
 
     if (postType === postTypes.GROUP_POST) {
      
     } else {
       if (postType === postTypes.SWAP) {
+
         
       } else if (postType === postTypes.HANG_SHARE) {
        
 
-      }else {
-        if (text === '' && Object.keys(file).length === 0) {
-          setError("Can't Create empty post");
-        } else {
+      } else if (postType === postTypes.SHARE_POST) {
+       
+      } else {
+
+        
           
         }
       }
     }
-    clearFields();
+    
   };
 
   // used to change the position of the enhanced drawer,
@@ -486,8 +511,10 @@ export default function AddPostScreen({navigation, route}) {
 
   useEffect(() => {}, [postPrivacyOption]);
 
+  console.log(flatListRef);
+
   const renderHeader = () => {
-    if ((postType === postTypes.HANG_SHARE) && images.length === 0 )
+    if (postType === postTypes.HANG_SHARE && images.length === 0)
       return (
         <Header
           left={<HeaderCloseIcon onPress={handleCancel} />}
@@ -502,7 +529,7 @@ export default function AddPostScreen({navigation, route}) {
               onPress={() => navigation.navigate(routes.KEEP_HANG)}
             />
           }
-        /> 
+        />
       );
     if (
       postType === postTypes.CREATE_POST ||
@@ -528,7 +555,7 @@ export default function AddPostScreen({navigation, route}) {
           right={
             <HeaderButton
               onPress={handleAddPost}
-              title={postType === postTypes.SHARE_POST ? "Share" : "Post"}
+              title={postType === postTypes.SHARE_POST ? 'Share' : 'Post'}
               isActive={isButtonActive}
             />
           }
@@ -537,6 +564,12 @@ export default function AddPostScreen({navigation, route}) {
   };
 
   const {width, height} = Dimensions.get('window');
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const onViewRef = React.useRef(({viewableItems}) => {
+    setActiveIndex(viewableItems[0].index);
+  });
+  const viewConfigRef = React.useRef({viewAreaCoveragePercentThreshold: 50});
 
   return (
     <Screen>
@@ -568,22 +601,22 @@ export default function AddPostScreen({navigation, route}) {
 
               {/* {postType === postTypes.CREATE_POST ||
                 (postTypes.GROUP_POST && ( */}
-                  <View style={[styles.headerTab, styles.row]}>
-                    <Icon
-                      type="MaterialCommunityIcons"
-                      name="plus"
-                      size={15}
-                      color={colors.dimGray}
-                    />
-                    <Text style={styles.headerTabText}>Albums</Text>
-                    <Icon
-                      type="MaterialIcons"
-                      name="keyboard-arrow-down"
-                      size={15}
-                      color={colors.dimGray}
-                    />
-                  </View>
-                {/* ))} */}
+              <View style={[styles.headerTab, styles.row]}>
+                <Icon
+                  type="MaterialCommunityIcons"
+                  name="plus"
+                  size={15}
+                  color={colors.dimGray}
+                />
+                <Text style={styles.headerTabText}>Albums</Text>
+                <Icon
+                  type="MaterialIcons"
+                  name="keyboard-arrow-down"
+                  size={15}
+                  color={colors.dimGray}
+                />
+              </View>
+              {/* ))} */}
               {/*** // Todo: Create swap category! */}
             </View>
           </View>
@@ -601,8 +634,7 @@ export default function AddPostScreen({navigation, route}) {
               }
               style={styles.plusIcon}
             />
-            
-            )}
+          )}
         </View>
 
         {/**Content */}
@@ -628,7 +660,6 @@ export default function AddPostScreen({navigation, route}) {
                     <Text>{' - '}</Text>
                     <TextInput
                       placeholder={
-                        
                         (postFeel.feeling !== 'Travelling to'
                           ? `What do you `
                           : `Where do you `) + postFeel.feeling
@@ -642,7 +673,7 @@ export default function AddPostScreen({navigation, route}) {
         ) : null}
         <TextInput
           placeholder={placeholder}
-          //   postType === postTypes.SWAP 
+          //   postType === postTypes.SWAP
           //     ? SWAP_DEFAULT_TEXT
           //     : postType === postTypes.HANG_SHARE ? 'Please Anyone want it,can have it' :'We Share, Do you?'
           // }
@@ -663,9 +694,14 @@ export default function AddPostScreen({navigation, route}) {
               paddingTop: 10,
               borderRadius: 10,
             }}>
-            <View style={{flexDirection:'row',alignItems:'center',marginHorizontal:5}} >
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginHorizontal: 5,
+              }}>
               <UserProfilePicture
-                profilePicture={postData.profilePicture}
+                profilePicture={postData.userdata.profilePicture}
                 size={35}
               />
               <Text
@@ -673,17 +709,56 @@ export default function AddPostScreen({navigation, route}) {
                 {`${postData.userdata?.firstName} ${postData.userdata?.lastName}`}
               </Text>
             </View>
-            {postData.content && <Text style={{fontSize: 14, margin: 5}}>{postData.content}</Text> }
-            <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
-              {postData.media.map(({media},index) => (
-                <Image
-                key={index}
-                  style={{width: width - 42, height: 200}}
-                  resizeMode={'cover'}
-                  source={{uri: fileStorage.baseUrl + media}}
-                />
-              ))}
-            </ScrollView>
+            {postData.content && (
+              <Text style={{fontSize: 14, margin: 5}}>{postData.content}</Text>
+            )}
+
+            <FlatList
+              onViewableItemsChanged={onViewRef.current}
+              viewabilityConfig={viewConfigRef.current}
+              horizontal
+              ref={flatListRef}
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              data={postData.media}
+              keyExtractor={({item}, index) => index.toString()}
+              renderItem={({item}) => {
+                return (
+                  <Image
+                    style={{width: width - 42, height: 200}}
+                    resizeMode={'cover'}
+                    source={{uri: fileStorage.baseUrl + item.media}}
+                  />
+                );
+              }}
+            />
+            <View>
+              <View
+                style={{
+                  marginVertical: 5,
+                  flexDirection: 'row',
+                  alignSelf: 'center',
+                }}>
+                {postData.media?.length > 1 &&
+                  postData.media.map(({media}, index) => (
+                    <TouchableOpacity
+                      style={{
+                        width: activeIndex === index ? 15 : 6,
+                        height: 6,
+                        borderRadius: 5,
+                        backgroundColor: '#333',
+                        marginHorizontal: 3,
+                      }}
+                      onPress={_ =>
+                        flatListRef.current.scrollToIndex({
+                          animated: true,
+                          index: '' + index,
+                        })
+                      }
+                    />
+                  ))}
+              </View>
+            </View>
           </View>
         )}
         <ImageInputList
@@ -737,7 +812,7 @@ export default function AddPostScreen({navigation, route}) {
       )}
       {postType === postTypes.SHARE_POST && (
         <EnhancedOptionsDrawer
-        snap={[125, 100, 100, 100]}
+          snap={[125, 100, 100, 100]}
           options={sharePostOptions}
           forwardedRef={sharePostDrawerRef}
         />

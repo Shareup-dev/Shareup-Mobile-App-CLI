@@ -104,6 +104,7 @@ export default function Drawer({isVisible, setIsVisible}) {
       title: 'Saved Posts',
       icon: require('../assets/post-options-icons/save-post-icon.png'),
       onPress: () => {
+        console.log("saved Post");
         navigation.navigate(routes.SAVED_POST_SCREEN)
         setIsVisible(false)
        },

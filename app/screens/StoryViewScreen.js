@@ -240,8 +240,9 @@ const StoryViewScreen = ({navigation, route}) => {
                 <Icon
                   name={'options'}
                   type={'SimpleLineIcons'}
+
                   size={54}
-                  backgroundColor={'unset'}
+                  backgroundColor={'#fff'}
                   noBackground={true}
                 />
               </TouchableOpacity>
@@ -256,7 +257,7 @@ const StoryViewScreen = ({navigation, route}) => {
                 name={'close'}
                 type={'AntDesign'}
                 size={54}
-                backgroundColor={'unset'}
+                backgroundColor={'#fff'}
                 noBackground={true}
               />
             </TouchableOpacity>
