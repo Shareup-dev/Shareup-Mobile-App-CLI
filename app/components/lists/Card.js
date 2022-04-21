@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   profilePicture: {
-    borderRadius: 25,
+    borderRadius: 10,
     marginRight: 10,
     width: 50,
     height: 50,

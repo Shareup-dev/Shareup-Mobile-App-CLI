@@ -194,6 +194,7 @@ export default function GroupsScreen({navigation}) {
             }
           />
         }
+       
       />
 
       <View style={styles.optionsBar}>

@@ -14,6 +14,7 @@ import HangCard from "../components/lists/HangCard";
 import Screen from "../components/Screen";
 import Separator from "../components/Separator";
 import colors from "../config/colors";
+import routes from "../navigation/routes";
 
 export default function KeepHangScreen({ navigation }) {
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
@@ -22,6 +23,7 @@ export default function KeepHangScreen({ navigation }) {
       id: 1,
       title: "Hang Flow",
       image: "",
+      onPress: () => {navigation.navigate(routes.HANG_SHARE_SCREEN)}
     },
     {
       id: 2,

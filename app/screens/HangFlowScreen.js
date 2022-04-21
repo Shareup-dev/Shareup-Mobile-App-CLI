@@ -1,22 +1,23 @@
-import React, { useContext, useState,useCallback } from 'react';
-import { StyleSheet, Text, TouchableWithoutFeedback, FlatList, View } from 'react-native';
-
+import React, { useContext, useState, useCallback } from 'react';
+import { StyleSheet, Text, TouchableWithoutFeedback, FlatList, ScrollView,View} from 'react-native';
+import TextField from '../components/TextField';
 import Screen from '../components/Screen';
-import { Header, HeaderTitle } from '../components/headers';
+import { Header, HeaderTitle} from '../components/headers';
+import {HeaderWithBackArrow} from '../components/headers'
 import colors from '../config/colors';
 import Icon from '../components/Icon';
 import routes from '../navigation/routes';
-import SavedListItem from '../components/lists/SavedListItem';
 import { useFocusEffect } from '@react-navigation/native';
 import authContext from '../authContext';
 import postService from '../services/post.service';
 import HangFeedCard from '../components/lists/HangFeedCard';
-import Card from '../components/lists/HangFeedCard';
+import IconButton from '../components/buttons/IconButton';
+
 
 export default function HangFlowScreen({ navigation, route }) {
 
     const { userState } = useContext(authContext);
-    const [savedData,setSavedData] = useState([])
+    const [savedData, setSavedData] = useState([])
     const data = [{
         allPostsType: "hang",
         content: "@Ireland_Love is never defeated, and I could add, the history of Ireland proves it",
@@ -83,7 +84,7 @@ export default function HangFlowScreen({ navigation, route }) {
         }, []),
     );
     const getSavedPost = (userEmail) => {
-        postService.getSavedPost(userEmail).then((res)=> {
+        postService.getSavedPost(userEmail).then((res) => {
             setSavedData(res.data)
         })
     }
@@ -95,7 +96,7 @@ export default function HangFlowScreen({ navigation, route }) {
                 navigation={navigation}
                 //reloadPosts={loadNews}
                 postType={item.allPostsType}
-                onPress={()=>{navigation.navigate(routes.POST_DETAILS_SCREEN,{postData:item})}}
+                onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item }) }}
             />
         );
     };
@@ -104,29 +105,36 @@ export default function HangFlowScreen({ navigation, route }) {
         //setActivityIndicator(false);
     };
     return (
-        <Screen>
-            <Header
-                backgroundColor={colors.white}
-                left={
-                    <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
-                        <Icon
-                            name="chevron-back"
-                            type="Ionicons"
-                            size={25}
-                            backgroundSizeRatio={1}
-                        />
-                    </TouchableWithoutFeedback>
+        <ScrollView style={{backgroundColor:colors.white}}>
+            <HeaderWithBackArrow
+                onBackButton={() => navigation.goBack()}
+                rightComponent={
+                    <IconButton
+                        onPress={() => navigation.navigate(routes.KEEP_HANG)}
+                        IconComponent={
+                          <Icon
+                            image={require('../assets/icons/squared-add-icon.png')}
+                            color={colors.iondigoDye}
+                            backgroundSizeRatio={0.8}
+                          />
+                        }
+                        style={styles.plusIcon}
+                    />
                 }
-                middle={<HeaderTitle>Saved</HeaderTitle>}
-            //     right={<TouchableWithoutFeedback onPress={() => navigation.navigate(routes.SEARCH_SCREEN)}>
-            //     <Icon
-            //       name="search1"
-            //       type="AntDesign"
-            //       size={25}
-            //       backgroundSizeRatio={1}
-            //     />
-            //   </TouchableWithoutFeedback>}
             />
+             <View style={styles.searchContainer}>
+                        <TextField
+                            placeholder="Search"
+                            iconName="search1"
+                            iconType="AntDesign"
+                            style={styles.searchbar}
+                        //   ref={searchTextFieldRef}
+                        //   onChangeText={text => {
+                        //     onSearch(text);
+                        //     store.dispatch(recentSearchActions.setList(text))
+                        //   }}
+                        />
+                    </View>
 
             <FlatList
                 initialNumToRender={10}
@@ -141,7 +149,7 @@ export default function HangFlowScreen({ navigation, route }) {
                 )}
             />
 
-        </Screen>
+        </ScrollView>
     )
 }
 const styles = StyleSheet.create({
@@ -162,5 +170,15 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
+    searchContainer: {
+        paddingHorizontal: 5,
+        marginLeft:10,
+        marginRight:10,
+    },
+    searchbar: {
+        marginBottom: 10,
+        
+    },
+    
 
 });

@@ -5,7 +5,9 @@ import {
   TouchableWithoutFeedback,
   Alert,
   Text,
-  Image, TouchableOpacity
+  Image, TouchableOpacity,
+  Dimensions,
+  ScrollView
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { SliderBox } from 'react-native-image-slider-box';
@@ -13,7 +15,6 @@ import Tab from '../buttons/Tab'
 import colors from '../../config/colors';
 import defaultStyles from '../../config/styles';
 import authContext from '../../authContext';
-import UserService from '../../services/user.service';
 import PostService from '../../services/post.service';
 import Icon from '../Icon';
 import PostOptionDrawer from '../drawers/PostOptionsDrawer';
@@ -23,21 +24,10 @@ import PostActions from '../PostActions';
 import { color } from 'react-native-reanimated';
 import routes from '../../navigation/routes';
 import constants from '../../config/constants';
+import HangItemCard from '../../components/lists/HangItemCard'
 export default function HangFeedCard({
   user,
-  //postId,
-  //userId,
   postData,
-  //firstName,
-  //lastName,
-  //userEmail,
-  //date,
-  //postText,
-  //postImages,
-  //profileImage,
-  //reactions,
-  //comments,
-  //post,
   reloadPosts,
   onPress,
   style,
@@ -60,7 +50,7 @@ export default function HangFeedCard({
   const [currentImage, setCurrentImage] = useState();
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [sliderWidth, setSliderWidth] = useState();
-
+  const {width, height} = Dimensions.get('window');
   const options = [
     {
       title: 'Save post',
@@ -168,9 +158,7 @@ export default function HangFeedCard({
   );
   //.................... POST ACTION METHOD .............................//
   const savePost = itemId => {
-    PostService.savePost(userState?.userData?.id, itemId).then(res => {
-      alert('Post saved...');
-    });
+    
   };
   const loadImages = () => {
     if (postData.media?.length !== 0) {
@@ -185,24 +173,24 @@ export default function HangFeedCard({
   };
 
   const handleReactions = async () => {
-    PostService.likePost(user.id, postData.id)
-      .then(res => {
-        setIsUserLiked(!isUserLiked);
-        setNumberOfReactions(res.data.numberOfReaction);
-      }) //need to get likePostIds
-      .catch(e => console.error(e));
-    //reloadPost();
+    // PostService.likePost(user.id, postData.id)
+    //   .then(res => {
+    //     setIsUserLiked(!isUserLiked);
+    //     setNumberOfReactions(res.data.numberOfReaction);
+    //   }) //need to get likePostIds
+    //   .catch(e => console.error(e));
+    // //reloadPost();
   };
 
   // rerenders the post when interaction
   const reloadPost = async () => {
-    PostService.getPostByPostId(postData.id)
-      .then(res => {
-        //setComments(res.data.comments)
-        setNumberOfComments(res.data.numberOfComments);
-        setNumberOfReactions(res.data.numberOfReaction);
-      })
-      .catch(e => console.error(e));
+    // PostService.getPostByPostId(postData.id)
+    //   .then(res => {
+    //     //setComments(res.data.comments)
+    //     setNumberOfComments(res.data.numberOfComments);
+    //     setNumberOfReactions(res.data.numberOfReaction);
+    //   })
+    //   .catch(e => console.error(e));
   };
 
   const showDeleteAlert = () =>
@@ -219,56 +207,98 @@ export default function HangFeedCard({
     ]);
 
   const deletePost = async () => {
-    const response = await PostService.deletePost(postData.id);
-    reloadPosts();
-    setIsOptionsVisible(false);
+    // const response = await PostService.deletePost(postData.id);
+    // reloadPosts();
+    // setIsOptionsVisible(false);
   };
 
   const actionsTabSizeRatio = 0.5;
-
-  const onLayout = e => {
-    setSliderWidth(e.nativeEvent.layout.width * 0.25);
-  };
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View
-        style={[styles.card, defaultStyles.cardBorder, style]}
-        onLayout={onLayout}
-        >
-        <View style={[styles.imageCard, defaultStyles.cardBorder]}
-       >
-          {currentImage && (
-            <ImageView
-              visible={imageViewerVisible}
-              images={[{ uri: currentImage }]}
-              imageIndex={0}
-              onRequestClose={() => {
-                setImageViewerVisible(false);
-              }}
-            />
-
-          )}
-
-          {/** Post Image */}
-
-          {images?.length !== 0 && (
-
-            <SliderBox
-              images={images}
-              ImageComponentStyle={styles.image}
-              imageLoadingColor={colors.iondigoDye}
-              // parentWidth={sliderWidth / 1.04}
-              onCurrentImagePressed={index => {
-                setCurrentImage(images[index]);
-                setImageViewerVisible(true);
-              }}
-            />
-            // <Image source={{ uri: images[0] }} style={styles.image} />
-          )}
-          <View style={{ backgroundColor: colors.red, width: 20, height: 20 }}>
-          <Text>Salad</Text>
-          </View>
-        </View>
+        style={[styles.card, defaultStyles.cardBorder]}>
+        <View
+                style={[styles.imageCard, style]}>
+                <Image
+                    // key={index}
+                    style={{ width: 150, height: 100 }}
+                    resizeMode={'cover'}
+                    source={require('../../assets/images/14.jpg')}
+                />
+                <Text style={{ color: colors.iondigoDye, fontSize: 12, fontWeight: 'bold', paddingTop: 5 }}>Salad</Text>
+                <View style={{ flexDirection: 'row', marginTop: 20, }}>
+                    <TouchableWithoutFeedback onPress={() => { }}>
+                        <Icon
+                            name="star"
+                            type="FontAwesome"
+                            size={17}
+                            color={colors.iondigoDye}
+                            backgroundSizeRatio={0.8}
+                            style={styles.star}
+                        />
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={() => { }}>
+                        <Icon
+                            name="star"
+                            type="FontAwesome"
+                            size={17}
+                            color={colors.iondigoDye}
+                            backgroundSizeRatio={0.8}
+                            style={styles.star}
+                        />
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={() => { }}>
+                        <Icon
+                            name="star"
+                            type="FontAwesome"
+                            size={17}
+                            color={colors.iondigoDye}
+                            backgroundSizeRatio={0.8}
+                            style={styles.star}
+                        />
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={() => { }}>
+                        <Icon
+                            name="star"
+                            type="FontAwesome"
+                            size={17}
+                            color={colors.iondigoDye}
+                            backgroundSizeRatio={0.8}
+                            style={styles.star}
+                        />
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={() => { }}>
+                        <Icon
+                            name="star"
+                            type="FontAwesome"
+                            size={17}
+                            color={colors.iondigoDye}
+                            backgroundSizeRatio={0.8}
+                            style={styles.star}
+                        />
+                    </TouchableWithoutFeedback>
+                </View>
+                <View style={styles.cartComment}>
+                    <Tab
+                        title={"216"}
+                        iconName="comment-discussion"
+                        iconType="Octicons"
+                        sizeRatio={actionsTabSizeRatio}
+                        style={styles.actionTab}
+                        color={colors.white}
+                        fontColor={colors.mediumGray}
+                    />
+                    <Tab
+                        title={"817"}
+                        iconName="shoppingcart"
+                        iconType="AntDesign"
+                        sizeRatio={actionsTabSizeRatio}
+                        style={styles.actionTab}
+                        color={colors.white}
+                        fontColor={colors.mediumGray}
+                    />
+                </View>
+            </View>
         <View style={styles.content}>
           <View style={styles.userInfo}>
             <Image
@@ -289,64 +319,12 @@ export default function HangFeedCard({
             </View>
           </View>
 
-
-          {/* <View style={styles.actionsBar}> */}
-          {/* <View style={styles.likes}>
-          {isUserLiked ? (
-            <TouchableWithoutFeedback onPress={()=>{}}>
-              <Icon
-                name="star"
-                type="FontAwesome"
-                size={17}
-                color="#FFC107"
-                backgroundSizeRatio={1}
-                style={styles.star}
-              />
-            </TouchableWithoutFeedback>
-          ) : (
-            <TouchableWithoutFeedback onPress={()=>{}}>
-              <Icon
-                name="star-o"
-                type="FontAwesome"
-                size={17}
-                color="#FFC107"
-                backgroundSizeRatio={1}
-                style={styles.star}
-              />
-            </TouchableWithoutFeedback>
-          )}
-
-          <Text style={styles.actionsText}>{numberOfReactions}</Text>
-        </View> */}
-
-          {/* <View style={styles.commentsShares}>
-          <TouchableWithoutFeedback
-            onPress={() =>
-              navigation.navigate(routes.COMMENTS, {
-                postId,
-                userId,
-                //comments,
-                postType,
-                swapId,
-                fromReply,
-              })
-            }
-          >
-            <Text style={[styles.actionsText, styles.comments]}>
-              {numberOfComments} Comments
-            </Text>
-          </TouchableWithoutFeedback>
-
-          <Text style={styles.actionsText}>0 Shares</Text>
-        </View> */}
-          {/* </View> */}
-
           {postData.content !== "" && <Text style={styles.postText}>{postData.content}</Text>}
           <Tab
             title={"Accept"}
             sizeRatio={0.9}
             style={styles.actionTab}
-            color={colors.activeGreen}
+            color="#4dae50"
             fontColor={colors.white}
             iconSize={10}
           />
@@ -383,37 +361,47 @@ const borderRadius = 10;
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.white,
-    marginHorizontal: 15,
+    marginHorizontal: 20,
     marginTop: 10,
+    marginBottom:10,
     overflow: 'hidden',
+    borderBottomWidth: 3
 
     // padding: 7,
     // paddingHorizontal: 6,
   },
   imageCard: {
     backgroundColor: colors.white,
-    //overflow: 'hidden',
-    width: 250,
-    height: 200,
-    alignItems: 'center',
-    alignSelf: 'center',
-    flexDirection: 'column',
-    //justifyContent: 'space-evenly',
-    marginTop: 20,
-    marginVertical: 20
-
+        marginHorizontal: 15,
+        marginTop: 10,
+        overflow: 'hidden',
+        flexDirection: 'column',
+        alignItems: 'center',
+        alignSelf: 'center',
+        //height:200,
+        width: 250,
+        borderColor: colors.LightGray,
+        borderWidth: 1,
+        borderRadius: 10,
+        borderBottomWidth: 3,
+        //borderRightWidth:3,
   },
   image: {
-    width: 150,
-    height: 110,
+    // width: 150,
+    // height: 110,
     //borderTopLeftRadius: borderRadius,
     //borderTopRightRadius: borderRadius,
     resizeMode: 'cover',
     //marginTop:5,
     backgroundColor: colors.red
   },
+  hangitemName:{
+    color:colors.iondigoDye,
+    marginTop:10,
+    paddingTop:5,
+  },
   profilePicture: {
-    borderRadius: 25,
+    borderRadius: 10,
     marginRight: 10,
     width: 50,
     height: 50,
@@ -454,7 +442,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     marginHorizontal: 5,
     borderRadius: 10,
-    marginTop: 10,
+    marginTop: 15,
+    marginLeft:15,
+    marginRight:15,
+    marginBottom:10,
   },
   actionsBar: {
     flexDirection: 'row',

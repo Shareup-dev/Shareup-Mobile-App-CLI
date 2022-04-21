@@ -53,6 +53,8 @@ import {ScrollView} from 'react-native-gesture-handler';
 import fileStorage from '../config/fileStorage';
 import UserProfilePicture from '../components/UserProfilePicture';
 import { useFocusEffect } from '@react-navigation/native';
+import hangShareService from '../services/hangShare.service';
+import { swap } from 'formik';
 
 export default function AddPostScreen({navigation, route}) {
   const {loadingIndicator, setloadingIndicator} = useContext(AuthContext);
@@ -267,6 +269,7 @@ export default function AddPostScreen({navigation, route}) {
   };
 
   const createPostFormData = content => {
+    console.log(content);
     const formData = new FormData();
     formData.append('content', content.text);
     if (content.images.length !== 0) {
@@ -282,6 +285,9 @@ export default function AddPostScreen({navigation, route}) {
 
     if (content.groupId) {
       formData.append('groupid', content.groupId);
+    }
+    if(content.category){
+      formData.append('category', content.category);
     }
     return formData;
   };
@@ -324,87 +330,123 @@ export default function AddPostScreen({navigation, route}) {
     setImages(updatedImages);
     handleButtonActivation(text, updatedImages);
   };
+  const group = () => {
+    const postContent = {
+      text: text,
+      images: images,
+      groupId: groupId,
+    };
+    const formData = createPostFormData(postContent);
+    PostService.createPost(user.id, formData).then(resp => {
+      let existingPosts = store.getState().groupPosts;
+      // setloadingIndicator(false)
+      store.dispatch(
+        groupPostsActions.setPosts([resp.data, ...existingPosts]),
+      );
+
+      store.dispatch(feedPostsAction.addFeedPost(resp.data));
+      // const popAction = StackActions.pop(1);
+      setLoading(false);
+
+      navigation.navigate(routes.GROUP_FEED, resp.data.group);
+      // navigation.dispatch(popAction);
+    });
+  }
+  const swap = () => {
+    const swapContent = {
+      text: text === '' ? SWAP_DEFAULT_TEXT : text,
+      images: [swapImage],
+    };
+
+    const formData = createPostFormData(swapContent);
+    swapService
+      .createSwap(user.id, formData)
+      .then(resp => {
+        store.dispatch(feedPostsAction.addFeedPost(resp.data));
+        //setloadingIndicator(false)
+        setLoading(false);
+        navigation.navigate(routes.FEED);
+      })
+      .catch(e => {
+        setLoading(false);
+        console.error(e);
+      });
+  }
+  const hangShare = () => {
+    const swapContent = {
+      text: text === '' ? HANG_SHARE_TEXT : text,
+      category:"gifts",
+      images: images,
+    };
+
+    const formData = createPostFormData(swapContent);
+    hangShareService
+      .createHang(user.id, formData)
+      .then(resp => {
+        store.dispatch(feedPostsAction.addFeedPost(resp.data));
+        //setloadingIndicator(false)
+        setLoading(false);
+        navigation.navigate(routes.FEED);
+      })
+      .catch(e => {
+        setLoading(false);
+        console.error(e);
+      });
+  }
+  const sharePost = () => {
+
+  }
+  const createPost = () => {
+    const postContent = {
+      text: text,
+      images: images,
+      feeling: postFeel.feeling ? postFeel.feeling : null,
+      groupId: groupId,
+    };
+    const formData = createPostFormData(postContent);
+    PostService.createPost(user.id, formData)
+      .then(resp => {
+        store.dispatch(feedPostsAction.addFeedPost(resp.data));
+        //setloadingIndicator(false)
+        setLoading(false);
+        dispatch(postFeelingsActions.setDefault());
+        navigation.navigate(routes.FEED);
+      })
+      .catch(e => {
+        console.error(e);
+      });
+    //setProgress(prog)
+  }
 
   const handleAddPost = async () => {
     // setloadingIndicator(true)
     setLoading(true);
+    switch(postType){
+      case postTypes.GROUP_POST:
+        group();
+      case postTypes.SWAP:
+        swap();
+      case postTypes.HANG_SHARE:
+        hangShare();
+      case postTypes.SHARE_POST:
+        sharePost();
+      case postTypes.CREATE_POST:  
+        createPost();
+    }
 
-    if (groupPost) {
-      const postContent = {
-        text: text,
-        images: images,
-        //feeling: postFeel.feeling ? postFeel.feeling : null,
-        groupId: groupId,
-        // privacy:postPrivacyOption,
-        // tagedUsers:tagedUserData
-      };
-      // if (file.uri) {
-      //   postContent.images = file;
-      // }
-      // //if(postFeel.feeling) postContent.feeling = postFeel.feeling;
-      // if(postPrivacyOption) postContent.privacy = postPrivacyOption;
-      // if(tagedUserData) postContent.tagedUsers = tagedUserData;
-
-      const formData = createPostFormData(postContent);
-      PostService.createPost(user.id, formData).then(resp => {
-        let existingPosts = store.getState().groupPosts;
-        // setloadingIndicator(false)
-        store.dispatch(
-          groupPostsActions.setPosts([resp.data, ...existingPosts]),
-        );
-
-        store.dispatch(feedPostsAction.addFeedPost(resp.data));
-        // const popAction = StackActions.pop(1);
-        setLoading(false);
-
-        navigation.navigate(routes.GROUP_FEED, resp.data.group);
-        // navigation.dispatch(popAction);
-      });
+    if (postType === postTypes.GROUP_POST) {
+     
     } else {
       if (postType === postTypes.SWAP) {
-        const swapContent = {
-          text: text === '' ? SWAP_DEFAULT_TEXT : text,
-          images: [swapImage],
-        };
-
-        const formData = createPostFormData(swapContent);
-        swapService
-          .createSwap(user.id, formData)
-          .then(resp => {
-            store.dispatch(feedPostsAction.addFeedPost(resp.data));
-            //setloadingIndicator(false)
-            setLoading(false);
-            navigation.navigate(routes.FEED);
-          })
-          .catch(e => {
-            setLoading(false);
-            console.error(e);
-          });
+        
       } else if (postType === postTypes.HANG_SHARE) {
+       
 
       }else {
         if (text === '' && Object.keys(file).length === 0) {
           setError("Can't Create empty post");
         } else {
-          const postContent = {
-            text: text,
-            images: images,
-            feeling: postFeel.feeling ? postFeel.feeling : null,
-            groupId: groupId,
-          };
-          const formData = createPostFormData(postContent);
-          PostService.createPost(user.id, formData)
-            .then(resp => {
-              store.dispatch(feedPostsAction.addFeedPost(resp.data));
-              //setloadingIndicator(false)
-              setLoading(false);
-              dispatch(postFeelingsActions.setDefault());
-              navigation.navigate(routes.FEED);
-            })
-            .catch(e => {
-              console.error(e);
-            });
-          //setProgress(prog)
+          
         }
       }
     }
