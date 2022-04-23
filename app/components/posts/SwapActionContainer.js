@@ -12,7 +12,7 @@ export default function SwapActionContainer(props) {
         <Text style={[styles.title, defaultStyles.fontWeightMedium]}>
           Category
         </Text>
-        <Text style={styles.description}>lapTop</Text>
+        <Text style={styles.description}>Laptop</Text>
       </View>
       {/* <Text
           style={[

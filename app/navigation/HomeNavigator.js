@@ -56,8 +56,9 @@ export default function HomeNavigator(props) {
         component={MessagesNavigator}
       />
       <Stack.Screen name={routes.REEL_PLAYER} component={ReelPlayer} />
-      <Stack.Screen name={routes.SAVED_POST_SCREEN} component={HangFlowScreen} />
+      <Stack.Screen name={routes.SAVED_POST_SCREEN} component={SavedPostsScreen} />
       <Stack.Screen name={routes.POST_DETAILS_SCREEN} component={PostDetailScreen} />
+      <Stack.Screen name={routes.HANG_SHARE_SCREEN} component={HangFlowScreen}/>
     </Stack.Navigator>
   );
 }

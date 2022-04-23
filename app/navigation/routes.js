@@ -50,7 +50,7 @@ export default Object.freeze({
   TAG_PEOPLE: 'TagPeople',
   FEELING_ACTIVITY: 'feelingAndActivity',
   SEARCH_SCREEN:'SearchScreen',
-  SAVED_POST_SCREEN: 'HangFlowScreen',
+  SAVED_POST_SCREEN: 'SavedPostsScreen',
   PERSONAL_INFORMATION:"PERSONAL_INFORMATION",
   UPDATE_NAME:'UPDATE_NAME',
   UPDATE_EMAIL:'UPDATE_EMAIL',
@@ -59,6 +59,7 @@ export default Object.freeze({
   UPDATE_DOB:'UPDATE_DOB',
   UPDATE_GENDER:'UPDATE_GENDER',
   MANAGE_GROUPS:'MANAGE_GROUPS',
-  POST_DETAILS_SCREEN:'PostDetailScreen'
+  POST_DETAILS_SCREEN:'PostDetailScreen',
+  HANG_SHARE_SCREEN:'HangFlowScreen'
 
 });
