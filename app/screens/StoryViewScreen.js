@@ -240,6 +240,7 @@ const StoryViewScreen = ({navigation, route}) => {
                 <Icon
                   name={'options'}
                   type={'SimpleLineIcons'}
+                  color={"#fff"}
 
                   size={54}
                   backgroundColor={'#fff'}
@@ -257,6 +258,7 @@ const StoryViewScreen = ({navigation, route}) => {
                 name={'close'}
                 type={'AntDesign'}
                 size={54}
+                color={"#fff"}
                 backgroundColor={'#fff'}
                 noBackground={true}
               />
@@ -314,7 +316,7 @@ const StoryViewScreen = ({navigation, route}) => {
           style={{
             zIndex: 100,
             position: 'absolute',
-            bottom: 20,
+            bottom: 50,
             left: 15,
             fontSize: 16,
             fontWeight: '600',

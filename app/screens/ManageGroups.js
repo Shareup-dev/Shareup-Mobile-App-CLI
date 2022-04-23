@@ -1,8 +1,17 @@
-import React, { useContext, useEffect,useState } from 'react';
-import {View, StyleSheet, TouchableOpacity, Image, Text, Alert} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Text,
+  Alert,
+  FlatList,
+} from 'react-native';
 import AuthContext from '../authContext';
-import { HeaderWithBackArrow } from '../components/headers';
+import {HeaderWithBackArrow} from '../components/headers';
 import Icon from '../components/Icon';
+import routes from '../navigation/routes';
 import groupService from '../services/group.service';
 
 export default function ManageGroups({navigation}) {
@@ -45,8 +54,7 @@ export default function ManageGroups({navigation}) {
           borderWidth: 0.3,
           marginVertical: 5,
         }}>
-            <HeaderWithBackArrow title={"Manage groups"} />
-        <TouchableOpacity 
+        <TouchableOpacity
           activeOpacity={0.6}
           onPress={_ => navigation.navigate(routes.GROUP_FEED, item)}
           // navigation.navigate(routes.GROUP_FEED, item)}
@@ -104,7 +112,15 @@ export default function ManageGroups({navigation}) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={{flex:1}} >
+      <HeaderWithBackArrow
+        title={'Your Groups'}
+        onBackButton={() => {
+          navigation.goBack();
+        }}
+      />
+      <View style={[styles.container,{paddingTop:15}]} >
+
       {!groups.length ? (
         <Text style={{textAlign: 'center', fontSize: 12}}>
           You don't have any groups to manage
@@ -121,10 +137,41 @@ export default function ManageGroups({navigation}) {
           />
         </React.Fragment>
       )}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flex: 1,
+    paddingHorizontal:10
+  },
+  img: {
+    backgroundColor: '#33333360',
+    width: 70,
+    borderRadius: 10,
+    resizeMode: 'cover',
+    height: 70,
+  },
+  item: {
+    paddingHorizontal: 10,
+    marginVertical: 8,
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#333',
+  },
+  actionContainer: {
+    borderTopWidth: 1,
+
+    paddingHorizontal: 15,
+    marginTop: 5,
+    borderTopColor: '#cacaca60',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
 });

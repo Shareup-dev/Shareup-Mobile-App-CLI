@@ -9,6 +9,8 @@ class ProfileService {
     verifyOTP = (uid,otp) => AuthAxios({method:"GET", url:`contact_info/verify_otp_email_verify/${uid}`,params: {otp}})
     removeOptionalEmail = (uid) =>AuthAxios.delete(`users/${uid}/contact_info/remove_optional_email`)
     makeAsPrimaryEmail = (uid) => AuthAxios.put(`users/${uid}/contact_info/make_optional_email_primary_email`)
+
+    getAllMedia = (uid) => AuthAxios.get(`user/media/${uid}`);
 }
 
 export default new ProfileService();

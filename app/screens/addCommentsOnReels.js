@@ -186,7 +186,7 @@ export default function AddCommentsOnReels({navigation, route}) {
               style={{
                 fontSize: 13,
                 fontWeight: '600',
-                color: '#0000009',
+                color: '#00000095',
                 marginVertical: 3,
               }}>
               {`${firstName} ${lastName}`}

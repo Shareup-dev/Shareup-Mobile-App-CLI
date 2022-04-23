@@ -293,7 +293,7 @@ export default function AddPostScreen({ navigation, route }) {
     //setProgress(prog)
     }
   }
-
+ 
   const handleAddPost = async () => {
     // setloadingIndicator(true)
     console.log("postType:::",postType);
@@ -578,6 +578,7 @@ export default function AddPostScreen({ navigation, route }) {
                 {postData.media?.length > 1 &&
                   postData.media.map(({ media }, index) => (
                     <TouchableOpacity
+                    key={index}
                       style={{
                         width: activeIndex === index ? 15 : 6,
                         height: 6,

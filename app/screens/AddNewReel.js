@@ -244,7 +244,7 @@ export default function AddReelScreen({navigation}) {
       <ProgressBar
         indeterminate={isUploading}
         visible={isUploading}
-        color={'crimson'}
+        color={colors.iondigoDye}
       />
     </View>
   );
