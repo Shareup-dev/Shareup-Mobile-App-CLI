@@ -13,6 +13,7 @@ import MemberRequest from '../screens/ListOfMemberRequests';
 import ListOfMembers from '../screens/ListOfMembers';
 import EditGroup from '../screens/EditGroupScreen';
 import UpdateGroupPhoto from '../screens/UpdateGroupImage';
+import ManageGroups from '../screens/ManageGroups';
 
 export default function GroupNavigator(props) {
   const Stack = createStackNavigator();
@@ -43,6 +44,13 @@ export default function GroupNavigator(props) {
       <Stack.Screen
         name={routes.CREATE_NEW_GROUP}
         component={CreateNewGroup}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={routes.MANAGE_GROUPS}
+        component={ManageGroups}
         options={{
           headerShown: false,
         }}

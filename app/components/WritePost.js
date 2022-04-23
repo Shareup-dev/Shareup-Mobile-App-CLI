@@ -31,7 +31,7 @@ export default function WritePost({ navigation, style, groupPost, groupId }) {
         }
       >
         <View style={styles.writePostContainer}>
-          <UserProfilePicture size={45} />
+          <UserProfilePicture size={45} navigation={navigation} />
           <LinkButton
             title="We share, Do you? "
             fontSize={12}

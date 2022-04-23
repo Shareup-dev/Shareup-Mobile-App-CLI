@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {Image, View, StyleSheet} from 'react-native';
+import {Image, View, StyleSheet, TouchableOpacity} from 'react-native';
 
 import AuthContext from '../authContext';
 import fileStorage from '../config/fileStorage';

@@ -124,23 +124,10 @@ export default function ShareupAuthentication() {
       },
       // updating user information
       updateUserInfo: async (userData) => {
-        if(userData){
-
-          dispatch({
+         await dispatch({
             type: actions.UPDATE_USER,
             userData,
           })
-        }else {
-          
-          userService
-          .getUserByEmail(userState.username)
-          .then(({data}) =>
-            dispatch({
-              type: actions.UPDATE_USER,
-              userData: data ,
-            })
-          )
-        }
       },
     }),
     [],

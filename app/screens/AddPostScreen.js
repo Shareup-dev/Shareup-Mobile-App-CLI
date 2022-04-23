@@ -249,7 +249,6 @@ export default function AddPostScreen({navigation, route}) {
   const [progress, setProgress] = useState(0);
   const [postPrivacyOption, setPostPrivacyOption] = useState(privacyOptions[0]); // object to present the current privacy option
 
-  console.log('postType', postType);
   useFocusEffect(
     useCallback(() => {
       if (postType === postTypes.SWAP) {
@@ -461,7 +460,6 @@ export default function AddPostScreen({navigation, route}) {
 
   useEffect(() => {}, [postPrivacyOption]);
 
-  console.log(flatListRef);
 
   const renderHeader = () => {
     if (postType === postTypes.HANG_SHARE && images.length === 0)

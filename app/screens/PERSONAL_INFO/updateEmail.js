@@ -66,11 +66,17 @@ export default function UpdateEmail({navigation}) {
     setLoading(prev => ({content: 'Saving', state: true}));
     profileService
       .addOptionalEmail(userData.id, email)
-      .then(({status}) => status === 200 && authActions.updateUserInfo())
+      .then(({status}) => {
+        if (status === 200) {
+           authActions.updateUserInfo({
+            ...userData,
+            optional_email: email,
+          });
+        }
+      })
       .catch(e => e.message)
       .finally(_ => setLoading(prev => ({...prev, state: false})));
   };
-
 
   return (
     <View style={styles.container}>
@@ -89,8 +95,7 @@ export default function UpdateEmail({navigation}) {
             //   })
             // }
             activeOpacity={1}
-            style={
-              {
+            style={{
               marginVertical: 10,
               flexDirection: 'row',
               alignItems: 'center',

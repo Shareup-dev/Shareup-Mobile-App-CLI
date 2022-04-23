@@ -50,6 +50,7 @@ export default function NewsFeedNavigator() {
           headerShown: false,
         }}
       />
+    
       <Stack.Screen
         name={routes.PERSONAL_INFORMATION}
         component={PersonalInfoSettings}

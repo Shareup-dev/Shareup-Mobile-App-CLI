@@ -27,13 +27,17 @@ const tabs = [
 ];
 
 export default function UserProfileScreen({navigation, route}) {
+  const {params} = route;
   const [currentTab, setCurrentTab] = useState(POSTS);
+  
   const {
     userState: {userData},
   } = useContext(authContext);
-
+  
+  const [user, setUser] = useState(params.user? params.user:userData);
 
   const [posts, setPosts] = useState([]);
+
   const [imagesAndVideos, setImagesAndVideos] = useState([]);
   const [tags, setTags] = useState([]);
 
@@ -41,18 +45,19 @@ export default function UserProfileScreen({navigation, route}) {
     setCurrentTab(name);
   };
 
-  useEffect(() => {
-    const fetchPosts = () => {
-      postService
-        .getPostByEmail(userData.email)
-        .then(({data}) => setPosts(data))
-        .catch(e => console.error(e.message));
-    };
-    fetchPosts();
-  }, []);
+  // useEffect(() => {
+  //   const fetchPosts = () => {
+  //     postService
+  //       .getPostByEmail(user.email)
+  //       .then(({data}) => setPosts(data))
+  //       .catch(e => console.error(e.message));
+  //   };
+  //   fetchPosts();
+  // }, []);
 
   const ListHeader = () => (
     <ProfileTop
+       user={user}
       currentTab={currentTab}
       numberOfPosts={posts.length}
       navigation={navigation}
@@ -67,9 +72,9 @@ export default function UserProfileScreen({navigation, route}) {
        * The Swap Should from backend as instance of post
        */
       // ToDO: Refactor to use one component for posts and swap.
-      <SwapCard navigation={navigation} item={item} userId={item.userdata.id} />
+      <SwapCard navigation={navigation} item={item} userId={item.user.id} />
     ) : (
-      <Card user={item.userdata} postData={item} navigation={navigation} />
+      <Card user={item.user} postData={item} navigation={navigation} />
     );
   const ImagesAndVideosItem = ({item}) => <View></View>;
   const TagsItems = ({item}) => <View></View>;
@@ -77,7 +82,7 @@ export default function UserProfileScreen({navigation, route}) {
   return (
     <Screen style={styles.container}>
       <HeaderWithBackArrow
-        title={userData.firstName}
+        title={user.firstName}
         onBackButton={() => navigation.goBack()}
         leftComponent={
           <Icon
