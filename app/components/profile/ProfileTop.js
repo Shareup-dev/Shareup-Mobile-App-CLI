@@ -2,12 +2,10 @@ import React, {useContext} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 
 import colors from '../../config/colors';
-import Icon from '../Icon';
 import UserProfilePicture from '../UserProfilePicture';
 import Tab from '../buttons/Tab';
 import IconBar from '../tab-bar/IconBar';
 import routes from '../../navigation/routes';
-import authContext from '../../authContext';
 import Posts from './Posts';
 import StoriesList from '../lists/StoriesList';
 import AuthContext from '../../authContext';
@@ -41,7 +39,7 @@ export default function ProfileTop({
             /> */}
           </View>
           <View style={styles.counterWrapper}>
-            <Text>{user.numberOfPosts}</Text>
+            <Text>{user.numberOfPosts ? user.numberOfPosts  :numberOfPosts}</Text>
             <Text>Posts</Text>
           </View>
           <View style={styles.counterWrapper}>

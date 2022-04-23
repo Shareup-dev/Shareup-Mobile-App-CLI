@@ -1,5 +1,14 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {View, StyleSheet, Text, FlatList} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  FlatList,
+  Image,
+  Dimensions,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 
 import HeaderWithBackArrow from '../components/headers/HeaderWithBackArrow';
 import Icon from '../components/Icon';
@@ -7,6 +16,7 @@ import Screen from '../components/Screen';
 import colors from '../config/colors';
 import authContext from '../authContext';
 import Card from '../components/lists/Card';
+import ImageView from 'react-native-image-viewing';
 
 import {
   ImagesAndVideosEmpty,
@@ -15,6 +25,8 @@ import {
 } from '../components/profile';
 import SwapCard from '../components/lists/SwapCard';
 import postService from '../services/post.service';
+import profileService from '../services/profile.service';
+import fileStorage from '../config/fileStorage';
 
 const POSTS = 'posts';
 const IMAGE_VIDEOS = 'images&videos';
@@ -29,14 +41,20 @@ const tabs = [
 export default function UserProfileScreen({navigation, route}) {
   const {params} = route;
   const [currentTab, setCurrentTab] = useState(POSTS);
-  
+
   const {
     userState: {userData},
   } = useContext(authContext);
-  
-  const [user, setUser] = useState(params.user? params.user:userData);
+
+  const [user, setUser] = useState(params.user ? params.user : userData);
 
   const [posts, setPosts] = useState([]);
+  const [media, setMedia] = useState([]);
+  const [loading, setLoading] = useState(0);
+  const [imageSlider, setImageSlider] = useState({
+    state: false,
+    index: 0,
+  });
 
   const [imagesAndVideos, setImagesAndVideos] = useState([]);
   const [tags, setTags] = useState([]);
@@ -45,19 +63,29 @@ export default function UserProfileScreen({navigation, route}) {
     setCurrentTab(name);
   };
 
-  // useEffect(() => {
-  //   const fetchPosts = () => {
-  //     postService
-  //       .getPostByEmail(user.email)
-  //       .then(({data}) => setPosts(data))
-  //       .catch(e => console.error(e.message));
-  //   };
-  //   fetchPosts();
-  // }, []);
+  useEffect(() => {
+    const fetchData = () => {
+      setLoading(1);
+      Promise.all([
+        postService.getPostByEmail(user.email),
+        profileService.getAllMedia(user.id),
+      ])
+        .then(res => {
+          setPosts(res[0].data);
+          setMedia(res[1].data);
+        })
+        .catch(e => console.error(e.message))
+        .finally(_ => {
+          setLoading(2);
+        });
+    };
+
+    fetchData();
+  }, []);
 
   const ListHeader = () => (
     <ProfileTop
-       user={user}
+      user={user}
       currentTab={currentTab}
       numberOfPosts={posts.length}
       navigation={navigation}
@@ -72,11 +100,27 @@ export default function UserProfileScreen({navigation, route}) {
        * The Swap Should from backend as instance of post
        */
       // ToDO: Refactor to use one component for posts and swap.
-      <SwapCard navigation={navigation} item={item} userId={item.user.id} />
+      <SwapCard navigation={navigation} item={item} userId={item.userdata.id} />
     ) : (
-      <Card user={item.user} postData={item} navigation={navigation} />
+      <Card user={item.userdata} postData={item} navigation={navigation} />
     );
-  const ImagesAndVideosItem = ({item}) => <View></View>;
+
+  const {width} = Dimensions.get('window');
+  const ImagesAndVideosItem = ({item, index}) => (
+    <TouchableOpacity
+      onPress={_ => setImageSlider({state: true, index: index})}>
+      <Image
+        source={{uri: fileStorage.baseUrl + item.media}}
+        style={{
+          width: (width - 30) / 3,
+          borderRadius: 3,
+          height: 150,
+          margin: 5,
+          backgroundColor: '#eee',
+        }}
+      />
+    </TouchableOpacity>
+  );
   const TagsItems = ({item}) => <View></View>;
 
   return (
@@ -95,29 +139,53 @@ export default function UserProfileScreen({navigation, route}) {
         }
       />
 
+      <ImageView
+        visible={imageSlider.state}
+        images={media.map(({media}) => ({uri: fileStorage.baseUrl + media}))}
+        keyExtractor={(item, index) => index.toString()}
+        imageIndex={imageSlider.index}
+        onRequestClose={() => {
+          setImageSlider(false);
+        }}
+      />
+
       {currentTab == POSTS && (
         <FlatList
           data={posts}
-          renderItem={({item}) => <PostsItem item={item} />}
-          keyExtractor={post => post.id.toString()}
+          ve={true}
+          renderItem={({item}) => {
+            return <PostsItem item={item} />;
+          }}
+          keyExtractor={(post, index) => index.toString()}
           ListHeaderComponent={ListHeader}
           showsVerticalScrollIndicator={false}
-          ListEmptyComponent={() => (
-            <Text style={styles.listEmptyText}>Start adding your posts!</Text>
-          )}
+          ListEmptyComponent={() =>
+            loading === 2 ? (
+              <Text
+                style={styles.listEmptyText}>{`Start adding your posts!`}</Text>
+            ) : (
+              <>
+              <ActivityIndicator size={30} />
+              <Text
+                style={[styles.listEmptyText,{marginVertical:5}]}>{`Loading..`}</Text>
+                </>
+            )
+          }
           ListFooterComponent={() => <View style={styles.listFooter}></View>}
         />
       )}
 
       {currentTab == IMAGE_VIDEOS && (
         <FlatList
-          data={imagesAndVideos}
+          data={media}
+          numColumns={3}
           showsVerticalScrollIndicator={false}
-          renderItem={ImagesAndVideosItem}
-          keyExtractor={item => item.id.toString()}
+          renderItem={({item, index}) => (
+            <ImagesAndVideosItem item={item} index={index} />
+          )}
+          keyExtractor={(item, index) => index.toString()}
           ListHeaderComponent={ListHeader}
           ListEmptyComponent={ImagesAndVideosEmpty}
-          ListFooterComponent={() => <View style={styles.listFooter}></View>}
         />
       )}
 

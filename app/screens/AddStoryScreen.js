@@ -260,7 +260,7 @@ export default function AddStoryScreen({navigation}) {
         </KeyboardAvoidingView>
 
       )}
-      <ProgressBar indeterminate={isUploading} visible={isUploading} color={'crimson'}  />
+      <ProgressBar indeterminate={isUploading} visible={isUploading} color={colors.iondigoDye}  />
     </View>
   );
 }
