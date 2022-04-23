@@ -23,7 +23,7 @@ export default function ListItemEnhanced({
 }) {
   return (
     <>
-      <TouchableWithoutFeedback onPress={onPress}>
+      <TouchableWithoutFeedback onPress={()=>{}}>
         <View style={[styles.listItem, defaultStyle.lightShadow, style]}>
           {IconComponent}
           {image && <Image source={image} style={styles.image} />}
@@ -45,7 +45,7 @@ export default function ListItemEnhanced({
 
           <View style={styles.leftContainer}>
             <IconButton
-              onPress={() => alert("Item Added")}
+              onPress={onPress}
               IconComponent={
                 <Icon
                   name="plussquare"

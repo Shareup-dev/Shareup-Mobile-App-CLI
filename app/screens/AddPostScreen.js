@@ -57,6 +57,7 @@ import hangShareService from '../services/hangShare.service';
 import { swap } from 'formik';
 import { useFocusEffect } from '@react-navigation/native';
 import postService from '../services/post.service';
+import common from '../config/common';
 
 
 export default function AddPostScreen({ navigation, route }) {
@@ -80,165 +81,10 @@ export default function AddPostScreen({ navigation, route }) {
   const textInputRef = useRef();
 
   const sharePostDrawerRef = useRef(null); // reference for the enhanced drawer.
-  const sharePostOptions = [
-    {
-      title: 'Tag People',
-      icon: {
-        image: require('../assets/add-post-options-icons/tag-people-gradient-icon.png'),
-      },
-      onPress: () => {
-        navigation.navigate(routes.TAG_PEOPLE);
-      },
-    },
-
-    {
-      title: 'Feeling/Activity',
-      icon: {
-        image: require('../assets/add-post-options-icons/feeling-gradient-icon.png'),
-      },
-      onPress: () => {
-        navigation.navigate(routes.FEELING_ACTIVITY);
-      },
-    },
-  ];
-
   const createPostDrawerRef = useRef(null); // reference for the enhanced drawer.
-  const createPostOptions = [
-    {
-      title: 'Photos',
-      icon: {
-        image: require('../assets/add-post-options-icons/photo-gradient-icon.png'),
-      },
-      onPress: () => {
-        handelPickImage();
-      },
-    },
-    {
-      title: 'Tag People',
-      icon: {
-        image: require('../assets/add-post-options-icons/tag-people-gradient-icon.png'),
-      },
-      onPress: () => {
-        navigation.navigate(routes.TAG_PEOPLE);
-      },
-    },
-    {
-      title: 'Sell and Share',
-      icon: {
-        image: require('../assets/add-post-options-icons/sell-and-share-gradient-icon.png'),
-      },
-      onPress: () => {
-        alert('Sell and Share');
-      },
-    },
-    {
-      title: 'Feeling/Activity',
-      icon: {
-        image: require('../assets/add-post-options-icons/feeling-gradient-icon.png'),
-      },
-      onPress: () => {
-        navigation.navigate(routes.FEELING_ACTIVITY);
-      },
-    },
-    {
-      title: 'Location',
-      icon: {
-        image: require('../assets/add-post-options-icons/location-gradient-icon.png'),
-      },
-      onPress: () => {
-        alert('Location');
-      },
-    },
-    {
-      title: 'Live',
-      icon: {
-        image: require('../assets/add-post-options-icons/live-gradient-icon.png'),
-      },
-      onPress: () => {
-        alert('Live');
-      },
-    },
-  ];
+  const shareUpOptions = useMemo(() => common.shareUpOptions,[],);
 
-  const shareUpOptions = useMemo(
-    () => [
-      {
-        title: 'Share Feed',
-        icon: { image: require('../assets/icons/gray-feed-icon.png') },
-        onPress: () => {
-          alert('Share Feed');
-        },
-      },
-      {
-        title: 'Share time',
-        icon: { image: require('../assets/icons/gray-share-time-icon.png') },
-        onPress: () => {
-          alert('Share time');
-        },
-      },
-      {
-        title: 'Share Friends',
-        icon: { image: require('../assets/icons/gray-share-friends-icon.png') },
-        onPress: () => {
-          alert('Share Friends');
-        },
-      },
-      {
-        title: 'Share Point',
-        icon: { image: require('../assets/icons/gray-share-point-icon.png') },
-        onPress: () => {
-          alert('Share Point');
-        },
-      },
-      {
-        title: 'Share Groups',
-        icon: { image: require('../assets/icons/gray-share-groups-icon.png') },
-        onPress: () => {
-          alert('Share Groups');
-        },
-      },
-      {
-        title: 'Sell and Share',
-        icon: {
-          image: require('../assets/icons/gray-sell-and-share-icon.png'),
-        },
-        onPress: () => {
-          alert('Sell and Share');
-        },
-      },
-    ],
-    [],
-  );
-
-  const privacyOptions = useMemo(
-    () => [
-      {
-        icon: require('../assets/post-privacy-options-icons/public-icon.png'),
-        label: 'Public',
-        value: 'Public',
-        description: 'Anyone on or off Shareup',
-      },
-      {
-        icon: require('../assets/post-privacy-options-icons/friends-icon.png'),
-        label: 'Friends',
-        value: 'Friends',
-        description: 'Your friends on Shareup',
-      },
-      {
-        icon: require('../assets/post-privacy-options-icons/friends-except-icon.png'),
-        label: 'Friends except...',
-        value: 'Friends except...',
-        description: "Don't show to some friends",
-      },
-      {
-        icon: require('../assets/post-privacy-options-icons/specific-friends-icon.png'),
-        label: 'Specific friends',
-        value: 'Specific friends',
-        description: 'Only show to some friends',
-      },
-    ],
-    [],
-  );
+  const privacyOptions = useMemo(() => common.privacyOptions,[],);
 
   const [error, setError] = useState('');
   const [text, setText] = useState('');
@@ -272,6 +118,7 @@ export default function AddPostScreen({ navigation, route }) {
 
   const createPostFormData = content => {
     const formData = new FormData();
+    console.log("content:::",content);
     formData.append('content', content.text);
     if (content.images.length !== 0) {
       content.images.forEach(image => {
@@ -337,6 +184,10 @@ export default function AddPostScreen({ navigation, route }) {
 
 //........GROUP POST................//
   const group = () => {
+    if (text === '' && Object.keys(file).length === 0) {
+      setError("Can't Create empty post");
+      alert(error)
+   }else{
     const postContent = {
       text: text,
       images: images,
@@ -357,9 +208,11 @@ export default function AddPostScreen({ navigation, route }) {
       console.error(e);
     }).finally(_ => setLoading(false));
   }
+  }
 
   //........SWAP POST................//
   const swap = () => {
+    console.log("Swap post");
     const swapContent = {
       text: text === '' ? SWAP_DEFAULT_TEXT : text,
       images: [swapImage],
@@ -417,6 +270,10 @@ export default function AddPostScreen({ navigation, route }) {
   
   //........CREATE POST................//
   const createPost = () => {
+    if (text === '' && Object.keys(file).length === 0) {
+       setError("Can't Create empty post");
+       alert(error)
+    }else{
     const postContent = {
       text: text,
       images: images,
@@ -434,14 +291,13 @@ export default function AddPostScreen({ navigation, route }) {
         console.error(e);
       }).finally(_ => setLoading(false));
     //setProgress(prog)
+    }
   }
 
   const handleAddPost = async () => {
     // setloadingIndicator(true)
+    console.log("postType:::",postType);
     setLoading(true);
-    if (text === '' && Object.keys(file).length === 0) {
-      setError("Can't Create empty post");
-    } else {
       switch (postType) {
         case postTypes.GROUP_POST:
           group();
@@ -455,7 +311,7 @@ export default function AddPostScreen({ navigation, route }) {
           createPost();
       }
       clearFields();
-    }
+    
   };
 
   // used to change the position of the enhanced drawer,
@@ -765,13 +621,13 @@ export default function AddPostScreen({ navigation, route }) {
       </View>
       {postType === postTypes.CREATE_POST && (
         <EnhancedOptionsDrawer
-          options={createPostOptions}
+          options={common.createPostoptions}
           forwardedRef={createPostDrawerRef}
         />
       )}
       {postType === postTypes.GROUP_POST && (
         <EnhancedOptionsDrawer
-          options={createPostOptions}
+          options={common.createPostoptions}
           forwardedRef={createPostDrawerRef}
         />
       )}
@@ -785,7 +641,7 @@ export default function AddPostScreen({ navigation, route }) {
       {postType === postTypes.HANG_SHARE && (
         <OptionsDrawer
           title="What's in Hang ?"
-          options={[createPostOptions[0]]}
+          options={[common.createPostoptions[0]]}
           isVisible={isOptionsVisible}
           setIsVisible={setIsOptionsVisible}
         />
@@ -793,7 +649,7 @@ export default function AddPostScreen({ navigation, route }) {
       {postType === postTypes.SHARE_POST && (
         <EnhancedOptionsDrawer
           snap={[125, 100, 100, 100]}
-          options={sharePostOptions}
+          options={common.sharePostOptions}
           forwardedRef={sharePostDrawerRef}
         />
       )}

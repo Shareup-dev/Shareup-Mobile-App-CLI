@@ -217,15 +217,16 @@ export default function HangFeedCard({
       <View
         style={[styles.card, defaultStyles.cardBorder]}>
         <View
-                style={[styles.imageCard, style]}>
+                style={[styles.imageCard, defaultStyles.lightShadow]}>
                 <Image
-                    // key={index}
-                    style={{ width: 150, height: 100 }}
+                     source={{
+                      uri: fileStorage.baseUrl + postData.media[0].media,
+                    }}
+                    style={styles.image}
                     resizeMode={'cover'}
-                    source={require('../../assets/images/14.jpg')}
                 />
-                <Text style={{ color: colors.iondigoDye, fontSize: 12, fontWeight: 'bold', paddingTop: 5 }}>Salad</Text>
-                <View style={{ flexDirection: 'row', marginTop: 20, }}>
+                <Text style={{ color: colors.iondigoDye, fontSize: 12, fontWeight: 'bold', paddingTop: 10 }}>Salad</Text>
+                <View style={{ flexDirection: 'row', marginTop: 10, }}>
                     <TouchableWithoutFeedback onPress={() => { }}>
                         <Icon
                             name="star"
@@ -282,8 +283,8 @@ export default function HangFeedCard({
                         title={"216"}
                         iconName="comment-discussion"
                         iconType="Octicons"
-                        sizeRatio={actionsTabSizeRatio}
-                        style={styles.actionTab}
+                        sizeRatio={0.8}
+                        style={styles.actionTab,{marginTop:0,marginBottom:0}}
                         color={colors.white}
                         fontColor={colors.mediumGray}
                     />
@@ -291,8 +292,8 @@ export default function HangFeedCard({
                         title={"817"}
                         iconName="shoppingcart"
                         iconType="AntDesign"
-                        sizeRatio={actionsTabSizeRatio}
-                        style={styles.actionTab}
+                        sizeRatio={0.8}
+                        style={styles.actionTab,{marginTop:0,marginBottom:0}}
                         color={colors.white}
                         fontColor={colors.mediumGray}
                     />
@@ -364,34 +365,31 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom:10,
     overflow: 'hidden',
-    borderBottomWidth: 3
-
-    // padding: 7,
-    // paddingHorizontal: 6,
   },
   imageCard: {
     backgroundColor: colors.white,
         marginHorizontal: 15,
         marginTop: 10,
-        overflow: 'hidden',
+        //overflow: 'hidden',
         flexDirection: 'column',
         alignItems: 'center',
         alignSelf: 'center',
         //height:200,
-        width: 250,
+        width: "80%",
         borderColor: colors.LightGray,
         borderWidth: 1,
         borderRadius: 10,
-        borderBottomWidth: 3,
-        //borderRightWidth:3,
+       
+        
   },
   image: {
-    // width: 150,
-    // height: 110,
+     width: "60%", 
+     height: 110,
     //borderTopLeftRadius: borderRadius,
     //borderTopRightRadius: borderRadius,
     resizeMode: 'cover',
-    //marginTop:5,
+    borderBottomLeftRadius:10,
+    borderBottomRightRadius:10,
     backgroundColor: colors.red
   },
   hangitemName:{
@@ -478,4 +476,11 @@ const styles = StyleSheet.create({
     width: 60,
     marginTop: -5,
   },
+  cartComment:{
+    width: "100%",
+    flexDirection:"row",
+    justifyContent:"space-between",
+    marginTop:0
+
+  }
 });

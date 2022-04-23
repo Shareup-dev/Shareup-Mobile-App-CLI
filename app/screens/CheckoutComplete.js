@@ -7,9 +7,12 @@ import colors from "../config/colors";
 import routes from "../navigation/routes";
 import store from "../redux/store";
 import { swapedImagesAction } from "../redux/swapedImages";
+import constants from "../config/constants";
 
-const SwapCheckoutComplete = ({ navigation, route }) => {
-
+const CheckoutComplete = ({ navigation, route }) => {
+  const  {postType,swapedPostId } = route.params;
+  const {postTypes} = constants
+  console.log(postType);
   return (
     <Screen>
       <View style={styles.mainContainer}>
@@ -26,15 +29,15 @@ const SwapCheckoutComplete = ({ navigation, route }) => {
             shipped soon
           </Text>
           <TouchableOpacity
-            onPress={() => {
+            onPress={() => {postType == postTypes.HANG_SHARE ? navigation.navigate(routes.FEED):
               store.dispatch(
-                swapedImagesAction.removeImages(route.params.swapedPostId)
+                swapedImagesAction.removeImages(swapedPostId)
               );
               navigation.navigate(routes.FEED);
             }}
           >
             <View style={styles.goBackButton}>
-              <Text style={styles.goBackLabel}>Go to homepage</Text>
+              <Text style={styles.goBackLabel}>{postType == postTypes.HANG_SHARE ? "Hang In":"Track Order"}</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -74,11 +77,11 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
   goBackLabel: {
-    fontSize: 22,
+    fontSize: 20,
     color: colors.iondigoDye,
-    opacity: 1,
+    opacity: 0.8,
     // position:'absolute'
   },
 });
 
-export default SwapCheckoutComplete;
+export default CheckoutComplete;

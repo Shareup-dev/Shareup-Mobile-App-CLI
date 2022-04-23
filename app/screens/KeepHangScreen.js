@@ -14,16 +14,18 @@ import HangCard from "../components/lists/HangCard";
 import Screen from "../components/Screen";
 import Separator from "../components/Separator";
 import colors from "../config/colors";
+import constants from "../config/constants";
 import routes from "../navigation/routes";
 
 export default function KeepHangScreen({ navigation }) {
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
+  const {postTypes} = constants;
   const hangList = [
     {
       id: 1,
       title: "Hang Flow",
       image: "",
-      onPress: () => {navigation.navigate(routes.HANG_SHARE_SCREEN)}
+      onPress: () => {navigation.navigate(routes.HANG_FLOW_SCREEN)}
     },
     {
       id: 2,
@@ -133,6 +135,7 @@ export default function KeepHangScreen({ navigation }) {
       <GiftDrawer
         isVisible={isDrawerVisible}
         setIsVisible={setIsDrawerVisible}
+        onPress={() => {navigation.navigate(routes.CHECKOUT , postTypes.HANG_SHARE),setIsDrawerVisible(false)}}
       />
     </Screen>
   );

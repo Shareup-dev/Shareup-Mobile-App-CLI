@@ -1,3 +1,4 @@
+
 export default {
   postTypes: {
     HANG_SHARE: "Hang Share",
@@ -7,4 +8,5 @@ export default {
     GROUP_POST: "Group Post",
     SHARE_POST: "SHARE_POST",
   },
+   
 };

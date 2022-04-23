@@ -40,8 +40,8 @@ export default Object.freeze({
   GROUP_NAVIGATOR: 'GroupNavigator',
   SWAP_DISPLAY: 'SwapDisplay',
   SWAP_SHIPPING: 'SwapShipping',
-  SWAP_CHECKOUT: 'SwapCheckout',
-  SWAP_CHECKOUT_COMPLETE: 'SwapCheckoutComplete',
+  CHECKOUT: 'Checkout',
+  CHECKOUT_COMPLETE: 'CheckoutComplete',
   ADDS_STORY: 'AddStory',
   STORY_VIEW_SCREEN: 'StoryViewScreen',
   ADD_NEW_REEL: 'ADD_NEW_REEL',
@@ -60,6 +60,6 @@ export default Object.freeze({
   UPDATE_GENDER:'UPDATE_GENDER',
   MANAGE_GROUPS:'MANAGE_GROUPS',
   POST_DETAILS_SCREEN:'PostDetailScreen',
-  HANG_SHARE_SCREEN:'HangFlowScreen'
+  HANG_FLOW_SCREEN:'HangFlowScreen'
 
 });

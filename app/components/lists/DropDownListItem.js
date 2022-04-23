@@ -28,7 +28,7 @@ export default function DropDownListItem({
 
   return (
     <>
-      <TouchableWithoutFeedback onPress={onPress}>
+      <TouchableWithoutFeedback onPress={()=>{}}>
         <View style={[styles.listItem, defaultStyle.lightShadow, style]}>
           {IconComponent}
           {image && <Image source={image} style={styles.image} />}
@@ -87,6 +87,7 @@ export default function DropDownListItem({
               subTitle={item.state}
               subSubTitle={item.price}
               image={item.image}
+              onPress={onPress}
             />
           )}
         />

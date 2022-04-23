@@ -1,11 +1,26 @@
-import React from 'react';
-import {View, StyleSheet, FlatList, StatusBar} from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { View, StyleSheet, FlatList, StatusBar } from 'react-native';
 import Modal from 'react-native-modal';
 
 import colors from '../../config/colors';
 import DropDownListItem from '../lists/DropDownListItem';
+import { useFocusEffect } from '@react-navigation/native';
+import hangShareService from '../../services/hangShare.service';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function GiftDrawer({isVisible, setIsVisible}) {
+export default function GiftDrawer({ isVisible, setIsVisible ,onPress}) {
+  useFocusEffect(
+    useCallback(() => {
+      getGifsForHang();
+    }, []),
+  );
+  const getGifsForHang = () => {
+    hangShareService.getAllGiftsForHang().then((res) => {
+      console.log("Response::",res.data);
+      //setListItems(res.data)
+    })
+  }
+  const [listItems1, setListItems] = useState([])
   const listItems = [
     {
       title: 'Best Buy',
@@ -47,7 +62,7 @@ export default function GiftDrawer({isVisible, setIsVisible}) {
           image: require('../../assets/gift-images/jeans.png'),
         },
       ],
-      onPress: () => {},
+      onPress: () => { },
     },
     {
       title: 'Flipkart',
@@ -63,7 +78,9 @@ export default function GiftDrawer({isVisible, setIsVisible}) {
     },
   ];
 
+
   return (
+   
     <Modal
       style={styles.modal}
       isVisible={isVisible}
@@ -71,12 +88,12 @@ export default function GiftDrawer({isVisible, setIsVisible}) {
       onSwipeComplete={() => setIsVisible(false)}
       onBackdropPress={() => setIsVisible(false)}
       animationIn="slideInRight"
-      animationOut="slideOutRight">
+      animationOut="slideOutRight">  
       <View style={styles.container}>
         <FlatList
           data={listItems}
           keyExtractor={item => item.title}
-          renderItem={({item}) => (
+          renderItem={({ item }) => (
             <View style={styles.DropDownListItems}>
               <DropDownListItem
                 title={item.title}
@@ -84,12 +101,14 @@ export default function GiftDrawer({isVisible, setIsVisible}) {
                 subSubTitle="100+ items"
                 image={item.image}
                 dropListItems={item.items}
+                onPress={onPress}
               />
             </View>
           )}
         />
       </View>
     </Modal>
+    
   );
 }
 
@@ -97,6 +116,9 @@ const styles = StyleSheet.create({
   modal: {
     padding: 0,
     margin: 0,
+    paddingTop:35,
+    borderRadius:10,
+    paddingBottom:35
   },
   container: {
     flex: 1,
@@ -107,6 +129,6 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   DropDownListItems: {
-    marginVertical: 7,
+    paddingTop:5,
   },
 });

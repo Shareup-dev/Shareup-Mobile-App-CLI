@@ -21,6 +21,8 @@ import AddCommentsOnReels from '../screens/addCommentsOnReels';
 import SavedPostsScreen from '../screens/SavedPostsScreen';
 import PostDetailScreen from '../screens/PostDetailScreen';
 import HangFlowScreen from '../screens/HangFlowScreen';
+import AddNewFriendScreen from '../screens/AddNewFriendScreen';
+import AllFriendsScreen from '../screens/AllFriendsScreen';
 
 const Stack = createNativeStackNavigator();
 const headerHeight = useHeaderHeight;
@@ -58,7 +60,9 @@ export default function HomeNavigator(props) {
       <Stack.Screen name={routes.REEL_PLAYER} component={ReelPlayer} />
       <Stack.Screen name={routes.SAVED_POST_SCREEN} component={SavedPostsScreen} />
       <Stack.Screen name={routes.POST_DETAILS_SCREEN} component={PostDetailScreen} />
-      <Stack.Screen name={routes.HANG_SHARE_SCREEN} component={HangFlowScreen}/>
+      <Stack.Screen name={routes.HANG_FLOW_SCREEN} component={HangFlowScreen}/>
+      <Stack.Screen name={routes.Add_NEW_FRIEND} component={AddNewFriendScreen}/>
+      <Stack.Screen name={routes.ALL_FRIENDS} component={AllFriendsScreen}/>
     </Stack.Navigator>
   );
 }

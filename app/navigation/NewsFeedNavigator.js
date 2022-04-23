@@ -15,8 +15,8 @@ import SetPostAudience from '../screens/SetPostAudience';
 import SettingPrivacyScreen from '../screens/SettingPrivacyScreen';
 import SwapDisplay from '../screens/SwapDisplay';
 import ShippingAddress from '../screens/ShippingAddress';
-import SwapCheckout from '../screens/SwapCheckout';
-import SwapCheckoutComplete from '../screens/SwapCheckoutComplete';
+import Checkout from '../screens/Checkout';
+import CheckoutComplete from '../screens/CheckoutComplete';
 import AddCommentsOnReels from '../screens/addCommentsOnReels';
 import SearchScreen from '../screens/SearchScreen';
 import PersonalInfoSettings from '../screens/PersonalInfoSettings';
@@ -166,16 +166,16 @@ export default function NewsFeedNavigator() {
         }}
       />
       <Stack.Screen
-        name={routes.SWAP_CHECKOUT}
-        component={SwapCheckout}
+        name={routes.CHECKOUT}
+        component={Checkout}
         options={{
           headerShown: false,
           headerTitle: '',
         }}
       />
       <Stack.Screen
-        name={routes.SWAP_CHECKOUT_COMPLETE}
-        component={SwapCheckoutComplete}
+        name={routes.CHECKOUT_COMPLETE}
+        component={CheckoutComplete}
         options={{
           headerShown: false,
           headerTitle: '',
