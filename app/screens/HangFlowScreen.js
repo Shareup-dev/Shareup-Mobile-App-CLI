@@ -12,6 +12,7 @@ import authContext from '../authContext';
 import postService from '../services/post.service';
 import HangFeedCard from '../components/lists/HangFeedCard';
 import IconButton from '../components/buttons/IconButton';
+import hangShareService from '../services/hangShare.service';
 
 
 export default function HangFlowScreen({ navigation, route }) {
@@ -80,11 +81,11 @@ export default function HangFlowScreen({ navigation, route }) {
 
     useFocusEffect(
         useCallback(() => {
-            getSavedPost(userState.userData.email);
+            getAllHang(userState.userData.email);
         }, []),
     );
-    const getSavedPost = (userEmail) => {
-        postService.getSavedPost(userEmail).then((res) => {
+    const getAllHang = (userEmail) => {
+        hangShareService.getAllHangData().then((res) => {
             setSavedData(res.data)
         })
     }
@@ -138,7 +139,7 @@ export default function HangFlowScreen({ navigation, route }) {
 
             <FlatList
                 initialNumToRender={10}
-                data={data}
+                data={savedData}
                 // ListFooterComponent={ActivityIndicatorComponent}
                 keyExtractor={post => post.id.toString()}
                 showsVerticalScrollIndicator={false}

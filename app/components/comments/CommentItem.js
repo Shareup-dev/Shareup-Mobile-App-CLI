@@ -111,12 +111,12 @@ export default function CommentItem({
         <View style={styles.commentContainer}>
           {/** Left */}
           <View>
-            <UserProfilePicture size={40} />
+            <UserProfilePicture size={40} profilePicture={comment.user.profilePicture} />
           </View>
 
           {/** Medial */}
           <View style={styles.medialContainer}>
-            {/* <Text style={styles.userName}>{comment.user.firstName}</Text> */}
+            <Text style={styles.userName}>{comment.user.firstName}</Text>
 
             {/* <Text style={styles.comment}>{comment}</Text> */}
             <View style={styles.commentBody}>

@@ -24,7 +24,6 @@ import PostActions from '../PostActions';
 import { color } from 'react-native-reanimated';
 import routes from '../../navigation/routes';
 import constants from '../../config/constants';
-import HangItemCard from '../../components/lists/HangItemCard'
 export default function HangFeedCard({
   user,
   postData,
