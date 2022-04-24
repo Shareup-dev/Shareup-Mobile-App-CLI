@@ -35,6 +35,7 @@ export default Object.freeze({
   SET_POST_AUDIENCE: 'SetPostAudience',
   MESSAGES_NAVIGATOR: 'MessagesNavigator',
   CHAT_ROOM: 'ChatRoom',
+  CHAT_SCREEN: 'CHAT_SCREEN',
   SETTING_PRIVACY: 'SettingPrivacy',
   ACTIVITY_NAVIGATOR: 'ActivityNavigator',
   GROUP_NAVIGATOR: 'GroupNavigator',
