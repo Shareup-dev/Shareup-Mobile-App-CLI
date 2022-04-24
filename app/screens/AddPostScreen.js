@@ -58,9 +58,11 @@ import { swap } from 'formik';
 import { useFocusEffect } from '@react-navigation/native';
 import postService from '../services/post.service';
 import common from '../config/common';
+import { color } from 'react-native-reanimated';
 
 
 export default function AddPostScreen({ navigation, route }) {
+  const { postType, groupPost, groupId, swapImage, postData,isEdit } = route.params;
   const flatListRef = useRef();
   const { loadingIndicator, setloadingIndicator } = useContext(AuthContext);
 
@@ -73,7 +75,7 @@ export default function AddPostScreen({ navigation, route }) {
   const postFeel = useSelector(state => state.postFeel);
 
   const { postTypes } = constants;
-  const { postType, groupPost, groupId, swapImage, postData } = route.params;
+  
 
   const SWAP_DEFAULT_TEXT = 'Hi all \n I want to Swap ...';
   const HANG_SHARE_TEXT = 'Please anyone want this,can have it';
@@ -82,8 +84,127 @@ export default function AddPostScreen({ navigation, route }) {
 
   const sharePostDrawerRef = useRef(null); // reference for the enhanced drawer.
   const createPostDrawerRef = useRef(null); // reference for the enhanced drawer.
-  const shareUpOptions = useMemo(() => common.shareUpOptions,[],);
+  const shareUpOptions = useMemo(() => {[
+    {
+      title: 'Share Feed',
+      icon: { image: require('../assets/icons/gray-feed-icon.png') },
+      onPress: () => {
+        alert('Share Feed');
+      },
+    },
+    {
+      title: 'Share time',
+      icon: { image: require('../assets/icons/gray-share-time-icon.png') },
+      onPress: () => {
+        alert('Share time');
+      },
+    },
+    {
+      title: 'Share Friends',
+      icon: { image: require('../assets/icons/gray-share-friends-icon.png') },
+      onPress: () => {
+        alert('Share Friends');
+      },
+    },
+    {
+      title: 'Share Point',
+      icon: { image: require('../assets/icons/gray-share-point-icon.png') },
+      onPress: () => {
+        alert('Share Point');
+      },
+    },
+    {
+      title: 'Share Groups',
+      icon: { image: require('../assets/icons/gray-share-groups-icon.png') },
+      onPress: () => {
+        alert('Share Groups');
+      },
+    },
+    {
+      title: 'Sell and Share',
+      icon: {
+        image: require('../assets/icons/gray-sell-and-share-icon.png'),
+      },
+      onPress: () => {
+        alert('Sell and Share');
+      },
+    },
+  ]},[],);
 
+  const createPostoptions = [{
+    title: 'Photos',
+    icon: {
+      image: require('../assets/add-post-options-icons/photo-gradient-icon.png'),
+    },
+    onPress: () => {
+      handelPickImage();
+    },
+  },
+  {
+    title: 'Tag People',
+    icon: {
+      image: require('../assets/add-post-options-icons/tag-people-gradient-icon.png'),
+    },
+    onPress: () => {
+      navigation.navigate(routes.TAG_PEOPLE);
+    },
+  },
+  {
+    title: 'Sell and Share',
+    icon: {
+      image: require('../assets/add-post-options-icons/sell-and-share-gradient-icon.png'),
+    },
+    onPress: () => {
+      alert('Sell and Share');
+    },
+  },
+  {
+    title: 'Feeling/Activity',
+    icon: {
+      image: require('../assets/add-post-options-icons/feeling-gradient-icon.png'),
+    },
+    onPress: () => {
+      navigation.navigate(routes.FEELING_ACTIVITY);
+    },
+  },
+  {
+    title: 'Location',
+    icon: {
+      image: require('../assets/add-post-options-icons/location-gradient-icon.png'),
+    },
+    onPress: () => {
+      alert('Location');
+    },
+  },
+  {
+    title: 'Live',
+    icon: {
+      image: require('../assets/add-post-options-icons/live-gradient-icon.png'),
+    },
+    onPress: () => {
+      alert('Live');
+    },
+  },
+]
+const sharePostOptions = [{
+  title: 'Tag People',
+  icon: {
+    image: require('../assets/add-post-options-icons/tag-people-gradient-icon.png'),
+  },
+  onPress: () => {
+    navigation.navigate(routes.TAG_PEOPLE);
+  },
+},
+
+{
+  title: 'Feeling/Activity',
+  icon: {
+    image: require('../assets/add-post-options-icons/feeling-gradient-icon.png'),
+  },
+  onPress: () => {
+    navigation.navigate(routes.FEELING_ACTIVITY);
+  },
+},]
   const privacyOptions = useMemo(() => common.privacyOptions,[],);
 
   const [error, setError] = useState('');
@@ -98,6 +219,7 @@ export default function AddPostScreen({ navigation, route }) {
   const [progress, setProgress] = useState(0);
   const [postPrivacyOption, setPostPrivacyOption] = useState(privacyOptions[0]); // object to present the current privacy option
 
+
   useFocusEffect(
     useCallback(() => {
       if (postType === postTypes.SWAP) {
@@ -108,10 +230,18 @@ export default function AddPostScreen({ navigation, route }) {
         setPlaceHolder('We Share,Do you ?');
         handleButtonActivation(text, images);
       }
+      if (isEdit){loadImages();}
       return () => clearFields();
     }, [swapImage]),
   );
 
+  const loadImages = () => {
+    if (postData.media?.length !== 0) {
+      setImages(
+        postData.media?.map(image => fileStorage.baseUrl + image.media),
+      );
+    }
+  };
   const setTagedUser = userData => {
     setTagedUserData(userData);
   };
@@ -237,8 +367,19 @@ export default function AddPostScreen({ navigation, route }) {
       category: "gifts",
       images: images,
     };
-
     const formData = createPostFormData(swapContent);
+    if (isEdit){
+      console.log("here");
+      hangShareService
+      .editHang(user.id,postData.id, formData)
+      .then(resp => {
+        store.dispatch(feedPostsAction.addFeedPost(resp.data));
+        navigation.navigate(routes.FEED);
+      })
+      .catch(e => {
+        console.error(e);
+      }).finally(_ => setLoading(false));;
+    }else{
     hangShareService
       .createHang(user.id, formData)
       .then(resp => {
@@ -248,6 +389,7 @@ export default function AddPostScreen({ navigation, route }) {
       .catch(e => {
         console.error(e);
       }).finally(_ => setLoading(false));;
+    }
   }
   //........SHARE POST................//
   const sharePost = () => {
@@ -310,7 +452,7 @@ export default function AddPostScreen({ navigation, route }) {
         case postTypes.CREATE_POST:
           createPost();
       }
-      clearFields();
+      //clearFields();
     
   };
 
@@ -508,12 +650,12 @@ export default function AddPostScreen({ navigation, route }) {
           </TouchableOpacity>
         ) : null}
         <TextInput
-          placeholder={placeholder}
+          placeholder={isEdit?postData.content:placeholder}
           //   postType === postTypes.SWAP
           //     ? SWAP_DEFAULT_TEXT
           //     : postType === postTypes.HANG_SHARE ? 'Please Anyone want it,can have it' :'We Share, Do you?'
           // }
-          placeholderTextColor={colors.dimGray}
+          placeholderTextColor={isEdit?colors.dark:colors.dimGray}
           style={styles.textInput}
           numberOfLines={10}
           multiline={true}
@@ -622,13 +764,13 @@ export default function AddPostScreen({ navigation, route }) {
       </View>
       {postType === postTypes.CREATE_POST && (
         <EnhancedOptionsDrawer
-          options={common.createPostoptions}
+          options={createPostoptions}
           forwardedRef={createPostDrawerRef}
         />
       )}
       {postType === postTypes.GROUP_POST && (
         <EnhancedOptionsDrawer
-          options={common.createPostoptions}
+          options={createPostoptions}
           forwardedRef={createPostDrawerRef}
         />
       )}
@@ -642,7 +784,7 @@ export default function AddPostScreen({ navigation, route }) {
       {postType === postTypes.HANG_SHARE && (
         <OptionsDrawer
           title="What's in Hang ?"
-          options={[common.createPostoptions[0]]}
+          options={[createPostoptions[0]]}
           isVisible={isOptionsVisible}
           setIsVisible={setIsOptionsVisible}
         />
@@ -650,7 +792,7 @@ export default function AddPostScreen({ navigation, route }) {
       {postType === postTypes.SHARE_POST && (
         <EnhancedOptionsDrawer
           snap={[125, 100, 100, 100]}
-          options={common.sharePostOptions}
+          options={sharePostOptions}
           forwardedRef={sharePostDrawerRef}
         />
       )}

@@ -60,6 +60,7 @@ export default Object.freeze({
   UPDATE_GENDER:'UPDATE_GENDER',
   MANAGE_GROUPS:'MANAGE_GROUPS',
   POST_DETAILS_SCREEN:'PostDetailScreen',
-  HANG_FLOW_SCREEN:'HangFlowScreen'
+  HANG_FLOW_SCREEN:'HangFlowScreen',
+  SHIPPING_ADDRESS:'ShippingAddress'
 
 });

@@ -1,5 +1,6 @@
-import React from "react";
-import { View, Text, StyleSheet, Image, TextInput } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, Image, TextInput, Platform } from "react-native";
+import { Button } from "react-native-paper";
 import AppButton from "../components/buttons/Button";
 import { Header, HeaderCloseIcon, HeaderTitle } from "../components/headers";
 import Screen from "../components/Screen";
@@ -9,6 +10,7 @@ import store from "../redux/store";
 import { swapedImagesAction } from "../redux/swapedImages";
 
 const ShippingAddress = ({ navigation, route }) => {
+  const [showMessageScreen,setShowMessageScreen] = useState(true);
 
   return (
     <Screen>
@@ -43,16 +45,22 @@ const ShippingAddress = ({ navigation, route }) => {
         </View>
         <AppButton
           onPress={() => {
-            navigation.navigate(routes.SWAP_CHECKOUT, {
-              swapedPostId: route.params.swapedPostId,
-            });
+            setShowMessageScreen(true)
           }}
           style={styles.payButton}
-          title={"Let's Pay"}
+          title={"Let's Ship"}
           width={"70%"}
         />
         <Text style={styles.partners}>See your partners</Text>
       </View>
+      {showMessageScreen && (<View style={styles.messageView}>
+        <View>
+          <Image></Image>
+          <Text></Text>
+          <Text></Text>
+          <AppButton></AppButton>
+        </View>
+      </View>)}
     </Screen>
   );
 };
@@ -67,8 +75,8 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   subTitle: {
-    fontSize: 20,
-    color: colors.LightGray,
+    fontSize: 15,
+    color: colors.dimGray,
     textAlign: "center",
   },
   imageContainer: {
@@ -104,4 +112,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 18,
   },
+  messageView:{
+    flex:1,
+    backgroundColor:colors.dimGray,
+    width:"100%",
+    height:"100%",
+   // flexWrap:"wrap",
+    opacity:0.3,
+    backfaceVisibility:"visible",
+    position:"absolute"
+    
+  }
 });

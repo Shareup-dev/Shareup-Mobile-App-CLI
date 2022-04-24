@@ -1,7 +1,7 @@
 
 export default {
   postTypes: {
-    HANG_SHARE: "Hang Share",
+    HANG_SHARE: "hangShare",
     CREATE_POST: "Create Post",
     SHARE_UP: "Share Up",
     SWAP: "swap",

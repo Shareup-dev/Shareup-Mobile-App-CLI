@@ -24,6 +24,7 @@ import PostActions from '../PostActions';
 import { color } from 'react-native-reanimated';
 import routes from '../../navigation/routes';
 import constants from '../../config/constants';
+import hangShareService from '../../services/hangShare.service';
 export default function HangFeedCard({
   user,
   postData,
@@ -70,10 +71,13 @@ export default function HangFeedCard({
       },
     },
     {
-      title: 'Swap',
+      title: 'Edit',
       icon: { image: require('../../assets/post-options-icons/swap-icon.png') },
       onPress: () => {
-        alert('Swap');
+        navigation.navigate(routes.ADD_POST,{postType: constants.postTypes.HANG_SHARE,
+          postData,
+          isEdit:true})
+          setIsOptionsVisible(false)
       },
     },
     {
@@ -162,7 +166,7 @@ export default function HangFeedCard({
   const loadImages = () => {
     if (postData.media?.length !== 0) {
       setImages(
-        postData.media?.map(image => fileStorage.baseUrl + image.media),
+        postData.media?.map(image => image.mediaPath),
       );
     }
   };
@@ -206,9 +210,12 @@ export default function HangFeedCard({
     ]);
 
   const deletePost = async () => {
-    // const response = await PostService.deletePost(postData.id);
-    // reloadPosts();
-    // setIsOptionsVisible(false);
+    console.log("Data",userState.userData.id,postData.id);
+    hangShareService.deleteHang(userState.userData.id,postData.id)
+    .then((res)=> {console.log(res.data);})
+    .catch((e)=>{console.log("error",e);})
+    reloadPosts();
+    setIsOptionsVisible(false);
   };
 
   const actionsTabSizeRatio = 0.5;
@@ -220,7 +227,7 @@ export default function HangFeedCard({
                 style={[styles.imageCard, defaultStyles.lightShadow]}>
                 <Image
                      source={{
-                      uri: fileStorage.baseUrl + postData.media[0].media,
+                      uri:postData.media[0].mediaPath,
                     }}
                     style={styles.image}
                     resizeMode={'cover'}
@@ -320,6 +327,7 @@ export default function HangFeedCard({
           </View>
 
           {postData.content !== "" && <Text style={styles.postText}>{postData.content}</Text>}
+          {userState?.userData.id !== postData.userdata.id && (
           <Tab
             title={"Accept"}
             sizeRatio={0.9}
@@ -327,7 +335,8 @@ export default function HangFeedCard({
             color="#4dae50"
             fontColor={colors.white}
             iconSize={10}
-          />
+            onPress={()=> navigation.navigate(routes.SHIPPING_ADDRESS)}
+          />)}
           <TouchableOpacity
             style={styles.menuButton}
             onPress={() => {
@@ -390,7 +399,6 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     borderBottomLeftRadius:10,
     borderBottomRightRadius:10,
-    backgroundColor: colors.red
   },
   hangitemName:{
     color:colors.iondigoDye,

@@ -72,12 +72,14 @@ export default function KeepHangScreen({ navigation }) {
       <View style={styles.line} />
 
       <View style={styles.cameraIcon}>
+        <TouchableWithoutFeedback onPress={()=>{}}>
         <Icon
           name="camera"
           type="Feather"
           color={colors.mediumGray}
           backgroundSizeRatio={0.7}
         />
+        </TouchableWithoutFeedback>
       </View>
       <ScrollView>
         <View style={styles.content}>
