@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import { View, Text, StyleSheet, Image, TextInput, Platform } from "react-native";
 import { Button } from "react-native-paper";
 import AppButton from "../components/buttons/Button";
@@ -8,10 +8,23 @@ import colors from "../config/colors";
 import routes from "../navigation/routes";
 import store from "../redux/store";
 import { swapedImagesAction } from "../redux/swapedImages";
+import authContext from '../authContext';
+import hangShareService from "../services/hangShare.service";
 
 const ShippingAddress = ({ navigation, route }) => {
+  const postData = route.params;
+  const { userState } = useContext(authContext);
   const [showMessageScreen,setShowMessageScreen] = useState(true);
-
+  const acceptHang = () => {
+    const data = {
+      latitude: 12.6788,
+      longitude: -12.7866,
+      phone_number:"1234567890"
+    };
+    hangShareService.acceptHang(userState.userData.id,postData.id,data)
+    .then((res)=> {console.log(res.data);})
+    .catch((e)=>{console.log(e);})
+  }
   return (
     <Screen>
       <Header
@@ -44,23 +57,13 @@ const ShippingAddress = ({ navigation, route }) => {
           />
         </View>
         <AppButton
-          onPress={() => {
-            setShowMessageScreen(true)
-          }}
+          onPress={()=> acceptHang()}
           style={styles.payButton}
           title={"Let's Ship"}
           width={"70%"}
         />
         <Text style={styles.partners}>See your partners</Text>
       </View>
-      {showMessageScreen && (<View style={styles.messageView}>
-        <View>
-          <Image></Image>
-          <Text></Text>
-          <Text></Text>
-          <AppButton></AppButton>
-        </View>
-      </View>)}
     </Screen>
   );
 };
@@ -119,8 +122,14 @@ const styles = StyleSheet.create({
     height:"100%",
    // flexWrap:"wrap",
     opacity:0.3,
-    backfaceVisibility:"visible",
-    position:"absolute"
+    position:"absolute",
+    alignItems:"center",
+    justifyContent:"center"
     
-  }
+  },
+message:{
+  position:"relative",
+  opacity:1,
+  backgroundColor:colors.white,
+}
 });

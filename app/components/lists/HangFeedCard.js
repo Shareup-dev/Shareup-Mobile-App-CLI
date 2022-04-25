@@ -217,7 +217,7 @@ export default function HangFeedCard({
     reloadPosts();
     setIsOptionsVisible(false);
   };
-
+  
   const actionsTabSizeRatio = 0.5;
   return (
     <TouchableWithoutFeedback onPress={onPress}>
@@ -335,7 +335,7 @@ export default function HangFeedCard({
             color="#4dae50"
             fontColor={colors.white}
             iconSize={10}
-            onPress={()=> navigation.navigate(routes.SHIPPING_ADDRESS)}
+            onPress={()=> navigation.navigate(routes.SHIPPING_ADDRESS,postData)}
           />)}
           <TouchableOpacity
             style={styles.menuButton}

@@ -25,6 +25,7 @@ import AddNewFriendScreen from '../screens/AddNewFriendScreen';
 import AllFriendsScreen from '../screens/AllFriendsScreen';
 import ShippingAddress from '../screens/ShippingAddress';
 
+
 const Stack = createNativeStackNavigator();
 const headerHeight = useHeaderHeight;
 export default function HomeNavigator(props) {
@@ -65,6 +66,8 @@ export default function HomeNavigator(props) {
       <Stack.Screen name={routes.Add_NEW_FRIEND} component={AddNewFriendScreen}/>
       <Stack.Screen name={routes.ALL_FRIENDS} component={AllFriendsScreen}/>
       <Stack.Screen name={routes.SHIPPING_ADDRESS} component={ShippingAddress}/>
+      
+      
     </Stack.Navigator>
   );
 }

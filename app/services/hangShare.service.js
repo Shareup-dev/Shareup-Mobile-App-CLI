@@ -11,7 +11,7 @@ class HangShareService {
     getallMealsForHang = () => 
         AuthAxios.get(`hangshare/Meals`)
     acceptHang = (hsid,uid,data) =>
-        AuthAxios.put(`hangshare/accept/${hsid}}/${uid}`,data)   
+        AuthAxios.put(`hangshare/accept/${hsid}/${uid}`,data)   
     editHang = (uid,hsid,data) => 
         AuthAxios.put(`hangshare/${uid}/edit/${hsid}`,data)    
     deleteHang = (uid,hsid) => 

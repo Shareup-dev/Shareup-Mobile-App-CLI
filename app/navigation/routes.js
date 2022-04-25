@@ -61,6 +61,7 @@ export default Object.freeze({
   MANAGE_GROUPS:'MANAGE_GROUPS',
   POST_DETAILS_SCREEN:'PostDetailScreen',
   HANG_FLOW_SCREEN:'HangFlowScreen',
-  SHIPPING_ADDRESS:'ShippingAddress'
+  SHIPPING_ADDRESS:'ShippingAddress',
+  
 
 });
