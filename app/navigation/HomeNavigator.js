@@ -24,6 +24,7 @@ import HangFlowScreen from '../screens/HangFlowScreen';
 import AddNewFriendScreen from '../screens/AddNewFriendScreen';
 import AllFriendsScreen from '../screens/AllFriendsScreen';
 import ShippingAddress from '../screens/ShippingAddress';
+import ChatScreen from '../screens/ChatScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -35,6 +36,7 @@ export default function HomeNavigator(props) {
         headerShown: false,
       }}>
       <Stack.Screen name={routes.APP_NAVIGATOR} component={AppNavigator} />
+      <Stack.Screen name={routes.CHAT_SCREEN} component={ChatScreen} />
       <Stack.Screen
         name={routes.STORY_VIEW_SCREEN}
         component={StoryViewScreen}

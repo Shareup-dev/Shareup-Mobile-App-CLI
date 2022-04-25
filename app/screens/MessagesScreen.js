@@ -18,14 +18,14 @@ import useConversationListener from '../backendless/useConversationListener';
 
 const CHATS = 'Chats';
 const FRIENDS = 'Friends';
-const GROUPS = 'Groups';
-const FAVORITES = 'Favorites';
+// const GROUPS = 'Groups';
+// const FAVORITES = 'Favorites';
 
 const tabes = [
   {name: CHATS},
   {name: FRIENDS},
-  {name: GROUPS},
-  {name: FAVORITES},
+  // {name: GROUPS},
+  // {name: FAVORITES},
 ];
 
 export default function MessagesScreen({navigation}) {
@@ -92,10 +92,10 @@ export default function MessagesScreen({navigation}) {
         <View style={styles.bar}>
           <Bar tabes={tabes} onTab={handleTabbed} currentTab={currentTab} />
         </View>
-        <View style={styles.addGroupsContainer}>
+        {/* <View style={styles.addGroupsContainer}>
           <FancyAddButton style={styles.fancyAddButton} SizeRatio={0.7} />
           <Text style={styles.smallerFont}>Add Groups...</Text>
-        </View>
+        </View> */}
       </View>
 
       <View style={styles.separator} />

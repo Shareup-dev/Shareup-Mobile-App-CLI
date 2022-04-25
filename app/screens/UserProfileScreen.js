@@ -56,7 +56,6 @@ export default function UserProfileScreen({navigation, route}) {
     index: 0,
   });
 
-  const [imagesAndVideos, setImagesAndVideos] = useState([]);
   const [tags, setTags] = useState([]);
 
   const handleTapped = name => {
@@ -64,23 +63,19 @@ export default function UserProfileScreen({navigation, route}) {
   };
 
   useEffect(() => {
-    const fetchData = () => {
-      setLoading(1);
-      Promise.all([
-        postService.getPostByEmail(user.email),
-        profileService.getAllMedia(user.id),
-      ])
-        .then(res => {
+    setLoading(1);
+    Promise.all([
+      postService.getPostByEmail(user.email),
+      profileService.getAllMedia(user.id),
+    ])
+      .then(res => {
           setPosts(res[0].data);
           setMedia(res[1].data);
-        })
-        .catch(e => console.error(e.message))
-        .finally(_ => {
-          setLoading(2);
-        });
-    };
-
-    fetchData();
+      })
+      .catch(e => console.error(e.message))
+      .finally(_ => {
+        setLoading(2);
+      });
   }, []);
 
   const ListHeader = () => (
@@ -165,10 +160,13 @@ export default function UserProfileScreen({navigation, route}) {
                 style={styles.listEmptyText}>{`Start adding your posts!`}</Text>
             ) : (
               <>
-              <ActivityIndicator size={30} />
-              <Text
-                style={[styles.listEmptyText,{marginVertical:5}]}>{`Loading..`}</Text>
-                </>
+                <ActivityIndicator size={30} />
+                <Text
+                  style={[
+                    styles.listEmptyText,
+                    {marginVertical: 5},
+                  ]}>{`Loading..`}</Text>
+              </>
             )
           }
           ListFooterComponent={() => <View style={styles.listFooter}></View>}

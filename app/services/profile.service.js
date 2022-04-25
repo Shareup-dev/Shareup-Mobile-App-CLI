@@ -10,7 +10,7 @@ class ProfileService {
     removeOptionalEmail = (uid) =>AuthAxios.delete(`users/${uid}/contact_info/remove_optional_email`)
     makeAsPrimaryEmail = (uid) => AuthAxios.put(`users/${uid}/contact_info/make_optional_email_primary_email`)
 
-    getAllMedia = (uid) => AuthAxios.get(`user/media/${uid}`);
+    getAllMedia = (uid,config) => AuthAxios.get(`user/media/${uid}`,config);
 }
 
 export default new ProfileService();

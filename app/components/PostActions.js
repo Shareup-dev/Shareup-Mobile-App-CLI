@@ -43,12 +43,17 @@ const PostActions = ({
     moment(postData.published, 'DD MMMM YYYY hh:mm:ss').fromNow(),
     // null
   );
+
   return (
     <View style={styles.content}>
       <View style={styles.userInfo}>
         <TouchableOpacity
-           onPress={() =>
-            navigation.navigate(routes.USER_PROFILE,{user: postData.userdata})
+          onPress={() =>
+            navigation?.getState()?.routes[1]?.name === 'UserProfile'
+              ? null
+              : navigation.navigate(routes.USER_PROFILE, {
+                  user: postData.userdata,
+                })
           }>
           <Image
             source={{

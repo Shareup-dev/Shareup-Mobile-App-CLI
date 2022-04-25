@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, TouchableOpacity} from 'react-native';
 
 import routes from '../../navigation/routes';
 import defaultStyles from '../../config/styles';
@@ -31,10 +31,7 @@ export default function FriendsList({navigation, friends, loading, refresh}) {
         user.id,
         item.id,
       );
-
     }
-
- 
 
     navigation.navigate(routes.CHAT_ROOM, {
       contact: item,
@@ -51,16 +48,19 @@ export default function FriendsList({navigation, friends, loading, refresh}) {
         onRefresh={handelRefresh}
         ListEmptyComponent={<EmptyNotice navigation={navigation} />}
         renderItem={({item}) => (
-          <ListItem
-            style={[defaultStyles.listItemStyle, defaultStyles.lightShadow]}
-            title={item.firstName}
-            image={item.profilePicturePath}
-            subTitle="Accepted your request! "
-            displayLeft={true}
-            tabTitle="Send Message"
-            showCloseButton={false}
-            onPress={() => directToChatRoom(item)}
-          />
+          <TouchableOpacity
+            onPress={_ => navigation.navigate(routes.CHAT_SCREEN)}>
+            <ListItem
+              style={[defaultStyles.listItemStyle, defaultStyles.lightShadow]}
+              title={item.firstName}
+              image={item.profilePicturePath}
+              subTitle="Accepted your request! "
+              displayLeft={true}
+              tabTitle="Send Message"
+              showCloseButton={false}
+              onPress={() => directToChatRoom(item)}
+            />
+          </TouchableOpacity>
         )}
       />
     </ListWrapper>
