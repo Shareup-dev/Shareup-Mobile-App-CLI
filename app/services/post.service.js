@@ -33,7 +33,13 @@ class PostService {
   likeUnlikeComment = (uid,cid,params) =>
     AuthAxios.put(`comment/${uid}/like-unlike/${cid}`,params)
   editComment = (cid,comment) => 
-    AuthAxios.put(`comment/Edit_comment/${cid}`,comment)
+    AuthAxios({
+      method:'PUT',
+      url:`comment/Edit_comment/${cid}`,
+      params:{
+        content:comment
+      }
+    })
   
 
   getAllComments = (uid,pid) =>

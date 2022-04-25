@@ -9,6 +9,7 @@ class GroupService {
   groupSuggestion = uid => AuthAxios.get(`groups/suggestion/${uid}`);
   addGroupImage = (gid, data) => AuthAxios.post(`groups/upload_image/${gid}`, data);
   editGroup = (gid,data) => AuthAxios.put(`groups/${gid}/edit_group`,data);
+  newsFeed = (uid) => AuthAxios.get(`groups/newsfeed_groups/${uid}`)
   
   search = keyword =>
     AuthAxios({
@@ -29,6 +30,7 @@ class GroupService {
   checkIsMember = (gid, uid) => AuthAxios.get(`groups/${uid}/is_member/${gid}`);
   addMember = (uid, gid) => AuthAxios.post(`groups/${uid}/join/${gid}`);
   deleteMember = (aid,uid,gid) => AuthAxios.delete(`groups/${aid}/${gid}/delete/${uid}`);
+  didRequested = (uid,gid) => AuthAxios.get(`groups/${uid}/did_request_join/${gid}`)
   
   searchMembers = (keyword,gid) => AuthAxios({
     method:'GET',
@@ -46,6 +48,7 @@ class GroupService {
   listOfRequests = gid => AuthAxios.get(`groups/${gid}/member_requests`);
 
   // post
+
   getPostByUserId = uid => AuthAxios.get(`groups/posts_user_group/${uid}`);
   getGroupPost = gid => AuthAxios.get(`groups/posts/${gid}`);
 

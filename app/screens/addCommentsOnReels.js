@@ -63,6 +63,8 @@ export default function AddCommentsOnReels({navigation, route}) {
       .editComment(cid, comment)
       .then(res => {
         if (res.status === 200) {
+          fetchComments();
+          setComment('');
           handleCloseDownModal();
         }
       })

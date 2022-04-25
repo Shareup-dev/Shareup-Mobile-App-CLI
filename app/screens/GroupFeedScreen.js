@@ -46,12 +46,14 @@ const GroupFeedScreen = ({navigation, route}) => {
       await Promise.all([
         GroupService.getGroupById(groupData.id),
         GroupService.checkIsMember(groupData.id, userData.id),
-        GroupService.getGroupPost(groupData.id)
+        GroupService.getGroupPost(groupData.id),
+        GroupService.didRequested(userData.id,groupData.id)
       ])
         .then(res => {
           setGroup(res[0].data);
           setIsMember(res[1].data);
           setPosts(res[2].data);
+          setRequested(res[3].data)
         })
         .catch(e => console.error(e))
         .finally(_ => setLoading(false));
@@ -87,12 +89,12 @@ const GroupFeedScreen = ({navigation, route}) => {
 
   const handleJoinGroup = () => {
     GroupService.joinRequest(userData.id, groupData.id)
-      .then(res => setRequested(true))
+      .then(({status}) => status===200 && setRequested(true))
       .catch(e => e);
   };
   const handleExitGroup = () => {
     GroupService.leavegroup(userData.id, groupData.id)
-      .then(res => setIsMember(false))
+      .then(({status}) => status===200 && setIsMember(false))
       .catch(e => e);
   };
 
@@ -101,9 +103,9 @@ const GroupFeedScreen = ({navigation, route}) => {
   };
 
   const checkOwner = () => {
-   // if (userData.id === groupData.owner?.id) return true;
-   // else 
-   return true;
+   if (userData.id === groupData.owner?.id) return true;
+   else 
+   return false;
   };
   const DropDownMenu = () => {
     return (
@@ -244,7 +246,7 @@ const GroupFeedScreen = ({navigation, route}) => {
                           ? 'Loading'
                           : !isMember
                           ? requested
-                            ? 'Request sent'
+                            ? 'Requested'
                             : 'Ask to Join'
                           : 'Left Group'
                       }
