@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
+import {array} from 'yup';
 import {HeaderWithBackArrow} from '../components/headers';
 import colors from '../config/colors';
 import fileStorage from '../config/fileStorage';
@@ -18,12 +19,15 @@ export default function MemberRequest({navigation, route}) {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(0);
 
+
   useEffect(() => {
     const fetchMemberRequests = async () => {
       setLoading(1);
       groupService
         .listOfRequests(groupData.id)
-        .then(res => setRequests(res.data))
+        .then(({data}) => {
+          setRequests(data)
+        })
         .catch(e => console.error(e.message))
         .finally(_ => setLoading(2));
     };
@@ -53,7 +57,6 @@ export default function MemberRequest({navigation, route}) {
   };
 
   const Item = ({item}) => {
-
     return (
       <View
         style={{
@@ -70,14 +73,14 @@ export default function MemberRequest({navigation, route}) {
           }}>
           <Image
             source={
-              item?.group?.image
-                ? {uri: fileStorage.baseUrl + item?.group?.image}
+              item?.user?.profilePicture
+                ? {uri: fileStorage.baseUrl + item?.user?.profilePicture}
                 : require('../assets/images/group-texture.png')
             }
             style={styles.img}
           />
           <View style={styles.item}>
-            <Text style={styles.title}>@{item.user.firstName}</Text>
+            <Text style={styles.title}>{item.user.firstName}</Text>
             <Text>requesting to join </Text>
           </View>
         </View>

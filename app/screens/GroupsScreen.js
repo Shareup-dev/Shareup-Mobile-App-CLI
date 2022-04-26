@@ -22,17 +22,32 @@ import groupService from '../services/group.service';
 
 export default function GroupsScreen({navigation}) {
   const {userData} = useContext(authContext).userState;
-  
+
   const initSearchVal = {
     keyword: '',
     result: [],
     loading: 0,
   };
   const [search, setSearch] = useState(initSearchVal);
-  
+  const [feed, setFeed] = useState({
+    state: [],
+    loading: false,
+  });
+
+  useEffect(() => {
+    const fetchFeed = () => {
+      setFeed(prev => ({...prev, loading: true}));
+      groupService
+        .newsFeed(userData.id)
+        .then(({data}) => setFeed(prev => ({...prev, state: data})))
+        .catch(e => console.error(e.message))
+        .finally(_ => setFeed(prev => ({...prev, loading: false})));
+    };
+    fetchFeed();
+  }, []);
 
 
- 
+
   const searchGroups = _ => {
     if (search.keyword) {
       setSearch(prev => ({...prev, loading: 1}));
@@ -48,9 +63,6 @@ export default function GroupsScreen({navigation}) {
   const handleClearSearch = () => {
     setSearch(initSearchVal);
   };
-
-  
-  
 
   const SearchResultCard = ({item}) => (
     <TouchableOpacity
@@ -71,7 +83,7 @@ export default function GroupsScreen({navigation}) {
         />
         <View style={styles.item}>
           <Text style={styles.title}>{item.name}</Text>
-          <Text>{item.description}</Text>
+          <Text style={{fontSize:13}} >{item.description}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -105,7 +117,6 @@ export default function GroupsScreen({navigation}) {
             }
           />
         }
-       
       />
 
       <View style={styles.optionsBar}>
@@ -182,8 +193,6 @@ export default function GroupsScreen({navigation}) {
             </View>
           </>
         )}
-
- 
       </ScrollView>
     </View>
   );
