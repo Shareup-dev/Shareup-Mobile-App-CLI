@@ -170,6 +170,9 @@ export default function Drawer({isVisible, setIsVisible}) {
                 <LinkButton
                   title={'Help & Support'}
                   style={styles.linkButton}
+                  onPress={()=>{navigation.navigate(routes.HELP_SUPPORT) 
+                    setIsVisible(false)}}
+
                 />
               </View>
             </View>

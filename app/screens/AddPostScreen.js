@@ -238,7 +238,7 @@ const sharePostOptions = [{
   const loadImages = () => {
     if (postData.media?.length !== 0) {
       setImages(
-        postData.media?.map(image => fileStorage.baseUrl + image.media),
+        postData.media?.map(image =>image.mediaPath),
       );
     }
   };
@@ -248,7 +248,6 @@ const sharePostOptions = [{
 
   const createPostFormData = content => {
     const formData = new FormData();
-    console.log("content:::",content);
     formData.append('content', content.text);
     if (content.images.length !== 0) {
       content.images.forEach(image => {
@@ -349,6 +348,17 @@ const sharePostOptions = [{
     };
 
     const formData = createPostFormData(swapContent);
+    if (isEdit){
+      swapService
+      .editSwap(postData.id, formData)
+      .then(resp => {
+        store.dispatch(feedPostsAction.addFeedPost(resp.data));
+        navigation.navigate(routes.FEED);
+      })
+      .catch(e => {
+        console.error(e);
+      }).finally(_ => setLoading(false));
+    }else{
     swapService
       .createSwap(user.id, formData)
       .then(resp => {
@@ -359,6 +369,7 @@ const sharePostOptions = [{
         console.error(e);
       }).finally(_ => setLoading(false));
   }
+}
   
   //........HANG SHARE POST................//
   const hangShare = () => {
@@ -369,7 +380,6 @@ const sharePostOptions = [{
     };
     const formData = createPostFormData(swapContent);
     if (isEdit){
-      console.log("here");
       hangShareService
       .editHang(user.id,postData.id, formData)
       .then(resp => {
@@ -423,6 +433,17 @@ const sharePostOptions = [{
       groupId: groupId,
     };
     const formData = createPostFormData(postContent);
+    if (isEdit){
+      PostService.editPost(postData.id, formData)
+      .then(resp => {
+        store.dispatch(feedPostsAction.addFeedPost(resp.data));
+        dispatch(postFeelingsActions.setDefault());
+        navigation.navigate(routes.FEED);
+      })
+      .catch(e => {
+        console.error(e);
+      }).finally(_ => setLoading(false));
+    }else{
     PostService.createPost(user.id, formData)
       .then(resp => {
         store.dispatch(feedPostsAction.addFeedPost(resp.data));
@@ -435,10 +456,10 @@ const sharePostOptions = [{
     //setProgress(prog)
     }
   }
+  }
  
   const handleAddPost = async () => {
     // setloadingIndicator(true)
-    console.log("postType:::",postType);
     setLoading(true);
       switch (postType) {
         case postTypes.GROUP_POST:

@@ -14,7 +14,6 @@ import common from "../config/common";
 const Checkout = ({ navigation, route }) => {
   const  postType  = route.params;
   const { postTypes } = constants;
-  console.log(postType);
   return (
     <ScrollView style={{backgroundColor:colors.white}}>
       

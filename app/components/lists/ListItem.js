@@ -44,6 +44,7 @@ export default function ListItem({
 }) {
 
   return (
+    <TouchableWithoutFeedback onPress={onPress}>
       <View style={[styles.listItem, style]}>
         {IconComponent}
         {image && (
@@ -110,6 +111,7 @@ export default function ListItem({
           </View>
         )}
       </View>
+      </TouchableWithoutFeedback>
   );
 }
 

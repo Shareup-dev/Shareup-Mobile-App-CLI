@@ -210,9 +210,9 @@ export default function HangFeedCard({
     ]);
 
   const deletePost = async () => {
-    console.log("Data",userState.userData.id,postData.id);
+   
     hangShareService.deleteHang(userState.userData.id,postData.id)
-    .then((res)=> {console.log(res.data);})
+    .then((res)=> {})
     .catch((e)=>{console.log("error",e);})
     reloadPosts();
     setIsOptionsVisible(false);

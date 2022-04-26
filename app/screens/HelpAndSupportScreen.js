@@ -6,7 +6,6 @@ import defaultStyles from "../config/styles";
 import Icon from "../components/Icon";
 import { Header, HeaderTitle, HeaderCloseIcon } from "../components/headers";
 import colors from "../config/colors";
-import routes from "../navigation/routes";
 
 
 
@@ -15,31 +14,45 @@ export default function SettingPrivacy({ navigation }) {
   
   const SettingValue = [
     {
-      title: "Settings",
-      icon: { image: require("../assets/icons/gray-feed-icon.png") },
-      onPress: () => {
-        navigation.navigate(routes.ACCOUNT_SETTINGS)
+        title: 'Help Center',
+        icon: {
+          name:"md-help-circle-outline",
+          type:"Ionicons",
+        },
+        onPress: () => {
+          alert("savedPost")
+         },
       },
-    },
-    {
-      title: "Device Request",
-      icon: { image: require("../assets/icons/gray-share-time-icon.png") },
-      onPress: () => {
+      {
+        title: 'Support Inbox',
+        icon: {
+          name:"inbox",
+          type:"Entypo",
+        },
+        onPress: () => {
+          alert("savedPost")
+         },
       },
-    },
-    {
-      title: "Recent ad activity",
-      icon: { image: require("../assets/icons/gray-share-friends-icon.png") },
-      onPress: () => {
+      {
+        title: 'Report a Problem',
+        icon: {
+          name:"report-problem",
+          type:"MaterialIcons",
+        },
+        onPress: () => {
+          alert("savedPost")
+         },
       },
-    },
-    {
-      title: "Find Wi-Fi",
-      icon: { image: require("../assets/icons/gray-share-point-icon.png") },
-      onPress: () => {
-
+      {
+        title: 'Terms & Policies',
+        icon: {
+          name:"address-book",
+          type:"FontAwesome5",
+        },
+        onPress: () => {
+          alert("savedPost")
+         },
       },
-    },
     
   ];
     return (
@@ -48,7 +61,7 @@ export default function SettingPrivacy({ navigation }) {
         left={<HeaderCloseIcon onPress={() => navigation.goBack()} />}
         middle={
           <HeaderTitle titleStyle={styles.headerTitle}>
-            Setting & Privacy
+            Help & Support
           </HeaderTitle>
         }
        

@@ -16,7 +16,6 @@ export default function GiftDrawer({ isVisible, setIsVisible ,onPress}) {
   );
   const getGifsForHang = () => {
     hangShareService.getAllGiftsForHang().then((res) => {
-      console.log("Response::",res.data);
       //setListItems(res.data)
     })
   }

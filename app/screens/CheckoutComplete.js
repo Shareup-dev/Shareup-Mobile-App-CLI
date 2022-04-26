@@ -12,14 +12,13 @@ import constants from "../config/constants";
 const CheckoutComplete = ({ navigation, route }) => {
   const  {postType,swapedPostId } = route.params;
   const {postTypes} = constants
-  console.log(postType);
   return (
     <Screen>
       <View style={styles.mainContainer}>
         <Image
-          style={{ marginTop: 100, height: 350 }}
+          style={{ marginTop: 100, height: "50%" }}
           resizeMode={"center"}
-          width={"auto"}
+          width={"100%"}
           source={require("../assets/icons/CheckoutComplete.png")}
         />
         <View style={styles.infoContainer}>

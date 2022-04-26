@@ -85,10 +85,13 @@ export default function Card({
       },
     },
     {
-      title: 'Swap',
+      title: 'Edit',
       icon: {image: require('../../assets/post-options-icons/swap-icon.png')},
       onPress: () => {
-        alert('Swap');
+        navigation.navigate(routes.ADD_POST,{postType: constants.postTypes.CREATE_POST,
+          postData,
+          isEdit:true})
+          setIsOptionsVisible(false)
       },
     },
     {

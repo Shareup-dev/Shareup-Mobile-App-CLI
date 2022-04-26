@@ -63,6 +63,7 @@ export default Object.freeze({
   POST_DETAILS_SCREEN:'PostDetailScreen',
   HANG_FLOW_SCREEN:'HangFlowScreen',
   SHIPPING_ADDRESS:'ShippingAddress',
-  
+  HELP_SUPPORT:'HelpAndSupportScreen',
+  ACCOUNT_SETTINGS:'AccountSettingsScreen'
 
 });
