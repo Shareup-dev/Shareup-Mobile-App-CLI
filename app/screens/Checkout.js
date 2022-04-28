@@ -12,8 +12,9 @@ import OptionBox from "../components/posts/OptionBox";
 import common from "../config/common";
 
 const Checkout = ({ navigation, route }) => {
-  const  postType  = route.params;
+  const  {postType,item}  = route.params;
   const { postTypes } = constants;
+  
   return (
     <ScrollView style={{backgroundColor:colors.white}}>
       
@@ -86,7 +87,8 @@ const Checkout = ({ navigation, route }) => {
           <AppButton
             onPress={() => {
               navigation.navigate(routes.CHECKOUT_COMPLETE, {
-                postType
+                postType,
+                item:item,
               });
             }}
             width={"45%"}

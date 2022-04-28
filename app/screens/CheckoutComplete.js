@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useContext} from "react";
 import { View, Text, Image, StyleSheet, Button } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import AppButton from "../components/buttons/Button";
@@ -8,10 +8,56 @@ import routes from "../navigation/routes";
 import store from "../redux/store";
 import { swapedImagesAction } from "../redux/swapedImages";
 import constants from "../config/constants";
+import hangShareService from "../services/hangShare.service";
+import authContext from "../authContext";
 
 const CheckoutComplete = ({ navigation, route }) => {
-  const  {postType,swapedPostId } = route.params;
+  const  {postType,swapedPostId,item } = route.params;
   const {postTypes} = constants
+  const { userData: user } = useContext(authContext)?.userState;
+
+  const createPostFormData = content => {
+    const formData = new FormData();
+    formData.append('content', content.text);
+    if (content.images.length !== 0) {
+      content.images.forEach(image => {
+       // const splitPathArr = image.split('/');
+        formData.append(`files`, {
+          name: "String(splitPathArr.slice(-1).pop())",
+          type: 'image/jpg',
+          uri: image//Platform.OS === 'ios' ? image.replace('file://', '') : image,
+        });
+      });
+    }
+
+    if (content.groupId) {
+      formData.append('groupid', content.groupId);
+    }
+    if (content.category) {
+      formData.append('category', content.category);
+    }
+    return formData;
+  };
+
+  const createHang =() => {
+    
+    //   const swapContent = {
+    //     text: item.title,
+    //     category: "gifts",
+    //     images: ["assets/gift-images/flower.png"],
+    //   };
+    //   const formData = createPostFormData(swapContent);
+    //     hangShareService
+    //       .createHang(user.id, formData)
+    //       .then(resp => {
+    //         //store.dispatch(feedPostsAction.addFeedPost(resp.data));
+    //         navigation.navigate(routes.FEED);
+    //       })
+    //       .catch(e => {
+    //         console.error(e);
+    //       }).finally(_ => navigation.navigate(routes.FEED));;
+          navigation.navigate(routes.FEED);
+  }
   return (
     <Screen>
       <View style={styles.mainContainer}>
@@ -28,11 +74,11 @@ const CheckoutComplete = ({ navigation, route }) => {
             shipped soon
           </Text>
           <TouchableOpacity
-            onPress={() => {postType == postTypes.HANG_SHARE ? navigation.navigate(routes.FEED):
-              store.dispatch(
+            onPress={() => {postType == postTypes.HANG_SHARE 
+              ? createHang()
+              :store.dispatch(
                 swapedImagesAction.removeImages(swapedPostId)
               );
-              navigation.navigate(routes.FEED);
             }}
           >
             <View style={styles.goBackButton}>

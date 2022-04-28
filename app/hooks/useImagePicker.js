@@ -1,11 +1,20 @@
 import {useState} from 'react';
-import {launchImageLibrary} from 'react-native-image-picker';
+//import {launchImageLibrary} from 'react-native-image-picker';
 import * as ImagePicker from 'react-native-image-picker';
+//import ImagePicker from 'react-native-image-crop-picker';
 
 export default function useImagesPicker() {
   const [file, setFile] = useState([]);
 
-  const pickImage = async () => {
+  const pickImage = async() => {
+    // ImagePicker.launchImageLibrary({
+    //   mediaType: 'photo',
+    //  selectionLimit: 5,
+    // }).then(image => {
+    //   console.log(image);
+    //   setFile(image);
+    //  return image;
+    // });
     try {
       const result = await ImagePicker.launchImageLibrary({
         mediaType: 'photo',

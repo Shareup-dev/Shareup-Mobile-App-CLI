@@ -66,7 +66,7 @@ export default function TagPeople({ navigation,TagedUserData }) {
         <View style={styles.usersInfo}>
           <Image
             style={styles.img}
-            source={{ uri: fileStorage.baseUrl + img}}
+            source={{ uri: img}}
           />
           <Text style={{ marginLeft: 15 }}>{name}</Text>
         </View>

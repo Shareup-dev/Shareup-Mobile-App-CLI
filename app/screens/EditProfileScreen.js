@@ -175,7 +175,7 @@ export default function EditProfileScreen({navigation}) {
                             : userData.profilePicture
                             ? {
                                 uri:
-                                  fileStorage.baseUrl + userData.profilePicture,
+                                  userData.profilePicturePath,
                               }
                             : require('../assets/default-profile-picture.png')
                         }
@@ -300,7 +300,7 @@ export default function EditProfileScreen({navigation}) {
                     onPress={_ =>
                       navigation.navigate(routes.PERSONAL_INFORMATION)
                     }
-                    title=" Professional information settings"
+                    title=" Personal information settings"
                     fontSize={18}
                     style={styles.linkButtons}
                   />

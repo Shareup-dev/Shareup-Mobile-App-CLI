@@ -57,7 +57,7 @@ const PostActions = ({
           }>
           <Image
             source={{
-              uri: fileStorage.baseUrl + postData.userdata.profilePicture,
+              uri: postData.userdata.profilePicturePath,
             }}
             style={styles.profilePicture}
           />

@@ -59,13 +59,15 @@ import { useFocusEffect } from '@react-navigation/native';
 import postService from '../services/post.service';
 import common from '../config/common';
 import { color } from 'react-native-reanimated';
-
+import ImagePicker from 'react-native-image-crop-picker';
+import {postImagesAction} from '../redux/postImages'
+import { removeImage } from '../redux/imagesPickerSlice';
 
 export default function AddPostScreen({ navigation, route }) {
-  const { postType, groupPost, groupId, swapImage, postData,isEdit } = route.params;
+  const { postType,groupId, swapImage, postData, isEdit} = route.params;
   const flatListRef = useRef();
   const { loadingIndicator, setloadingIndicator } = useContext(AuthContext);
-
+  const postImages = useSelector(state => state.postImages)
   const { userData: user } = useContext(authContext)?.userState;
   const [loading, setLoading] = useState(false);
   const [tagedUserData, setTagedUserData] = useState([]);
@@ -75,61 +77,63 @@ export default function AddPostScreen({ navigation, route }) {
   const postFeel = useSelector(state => state.postFeel);
 
   const { postTypes } = constants;
-  
+
 
   const SWAP_DEFAULT_TEXT = 'Hi all \n I want to Swap ...';
   const HANG_SHARE_TEXT = 'Please anyone want this,can have it';
 
   const textInputRef = useRef();
-
+  const [file, setFile] = useState([]);
   const sharePostDrawerRef = useRef(null); // reference for the enhanced drawer.
   const createPostDrawerRef = useRef(null); // reference for the enhanced drawer.
-  const shareUpOptions = useMemo(() => {[
-    {
-      title: 'Share Feed',
-      icon: { image: require('../assets/icons/gray-feed-icon.png') },
-      onPress: () => {
-        alert('Share Feed');
+  const shareUpOptions = useMemo(() => {
+    [
+      {
+        title: 'Share Feed',
+        icon: { image: require('../assets/icons/gray-feed-icon.png') },
+        onPress: () => {
+          alert('Share Feed');
+        },
       },
-    },
-    {
-      title: 'Share time',
-      icon: { image: require('../assets/icons/gray-share-time-icon.png') },
-      onPress: () => {
-        alert('Share time');
+      {
+        title: 'Share time',
+        icon: { image: require('../assets/icons/gray-share-time-icon.png') },
+        onPress: () => {
+          alert('Share time');
+        },
       },
-    },
-    {
-      title: 'Share Friends',
-      icon: { image: require('../assets/icons/gray-share-friends-icon.png') },
-      onPress: () => {
-        alert('Share Friends');
+      {
+        title: 'Share Friends',
+        icon: { image: require('../assets/icons/gray-share-friends-icon.png') },
+        onPress: () => {
+          alert('Share Friends');
+        },
       },
-    },
-    {
-      title: 'Share Point',
-      icon: { image: require('../assets/icons/gray-share-point-icon.png') },
-      onPress: () => {
-        alert('Share Point');
+      {
+        title: 'Share Point',
+        icon: { image: require('../assets/icons/gray-share-point-icon.png') },
+        onPress: () => {
+          alert('Share Point');
+        },
       },
-    },
-    {
-      title: 'Share Groups',
-      icon: { image: require('../assets/icons/gray-share-groups-icon.png') },
-      onPress: () => {
-        alert('Share Groups');
+      {
+        title: 'Share Groups',
+        icon: { image: require('../assets/icons/gray-share-groups-icon.png') },
+        onPress: () => {
+          alert('Share Groups');
+        },
       },
-    },
-    {
-      title: 'Sell and Share',
-      icon: {
-        image: require('../assets/icons/gray-sell-and-share-icon.png'),
+      {
+        title: 'Sell and Share',
+        icon: {
+          image: require('../assets/icons/gray-sell-and-share-icon.png'),
+        },
+        onPress: () => {
+          alert('Sell and Share');
+        },
       },
-      onPress: () => {
-        alert('Sell and Share');
-      },
-    },
-  ]},[],);
+    ]
+  }, []);
 
   const createPostoptions = [{
     title: 'Photos',
@@ -137,7 +141,9 @@ export default function AddPostScreen({ navigation, route }) {
       image: require('../assets/add-post-options-icons/photo-gradient-icon.png'),
     },
     onPress: () => {
-      handelPickImage();
+      // handelPickImage();
+      navigation.navigate(routes.KEEP_HANG,postType)
+     //navigation.navigate(routes.ADDS_STORY)
     },
   },
   {
@@ -185,31 +191,31 @@ export default function AddPostScreen({ navigation, route }) {
       alert('Live');
     },
   },
-]
-const sharePostOptions = [{
-  title: 'Tag People',
-  icon: {
-    image: require('../assets/add-post-options-icons/tag-people-gradient-icon.png'),
+  ]
+  const sharePostOptions = [{
+    title: 'Tag People',
+    icon: {
+      image: require('../assets/add-post-options-icons/tag-people-gradient-icon.png'),
+    },
+    onPress: () => {
+      navigation.navigate(routes.TAG_PEOPLE);
+    },
   },
-  onPress: () => {
-    navigation.navigate(routes.TAG_PEOPLE);
-  },
-},
 
-{
-  title: 'Feeling/Activity',
-  icon: {
-    image: require('../assets/add-post-options-icons/feeling-gradient-icon.png'),
-  },
-  onPress: () => {
-    navigation.navigate(routes.FEELING_ACTIVITY);
-  },
-},]
-  const privacyOptions = useMemo(() => common.privacyOptions,[],);
+  {
+    title: 'Feeling/Activity',
+    icon: {
+      image: require('../assets/add-post-options-icons/feeling-gradient-icon.png'),
+    },
+    onPress: () => {
+      navigation.navigate(routes.FEELING_ACTIVITY);
+    },
+  },]
+  const privacyOptions = useMemo(() => common.privacyOptions, [],);
 
   const [error, setError] = useState('');
   const [text, setText] = useState('');
-  const { file, pickImage, clearFile } = useImagePicker();
+  //const { file, pickImage, clearFile } = useImagePicker();
 
   const [displayImage, setDisplayImage] = useState(false);
   const [isButtonActive, setIsButtonActive] = useState(false);
@@ -219,26 +225,43 @@ const sharePostOptions = [{
   const [progress, setProgress] = useState(0);
   const [postPrivacyOption, setPostPrivacyOption] = useState(privacyOptions[0]); // object to present the current privacy option
 
-
+  
+  useEffect(()=>{
+    if (postType === postTypes.HANG_SHARE) {
+      setPlaceHolder(HANG_SHARE_TEXT);
+    }else if (postType === postTypes.SWAP) {
+      setPlaceHolder(SWAP_DEFAULT_TEXT);
+    }else{
+      setPlaceHolder('We Share,Do you ?');
+    }
+    
+  })
   useFocusEffect(
-    useCallback(() => {
+    useCallback(() => {  
+      if (postType === postTypes.HANG_SHARE) {
+        setPlaceHolder(HANG_SHARE_TEXT);
+        setIsOptionsVisible(false);
+        setImages(postImages)
+        handleButtonActivation(text,postImages)
+      }
       if (postType === postTypes.SWAP) {
         setPlaceHolder(SWAP_DEFAULT_TEXT);
         setImages([swapImage]);
         handleButtonActivation(text, [swapImage]);
       } else {
         setPlaceHolder('We Share,Do you ?');
-        handleButtonActivation(text, images);
+        setImages(postImages)
+        handleButtonActivation(text,postImages)
       }
-      if (isEdit){loadImages();}
-      return () => clearFields();
-    }, [swapImage]),
+      if (isEdit) { loadImages(); }
+      return;
+    }, [swapImage,postImages]),
   );
 
   const loadImages = () => {
     if (postData.media?.length !== 0) {
       setImages(
-        postData.media?.map(image =>image.mediaPath),
+        postData.media?.map(image => image.mediaPath),
       );
     }
   };
@@ -275,6 +298,7 @@ const sharePostOptions = [{
   };
 
   const handleButtonActivation = (text, images) => {
+    console.log(text,images);
     if (text !== '' || text !== undefined) setIsButtonActive(true);
     if (images?.length > 0) setIsButtonActive(true);
     if (images?.length === 0 && text === '') setIsButtonActive(false);
@@ -282,17 +306,31 @@ const sharePostOptions = [{
     if (postType === postTypes.SHARE_POST) setIsButtonActive(true);
   };
 
-  const handelPickImage = async () => {
-    try {
-      const result = await pickImage();
-      const uri = result.map(item => {
-        return item.uri;
-      });
-      if (!result.cancelled) onAddImage(uri);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const handelPickImage = async () => {
+  //   ImagePicker.openPicker({
+  //     width: "100%",
+  //     height: "100%",
+  //     multiple: true,
+  //     cropping: true
+  //   }).then(image => {
+      
+  //     setFile(image);
+  //     const uri = image.map(item => {
+  //       return item.sourceURL;
+  //     });
+  //     onAddImage(uri);
+  //   });
+    // try {
+    //   const result = await pickImage().then((result) =>)
+    //   console.log("IMAGES",result);
+    //   const uri = result.map(item => {
+    //     return item.sourceURL;
+    //   });
+    //   if (!result.cancelled) onAddImage(uri);
+    // } catch (error) {
+    //   console.error(error);
+    // }
+  // };
 
   const onAddImage = uri => {
     if (postType === postTypes.HANG_SHARE) {
@@ -300,77 +338,78 @@ const sharePostOptions = [{
       setIsOptionsVisible(false);
     }
     setImages(images.concat(uri));
-    handleButtonActivation(text, images.concat(uri));
+    handleButtonActivation(text, images);
   };
 
   const onRemoveImage = uri => {
     const updatedImages = images.filter(images => images !== uri);
+    dispatch(postImagesAction.removeImage(uri))
     setImages(updatedImages);
     handleButtonActivation(text, updatedImages);
   };
-  
-//******************* POST HANDLE METHODS *********************//
 
-//........GROUP POST................//
+  //******************* POST HANDLE METHODS *********************//
+
+  //........GROUP POST................//
   const group = () => {
     if (text === '' && Object.keys(file).length === 0) {
       setError("Can't Create empty post");
       alert(error)
-   }else{
-    const postContent = {
-      text: text,
-      images: images,
-      groupId: groupId,
-    };
-    const formData = createPostFormData(postContent);
-    PostService.createPost(user.id, formData).then(resp => {
-      let existingPosts = store.getState().groupPosts;
-      // setloadingIndicator(false)
-      store.dispatch(
-        groupPostsActions.setPosts([resp.data, ...existingPosts]),
-      );
-      store.dispatch(feedPostsAction.addFeedPost(resp.data));
-      // const popAction = StackActions.pop(1);
-      navigation.navigate(routes.GROUP_FEED, resp.data.group);
-      // navigation.dispatch(popAction);
-    }).catch(e => {
-      console.error(e);
-    }).finally(_ => setLoading(false));
-  }
+    } else {
+      const postContent = {
+        text: text,
+        images: images,
+        groupId: groupId,
+      };
+      const formData = createPostFormData(postContent);
+      PostService.createPost(user.id, formData).then(resp => {
+        let existingPosts = store.getState().groupPosts;
+        // setloadingIndicator(false)
+        store.dispatch(
+          groupPostsActions.setPosts([resp.data, ...existingPosts]),
+        );
+        store.dispatch(feedPostsAction.addFeedPost(resp.data));
+        // const popAction = StackActions.pop(1);
+        navigation.navigate(routes.GROUP_FEED, resp.data.group);
+        // navigation.dispatch(popAction);
+      }).catch(e => {
+        console.error(e);
+      }).finally(_ => {setLoading(false); clearFields();});
+    }
   }
 
   //........SWAP POST................//
   const swap = () => {
-    console.log("Swap post");
+   
     const swapContent = {
       text: text === '' ? SWAP_DEFAULT_TEXT : text,
       images: [swapImage],
     };
 
     const formData = createPostFormData(swapContent);
-    if (isEdit){
+    if (isEdit) {
       swapService
-      .editSwap(postData.id, formData)
-      .then(resp => {
-        store.dispatch(feedPostsAction.addFeedPost(resp.data));
-        navigation.navigate(routes.FEED);
-      })
-      .catch(e => {
-        console.error(e);
-      }).finally(_ => setLoading(false));
-    }else{
-    swapService
-      .createSwap(user.id, formData)
-      .then(resp => {
-        store.dispatch(feedPostsAction.addFeedPost(resp.data));
-        navigation.navigate(routes.FEED);
-      })
-      .catch(e => {
-        console.error(e);
-      }).finally(_ => setLoading(false));
+        .editSwap(postData.id, formData)
+        .then(resp => {
+          store.dispatch(feedPostsAction.addFeedPost(resp.data));
+          navigation.navigate(routes.FEED);
+        })
+        .catch(e => {
+          console.error(e);
+        }).finally(_ => setLoading(false));
+    } else {
+      swapService
+        .createSwap(user.id, formData)
+        .then(resp => {
+          store.dispatch(feedPostsAction.addFeedPost(resp.data));
+          navigation.navigate(routes.FEED);
+        })
+        .catch(e => {
+          console.error(e);
+        }).finally(_ => {setLoading(false); clearFields();});
+    }
   }
-}
-  
+
   //........HANG SHARE POST................//
   const hangShare = () => {
     const swapContent = {
@@ -379,26 +418,26 @@ const sharePostOptions = [{
       images: images,
     };
     const formData = createPostFormData(swapContent);
-    if (isEdit){
+    if (isEdit) {
       hangShareService
-      .editHang(user.id,postData.id, formData)
-      .then(resp => {
-        store.dispatch(feedPostsAction.addFeedPost(resp.data));
-        navigation.navigate(routes.FEED);
-      })
-      .catch(e => {
-        console.error(e);
-      }).finally(_ => setLoading(false));;
-    }else{
-    hangShareService
-      .createHang(user.id, formData)
-      .then(resp => {
-        store.dispatch(feedPostsAction.addFeedPost(resp.data));
-        navigation.navigate(routes.FEED);
-      })
-      .catch(e => {
-        console.error(e);
-      }).finally(_ => setLoading(false));;
+        .editHang(user.id, postData.id, formData)
+        .then(resp => {
+          store.dispatch(feedPostsAction.addFeedPost(resp.data));
+          navigation.navigate(routes.FEED);
+        })
+        .catch(e => {
+          console.error(e);
+        }).finally(_ => setLoading(false));;
+    } else {
+      hangShareService
+        .createHang(user.id, formData)
+        .then(resp => {
+          store.dispatch(feedPostsAction.addFeedPost(resp.data));
+          navigation.navigate(routes.FEED);
+        })
+        .catch(e => {
+          console.error(e);
+        }).finally(_ => {setLoading(false); clearFields();});;
     }
   }
   //........SHARE POST................//
@@ -417,64 +456,63 @@ const sharePostOptions = [{
         navigation.navigate(routes.FEED);
       })
       .catch(e => console.error(e.message))
-      .finally(_ => setLoading(false));
+      .finally(_ => {setLoading(false); clearFields();});
   }
-  
+
   //........CREATE POST................//
   const createPost = () => {
     if (text === '' && Object.keys(file).length === 0) {
-       setError("Can't Create empty post");
-       alert(error)
-    }else{
-    const postContent = {
-      text: text,
-      images: images,
-      feeling: postFeel.feeling ? postFeel.feeling : null,
-      groupId: groupId,
-    };
-    const formData = createPostFormData(postContent);
-    if (isEdit){
-      PostService.editPost(postData.id, formData)
-      .then(resp => {
-        store.dispatch(feedPostsAction.addFeedPost(resp.data));
-        dispatch(postFeelingsActions.setDefault());
-        navigation.navigate(routes.FEED);
-      })
-      .catch(e => {
-        console.error(e);
-      }).finally(_ => setLoading(false));
-    }else{
-    PostService.createPost(user.id, formData)
-      .then(resp => {
-        store.dispatch(feedPostsAction.addFeedPost(resp.data));
-        dispatch(postFeelingsActions.setDefault());
-        navigation.navigate(routes.FEED);
-      })
-      .catch(e => {
-        console.error(e);
-      }).finally(_ => setLoading(false));
-    //setProgress(prog)
+      setError("Can't Create empty post");
+      alert(error)
+    } else {
+      const postContent = {
+        text: text,
+        images: images,
+        feeling: postFeel.feeling ? postFeel.feeling : null,
+        groupId: groupId,
+      };
+      const formData = createPostFormData(postContent);
+      if (isEdit) {
+        PostService.editPost(postData.id, formData)
+          .then(resp => {
+            store.dispatch(feedPostsAction.addFeedPost(resp.data));
+            dispatch(postFeelingsActions.setDefault());
+            navigation.navigate(routes.FEED);
+          })
+          .catch(e => {
+            console.error(e);
+          }).finally(_ => setLoading(false));
+      } else {
+        PostService.createPost(user.id, formData)
+          .then(resp => {
+            store.dispatch(feedPostsAction.addFeedPost(resp.data));
+            dispatch(postFeelingsActions.setDefault());
+            navigation.navigate(routes.FEED);
+          })
+          .catch(e => {
+            console.error(e);
+          }).finally(_ => {setLoading(false); clearFields();});
+        //setProgress(prog)
+      }
     }
   }
-  }
- 
+
   const handleAddPost = async () => {
     // setloadingIndicator(true)
     setLoading(true);
-      switch (postType) {
-        case postTypes.GROUP_POST:
-          group();
-        case postTypes.SWAP:
-          swap();
-        case postTypes.HANG_SHARE:
-          hangShare();
-        case postTypes.SHARE_POST:
-          sharePost();
-        case postTypes.CREATE_POST:
-          createPost();
-      }
-      //clearFields();
-    
+    switch (postType) {
+      case postTypes.GROUP_POST:
+        group();
+      case postTypes.SWAP:
+        swap();
+      case postTypes.HANG_SHARE:
+        hangShare();
+      case postTypes.SHARE_POST:
+        sharePost();
+      case postTypes.CREATE_POST:
+        createPost();
+    }
+
   };
 
   // used to change the position of the enhanced drawer,
@@ -494,11 +532,12 @@ const sharePostOptions = [{
 
   const clearFields = () => {
     setText('');
-    clearFile();
+    setFile([]);
     setDisplayImage(false);
     setImages([]);
     setIsButtonActive(false);
     textInputRef.current.clear();
+    dispatch(postImagesAction.removeAllImages())
   };
 
   const handelPrivacySetting = value => {
@@ -508,7 +547,7 @@ const sharePostOptions = [{
     setIsPrivacyOptionsVisible(!isPrivacyOptionsVisible);
   };
 
-  useEffect(() => {}, [postPrivacyOption]);
+  useEffect(() => { }, [postPrivacyOption]);
 
 
 
@@ -525,7 +564,7 @@ const sharePostOptions = [{
           right={
             <SpecialHeaderButton
               title="Keep Hang"
-              onPress={() => navigation.navigate(routes.KEEP_HANG)}
+              onPress={() => navigation.navigate(routes.KEEP_HANG,postType)}
             />
           }
         />
@@ -580,7 +619,7 @@ const sharePostOptions = [{
           <Image
             source={
               user.profilePicture
-                ? { uri: fileStorage.baseUrl + user.profilePicture }
+                ? { uri: user.profilePicturePath }
                 : require('../assets/default-profile-picture.png')
             }
             style={defaultStyles.circledProfilePicture}
@@ -623,7 +662,7 @@ const sharePostOptions = [{
           {(postType === postTypes.HANG_SHARE ||
             postType === postTypes.SHARE_UP) && (
               <IconButton
-                onPress={() => setIsOptionsVisible(!isOptionsVisible)}
+                onPress={() => navigation.navigate(routes.KEEP_HANG,postType)}
                 IconComponent={
                   <Icon
                     image={require('../assets/icons/squared-add-icon.png')}
@@ -671,12 +710,12 @@ const sharePostOptions = [{
           </TouchableOpacity>
         ) : null}
         <TextInput
-          placeholder={isEdit?postData.content:placeholder}
+          placeholder={isEdit ? postData.content : placeholder}
           //   postType === postTypes.SWAP
           //     ? SWAP_DEFAULT_TEXT
           //     : postType === postTypes.HANG_SHARE ? 'Please Anyone want it,can have it' :'We Share, Do you?'
           // }
-          placeholderTextColor={isEdit?colors.dark:colors.dimGray}
+          placeholderTextColor={isEdit ? colors.dark : colors.dimGray}
           style={styles.textInput}
           numberOfLines={10}
           multiline={true}
@@ -726,7 +765,7 @@ const sharePostOptions = [{
                   <Image
                     style={{ width: width - 42, height: 200 }}
                     resizeMode={'cover'}
-                    source={{ uri: fileStorage.baseUrl + item.media }}
+                    source={{ uri: item.mediaPath}}
                   />
                 );
               }}
@@ -741,7 +780,7 @@ const sharePostOptions = [{
                 {postData.media?.length > 1 &&
                   postData.media.map(({ media }, index) => (
                     <TouchableOpacity
-                    key={index}
+                      key={index}
                       style={{
                         width: activeIndex === index ? 15 : 6,
                         height: 6,

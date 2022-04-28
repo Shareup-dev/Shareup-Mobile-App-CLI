@@ -184,9 +184,9 @@ const GroupFeedScreen = ({navigation, route}) => {
                 // resizeMode={route.params.image ? 'contain' : 'cover'}
                 // resizeMode={'cover'}
                 source={
-                  group.image
+                  group.groupImagePath
                     ? {
-                        uri: fileStorage.baseUrl + group.image,
+                        uri: group.groupImagePath,
                       }
                     : require('../assets/images/group-texture.png')
                 }

@@ -16,10 +16,20 @@ import Separator from "../components/Separator";
 import colors from "../config/colors";
 import constants from "../config/constants";
 import routes from "../navigation/routes";
+import ImageCropPicker from "react-native-image-crop-picker";
+import { useDispatch, useSelector } from "react-redux";
+import { State } from "react-native-gesture-handler";
+import store from "../redux/store";
+import {postImagesAction} from '../redux/postImages'
 
-export default function KeepHangScreen({ navigation }) {
+export default function KeepHangScreen({ navigation,route }) {
+  const dispatch = useDispatch()
+  const postImages = useSelector(state => state.postImages)
+  const postType = route.params;
+ 
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const {postTypes} = constants;
+  const [file, setFile] = useState([]);
   const hangList = [
     {
       id: 1,
@@ -45,16 +55,56 @@ export default function KeepHangScreen({ navigation }) {
     },
     { id: 5, title: "", image: "" },
   ];
+
+  const handleImagePicker = () => {
+    ImageCropPicker.openPicker({
+      width: "100%",
+      height: "100%",
+      multiple:true,
+      cropping: true
+    }).then(image => {
+ 
+      const newImage = image.filter(img => 
+        // if (postType === postTypes.HANG_SHARE) {
+        //   dispatch(postImagesAction.addNewImages(img.sourceURL))
+        // }else{
+          dispatch(postImagesAction.setImages(img.sourceURL))
+        // }
+        
+      
+      )
+      setFile(image)
+      navigation.navigate(routes.ADD_POST,{
+        postType: postType,
+      })
+    })
+  }
+  const handleCamera = () => {
+    ImageCropPicker.openCamera({
+    }).then(image => {
+      
+        dispatch(postImagesAction.setImages(image.path))
+      setFile(image)
+      navigation.navigate(routes.ADD_POST,{
+        postType: postType,
+      })
+    });
+  } 
   return (
     <Screen statusPadding={true}>
+      {postType === postTypes.HANG_SHARE ? (
       <View style={styles.header}>
         <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
           <Icon name="chevron-back" type="Ionicons" size={50} />
         </TouchableWithoutFeedback>
 
         <Text style={styles.headerTitle}> Today to me, tomorrow to you</Text>
-      </View>
-
+      </View>): (<View style={styles.header}>
+        <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
+          <Icon name="chevron-back" type="Ionicons" size={50} />
+        </TouchableWithoutFeedback>
+        </View>)}
+        {postType === postTypes.HANG_SHARE ? (
       <View style={styles.listContainer}>
         <FlatList
           data={hangList}
@@ -68,11 +118,11 @@ export default function KeepHangScreen({ navigation }) {
             />
           )}
         />
-      </View>
+      </View>):(<View/>)}
       <View style={styles.line} />
 
       <View style={styles.cameraIcon}>
-        <TouchableWithoutFeedback onPress={()=>{}}>
+        <TouchableWithoutFeedback onPress={handleCamera}>
         <Icon
           name="camera"
           type="Feather"
@@ -129,7 +179,7 @@ export default function KeepHangScreen({ navigation }) {
             <Text style={styles.text}>Sharing easier</Text>
           </View>
           <View style={styles.button}>
-            <Button title="Continue" />
+            <Button title="Continue" onPress={handleImagePicker}/>
           </View>
         </View>
       </ScrollView>
@@ -137,7 +187,7 @@ export default function KeepHangScreen({ navigation }) {
       <GiftDrawer
         isVisible={isDrawerVisible}
         setIsVisible={setIsDrawerVisible}
-        onPress={() => {navigation.navigate(routes.CHECKOUT , postTypes.HANG_SHARE),setIsDrawerVisible(false)}}
+        onPress={(item) => { navigation.navigate(routes.CHECKOUT , {postType:postTypes.HANG_SHARE,item}),setIsDrawerVisible(false)}}
       />
     </Screen>
   );
@@ -164,6 +214,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     marginTop: 20,
     marginRight: 20,
+    
   },
   content: {
     alignItems: "center",
@@ -184,6 +235,7 @@ const styles = StyleSheet.create({
   sectionWrapper: {
     flexDirection: "row",
     alignItems: "center",
+  
   },
   separator: {
     marginVertical: 20,

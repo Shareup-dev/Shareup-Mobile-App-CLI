@@ -50,7 +50,7 @@ export default function ListItem({
         {image && (
           <Image
             style={styles.image}
-            source={{ uri: fileStorage.baseUrl + image }}
+            source={{ uri: image }}
           />
         )}
         <View style={styles.detailsContainer}>

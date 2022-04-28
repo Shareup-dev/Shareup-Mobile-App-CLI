@@ -171,7 +171,7 @@ export default function AddStoryScreen({navigation}) {
       <StatusBar backgroundColor="#000" barStyle="light-content" />
       {screen === 'capture' ? (
         <RNCamera
-          style={styles.camera}
+          style={[styles.camera,{display: mode === 'video' ? 'none' : 'flex'}]}
           ratio={'16:9'}
           captureAudio={true}
           ref={ref => {

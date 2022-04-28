@@ -83,6 +83,7 @@ export default function DropDownListItem({
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <ListItemEnhanced
+              item={item}
               title={item.title}
               subTitle={item.state}
               subSubTitle={item.price}

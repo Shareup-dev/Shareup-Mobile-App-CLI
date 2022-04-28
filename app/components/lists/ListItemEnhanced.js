@@ -13,6 +13,7 @@ import defaultStyle from "../../config/styles";
 import IconButton from "../buttons/IconButton";
 
 export default function ListItemEnhanced({
+  item,
   title,
   subTitle,
   subSubTitle,
@@ -20,7 +21,9 @@ export default function ListItemEnhanced({
   IconComponent,
   onPress,
   style,
-}) {
+}) 
+{
+ 
   return (
     <>
       <TouchableWithoutFeedback onPress={()=>{}}>
@@ -45,7 +48,7 @@ export default function ListItemEnhanced({
 
           <View style={styles.leftContainer}>
             <IconButton
-              onPress={onPress}
+              onPress={()=> onPress(item)}
               IconComponent={
                 <Icon
                   name="plussquare"

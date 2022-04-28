@@ -232,7 +232,7 @@ export default function HangFeedCard({
                     style={styles.image}
                     resizeMode={'cover'}
                 />
-                <Text style={{ color: colors.iondigoDye, fontSize: 12, fontWeight: 'bold', paddingTop: 10 }}>Salad</Text>
+                <Text style={{ color: colors.iondigoDye, fontSize: 12, fontWeight: 'bold', paddingTop: 10 }}></Text>
                 <View style={{ flexDirection: 'row', marginTop: 10, }}>
                     <TouchableWithoutFeedback onPress={() => { }}>
                         <Icon
@@ -309,7 +309,7 @@ export default function HangFeedCard({
         <View style={styles.content}>
           <View style={styles.userInfo}>
             <Image
-              source={{ uri: fileStorage.baseUrl + postData.userdata.profilePicture }}
+              source={{ uri:postData.userdata.profilePicturePath }}
               style={styles.profilePicture}
             />
 

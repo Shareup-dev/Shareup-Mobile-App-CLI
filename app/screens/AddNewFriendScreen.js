@@ -154,7 +154,7 @@ export default function AddNewFriendScreen({navigation}) {
           <ListItem
             email={item.email}
             user={item}
-            image={item.profilePicturePath}
+            image={item.profilePicture}
             title={item.firstName}
             tabTitle={
               //  sentto.filter(user => user.email === item.email)[0]
@@ -178,9 +178,9 @@ export default function AddNewFriendScreen({navigation}) {
                 : 'Recommended'
             }
             onPress={onSendRequest}
-            showCloseButton={false}
+            showCloseButton={true}
             secondBtn={false}
-            fullWidth={true}
+            //fullWidth={true}
             style={[defaultStyles.listItemStyle, defaultStyles.lightShadow]}
             displayLeft={true}
             onPressProfile={() =>

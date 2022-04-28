@@ -48,15 +48,15 @@ export default function Drawer({isVisible, setIsVisible}) {
       title: 'Share Time',
       icon: require('../assets/icons/share-time-icon.png'),
       onPress: () => {
-        navigation.navigate(routes.USER_PROFILE)
         setIsVisible(false)
+        navigation.navigate(routes.USER_PROFILE,userState.userData.email)
        },
     },
     {
       title: 'Share Point',
       icon: require('../assets/icons/share-point-icon.png'),
       onPress: () => {
-        alert("savedPost")
+        alert("share point")
        },
     },
     {
@@ -79,7 +79,7 @@ export default function Drawer({isVisible, setIsVisible}) {
       title: 'Share Groups',
       icon: require('../assets/icons/foundation_social-skillshare.png'),
       onPress: () => {
-        navigation.navigate(routes.GROUP_NAVIGATOR)
+        navigation.navigate(routes.MY_GROUPS)
         setIsVisible(false)
        },
     },
@@ -120,7 +120,7 @@ export default function Drawer({isVisible, setIsVisible}) {
       title: 'Saved Swaps',
       icon: require('../assets/icons/saved-swap-colored-icon.png'),
       onPress: () => {
-        alert("savedPost")
+        alert("saved swap")
        },
     },
   ];

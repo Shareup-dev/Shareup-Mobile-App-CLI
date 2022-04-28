@@ -47,7 +47,7 @@ const SwapCard = React.memo(({item, navigation, userId, style}) => {
     useContext(AuthContext)?.userState;
   const loadImages = () => {
     if (item.media.length !== 0) {
-      setImages(item.media.map(image => fileStorage.baseUrl + image.media));
+      setImages(item.media.map(image =>  image.mediaPath));
     }
   };
 

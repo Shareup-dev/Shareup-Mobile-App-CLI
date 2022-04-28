@@ -17,10 +17,13 @@ import messagesReducer from "./messagesSlice";
 import ConversationsSlice from "./ConversationsSlice";
 import postFeelings from "./postFeelings";
 import recentSearch from "./recentSearch";
+import postImageReducer from "./postImages";
+
 
 export default store = configureStore({
   reducer: {
     like: likeReducer,
+    postImages: postImageReducer.reducer,
     comments: commentsReducer,
     loggedInUserSlice: loggedInUserSlice.reducer,
     sentRequests,

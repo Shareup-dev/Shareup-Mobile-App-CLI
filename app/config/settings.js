@@ -5,15 +5,17 @@
 
 const settings = {
   dev: {
-  //apiUrl: 'http://192.168.100.239:8080', //Logeeshan
-    apiUrl: 'http://192.168.100.238:8080', //This Mac
+  apiUrl: 'http://192.168.100.239:8080', //Logeeshan
+    //apiUrl: 'http://192.168.100.238:8080', //This Mac
     //apiUrl: 'http://192.168.100.244:8080', //Basma
+    //apiUrl: 'http://192.168.100.88:8080', //Rouf
+    
   },
   staging: {
     apiUrl: 'http://192.168.100.2:8080',
   },
   prod: {
-    apiUrl: 'https://shareup.digital/backend',
+    apiUrl: 'http://34.212.75.111',
   },
 };
 
@@ -24,7 +26,7 @@ const getCurrentSettings = () => {
   // if (__DEV__) return settings.prod;
 
   // if (Constants.manifest.releaseChannel === 'staging') return settings.staging;
-  return settings.dev;
+  return settings.prod;
 };
 
 export default getCurrentSettings();

@@ -58,7 +58,7 @@ export default function SavedListItem({
   );
   const loadImages = () => {
     if (postData.media?.length !== 0) {
-      setImages(postData.media?.map(image => fileStorage.baseUrl + image.media));
+      setImages(postData.media?.map(image =>  image.mediaPath));
     }
 
   };

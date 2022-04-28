@@ -105,7 +105,7 @@ export default function PostDetailScreen({ navigation, route }) {
     );
     const loadImages = () => {
         if (postData.media?.length !== 0) {
-            setImages(postData.media?.map(image => fileStorage.baseUrl + image.media));
+            setImages(postData.media?.map(image => image.mediaPath));
         }
     }
     const handleReactions = async () => {
@@ -133,7 +133,7 @@ export default function PostDetailScreen({ navigation, route }) {
                 }
                 middle={<View style={styles.userNameContainer}>
                     <Image
-                        source={{ uri: fileStorage.baseUrl + postData.userdata.profilePicture }}
+                        source={{ uri: postData.userdata.profilePicturePath }}
                         style={styles.profilePicture}
                     />
 

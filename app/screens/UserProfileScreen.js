@@ -105,7 +105,7 @@ export default function UserProfileScreen({navigation, route}) {
     <TouchableOpacity
       onPress={_ => setImageSlider({state: true, index: index})}>
       <Image
-        source={{uri: fileStorage.baseUrl + item.media}}
+        source={{uri: item.mediaPath}}
         style={{
           width: (width - 30) / 3,
           borderRadius: 3,
@@ -136,7 +136,7 @@ export default function UserProfileScreen({navigation, route}) {
 
       <ImageView
         visible={imageSlider.state}
-        images={media.map(({media}) => ({uri: fileStorage.baseUrl + media}))}
+        images={media.map(({media}) => ({uri: media.mediaPath}))}
         keyExtractor={(item, index) => index.toString()}
         imageIndex={imageSlider.index}
         onRequestClose={() => {

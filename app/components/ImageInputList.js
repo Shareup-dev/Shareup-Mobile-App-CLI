@@ -23,8 +23,9 @@ export default function ImageInputList({
   return (
       <View style={styles.container}>
       <ScrollView
+      // horizontal
         ref={scrollView}
-        // horizontal
+        showsVerticalScrollIndicator = {false}
         onContentSizeChange={() => scrollView.current.scrollToEnd()}
       >
         {imageUris.map((uri) => (

@@ -45,7 +45,7 @@ export default function GroupJoinCard({item, navigation}) {
     <View style={[styles.container, defaultStyle.cardBorder]}>
       {image ? (
         <Image
-          source={{uri: fileStorage.baseUrl + image}}
+          source={{uri: image}}
           style={styles.image}
         />
       ) : (
