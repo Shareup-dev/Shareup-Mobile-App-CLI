@@ -6,7 +6,7 @@ import routes from '../navigation/routes';
 
 export default function PersonalInfoSettings({navigation}) {
   const {
-    userState: {userData:{firstName,lastName,email,gender}},
+    userState: {userData:{firstName,lastName,email,gender,birthday_date}},
   } = useContext(AuthContext);
 
   function calculateAge(birthday) { // birthday is a date
@@ -45,7 +45,7 @@ export default function PersonalInfoSettings({navigation}) {
           </TouchableOpacity>
           <TouchableOpacity style={styles.formGroup} onPress={_=> navigation.navigate(routes.UPDATE_DOB)} >
             <Text style={styles.label}>Date of Birth</Text>
-            <Text  style={styles.input} >{`1994-12-14  (${calculateAge(new Date('1994-12-14'))} Years)`}</Text>
+            <Text  style={styles.input} >{birthday_date ? `${birthday_date} (${calculateAge(new Date(birthday_date))} Years)`: `Please add your Date of Birth`}</Text>
           </TouchableOpacity>
         </View>
       </View>

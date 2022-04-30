@@ -8,6 +8,7 @@ import Icon from "../components/Icon";
 import { Header, HeaderTitle, HeaderCloseIcon } from "../components/headers";
 import colors from "../config/colors";
 import { Title } from "react-native-paper";
+import routes from "../navigation/routes";
 
 
 
@@ -26,7 +27,7 @@ export default function AccountSettingsScreen({ navigation }) {
                         type: "MaterialCommunityIcons",
                     },
                     onPress: () => {
-                        alert("savedPost")
+                            navigation.navigate(routes.PERSONAL_INFORMATION)
                     },
                 },
                 {
@@ -36,7 +37,7 @@ export default function AccountSettingsScreen({ navigation }) {
                         type: "Octicons",
                     },
                     onPress: () => {
-                        alert("savedPost")
+                        navigation.navigate(routes.UPDATE_PASSWORD)
                     },
                 },
                 {

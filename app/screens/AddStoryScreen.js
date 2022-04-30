@@ -154,8 +154,6 @@ export default function AddStoryScreen({navigation}) {
       uri: story.uri,
     });
 
-
-
     storyService
       .addStory(userData.id, storyData)
       .then(res => res)
@@ -164,6 +162,7 @@ export default function AddStoryScreen({navigation}) {
         setIsUploading(false);
         navigation.goBack();
       });
+
   };
 
   return (
@@ -236,7 +235,7 @@ export default function AddStoryScreen({navigation}) {
           {mode === 'photo' ? (
             <Image
               source={story}
-              resizeMode={'cover'}
+              resizeMode={'contain'}
               style={{
                 height: '100%',
                 width: '100%',

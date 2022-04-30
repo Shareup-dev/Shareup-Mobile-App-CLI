@@ -6,9 +6,9 @@ import routes from '../../navigation/routes';
 
 import fileStorage from '../../config/fileStorage';
 
-export default function StoryCard({style, navigation,setStories, data}) {
+export default function StoryCard({style, navigation, data}) {
   const addStoryHandler = () => {
-    navigation.navigate(routes.STORY_VIEW_SCREEN, {data,setStories});
+    navigation.navigate(routes.STORY_VIEW_SCREEN, {data});
   };
   const {stories_List, firstName} = data;
 

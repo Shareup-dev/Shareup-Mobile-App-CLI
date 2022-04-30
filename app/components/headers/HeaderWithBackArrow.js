@@ -14,11 +14,11 @@ export default function HeaderWithBackArrow({
 }) {
   return (
     <View style={styles.container}>
-      <TouchableWithoutFeedback onPress={onBackButton}>
+      <TouchableWithoutFeedback onPress={onBackButton}  >
         <Icon
           name="chevron-back"
           type="Ionicons"
-          size={35}
+          size={45}
           backgroundSizeRatio={0.8}
         />
       </TouchableWithoutFeedback>

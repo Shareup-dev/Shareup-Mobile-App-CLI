@@ -82,7 +82,7 @@ export default function AddReelScreen({navigation}) {
 
   const videoPickHandler = () => {
     launchImageLibrary({
-      quality: 0.5,
+      quality: 0.8,
       mediaType: 'video',
       durationLimit: 1,
       selectionLimit: 1,

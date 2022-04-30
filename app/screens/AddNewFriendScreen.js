@@ -1,5 +1,5 @@
-import React, {useEffect, useState, useContext,useCallback} from 'react';
-import {FlatList, StyleSheet} from 'react-native';
+import React, {useEffect, useState, useContext, useCallback} from 'react';
+import {FlatList, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import Screen from '../components/Screen';
@@ -13,14 +13,15 @@ import FriendService from '../services/FriendService';
 import store from '../redux/store';
 import {sentRequestsActions} from '../redux/sentRequests';
 import colors from '../config/colors';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import routes from '../navigation/routes';
 
 export default function AddNewFriendScreen({navigation}) {
   const [users, setusers] = useState([]);
   const [sentto, setSentto] = useState([]);
-  const {user: loggedInUser} = useContext(authContext);
+  const {
+    userState: {userData: loggedInUser},
+  } = useContext(authContext);
   const {userState} = useContext(authContext);
   let alreadySentTo = useSelector(state => state.sentRequests);
 
@@ -103,12 +104,10 @@ export default function AddNewFriendScreen({navigation}) {
   // }, []);
 
   const onSendRequest = recievedUser => {
- 
     if (!recievedUser.firstName) {
       return;
     }
     if (sentto.filter(user => user.email === recievedUser.email)[0]) {
-   
       return;
     }
     setSentto(previousState => {
@@ -137,14 +136,17 @@ export default function AddNewFriendScreen({navigation}) {
           </TouchableWithoutFeedback>
         }
         middle={<HeaderTitle>Add New Friends</HeaderTitle>}
-        right={<TouchableWithoutFeedback onPress={() => navigation.navigate(routes.SEARCH_SCREEN)}>
-        <Icon
-          name="search1"
-          type="AntDesign"
-          size={25}
-          backgroundSizeRatio={1}
-        />
-      </TouchableWithoutFeedback>}
+        right={
+          <TouchableWithoutFeedback
+            onPress={() => navigation.navigate(routes.SEARCH_SCREEN)}>
+            <Icon
+              name="search1"
+              type="AntDesign"
+              size={25}
+              backgroundSizeRatio={1}
+            />
+          </TouchableWithoutFeedback>
+        }
       />
       <FlatList
         contentContainerStyle={styles.groupsList}

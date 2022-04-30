@@ -8,6 +8,8 @@ import {
   Dimensions,
   ScrollView,
 } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
+import { Item } from 'react-native-paper/lib/typescript/components/List/List';
 import {HeaderWithBackArrow} from '../components/headers';
 import Icon from '../components/Icon';
 import colors from '../config/colors';
@@ -63,27 +65,30 @@ export default function ChatScreen({navigation}) {
         title={'Kaneshamoorthi Lokeesan'}
         titleStyle={{fontSize: 16}}
         onBackButton={_ => navigation.goBack()}
+        rightComponent={
+          <View style={{flexDirection: 'row'}}>
+            <Icon
+              name="md-videocam-outline"
+              type="Ionicons"
+            />
+            <Icon name="phone-call" type="Feather" />
+            <Icon name="options" type="SimpleLineIcons" />
+          </View>
+        }
       />
-      <ScrollView
+      <FlatList 
+      inverted
         style={{
           paddingHorizontal: 10,
           flex: 1,
           marginBottom: 90,
-        }}
-        >
-        <>
-          <MessageCard />
-          <MessageCard />
-          <MessageCard />
-          <MessageCard right />
-          <MessageCard right />
-          <MessageCard />
-          <MessageCard />
-          <MessageCard right />
-          <MessageCard right />
-        </>
-      </ScrollView>
-
+        }}       
+        
+        data={[1,20,3,4,56,7,6,85,6]}
+        keyExtractor={(item,i) => i.toString()}
+        renderItem={({item}) => <MessageCard right={item >10 ? true : false} />}
+      />
+  
       <View
         style={{
           position: 'absolute',

@@ -1,7 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {View, StyleSheet, SectionList, Text} from 'react-native';
+import {FlatList} from 'react-native-gesture-handler';
+import {useDispatch, useSelector} from 'react-redux';
 import AuthContext from '../../authContext';
 import colors from '../../config/colors';
+import {storiesAction} from '../../redux/stories';
 import storiesService from '../../services/story.service';
 import CreateStoryCard from './CreateStoryCard';
 import StoryCard from './StoryCard';
@@ -10,9 +13,13 @@ export default function StoriesList({navigation, style}) {
   const {
     userState: {userData, username},
   } = useContext(AuthContext);
-  const [stories, setStories] = useState([]);
 
   const [Loading, setLoading] = useState(0);
+
+  const dispatch = useDispatch();
+  const stories = useSelector(state => state.stories);
+
+  // console.log("my new",story)
 
   useEffect(() => {
     const fetchStories = () => {
@@ -22,23 +29,14 @@ export default function StoriesList({navigation, style}) {
         storiesService.getStoriesOfFriends(userData.id),
       ])
         .then(res => {
-          setStories([
-            {
-              title: 'my stories',
-              data: res[0].data.length
-                ? [
-                    {
-                      ...res[0].data[0].user,
-                      stories_List: res[0].data,
-                    },
-                  ]
-                : [],
-            },
-            {
-              title: 'friends stories',
-              data: res[1].data,
-            },
-          ]);
+          // getting user info from first element. and i spread it with list of stories - this is only for login user
+          const myStories = {...res[0].data[0].user, stories_List: res[0].data};
+          const friendsStories = res[1].data;
+
+          const array = friendsStories;
+          array.unshift(myStories); // merging (login user stories + his friends stories) #### first index should be login user stories
+
+          dispatch(storiesAction.setStories(array));
         })
         .catch(e => console.error(e.message))
         .finally(_ => {
@@ -46,68 +44,63 @@ export default function StoriesList({navigation, style}) {
         });
     };
     fetchStories();
-    navigation.addListener('focus', async e => fetchStories());
-  }, [navigation]);
+  }, []);
 
   const EmptyCard = () => {
     return (
       <>
-      <View
-        style={{
-          width: 100,
-          height: 150,
-          borderWidth: 1.5,
-          borderColor: colors.lighterGray,
-          borderRadius: 15,
-          marginLeft: 2,
-          overflow: 'hidden',
-          backgroundColor: '#eeeeee',
-        }} />
-      <View
-        style={{
-          width: 100,
-          height: 150,
-          borderWidth: 1.5,
-          borderColor: colors.lighterGray,
-          borderRadius: 15,
-          marginLeft: 2,
-          overflow: 'hidden',
-          backgroundColor: '#eeeeee',
-        }} />
-      <View
-        style={{
-          width: 100,
-          height: 150,
-          borderWidth: 1.5,
-          borderColor: colors.lighterGray,
-          borderRadius: 15,
-          marginLeft: 2,
-          overflow: 'hidden',
-          backgroundColor: '#eeeeee',
-        }} />
-  
-        </>
+        <View
+          style={{
+            width: 100,
+            height: 150,
+            borderWidth: 1.5,
+            borderColor: colors.lighterGray,
+            borderRadius: 15,
+            marginLeft: 2,
+            overflow: 'hidden',
+            backgroundColor: '#eeeeee',
+          }}
+        />
+        <View
+          style={{
+            width: 100,
+            height: 150,
+            borderWidth: 1.5,
+            borderColor: colors.lighterGray,
+            borderRadius: 15,
+            marginLeft: 2,
+            overflow: 'hidden',
+            backgroundColor: '#eeeeee',
+          }}
+        />
+        <View
+          style={{
+            width: 100,
+            height: 150,
+            borderWidth: 1.5,
+            borderColor: colors.lighterGray,
+            borderRadius: 15,
+            marginLeft: 2,
+            overflow: 'hidden',
+            backgroundColor: '#eeeeee',
+          }}
+        />
+      </>
     );
   };
 
   return (
     <View style={[styles.container, style]}>
       <CreateStoryCard navigation={navigation} />
-      <SectionList
-        sections={stories}
-        horizontal={true}
+      <FlatList
+        data={stories}
+        horizontal
         showsHorizontalScrollIndicator={false}
-        keyExtractor={(item, i) => i.toString()}
         style={styles.list}
         ListEmptyComponent={() => <EmptyCard />}
+        keyExtractor={(item, i) => i.toString()}
         renderItem={({item}) => {
-          return (
-            <StoryCard
-              data={item}
-              setStories={setStories}
-              navigation={navigation}
-            />
-          );
+          return <StoryCard data={item} navigation={navigation} />;
         }}
       />
     </View>

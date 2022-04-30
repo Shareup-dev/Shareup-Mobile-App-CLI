@@ -26,13 +26,13 @@ import storyService from '../services/story.service';
 import AuthContext from '../authContext';
 import UserProfilePicture from '../components/UserProfilePicture';
 
+
 const windowWidth = Dimensions.get('screen').width;
 
 const StoryViewScreen = ({navigation, route}) => {
   const {
-    data: {stories_List: data, firstName, lastName, profilePicture, id: userID},
-    setStories,
-  } = route.params;
+    data: {stories_List: data, firstName, lastName,  id: userID},
+      } = route.params;
 
   const {
     userState: {userData},
@@ -240,8 +240,7 @@ const StoryViewScreen = ({navigation, route}) => {
                 <Icon
                   name={'options'}
                   type={'SimpleLineIcons'}
-                  color={"#fff"}
-
+                  color={'#fff'}
                   size={54}
                   backgroundColor={'#fff'}
                   noBackground={true}
@@ -258,7 +257,7 @@ const StoryViewScreen = ({navigation, route}) => {
                 name={'close'}
                 type={'AntDesign'}
                 size={54}
-                color={"#fff"}
+                color={'#fff'}
                 backgroundColor={'#fff'}
                 noBackground={true}
               />
@@ -273,59 +272,58 @@ const StoryViewScreen = ({navigation, route}) => {
   }, []);
 
   return (
-    <>
-      <TouchableOpacity
-        activeOpacity={1}
-        onPressIn={() => {
-          setPaused(true);
-          pauseProgress();
-        }}
-        onPressOut={() => {
-          setPaused(false);
-          startProgress();
-        }}>
-        <StorySlides />
-        {data[activeIndex]?.video ? (
-          <Video
-            ref={ref => (this.player = ref)}
-            paused={paused}
-            onLoad={_ => setLoaded(true)}
-            resizeMode={'cover'}
-            style={{
-              width: '100%',
-              height: '100%',
-              backgroundColor: '#000',
-            }}
-            source={{
-              uri: fileStorage.baseUrl + data[activeIndex].video,
-            }}
-          />
-        ) : (
-          <Image
-            style={{
-              width: '100%',
-              height: '100%',
-              backgroundColor: '#000',
-            }}
-            resizeMode={'contain'}
-            onLoadEnd={_ => setLoaded(true)}
-            source={{uri: fileStorage.baseUrl + data[activeIndex].image}}
-          />
-        )}
-        <Text
-          style={{
-            zIndex: 100,
-            position: 'absolute',
-            bottom: 50,
-            left: 15,
-            fontSize: 16,
-            fontWeight: '600',
-            color: '#fff',
+        <TouchableOpacity
+        
+          activeOpacity={1}
+          onPressIn={() => {
+            setPaused(true);
+            pauseProgress();
+          }}
+          onPressOut={() => {
+            setPaused(false);
+            startProgress();
           }}>
-          {data[activeIndex].caption}
-        </Text>
-      </TouchableOpacity>
-    </>
+          <StorySlides />
+          {data[activeIndex]?.video ? (
+            <Video
+              ref={ref => (this.player = ref)}
+              paused={paused}
+              onLoad={_ => setLoaded(true)}
+              resizeMode={'cover'}
+              style={{
+                width: '100%',
+                height: '100%',
+                backgroundColor: '#000',
+              }}
+              source={{
+                uri: fileStorage.baseUrl + data[activeIndex].video,
+              }}
+            />
+          ) : (
+            <Image
+              style={{
+                width: '100%',
+                height: '100%',
+                backgroundColor: '#000',
+              }}
+              resizeMode={'contain'}
+              onLoadEnd={_ => setLoaded(true)}
+              source={{uri: fileStorage.baseUrl + data[activeIndex].image}}
+            />
+          )}
+          <Text
+            style={{
+              zIndex: 100,
+              position: 'absolute',
+              bottom: 50,
+              left: 15,
+              fontSize: 16,
+              fontWeight: '600',
+              color: '#fff',
+            }}>
+            {data[activeIndex].caption}
+          </Text>
+        </TouchableOpacity>
   );
 };
 

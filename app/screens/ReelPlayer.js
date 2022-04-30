@@ -14,7 +14,7 @@ import {
 import Icon from '../components/Icon';
 import Video from 'react-native-video';
 import routes from '../navigation/routes';
-import moment  from 'moment';
+import moment from 'moment';
 import fileStorage from '../config/fileStorage';
 import ReelsService from '../services/Reels.service';
 import AuthContext from '../authContext';
@@ -42,20 +42,22 @@ const ReelPlayer = ({navigation, route}) => {
       const {firstName, lastName} = user;
 
       const [date, setDate] = useState(
-        moment(publishedDate, "DD MMMM YYYY hh:mm:ss").fromNow()
-      // null
-     );
-          const [like, setLike] = useState(Boolean(reelLiked));
-      const [totalLikes, setTotalLikes] = useState(numberOfReaction? numberOfReaction : 0);
-      const [totalComments, setTotalComments] = useState(numberOfComments? numberOfComments : 0);
+        moment(publishedDate, 'DD MMMM YYYY hh:mm:ss').fromNow(),
+        // null
+      );
+      const [like, setLike] = useState(Boolean(reelLiked));
+      const [totalLikes, setTotalLikes] = useState(
+        numberOfReaction ? numberOfReaction : 0,
+      );
+      const [totalComments, setTotalComments] = useState(
+        numberOfComments ? numberOfComments : 0,
+      );
 
       const toggleLike = () => {
-
-        
         ReelsService.likeUnLike(userData.id, rid, {})
-        .then(({status}) => {
-          if (status === 200) {
-              if(like) setTotalLikes(prev => prev - 1);
+          .then(({status}) => {
+            if (status === 200) {
+              if (like) setTotalLikes(prev => prev - 1);
               else setTotalLikes(prev => prev + 1);
               setLike(prev => !prev);
             }
@@ -72,10 +74,13 @@ const ReelPlayer = ({navigation, route}) => {
                 borderRadius: 35,
               }}>
               <View style={styles.reelsInfo}>
-                <UserProfilePicture profilePicture={user?.profilePicture}  size={50} />
-               
+                <UserProfilePicture
+                  profilePicture={user?.profilePicture}
+                  size={50}
+                />
+
                 <View>
-                  <Text style={{color: '#fff', marginTop: 2, fontSize: 14}}>
+                  <Text style={{color: '#fff', marginTop: 2,marginLeft:5, fontSize: 14}}>
                     {`${firstName} ${lastName}`}
                   </Text>
                   <View
@@ -133,7 +138,9 @@ const ReelPlayer = ({navigation, route}) => {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={_ => navigation.navigate(routes.ADD_COMMENT_REEL,{reelId : rid})}>
+              onPress={_ =>
+                navigation.navigate(routes.ADD_COMMENT_REEL, {reelId: rid})
+              }>
               <Icon
                 color="#fff"
                 style={{marginVertical: 5}}
@@ -262,7 +269,7 @@ const ReelPlayer = ({navigation, route}) => {
               <Video
                 style={{
                   width: width,
-                  height: height ,
+                  height: height,
                   zIndex: -10,
                 }}
                 onLoadStart={_ => setLoaded(false)}
@@ -320,7 +327,6 @@ const ReelPlayer = ({navigation, route}) => {
               video={video_name}
               thumbnail_name={thumbnail_name}
               reactions={reactions}
-              
               id={id}
               user={userdata}
               numberOfComments={numberOfComments}
@@ -340,6 +346,7 @@ const styles = StyleSheet.create({
   reelsInfo: {
     flexDirection: 'row',
     alignItems: 'center',
+    margin: 5,
   },
   forwardArrow: {
     flexDirection: 'row',
