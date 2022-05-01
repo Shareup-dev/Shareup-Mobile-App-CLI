@@ -78,7 +78,7 @@ export default function SentRequests({navigation}) {
             renderItem={({item}) => (
               <ListItem
                 user={item}
-                image={item.profilePicture}
+                image={item.profilePicturePath}
                 title={item.firstName}
                 showCloseButton={false}
                 tabTitle={

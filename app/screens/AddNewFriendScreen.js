@@ -156,7 +156,7 @@ export default function AddNewFriendScreen({navigation}) {
           <ListItem
             email={item.email}
             user={item}
-            image={item.profilePicture}
+            image={item.profilePicturePath}
             title={item.firstName}
             tabTitle={
               //  sentto.filter(user => user.email === item.email)[0]

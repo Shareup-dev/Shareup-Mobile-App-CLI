@@ -272,6 +272,8 @@ export default function Card({
               setCurrentImage(images[index]);
               setImageViewerVisible(true);
             }}
+            //autoplay={true}
+           // circleLoop={true}
           />
 
           // <Image source={{ uri: images[0] }} style={styles.image} />

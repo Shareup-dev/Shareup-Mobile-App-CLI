@@ -93,7 +93,7 @@ export default function ReceivedRequests({navigation}) {
             renderItem={({item}) => (
               <ListItem
                 user={item}
-                image={item.profilePicture}
+                image={item.profilePicturePath}
                 title={item.firstName}
                 secondBtnTitle={'Accept'}
                 secondBtn={

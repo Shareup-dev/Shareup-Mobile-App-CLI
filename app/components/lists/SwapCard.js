@@ -11,8 +11,9 @@ import defaultStyles from '../../config/styles';
 import SwapActionContainer from '../posts/SwapActionContainer';
 import AuthContext from '../../authContext';
 import onShare from '../Share';
+import swapService from '../../services/swap.service';
 const imageSize = 160;
-const SwapCard = React.memo(({item, navigation, userId, style}) => {
+const SwapCard = React.memo(({item, navigation, userId, style,reloadPosts}) => {
   const actionsTabSizeRatio = 0.5;
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [numberOfComments, setNumberOfComments] = useState(
@@ -108,12 +109,21 @@ const SwapCard = React.memo(({item, navigation, userId, style}) => {
     //   },
     // },
     {
-      title: 'Delete Post',
+      title:  userState?.userData?.id !== user?.id ? (
+        <Text style={{color: colors.dark}}>Report</Text>
+      ) : (
+        <Text style={{color: colors.red}}>Delete</Text>
+      ),
       icon: {
-        image: require('../../assets/post-options-icons/delete-red-icon.png'),
+        image:
+          userState?.userData?.id !== user?.id
+            ? require('../../assets/post-options-icons/report-icon.png')
+            : require('../../assets/post-options-icons/delete-red-icon.png'),
       },
       onPress: () => {
-        showDeleteAlert();
+        userState?.userData?.id !== user?.id
+          ? alert('Report')
+          : showDeleteAlert();
       },
     },
   ];
@@ -132,11 +142,11 @@ const SwapCard = React.memo(({item, navigation, userId, style}) => {
 
 const deletePost = async () => {
  
-    // const result = await PostService.deletePost(postId)
-    // .then(res => setPosts(res.data))
-    // .catch(e => console.error(e));
+   swapService.deleteSwap(item.id)
+    .then(res => {})
+    .catch(e => console.error(e));
   
-  //reloadPosts();
+    reloadPosts();
 };
   const onLayout = e => {
     setSliderWidth(e.nativeEvent.layout.width);

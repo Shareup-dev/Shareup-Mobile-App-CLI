@@ -227,7 +227,7 @@ export default function HangFeedCard({
                 style={[styles.imageCard, defaultStyles.lightShadow]}>
                 <Image
                      source={{
-                      uri:postData.media[0].mediaPath,
+                      uri:postData?.media[0]?.mediaPath,
                     }}
                     style={styles.image}
                     resizeMode={'cover'}

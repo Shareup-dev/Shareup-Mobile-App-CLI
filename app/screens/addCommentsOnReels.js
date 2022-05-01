@@ -172,7 +172,7 @@ export default function AddCommentsOnReels({navigation, route}) {
         <UserProfilePicture
           size={45}
           style={{marginHorizontal: 15}}
-          profilePicture={item?.user?.profilePicture}
+          profilePicture={item?.user?.profilePicturePath}
         />
         <View>
           <View

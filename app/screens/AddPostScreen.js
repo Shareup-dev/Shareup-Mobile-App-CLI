@@ -739,7 +739,7 @@ export default function AddPostScreen({ navigation, route }) {
                 marginHorizontal: 5,
               }}>
               <UserProfilePicture
-                profilePicture={postData.userdata.profilePicture}
+                profilePicture={postData.userdata.profilePicturePath}
                 size={35}
               />
               <Text
@@ -935,7 +935,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
-  textInput: { height: '10%', textAlignVertical: 'top', marginTop: 10 },
+  textInput: { height: '15%', textAlignVertical: 'top', marginTop: 10, },
   image: {
     width: '100%',
     height: 250,

@@ -60,7 +60,7 @@ export default function NewsFeedScreen({ navigation, route }) {
             user={item.userdata}
             postData={item}
             navigation={navigation}
-            //reloadPosts={getAllHang}
+            reloadPosts={loadNews}
             postType={item.allPostsType}
             onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item }) }}
           />);

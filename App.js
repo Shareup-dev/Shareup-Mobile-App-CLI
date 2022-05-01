@@ -11,6 +11,7 @@ import ShareupAuthentication from './app/util/ShareupAuthentication';
 export default function App() {
   return (
     <>
+    <SafeAreaView></SafeAreaView>
       <OfflineNotice />
       <GestureHandlerRootView style={{flex: 1}}>
         <NavigationContainer>

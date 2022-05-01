@@ -73,7 +73,7 @@ export default function MemberRequest({navigation, route}) {
           }}>
           <Image
             source={
-              item?.user?.profilePicture
+              item?.user?.profilePicturePath
                 ? {uri:item?.user?.profilePicturePath}
                 : require('../assets/images/group-texture.png')
             }

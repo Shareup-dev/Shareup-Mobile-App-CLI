@@ -88,7 +88,7 @@ export default function AllFriendsScreen({navigation}) {
           renderItem={({item}) => (
             <ListItem
               user={item}
-              image={item.profilePicture}
+              image={item.profilePicturePath}
               title={item.firstName}
               tabTitle={'Unfriend'}
               color={colors.iondigoDye}
