@@ -16,6 +16,7 @@ export default Object.freeze({
   ADD_COMMENT_REEL: 'ADD_COMMENT_REEL', 
   SWAP: 'Swap',
   EDIT_PROFILE: 'EditProfile',
+  FRIEND_PROFILE: 'FRIEND_PROFILE',
   ACTIVITY: 'Activity',
   GROUPS: 'Groups',
   GROUP_FEED: 'GroupFeed',

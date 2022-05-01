@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback, useEffect } from 'react';
+import React, {useContext, useState, useCallback, useEffect} from 'react';
 import {
   StyleSheet,
   FlatList,
@@ -16,14 +16,13 @@ import SwapCard from '../components/lists/SwapCard';
 
 import TrendingComponent from '../components/trending/TrendingComponent';
 import postService from '../services/post.service';
-import { useFocusEffect } from '@react-navigation/native';
-import { Switch } from 'react-native-gesture-handler';
+import {useFocusEffect} from '@react-navigation/native';
 import constants from '../config/constants';
 import HangFeedCard from '../components/lists/HangFeedCard';
 import routes from '../navigation/routes';
 
-export default function NewsFeedScreen({ navigation, route }) {
-  const { userState } = useContext(authContext);
+export default function NewsFeedScreen({navigation, route}) {
+  const {userState} = useContext(authContext);
   const [posts, setPosts] = useState([]);
   const [activityIndicator, setActivityIndicator] = useState(true);
   useFocusEffect(
@@ -32,19 +31,22 @@ export default function NewsFeedScreen({ navigation, route }) {
       // loadStories();
       // return setActivityIndicator(false);
       return;
-    }, [])
-  )
+    }, []),
+  );
+
   const loadNews = async () => {
-    postService.getNewsFeed(userState?.userData?.email)
-      .then(res => {
-        const postArray = res.data.reverse();
-        setPosts(postArray)
+    setActivityIndicator(true);
+    postService
+      .getNewsFeed(userState?.userData?.email)
+      .then(({data}) => {
+        console.log("data",data);
+        setPosts(data);
       })
       .catch(e => console.error(e))
+      .finally(hideActivityIndicator);
   };
 
-  const renderItem = ({ item }) => {
-
+  const renderItem = ({item}) => {
     {
       switch (item.allPostsType) {
         case constants.postTypes.SWAP:
@@ -54,25 +56,33 @@ export default function NewsFeedScreen({ navigation, route }) {
               route={route}
               item={item}
               userId={item.userdata.id}
-            />);
+            />
+          );
         case constants.postTypes.HANG_SHARE:
-          return (<HangFeedCard //style={styles.listItem}
-            user={item.userdata}
-            postData={item}
-            navigation={navigation}
-            //reloadPosts={getAllHang}
-            postType={item.allPostsType}
-            onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item }) }}
-          />);
+          return (
+            <HangFeedCard //style={styles.listItem}
+              user={item.userdata}
+              postData={item}
+              navigation={navigation}
+              //reloadPosts={getAllHang}
+              postType={item.allPostsType}
+              onPress={() => {
+                navigation.navigate(routes.POST_DETAILS_SCREEN, {
+                  postData: item,
+                });
+              }}
+            />
+          );
         default:
           return (
-          <Card
-            user={item.userdata}
-            postData={item}
-            navigation={navigation}
-            reloadPosts={loadNews}
-            postType={item.allPostsType}
-          />);
+            <Card
+              user={item.userdata}
+              postData={item}
+              navigation={navigation}
+              reloadPosts={loadNews}
+              postType={item.allPostsType}
+            />
+          );
       }
     }
   };
@@ -81,11 +91,9 @@ export default function NewsFeedScreen({ navigation, route }) {
     setActivityIndicator(false);
   };
 
-  const ActivityIndicatorComponent = () => (
-    <View style={styles.listFooter}>
-      {activityIndicator && (
-        <ActivityIndicator size="large" color={colors.iondigoDye} />
-      )}
+  const ActivityIndicatorComponent = ({style}) => (
+    <View style={[styles.listFooter,style]}>
+      <ActivityIndicator size="large" color={colors.iondigoDye} />
     </View>
   );
   const ListHeader = () => {
@@ -100,16 +108,21 @@ export default function NewsFeedScreen({ navigation, route }) {
   return (
     <Screen style={styles.container} statusPadding={false}>
       <FlatList
-        initialNumToRender={10}
         data={posts}
         ListHeaderComponent={ListHeader}
-        ListFooterComponent={ActivityIndicatorComponent}
-        keyExtractor={post => post.id.toString()}
+        keyExtractor={(post,i) => i.toString()}
         showsVerticalScrollIndicator={false}
         renderItem={renderItem}
-        onEndReached={hideActivityIndicator}
         ListEmptyComponent={() => (
-          <Text style={{ alignSelf: "center", marginVertical: 50 }}>No posts Available</Text>
+          <>
+            {activityIndicator ? (
+              <ActivityIndicatorComponent style={{alignSelf: 'center', marginVertical: 50}} />
+            ) : (
+              <Text style={{alignSelf: 'center', marginVertical: 50}}>
+                No posts Available
+              </Text>
+            )}
+          </>
         )}
       />
     </Screen>
