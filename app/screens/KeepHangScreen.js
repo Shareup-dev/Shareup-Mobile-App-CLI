@@ -58,12 +58,14 @@ export default function KeepHangScreen({ navigation,route }) {
 
   const handleImagePicker = () => {
     ImageCropPicker.openPicker({
+      mediaType:"any",
       width: "100%",
       height: "100%",
       multiple:true,
-      cropping: true
+      cropping: true,
+      //compressImageQuality: 0.5,
     }).then(image => {
- 
+      console.log(image);
       const newImage = image.filter(img => 
         // if (postType === postTypes.HANG_SHARE) {
         //   dispatch(postImagesAction.addNewImages(img.sourceURL))
@@ -74,6 +76,7 @@ export default function KeepHangScreen({ navigation,route }) {
       
       )
       setFile(image)
+      console.log(postImages);
       navigation.navigate(routes.ADD_POST,{
         postType: postType,
       })
@@ -81,6 +84,8 @@ export default function KeepHangScreen({ navigation,route }) {
   }
   const handleCamera = () => {
     ImageCropPicker.openCamera({
+      mediaType:"any",
+      compressVideoPreset:"LowQuality",
     }).then(image => {
       
         dispatch(postImagesAction.setImages(image.path))

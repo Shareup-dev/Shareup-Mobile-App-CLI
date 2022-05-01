@@ -67,8 +67,8 @@ export default function ManageGroups({navigation}) {
             }}>
             <Image
               source={
-                item.image
-                  ? {uri: fileStorage.baseUrl + item.image}
+                item.groupImagePath
+                  ? {uri:item.groupImagePath}
                   : require('../assets/images/group-texture.png')
               }
               style={styles.img}

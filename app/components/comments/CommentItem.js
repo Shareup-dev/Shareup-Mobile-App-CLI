@@ -111,7 +111,7 @@ export default function CommentItem({
         <View style={styles.commentContainer}>
           {/** Left */}
           <View>
-            <UserProfilePicture size={40} profilePicture={comment.user.profilePicture} />
+            <UserProfilePicture size={40} profilePicture={comment.user.profilePicturePath} />
           </View>
 
           {/** Medial */}

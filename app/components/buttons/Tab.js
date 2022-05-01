@@ -101,6 +101,8 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
+    marginLeft:5,
+    marginRight:5,
     // paddingHorizontal: 20 / sizeRatio,
   },
   title: {

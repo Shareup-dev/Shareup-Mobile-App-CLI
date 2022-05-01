@@ -75,7 +75,7 @@ const ReelPlayer = ({navigation, route}) => {
               }}>
               <View style={styles.reelsInfo}>
                 <UserProfilePicture
-                  profilePicture={user?.profilePicture}
+                  profilePicture={user?.profilePicturePath}
                   size={50}
                 />
 

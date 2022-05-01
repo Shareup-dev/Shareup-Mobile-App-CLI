@@ -105,7 +105,7 @@ export default function GroupsScreen({navigation}) {
             returnKeyType="search"
             endComponent={
               <TouchableOpacity
-                style={{marginLeft: 10}}
+                style={{marginLeft: 0}}
                 onPress={handleClearSearch}>
                 <Icon
                   name="close"
@@ -246,8 +246,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   searchbar: {
-    width: '90%',
-    marginLeft: 10,
+    width: '85%',
+    marginLeft: 5,
   },
   searchText: {
     width: '75%',

@@ -28,7 +28,7 @@ export default function ProfileTop({
       <View style={styles.padding}>
         <View style={styles.row1}>
           <View style={styles.profilePicture}>
-            <UserProfilePicture profilePicture={user.profilePicture} size={profilePictureSize} />
+            <UserProfilePicture profilePicture={user.profilePicturePath} size={profilePictureSize} />
             {/* <Icon
               name="pluscircle"
               type="AntDesign"

@@ -59,20 +59,14 @@ export default function NewsFeedScreen({navigation, route}) {
             />
           );
         case constants.postTypes.HANG_SHARE:
-          return (
-            <HangFeedCard //style={styles.listItem}
-              user={item.userdata}
-              postData={item}
-              navigation={navigation}
-              //reloadPosts={getAllHang}
-              postType={item.allPostsType}
-              onPress={() => {
-                navigation.navigate(routes.POST_DETAILS_SCREEN, {
-                  postData: item,
-                });
-              }}
-            />
-          );
+          return (<HangFeedCard //style={styles.listItem}
+            user={item.userdata}
+            postData={item}
+            navigation={navigation}
+            reloadPosts={loadNews}
+            postType={item.allPostsType}
+            onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item }) }}
+          />);
         default:
           return (
             <Card

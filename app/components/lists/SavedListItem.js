@@ -152,10 +152,12 @@ const styles = StyleSheet.create({
     width: "94%",
     flexDirection: "row",
     backgroundColor: colors.white,
-    marginTop: 10,
+    marginTop: 5,
     overflow: 'hidden',
     alignSelf: "center",
     padding: 7,
+    marginLeft:10,
+   // marginRight:10,
   },
   image: {
     width: "35%",
@@ -167,7 +169,7 @@ const styles = StyleSheet.create({
   contentView: {
     flexDirection: "column",
     marginRight: 10,
-    marginTop: 15,
+    //marginTop: 15,
     justifyContent: "center",
     borderRadius: borderRadius,
     width: "65%"

@@ -220,8 +220,8 @@ const StoryViewScreen = ({navigation, route}) => {
             <View style={styles.profileImg}>
               <UserProfilePicture
                 profilePicture={
-                  data[activeIndex].user?.profilePicture
-                    ? data[activeIndex].user?.profilePicture
+                  data[activeIndex].user?.profilePicturePath
+                    ? data[activeIndex].user?.profilePicturePath
                     : require('../assets/icons/user-icon.png')
                 }
                 size={55}
