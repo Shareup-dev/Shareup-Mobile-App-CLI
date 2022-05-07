@@ -5,6 +5,7 @@ import {
   FlatList,
   StyleSheet,
   TouchableWithoutFeedback,
+  ListViewBase,
 } from 'react-native';
 
 import Screen from '../components/Screen';
@@ -18,6 +19,9 @@ import defaultStyles from '../config/styles';
 import ListHeader from '../components/lists/ListHeader';
 import ListItem from '../components/lists/ListItem';
 import colors from '../config/colors';
+import ListItemEnhanced from '../components/lists/ListItemEnhanced';
+import { ListAccordionGroupContext } from 'react-native-paper/lib/typescript/components/List/ListAccordionGroup';
+import ListItemReceivedRequest from '../components/lists/ListItemReceivedRequest';
 
 export default function ReceivedRequests({navigation}) {
   const {userData: user} = useContext(authContext).userState;
@@ -59,6 +63,13 @@ export default function ReceivedRequests({navigation}) {
       return [...previousState, friend];
     });
   };
+  const redirectToProfile = (item) => {
+    navigation?.getState()?.routes[1]?.name === 'UserProfile'
+      ? null
+      : navigation.navigate(routes.USER_PROFILE, {
+          user: item,
+        })  
+}
 
   const getTabTitle = friend => {
     if (acceptedFrom.filter(user => friend.email === user.email)[0]) {
@@ -124,6 +135,7 @@ export default function ReceivedRequests({navigation}) {
                 }
                 displayLeft={true}
                 showCloseButton={false}
+                onPressProfile={()=>redirectToProfile(item)}
               />
             )}
           />

@@ -95,6 +95,13 @@ export default function ActivityScreen({navigation}) {
     }
     return;
   };
+  const redirectToProfile = (item) => {
+    navigation?.getState()?.routes[1]?.name === 'UserProfile'
+      ? null
+      : navigation.navigate(routes.USER_PROFILE, {
+          user: item,
+        })  
+}
   const onSendRequest = recievedUser => {
     if (!recievedUser.firstName) {
       return;
@@ -254,9 +261,7 @@ export default function ActivityScreen({navigation}) {
             onPress={onSendRequest}
             style={[defaultStyles.listItemStyle, defaultStyles.lightShadow]}
             displayLeft={true}
-            onPressProfile={() =>
-                  navigation.navigate(routes.USER_PROFILE, item.email)
-                }
+            onPressProfile={()=>redirectToProfile(item)}
           />
         )}
       />

@@ -44,8 +44,12 @@ export default function SentRequests({navigation}) {
     return () => mounted = false
   }, [fetch]);
  
-  const redirectToProfile = () => {
-
+  const redirectToProfile = (item) => {
+      navigation?.getState()?.routes[1]?.name === 'UserProfile'
+        ? null
+        : navigation.navigate(routes.USER_PROFILE, {
+            user: item,
+          })  
   }
   const onCancelRequest = friend => {
     sentto = sentto.filter(dost => dost.email !== friend.email);
@@ -98,7 +102,7 @@ export default function SentRequests({navigation}) {
                 }
                 subTitle="Sent"
                 onPress={onCancelRequest}
-                onPressProfile={redirectToProfile}
+                onPressProfile={()=> redirectToProfile(item)}
                 style={[defaultStyles.listItemStyle, defaultStyles.lightShadow]}
                 displayLeft={true}
               />

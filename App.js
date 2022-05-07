@@ -9,6 +9,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import ShareupAuthentication from './app/util/ShareupAuthentication';
 
 export default function App() {
+  console.disableYellowBox = true;
   return (
     <>
     <SafeAreaView></SafeAreaView>

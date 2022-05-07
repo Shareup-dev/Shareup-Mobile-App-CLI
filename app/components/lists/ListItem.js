@@ -45,21 +45,25 @@ export default function ListItem({
 
   return (
     <TouchableWithoutFeedback onPress={onPress}>
-      <View style={[styles.listItem, style]}>
+      <View style={[styles.listItem, style]} >
         {IconComponent}
         {image && (
+          
           <Image
             style={styles.image}
             source={{ uri: image }}
           />
+         
         )}
         <View style={styles.detailsContainer}>
+       
           <Text
             numberOfLines={1}
             style={[styles.title, defaultStyles.fontWeightMedium, titleStyle]}
           >
             {title}
           </Text>
+          
           {subTitle && (
             <Text
               numberOfLines={2}

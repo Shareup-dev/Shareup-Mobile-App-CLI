@@ -27,7 +27,7 @@ export default function NewsFeedScreen({navigation, route}) {
   const [activityIndicator, setActivityIndicator] = useState(true);
   useFocusEffect(
     useCallback(() => {
-      console.log("hereee");
+      
       loadNews();
       // loadStories();
       // return setActivityIndicator(false);
@@ -40,7 +40,6 @@ export default function NewsFeedScreen({navigation, route}) {
     postService
       .getNewsFeed(userState?.userData?.email)
       .then(({data}) => {
-        console.log("data",data);
         setPosts(data);
       })
       .catch(e => console.error(e))

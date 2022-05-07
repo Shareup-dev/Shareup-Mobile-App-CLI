@@ -63,22 +63,25 @@ export default function KeepHangScreen({ navigation,route }) {
   const handleImagePicker = async () => {
     try {
         const result = await pickImage().then((result) => {
-        console.log("IMAGES",result);
+          console.log("IMAGES::",result);
         const newImage = result.filter(img => {
               if (postType === postTypes.HANG_SHARE) {
-                dispatch(postImagesAction.addNewImages(img.uri))
+               
+                dispatch(postImagesAction.addNewImages([img.uri]))
               }else{
+               
                 dispatch(postImagesAction.setImages(img.uri))
               }
             }
             )
         //if (!result.cancelled) onAddImage(uri);
        // setFile(image)
-      console.log(postImages);
       navigation.navigate(routes.ADD_POST,{
         postType: postType,
       })
+      console.log("postImages::",postImages);
       })
+      
       } catch (error) {
         console.error(error);
       }
@@ -111,7 +114,6 @@ export default function KeepHangScreen({ navigation,route }) {
   const handleCamera = async () => {
     try {
       const result = await openCamera().then((result) => {
-      console.log("IMAGES",result);
       const newImage = result.filter(img => {
             if (postType === postTypes.HANG_SHARE) {
               dispatch(postImagesAction.addNewImages(img.uri))

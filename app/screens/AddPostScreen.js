@@ -227,30 +227,36 @@ export default function AddPostScreen({ navigation, route }) {
 
   
   useEffect(()=>{
+    console.log("here");
     if (postType === postTypes.HANG_SHARE) {
       setPlaceHolder(HANG_SHARE_TEXT);
+      //setImages([postImages])
     }else if (postType === postTypes.SWAP) {
       setPlaceHolder(SWAP_DEFAULT_TEXT);
+      //setImages([swapImage]);
     }else{
       setPlaceHolder(DEFAULT_TEXT);
+     // setImages([postImages])
     }
     
   })
   useFocusEffect(
+    
     useCallback(() => {  
+      console.log("hereee");
       if (postType === postTypes.HANG_SHARE) {
         setPlaceHolder(HANG_SHARE_TEXT);
         setIsOptionsVisible(false);
-        setImages(postImages)
+         setImages(postImages)
         handleButtonActivation(text,postImages)
       }
       if (postType === postTypes.SWAP) {
         setPlaceHolder(SWAP_DEFAULT_TEXT);
-        setImages([swapImage]);
+          setImages([swapImage]);
         handleButtonActivation(text, [swapImage]);
       } else {
         setPlaceHolder(DEFAULT_TEXT);
-        setImages(postImages)
+         setImages(postImages)
         handleButtonActivation(text,postImages)
       }
       if (isEdit) { loadImages(); }
@@ -298,7 +304,7 @@ export default function AddPostScreen({ navigation, route }) {
   };
 
   const handleButtonActivation = (text, images) => {
-    console.log(text,images);
+    // console.log(text,images);
     if (text !== '' || text !== undefined) setIsButtonActive(true);
     if (images?.length > 0) setIsButtonActive(true);
     if (images?.length === 0 && text === '') setIsButtonActive(false);
@@ -499,19 +505,30 @@ export default function AddPostScreen({ navigation, route }) {
   }
 
   const handleAddPost = async () => {
+    console.log("Type",postType);
     // setloadingIndicator(true)
     setLoading(true);
     switch (postType) {
       case postTypes.GROUP_POST:
+        console.log(postType);
         group();
+        break
       case postTypes.SWAP:
+        console.log(postType);
         swap();
+        break
       case postTypes.HANG_SHARE:
+        console.log(postType);
         hangShare();
+        break
       case postTypes.SHARE_POST:
+        console.log(postType);
         sharePost();
+        break
       case postTypes.CREATE_POST:
+        console.log(postType);
         createPost();
+        break
     }
 
   };
