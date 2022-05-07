@@ -185,7 +185,7 @@ const deletePost = async () => {
           />
         )}
 
-        {userState?.userData.id !== userId && <SwapActionContainer />}
+        {userState?.userData.id !== userId && <SwapActionContainer item={item} />}
       </View>
 
       <PostActions

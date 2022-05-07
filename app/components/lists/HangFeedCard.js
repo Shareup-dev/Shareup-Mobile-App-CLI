@@ -151,11 +151,12 @@ export default function HangFeedCard({
   useEffect(() => {
     formateDate();
     checkIfLiked();
-    loadImages();
+    //loadImages();
   }, []);
 
   useFocusEffect(
     useCallback(() => {
+      loadImages();
       reloadPost();
     }, [postData.id]),
   );

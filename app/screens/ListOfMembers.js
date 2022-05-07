@@ -145,8 +145,8 @@ export default function ListOfMembers({navigation, route}) {
           }}>
           <Image
             source={
-              item.image
-                ? {uri: fileStorage.baseUrl + item.image}
+              item.profilePicturePath
+                ? {uri: item.profilePicturePath}
                 : require('../assets/images/group-texture.png')
             }
             style={styles.img}

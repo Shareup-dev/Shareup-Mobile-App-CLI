@@ -6,6 +6,7 @@ import {
   FlatList,
   ScrollView,
   TouchableWithoutFeedback,
+  Dimensions,
 } from "react-native";
 import Button from "../components/buttons/Button";
 import GiftDrawer from "../components/drawers/GiftDrawer";
@@ -16,20 +17,23 @@ import Separator from "../components/Separator";
 import colors from "../config/colors";
 import constants from "../config/constants";
 import routes from "../navigation/routes";
+
 import ImageCropPicker from "react-native-image-crop-picker";
 import { useDispatch, useSelector } from "react-redux";
 import { State } from "react-native-gesture-handler";
 import store from "../redux/store";
+import { useImagePicker } from '../hooks';
 import {postImagesAction} from '../redux/postImages'
 
 export default function KeepHangScreen({ navigation,route }) {
   const dispatch = useDispatch()
   const postImages = useSelector(state => state.postImages)
   const postType = route.params;
- 
+  const { file, pickImage,openCamera, clearFile } = useImagePicker();
+ const {width,height}=Dimensions.get('window');
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const {postTypes} = constants;
-  const [file, setFile] = useState([]);
+  //const [file, setFile] = useState([]);
   const hangList = [
     {
       id: 1,
@@ -56,44 +60,87 @@ export default function KeepHangScreen({ navigation,route }) {
     { id: 5, title: "", image: "" },
   ];
 
-  const handleImagePicker = () => {
-    ImageCropPicker.openPicker({
-      mediaType:"any",
-      width: "100%",
-      height: "100%",
-      multiple:true,
-      cropping: true,
-      //compressImageQuality: 0.5,
-    }).then(image => {
-      console.log(image);
-      const newImage = image.filter(img => 
-        // if (postType === postTypes.HANG_SHARE) {
-        //   dispatch(postImagesAction.addNewImages(img.sourceURL))
-        // }else{
-          dispatch(postImagesAction.setImages(img.sourceURL))
-        // }
-        
-      
-      )
-      setFile(image)
+  const handleImagePicker = async () => {
+    try {
+        const result = await pickImage().then((result) => {
+        console.log("IMAGES",result);
+        const newImage = result.filter(img => {
+              if (postType === postTypes.HANG_SHARE) {
+                dispatch(postImagesAction.addNewImages(img.uri))
+              }else{
+                dispatch(postImagesAction.setImages(img.uri))
+              }
+            }
+            )
+        //if (!result.cancelled) onAddImage(uri);
+       // setFile(image)
       console.log(postImages);
       navigation.navigate(routes.ADD_POST,{
         postType: postType,
       })
-    })
-  }
-  const handleCamera = () => {
-    ImageCropPicker.openCamera({
-      mediaType:"any",
-      compressVideoPreset:"LowQuality",
-    }).then(image => {
-      
-        dispatch(postImagesAction.setImages(image.path))
-      setFile(image)
-      navigation.navigate(routes.ADD_POST,{
-        postType: postType,
       })
-    });
+      } catch (error) {
+        console.error(error);
+      }
+    //............................//
+    // ImageCropPicker.openPicker({
+    //   mediaType:"any",
+    //   width: width,
+    //   height: height,
+    //   multiple:true,
+    //   cropping: true,
+    //   compressImageQuality: 0.5,
+    // }).then(image => {
+    //   console.log(image);
+    //   const newImage = image.filter(img => 
+    //     // if (postType === postTypes.HANG_SHARE) {
+    //     //   dispatch(postImagesAction.addNewImages(img.sourceURL))
+    //     // }else{
+    //       dispatch(postImagesAction.setImages(img.sourceURL))
+    //     // }
+        
+      
+    //   )
+    //   setFile(image)
+    //   console.log(postImages);
+    //   navigation.navigate(routes.ADD_POST,{
+    //     postType: postType,
+    //   })
+    // })
+  }
+  const handleCamera = async () => {
+    try {
+      const result = await openCamera().then((result) => {
+      console.log("IMAGES",result);
+      const newImage = result.filter(img => {
+            if (postType === postTypes.HANG_SHARE) {
+              dispatch(postImagesAction.addNewImages(img.uri))
+            }else{
+              dispatch(postImagesAction.setImages(img.uri))
+            }
+          }
+          )
+      //if (!result.cancelled) onAddImage(uri);
+     // setFile(image)
+    console.log(postImages);
+    navigation.navigate(routes.ADD_POST,{
+      postType: postType,
+    })
+    })
+    } catch (error) {
+      console.error(error);
+    }
+    // ImageCropPicker.openCamera({
+    //   mediaType:"photo",
+    //   //compressVideoPreset:"LowQuality",
+    // }).then(image => {
+      
+    //     dispatch(postImagesAction.setImages(image.path))
+    //   setFile(image)
+    //   navigation.navigate(routes.ADD_POST,{
+    //     postType: postType,
+    //   })
+    // });
   } 
   return (
     <Screen statusPadding={true}>

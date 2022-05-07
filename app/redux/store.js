@@ -39,6 +39,6 @@ export default store = configureStore({
     messages: messagesReducer,
     conversations: ConversationsSlice,
     postFeel: postFeelings,
-    recentSearch:recentSearch.reducer
+    recentSearch:recentSearch,
   },
 });

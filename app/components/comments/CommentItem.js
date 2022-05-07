@@ -20,7 +20,6 @@ import LinkButton from "../buttons/LinkButton";
 import CommentText from "./CommentText";
 import authContext from "../../authContext";
 import { Button } from "react-native-paper";
-import CommentsScreen from "../../screens/CommentsScreen";
 import PostOptionDrawer from "../drawers/PostOptionsDrawer";
 import postService from "../../services/post.service";
 import { useFocusEffect } from "@react-navigation/native";

@@ -24,7 +24,7 @@ import FriendService from '../services/FriendService';
 import store from '../redux/store';
 import userService from '../services/user.service';
 import {useFocusEffect} from '@react-navigation/native';
-import { recentSearchActions } from '../redux/recentSearch';
+//import { recentSearchActions } from '../redux/recentSearch';
 
 
 export default function SearchScreen({navigation}) {
@@ -33,11 +33,11 @@ export default function SearchScreen({navigation}) {
     const [recentList,setRecentList] = useState([])
     const searchTextFieldRef = useRef();
 
-    useEffect(() => {
-        const recent = store.dispatch(recentSearchActions.getList())
-        setRecentList(recent)
-        return;
-      },[])
+    // useEffect(() => {
+    //     //const recent = store.dispatch(recentSearchActions.getList())
+    //     //setRecentList(recent)
+    //     return;
+    //   },[])
     const onSearch = searchKey => {
         if (searchKey == '') {
           setIsSearch(false);
@@ -68,7 +68,7 @@ return (
           ref={searchTextFieldRef}
           onChangeText={text => {
             onSearch(text);
-            store.dispatch(recentSearchActions.setList(text))
+            // store.dispatch(recentSearchActions.setList(text))
           }}
 
           

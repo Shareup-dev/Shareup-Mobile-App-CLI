@@ -27,6 +27,7 @@ export default function NewsFeedScreen({navigation, route}) {
   const [activityIndicator, setActivityIndicator] = useState(true);
   useFocusEffect(
     useCallback(() => {
+      console.log("hereee");
       loadNews();
       // loadStories();
       // return setActivityIndicator(false);
@@ -59,14 +60,22 @@ export default function NewsFeedScreen({navigation, route}) {
             />
           );
         case constants.postTypes.HANG_SHARE:
-          return (<HangFeedCard //style={styles.listItem}
-            user={item.userdata}
-            postData={item}
-            navigation={navigation}
-            reloadPosts={loadNews}
-            postType={item.allPostsType}
-            onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item }) }}
-          />);
+          return (
+            <SwapCard
+              navigation={navigation}
+              route={route}
+              item={item}
+              userId={item.userdata.id}
+            />
+          // <HangFeedCard //style={styles.listItem}
+          //   user={item.userdata}
+          //   postData={item}
+          //   navigation={navigation}
+          //   reloadPosts={loadNews}
+          //   postType={item.allPostsType}
+          //   onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item }) }}
+          // />
+          );
         default:
           return (
             <Card

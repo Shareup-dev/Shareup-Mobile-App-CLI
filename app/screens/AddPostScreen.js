@@ -78,7 +78,7 @@ export default function AddPostScreen({ navigation, route }) {
 
   const { postTypes } = constants;
 
-
+  const DEFAULT_TEXT = 'We Share, Do You ?'
   const SWAP_DEFAULT_TEXT = 'Hi all \n I want to Swap ...';
   const HANG_SHARE_TEXT = 'Please anyone want this,can have it';
 
@@ -232,7 +232,7 @@ export default function AddPostScreen({ navigation, route }) {
     }else if (postType === postTypes.SWAP) {
       setPlaceHolder(SWAP_DEFAULT_TEXT);
     }else{
-      setPlaceHolder('We Share,Do you ?');
+      setPlaceHolder(DEFAULT_TEXT);
     }
     
   })
@@ -249,7 +249,7 @@ export default function AddPostScreen({ navigation, route }) {
         setImages([swapImage]);
         handleButtonActivation(text, [swapImage]);
       } else {
-        setPlaceHolder('We Share,Do you ?');
+        setPlaceHolder(DEFAULT_TEXT);
         setImages(postImages)
         handleButtonActivation(text,postImages)
       }
@@ -380,7 +380,7 @@ export default function AddPostScreen({ navigation, route }) {
 
   //........SWAP POST................//
   const swap = () => {
-   
+    console.log("SWAPPPP");
     const swapContent = {
       text: text === '' ? SWAP_DEFAULT_TEXT : text,
       images: [swapImage],
@@ -412,6 +412,7 @@ export default function AddPostScreen({ navigation, route }) {
 
   //........HANG SHARE POST................//
   const hangShare = () => {
+    console.log("HANG_SHARE");
     const swapContent = {
       text: text === '' ? HANG_SHARE_TEXT : text,
       category: "gifts",
@@ -461,12 +462,12 @@ export default function AddPostScreen({ navigation, route }) {
 
   //........CREATE POST................//
   const createPost = () => {
-    if (text === '' && Object.keys(file).length === 0) {
+    if (text === '' && images.length === 0) {
       setError("Can't Create empty post");
       alert(error)
     } else {
       const postContent = {
-        text: text,
+        text: text === '' ? DEFAULT_TEXT : text,
         images: images,
         feeling: postFeel.feeling ? postFeel.feeling : null,
         groupId: groupId,

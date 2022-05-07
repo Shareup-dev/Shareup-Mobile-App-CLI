@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 
 import colors from '../config/colors';
-import JoinGroupList from './lists/JoinGroupList';
+// import JoinGroupList from './lists/JoinGroupList';
 import WritePost from './WritePost';
 
 import StoriesList from './lists/StoriesList';
@@ -15,7 +15,7 @@ export default function FeedTop({navigation}) {
       <WritePost navigation={navigation} />
 
       <View style={styles.suggestedGroupsWrapper}>
-        <JoinGroupList navigation={navigation} />
+        {/* <JoinGroupList navigation={navigation} /> */}
       </View>
     </View>
   );

@@ -4,15 +4,17 @@ import { View, StyleSheet, Text } from "react-native";
 import colors from "../../config/colors";
 import defaultStyles from "../../config/styles";
 import Tab from "../buttons/Tab";
+import constants from "../../config/constants";
 
-export default function SwapActionContainer(props) {
+export default function SwapActionContainer({item}) {
+  console.log(item.content);
   return (
     <View style={styles.container}>
       <View style={styles.categoryContainer}>
         <Text style={[styles.title, defaultStyles.fontWeightMedium]}>
-          Category
+          
         </Text>
-        <Text style={styles.description}>Laptop</Text>
+        <Text style={styles.description}></Text>
       </View>
       {/* <Text
           style={[
@@ -26,7 +28,7 @@ export default function SwapActionContainer(props) {
           Swap
         </Text> */}
       <Tab
-        title="Swap"
+        title={item.allPostsType === constants.postTypes.SWAP ? "Swap" : "Accept"}
         color={colors.iondigoDye}
         fontColor={colors.white}
         width={80}

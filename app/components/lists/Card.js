@@ -153,8 +153,12 @@ export default function Card({
     return Math.floor(Math.random() * (100000 - 0 + 1) + 0);
   }
   const formateDate = () => {
+    // 01 May 2022 09:24:23
+    // var d = new Date(postData.lastEdited); /* midnight in China on April 13th */
+    // d.toLocaleString('en-US', { timeZone: 'America/New_York' });
     const arrDate = postData.lastEdited.split(' ');
     const monthShort = arrDate[1].slice(0, 3);
+    
     setFormattedDate({
       day: arrDate[0],
       month: monthShort,
@@ -172,12 +176,13 @@ export default function Card({
   useEffect(() => {
     formateDate();
     checkIfLiked();
-    loadImages();
+    //loadImages();
   }, []);
 
   useFocusEffect(
     useCallback(() => {
       reloadPost();
+      loadImages();
     }, [postData.id]),
   );
   //.................... POST ACTION METHOD .............................//
