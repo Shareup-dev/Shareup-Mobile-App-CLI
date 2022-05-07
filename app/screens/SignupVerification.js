@@ -58,7 +58,7 @@ export default function SignupVerification({navigation, route}) {
   const resendOTP = () => {
     setMessage({...message, isSending: true});
     authService
-      .verifyEmailOTP(params.username)
+      .verifyEmailOTP(params?.username)
       .then(res =>
         res.status === 200
           ? setMessage({
@@ -86,10 +86,10 @@ export default function SignupVerification({navigation, route}) {
         .then(async res => {
           if (res.status === 200) {
             if (params.jwt)
-              await authActions.signup(params.username, params.jwt);
+              await authActions.signup(params?.username, params.jwt);
             else {
               authService
-                .login(params.username, params.password)
+                .login(params?.username, params.password)
                 .then(async result => {
                   if (result.status === 200) {
                     await authActions.login(

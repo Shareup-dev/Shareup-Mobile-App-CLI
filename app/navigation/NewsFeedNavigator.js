@@ -17,7 +17,7 @@ import SwapDisplay from '../screens/SwapDisplay';
 import ShippingAddress from '../screens/ShippingAddress';
 import Checkout from '../screens/Checkout';
 import CheckoutComplete from '../screens/CheckoutComplete';
-import AddCommentsOnReels from '../screens/addCommentsOnReels';
+// import AddCommentsOnReels from '../screens/addCommentsOnReels';
 import SearchScreen from '../screens/SearchScreen';
 import PersonalInfoSettings from '../screens/PersonalInfoSettings';
 import UpdateName from '../screens/PERSONAL_INFO/UpdateName';
@@ -26,6 +26,7 @@ import UpdateDOB from '../screens/PERSONAL_INFO/updateDOB';
 import UpdateEmail from '../screens/PERSONAL_INFO/updateEmail';
 import ManageEmail from '../screens/PERSONAL_INFO/manageEmail';
 import UpdatePassword from '../screens/PERSONAL_INFO/updatePassword';
+import FriendsProfileScreen from '../screens/FriendsProfileScreen';
 
 
 export default function NewsFeedNavigator() {
@@ -44,13 +45,21 @@ export default function NewsFeedNavigator() {
           header: ({navigation}) => <CustomHeaderBar navigation={navigation} />,
         }}
       />
-      <Stack.Screen
+   <Stack.Screen
         name={routes.USER_PROFILE}
         component={UserProfileScreen}
         options={{
           headerShown: false,
         }}
       />
+   <Stack.Screen
+        name={routes.FRIEND_PROFILE}
+        component={FriendsProfileScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+
     
       <Stack.Screen
         name={routes.PERSONAL_INFORMATION}
@@ -146,7 +155,7 @@ export default function NewsFeedNavigator() {
         options={{
           headerShown: false,
         }}
-      />
+      /> 
 
       {/* there are no use of this  */}
       <Stack.Screen

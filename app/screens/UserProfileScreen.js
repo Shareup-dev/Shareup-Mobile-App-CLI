@@ -46,7 +46,7 @@ export default function UserProfileScreen({navigation, route}) {
     userState: {userData},
   } = useContext(authContext);
 
-  const [user, setUser] = useState(params.user ? params.user : userData);
+  const [user, setUser] = useState(params?.user ? params?.user : userData);
 
   const [posts, setPosts] = useState([]);
   const [media, setMedia] = useState([]);

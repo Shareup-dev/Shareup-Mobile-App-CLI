@@ -1,5 +1,13 @@
 import React, {useContext, useEffect, useState, useCallback} from 'react';
-import {StyleSheet, Text, View, FlatList, Image, Alert} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Image,
+  Alert,
+  Touchable,
+} from 'react-native';
 
 import Screen from '../components/Screen';
 import TextField from '../components/TextField';
@@ -22,6 +30,7 @@ import {useSelector} from 'react-redux';
 import Toast from 'react-native-toast-message';
 import userService from '../services/user.service';
 import {useFocusEffect} from '@react-navigation/native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export default function ActivityScreen({navigation}) {
   const [users, setusers] = useState([]);
@@ -134,7 +143,13 @@ export default function ActivityScreen({navigation}) {
       <HeaderWithBackArrow
         onBackButton={() => navigation.navigate(routes.FEED)}
         title="Activity"
-        rightComponent={<UserProfilePicture size={35} />}
+        rightComponent={
+          <TouchableOpacity
+            onPress={_ => navigation.navigate(routes.USER_PROFILE)}
+            activeOpacity={0.8}>
+            <UserProfilePicture size={35} />
+          </TouchableOpacity>
+        }
       />
       <View style={styles.searchContainer}>
         <TextField
@@ -230,34 +245,37 @@ export default function ActivityScreen({navigation}) {
           //     navigation.navigate(routes.USER_PROFILE, item.email)
           //   }
           // />
-          <ListItem
-            email={item.email}
-            user={item}
-            image={item.profilePicturePath}
-            title={item.firstName}
-            tabTitle={
-              sentto.filter((user) => user.email === item.email)[0]
-                ? "Sent"
-                : "Send Request"
-            }
-            color={
-              sentto.filter((user) => user.email === item.email)[0]
-                ? colors.iondigoDye
-                : colors.lighterGray
-            }
-            fontColor={
-              sentto.filter((user) => user.email === item.email)[0]
-                ? colors.white
-                : colors.dark
-            }
-            subTitle="Recommended"
-            onPress={onSendRequest}
-            style={[defaultStyles.listItemStyle, defaultStyles.lightShadow]}
-            displayLeft={true}
-            onPressProfile={() =>
-                  navigation.navigate(routes.USER_PROFILE, item.email)
-                }
-          />
+          <TouchableOpacity
+            onPress={() => navigation.navigate(routes.FRIEND_PROFILE)}>
+            <ListItem
+              email={item.email}
+              user={item}
+              image={item.profilePicturePath}
+              title={item.firstName}
+              tabTitle={
+                sentto.filter(user => user.email === item.email)[0]
+                  ? 'Sent'
+                  : 'Send Request'
+              }
+              color={
+                sentto.filter(user => user.email === item.email)[0]
+                  ? colors.iondigoDye
+                  : colors.lighterGray
+              }
+              fontColor={
+                sentto.filter(user => user.email === item.email)[0]
+                  ? colors.white
+                  : colors.dark
+              }
+              subTitle="Recommended"
+              onPress={onSendRequest}
+              style={[defaultStyles.listItemStyle, defaultStyles.lightShadow]}
+              displayLeft={true}
+              onPressProfile={() =>
+                navigation.navigate(routes.USER_PROFILE, item.email)
+              }
+            />
+          </TouchableOpacity>
         )}
       />
     </Screen>

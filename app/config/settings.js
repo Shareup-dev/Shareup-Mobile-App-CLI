@@ -16,7 +16,7 @@ const settings = {
   },
   prod: {
     
-    apiUrl: 'http://44.195.204.128',//'http://shareup-env.eba-em9v8zqj.us-east-1.elasticbeanstalk.com/',
+    apiUrl: 'http://shareup-env.eba-em9v8zqj.us-east-1.elasticbeanstalk.com',//'http://shareup-env.eba-em9v8zqj.us-east-1.elasticbeanstalk.com/',
   },
 };
 
@@ -27,7 +27,7 @@ const getCurrentSettings = () => {
   // if (__DEV__) return settings.prod;
 
   // if (Constants.manifest.releaseChannel === 'staging') return settings.staging;
-  return settings.prod;
+  return settings.dev;
 };
 
 export default getCurrentSettings();

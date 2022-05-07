@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from 'react';
 import {
   Text,
   StyleSheet,
@@ -7,81 +7,89 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Dimensions,
-} from "react-native";
-import Button from "../components/buttons/Button";
-import GiftDrawer from "../components/drawers/GiftDrawer";
-import Icon from "../components/Icon";
-import HangCard from "../components/lists/HangCard";
-import Screen from "../components/Screen";
-import Separator from "../components/Separator";
-import colors from "../config/colors";
-import constants from "../config/constants";
-import routes from "../navigation/routes";
+} from 'react-native';
+import Button from '../components/buttons/Button';
+import GiftDrawer from '../components/drawers/GiftDrawer';
+import Icon from '../components/Icon';
+import HangCard from '../components/lists/HangCard';
+import Screen from '../components/Screen';
+import Separator from '../components/Separator';
+import colors from '../config/colors';
+import constants from '../config/constants';
+import routes from '../navigation/routes';
 
-import ImageCropPicker from "react-native-image-crop-picker";
-import { useDispatch, useSelector } from "react-redux";
-import { State } from "react-native-gesture-handler";
-import store from "../redux/store";
-import { useImagePicker } from '../hooks';
-import {postImagesAction} from '../redux/postImages'
+import ImageCropPicker from 'react-native-image-crop-picker';
+import {useDispatch, useSelector} from 'react-redux';
+import {State} from 'react-native-gesture-handler';
+import store from '../redux/store';
+import {useImagePicker} from '../hooks';
+import {postImagesAction} from '../redux/postImages';
 
-export default function KeepHangScreen({ navigation,route }) {
-  const dispatch = useDispatch()
-  const postImages = useSelector(state => state.postImages)
+export default function KeepHangScreen({navigation, route}) {
+  const dispatch = useDispatch();
+  const postImages = useSelector(state => state.postImages);
   const postType = route.params;
-  const { file, pickImage,openCamera, clearFile } = useImagePicker();
- const {width,height}=Dimensions.get('window');
+  const {file, pickImage, openCamera, clearFile} = useImagePicker();
+  const {width, height} = Dimensions.get('window');
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const {postTypes} = constants;
   //const [file, setFile] = useState([]);
   const hangList = [
     {
       id: 1,
-      title: "Hang Flow",
-      image: "",
-      onPress: () => {navigation.navigate(routes.HANG_FLOW_SCREEN)}
+      title: 'Hang Flow',
+      image: '',
+      onPress: () => {
+        navigation.navigate(routes.HANG_FLOW_SCREEN);
+      },
     },
     {
       id: 2,
-      title: "Hang Gifts",
-      image: require("../assets/icons/gray-gift-icon.png"),
+      title: 'Hang Gifts',
+      image: require('../assets/icons/gray-gift-icon.png'),
       onPress: () => setIsDrawerVisible(!isDrawerVisible),
     },
     {
       id: 3,
-      title: "Hang Meals",
-      image: require("../assets/icons/gray-food-icon.png"),
+      title: 'Hang Meals',
+      image: require('../assets/icons/gray-food-icon.png'),
     },
     {
       id: 4,
-      title: "",
-      image: "",
+      title: '',
+      image: '',
     },
-    { id: 5, title: "", image: "" },
+    {id: 5, title: '', image: ''},
   ];
 
-  const handleImagePicker = async () => {
-    try {
-        const result = await pickImage().then((result) => {
-        console.log("IMAGES",result);
-        const newImage = result.filter(img => {
-              if (postType === postTypes.HANG_SHARE) {
-                dispatch(postImagesAction.addNewImages(img.uri))
-              }else{
-                dispatch(postImagesAction.setImages(img.uri))
-              }
-            }
-            )
-        //if (!result.cancelled) onAddImage(uri);
-       // setFile(image)
-      console.log(postImages);
-      navigation.navigate(routes.ADD_POST,{
-        postType: postType,
+  const handleImagePicker = () => {
+    ImageCropPicker.openPicker({
+      mediaType: 'any',
+      width: width,
+      height: height,
+      multiple: true,
+      cropping: true,
+      //compressImageQuality: 0.5,
+    })
+      .then(image => {
+        console.log(image);
+        const newImage = image.filter(
+          img =>
+            // if (postType === postTypes.HANG_SHARE) {
+            //   dispatch(postImagesAction.addNewImages(img.sourceURL))
+            // }else{
+            dispatch(postImagesAction.setImages(img.sourceURL)),
+          // }
+        );
+        setFile(image);
+        console.log(postImages, 'post img');
+        navigation.navigate(routes.ADD_POST, {
+          postType: postType,
+        });
       })
-      })
-      } catch (error) {
+      .catch(error => {
         console.error(error);
-      }
+      });
     //............................//
     // ImageCropPicker.openPicker({
     //   mediaType:"any",
@@ -92,14 +100,13 @@ export default function KeepHangScreen({ navigation,route }) {
     //   compressImageQuality: 0.5,
     // }).then(image => {
     //   console.log(image);
-    //   const newImage = image.filter(img => 
+    //   const newImage = image.filter(img =>
     //     // if (postType === postTypes.HANG_SHARE) {
     //     //   dispatch(postImagesAction.addNewImages(img.sourceURL))
     //     // }else{
     //       dispatch(postImagesAction.setImages(img.sourceURL))
     //     // }
-        
-      
+
     //   )
     //   setFile(image)
     //   console.log(postImages);
@@ -107,26 +114,25 @@ export default function KeepHangScreen({ navigation,route }) {
     //     postType: postType,
     //   })
     // })
-  }
+  };
   const handleCamera = async () => {
     try {
-      const result = await openCamera().then((result) => {
-      console.log("IMAGES",result);
-      const newImage = result.filter(img => {
-            if (postType === postTypes.HANG_SHARE) {
-              dispatch(postImagesAction.addNewImages(img.uri))
-            }else{
-              dispatch(postImagesAction.setImages(img.uri))
-            }
+      const result = await openCamera().then(result => {
+        console.log('IMAGES', result);
+        const newImage = result.filter(img => {
+          if (postType === postTypes.HANG_SHARE) {
+            dispatch(postImagesAction.addNewImages(img.uri));
+          } else {
+            dispatch(postImagesAction.setImages(img.uri));
           }
-          )
-      //if (!result.cancelled) onAddImage(uri);
-     // setFile(image)
-    console.log(postImages);
-    navigation.navigate(routes.ADD_POST,{
-      postType: postType,
-    })
-    })
+        });
+        //if (!result.cancelled) onAddImage(uri);
+        // setFile(image)
+        console.log(postImages);
+        navigation.navigate(routes.ADD_POST, {
+          postType: postType,
+        });
+      });
     } catch (error) {
       console.error(error);
     }
@@ -134,53 +140,59 @@ export default function KeepHangScreen({ navigation,route }) {
     //   mediaType:"photo",
     //   //compressVideoPreset:"LowQuality",
     // }).then(image => {
-      
+
     //     dispatch(postImagesAction.setImages(image.path))
     //   setFile(image)
     //   navigation.navigate(routes.ADD_POST,{
     //     postType: postType,
     //   })
     // });
-  } 
+  };
   return (
     <Screen statusPadding={true}>
       {postType === postTypes.HANG_SHARE ? (
-      <View style={styles.header}>
-        <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
-          <Icon name="chevron-back" type="Ionicons" size={50} />
-        </TouchableWithoutFeedback>
+        <View style={styles.header}>
+          <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
+            <Icon name="chevron-back" type="Ionicons" size={50} />
+          </TouchableWithoutFeedback>
 
-        <Text style={styles.headerTitle}> Today to me, tomorrow to you</Text>
-      </View>): (<View style={styles.header}>
-        <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
-          <Icon name="chevron-back" type="Ionicons" size={50} />
-        </TouchableWithoutFeedback>
-        </View>)}
-        {postType === postTypes.HANG_SHARE ? (
-      <View style={styles.listContainer}>
-        <FlatList
-          data={hangList}
-          horizontal
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <HangCard
-              title={item.title}
-              image={item.image}
-              onPress={item.onPress}
-            />
-          )}
-        />
-      </View>):(<View/>)}
+          <Text style={styles.headerTitle}> Today to me, tomorrow to you</Text>
+        </View>
+      ) : (
+        <View style={styles.header}>
+          <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
+            <Icon name="chevron-back" type="Ionicons" size={50} />
+          </TouchableWithoutFeedback>
+        </View>
+      )}
+      {postType === postTypes.HANG_SHARE ? (
+        <View style={styles.listContainer}>
+          <FlatList
+            data={hangList}
+            horizontal
+            keyExtractor={item => item.id.toString()}
+            renderItem={({item}) => (
+              <HangCard
+                title={item.title}
+                image={item.image}
+                onPress={item.onPress}
+              />
+            )}
+          />
+        </View>
+      ) : (
+        <View />
+      )}
       <View style={styles.line} />
 
       <View style={styles.cameraIcon}>
         <TouchableWithoutFeedback onPress={handleCamera}>
-        <Icon
-          name="camera"
-          type="Feather"
-          color={colors.mediumGray}
-          backgroundSizeRatio={0.7}
-        />
+          <Icon
+            name="camera"
+            type="Feather"
+            color={colors.mediumGray}
+            backgroundSizeRatio={0.7}
+          />
         </TouchableWithoutFeedback>
       </View>
       <ScrollView>
@@ -231,7 +243,7 @@ export default function KeepHangScreen({ navigation,route }) {
             <Text style={styles.text}>Sharing easier</Text>
           </View>
           <View style={styles.button}>
-            <Button title="Continue" onPress={handleImagePicker}/>
+            <Button title="Continue" onPress={handleImagePicker} />
           </View>
         </View>
       </ScrollView>
@@ -239,7 +251,13 @@ export default function KeepHangScreen({ navigation,route }) {
       <GiftDrawer
         isVisible={isDrawerVisible}
         setIsVisible={setIsDrawerVisible}
-        onPress={(item) => { navigation.navigate(routes.CHECKOUT , {postType:postTypes.HANG_SHARE,item}),setIsDrawerVisible(false)}}
+        onPress={item => {
+          navigation.navigate(routes.CHECKOUT, {
+            postType: postTypes.HANG_SHARE,
+            item,
+          }),
+            setIsDrawerVisible(false);
+        }}
       />
     </Screen>
   );
@@ -248,36 +266,35 @@ export default function KeepHangScreen({ navigation,route }) {
 const styles = StyleSheet.create({
   container: {},
   header: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   headerTitle: {
     fontSize: 20,
   },
   line: {
     height: 1.5,
-    width: "100%",
+    width: '100%',
     backgroundColor: colors.lighterGray,
   },
   listContainer: {
     padding: 10,
   },
   cameraIcon: {
-    alignItems: "flex-end",
+    alignItems: 'flex-end',
     marginTop: 20,
     marginRight: 20,
-    
   },
   content: {
-    alignItems: "center",
+    alignItems: 'center',
   },
   title: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 17,
   },
   subTitle: {
     fontSize: 16,
-    fontWeight: "normal",
+    fontWeight: 'normal',
   },
   text: {
     color: colors.mediumGray,
@@ -285,20 +302,19 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   sectionWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-  
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   separator: {
     marginVertical: 20,
   },
   endWrapper: {
-    marginTop: "15%",
-    alignItems: "center",
+    marginTop: '15%',
+    alignItems: 'center',
     // backgroundColor: "red",
   },
   button: {
-    width: "70%",
+    width: '70%',
     marginVertical: 10,
   },
   extraSpace: {
