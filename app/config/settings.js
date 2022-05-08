@@ -15,8 +15,8 @@ const settings = {
     apiUrl: 'http://192.168.100.2:8080',
   },
   prod: {
-    
-    apiUrl: 'http://shareup-env.eba-em9v8zqj.us-east-1.elasticbeanstalk.com',//'http://shareup-env.eba-em9v8zqj.us-east-1.elasticbeanstalk.com/',
+    apiUrl:"http://44.195.204.128",
+   // apiUrl: 'http://shareup-env.eba-em9v8zqj.us-east-1.elasticbeanstalk.com',//'http://shareup-env.eba-em9v8zqj.us-east-1.elasticbeanstalk.com/',
   },
 };
 
