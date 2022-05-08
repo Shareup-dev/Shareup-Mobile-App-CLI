@@ -14,9 +14,7 @@ export default function FeedTop({navigation}) {
 
       <WritePost navigation={navigation} />
 
-      <View style={styles.suggestedGroupsWrapper}>
-        {/* <JoinGroupList navigation={navigation} /> */}
-      </View>
+     
     </View>
   );
 }
@@ -51,10 +49,7 @@ const styles = StyleSheet.create({
   tabsTitle: {
     fontWeight: '500',
   },
-  suggestedGroupsWrapper: {
-    marginHorizontal: 15,
-    marginTop: 10,
-  },
+ 
   storiesList: {
     marginTop: 15,
   },

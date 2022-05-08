@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  
   postedDate: {
     marginHorizontal: 10,
     color: colors.grayX11Gray,

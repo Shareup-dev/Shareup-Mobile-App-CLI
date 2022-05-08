@@ -62,105 +62,50 @@ export default function KeepHangScreen({navigation, route}) {
     {id: 5, title: '', image: ''},
   ];
 
-
-  const handleImagePicker = async () => {
-    try {
-        const result = await pickImage().then((result) => {
-          console.log("IMAGES::",result);
-        const newImage = result.filter(img => {
-              if (postType === postTypes.HANG_SHARE) {
-               
-                dispatch(postImagesAction.addNewImages([img.uri]))
-              }else{
-               
-                dispatch(postImagesAction.setImages(img.uri))
-              }
-            }
-            )
-        //if (!result.cancelled) onAddImage(uri);
-       // setFile(image)
-      navigation.navigate(routes.ADD_POST,{
-        postType: postType,
+  const handleImagePicker = () => {
+    ImageCropPicker.openPicker({
+      mediaType: 'any',
+      width: width,
+      height: height,
+      multiple: true,
+      cropping: true,
+      //compressImageQuality: 0.5,
+    })
+      .then(image => {
+        console.log(image);
+        image.filter(
+          img =>
+            // if (postType === postTypes.HANG_SHARE) {
+            //   dispatch(postImagesAction.addNewImages(img.sourceURL))
+            // }else{
+            dispatch(postImagesAction.setImages(img.sourceURL)),
+          // }
+        );
+        navigation.navigate(routes.ADD_POST, {
+          postType: postType,
+        });
       })
-      console.log("postImages::",postImages);
-      })
-      
-      } catch (error) {
-
-  // const handleImagePicker = () => {
-  //   ImageCropPicker.openPicker({
-  //     mediaType: 'any',
-  //     width: width,
-  //     height: height,
-  //     multiple: true,
-  //     cropping: true,
-  //     //compressImageQuality: 0.5,
-  //   })
-  //     .then(image => {
-  //       console.log(image);
-  //       const newImage = image.filter(
-  //         img =>
-  //           // if (postType === postTypes.HANG_SHARE) {
-  //           //   dispatch(postImagesAction.addNewImages(img.sourceURL))
-  //           // }else{
-  //           dispatch(postImagesAction.setImages(img.sourceURL)),
-  //         // }
-  //       );
-  //       setFile(image);
-  //       console.log(postImages, 'post img');
-  //       navigation.navigate(routes.ADD_POST, {
-  //         postType: postType,
-  //       });
-  //     })
-  //     .catch(error => {
-
-        console.error(error);
-      };
-    //............................//
-    // ImageCropPicker.openPicker({
-    //   mediaType:"any",
-    //   width: width,
-    //   height: height,
-    //   multiple:true,
-    //   cropping: true,
-    //   compressImageQuality: 0.5,
-    // }).then(image => {
-    //   console.log(image);
-    //   const newImage = image.filter(img =>
-    //     // if (postType === postTypes.HANG_SHARE) {
-    //     //   dispatch(postImagesAction.addNewImages(img.sourceURL))
-    //     // }else{
-    //       dispatch(postImagesAction.setImages(img.sourceURL))
-    //     // }
-
-    //   )
-    //   setFile(image)
-    //   console.log(postImages);
-    //   navigation.navigate(routes.ADD_POST,{
-    //     postType: postType,
-    //   })
-    // })
+      .catch(error => console.error(error));
   };
   const handleCamera = async () => {
     try {
+      const result = await openCamera().then(result => {
+        const newImage = result.filter(img => {
+          if (postType === postTypes.HANG_SHARE) {
+            dispatch(postImagesAction.addNewImages(img.uri));
+          } else {
+            dispatch(postImagesAction.setImages(img.uri));
+          }
 
-      const result = await openCamera().then((result) => {
-      const newImage = result.filter(img => {
-            if (postType === postTypes.HANG_SHARE) {
-              dispatch(postImagesAction.addNewImages(img.uri))
-            }else{
-              dispatch(postImagesAction.setImages(img.uri))
-            }
+          // const result = await openCamera().then(result => {
+          //   console.log('IMAGES', result);
+          //   const newImage = result.filter(img => {
+          //     if (postType === postTypes.HANG_SHARE) {
+          //       dispatch(postImagesAction.addNewImages(img.uri));
+          //     } else {
+          //       dispatch(postImagesAction.setImages(img.uri));
 
-      // const result = await openCamera().then(result => {
-      //   console.log('IMAGES', result);
-      //   const newImage = result.filter(img => {
-      //     if (postType === postTypes.HANG_SHARE) {
-      //       dispatch(postImagesAction.addNewImages(img.uri));
-      //     } else {
-      //       dispatch(postImagesAction.setImages(img.uri));
-
-        //  }
+          //  }
         });
         //if (!result.cancelled) onAddImage(uri);
         // setFile(image)

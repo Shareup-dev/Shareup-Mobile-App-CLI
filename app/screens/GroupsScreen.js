@@ -7,6 +7,7 @@ import {
   FlatList,
   ScrollView,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 
 import Icon from '../components/Icon';
@@ -19,6 +20,10 @@ import routes from '../navigation/routes';
 import fileStorage from '../config/fileStorage';
 import authContext from '../authContext';
 import groupService from '../services/group.service';
+import {useFocusEffect} from '@react-navigation/native';
+import constants from '../config/constants';
+import Card from '../components/lists/Card';
+import JoinGroupList from '../components/lists/JoinGroupList';
 
 export default function GroupsScreen({navigation}) {
   const {userData} = useContext(authContext).userState;
@@ -34,19 +39,19 @@ export default function GroupsScreen({navigation}) {
     loading: false,
   });
 
-  useEffect(() => {
-    const fetchFeed = () => {
-      setFeed(prev => ({...prev, loading: true}));
-      groupService
-        .newsFeed(userData.id)
-        .then(({data}) => setFeed(prev => ({...prev, state: data})))
-        .catch(e => console.error(e.message))
-        .finally(_ => setFeed(prev => ({...prev, loading: false})));
-    };
-    fetchFeed();
-  }, []);
-
-
+  const fetchFeed = () => {
+    setFeed(prev => ({...prev, loading: true}));
+    groupService
+      .newsFeed(userData.id)
+      .then(({data}) => setFeed(prev => ({...prev, state: data})))
+      .catch(e => console.error(e.message))
+      .finally(_ => setFeed(prev => ({...prev, loading: false})));
+  };
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchFeed();
+    }, []),
+  );
 
   const searchGroups = _ => {
     if (search.keyword) {
@@ -83,11 +88,68 @@ export default function GroupsScreen({navigation}) {
         />
         <View style={styles.item}>
           <Text style={styles.title}>{item.name}</Text>
-          <Text style={{fontSize:13}} >{item.description}</Text>
+          <Text style={{fontSize: 13}}>{item.description}</Text>
         </View>
       </View>
     </TouchableOpacity>
   );
+
+  const ActivityIndicatorComponent = ({style}) => (
+    <View style={[styles.listFooter, style]}>
+      <ActivityIndicator size="large" color={colors.iondigoDye} />
+    </View>
+  );
+
+  const HeaderComponent = () => {
+    return (
+      <View style={styles.suggestedGroupsWrapper}>
+        <JoinGroupList navigation={navigation} />
+      </View>
+    );
+  };
+
+  const renderItem = ({item}) => {
+    {
+      switch (item.allPostsType) {
+        case constants.postTypes.SWAP:
+          return (
+            <SwapCard
+              navigation={navigation}
+              route={route}
+              item={item}
+              userId={item.userdata.id}
+            />
+          );
+        case constants.postTypes.HANG_SHARE:
+          return (
+            <SwapCard
+              navigation={navigation}
+              route={route}
+              item={item}
+              userId={item.userdata.id}
+            />
+            // <HangFeedCard //style={styles.listItem}
+            //   user={item.userdata}
+            //   postData={item}
+            //   navigation={navigation}
+            //   reloadPosts={loadNews}
+            //   postType={item.allPostsType}
+            //   onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item }) }}
+            // />
+          );
+        default:
+          return (
+            <Card
+              user={item.userdata}
+              postData={item}
+              navigation={navigation}
+              reloadPosts={fetchFeed}
+              postType={item.allPostsType}
+            />
+          );
+      }
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -163,37 +225,59 @@ export default function GroupsScreen({navigation}) {
           titleStyle={styles.tabTitle}
         /> */}
       </View>
-
-      <ScrollView
-        style={styles.listContainer}
-        showsVerticalScrollIndicator={false}>
-        {search.loading === 2 && (
-          <>
-            <Text style={[{marginVertical: 5}, styles.title]}>
-              {`Search Results`}
-            </Text>
-            <View
-              style={{
-                backgroundColor: '#fdfdfd',
-                paddingHorizontal: 15,
-                paddingVertical: 10,
-                borderRadius: 10,
-              }}>
-              {search.result.length === 0 && (
-                <Text
-                  style={{
-                    textAlign: 'center',
-                    marginVertical: 15,
-                    fontSize: 15,
-                  }}>{`Groups not found`}</Text>
+      <View>
+        <ScrollView
+          style={styles.listContainer}
+          showsVerticalScrollIndicator={false}>
+          {search.loading === 2 && (
+            <>
+              <Text style={[{marginVertical: 5}, styles.title]}>
+                {`Search Results`}
+              </Text>
+              <View
+                style={{
+                  backgroundColor: '#fdfdfd',
+                  paddingHorizontal: 15,
+                  paddingVertical: 10,
+                  borderRadius: 10,
+                }}>
+                {search.result.length === 0 && (
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      marginVertical: 15,
+                      fontSize: 15,
+                    }}>{`Groups not found`}</Text>
+                )}
+                {search.result.map((result, i) => (
+                  <SearchResultCard item={result} key={i} />
+                ))}
+              </View>
+            </>
+          )}
+        </ScrollView>
+        <FlatList
+          data={feed.state}
+          initialNumToRender={5}
+          keyExtractor={(post, i) => i.toString()}
+          showsVerticalScrollIndicator={false}
+          ListHeaderComponent={HeaderComponent}
+          renderItem={renderItem}
+          ListEmptyComponent={() => (
+            <>
+              {feed.loading ? (
+                <ActivityIndicatorComponent
+                  style={{alignSelf: 'center', marginVertical: 50}}
+                />
+              ) : (
+                <Text style={{alignSelf: 'center', marginVertical: 50}}>
+                  No posts Available
+                </Text>
               )}
-              {search.result.map((result, i) => (
-                <SearchResultCard item={result} key={i} />
-              ))}
-            </View>
-          </>
-        )}
-      </ScrollView>
+            </>
+          )}
+        />
+      </View>
     </View>
   );
 }
