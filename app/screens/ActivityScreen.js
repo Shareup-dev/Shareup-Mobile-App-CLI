@@ -104,13 +104,13 @@ export default function ActivityScreen({navigation}) {
     }
     return;
   };
-  const redirectToProfile = (item) => {
+  const redirectToProfile = item => {
     navigation?.getState()?.routes[1]?.name === 'UserProfile'
       ? null
       : navigation.navigate(routes.USER_PROFILE, {
           user: item,
-        })  
-}
+        });
+  };
   const onSendRequest = recievedUser => {
     if (!recievedUser.firstName) {
       return;
@@ -253,8 +253,6 @@ export default function ActivityScreen({navigation}) {
           //   }
           // />
 
-          <TouchableOpacity
-            onPress={() => navigation.navigate(routes.FRIEND_PROFILE)}>
             <ListItem
               email={item.email}
               user={item}
@@ -283,8 +281,6 @@ export default function ActivityScreen({navigation}) {
                 navigation.navigate(routes.USER_PROFILE, item.email)
               }
             />
-          </TouchableOpacity>
-
         )}
       />
     </Screen>

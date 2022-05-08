@@ -20,7 +20,6 @@ import {
 import Video from 'react-native-video';
 import Icon from '../components/Icon';
 import colors from '../config/colors';
-import fileStorage from '../config/fileStorage';
 import DownModal from '../components/drawers/DownModal';
 import storyService from '../services/story.service';
 import AuthContext from '../authContext';
@@ -296,7 +295,7 @@ const StoryViewScreen = ({navigation, route}) => {
                 backgroundColor: '#000',
               }}
               source={{
-                uri: fileStorage.baseUrl + data[activeIndex].video,
+                uri: data[activeIndex].storiesVideoPath,
               }}
             />
           ) : (
@@ -308,7 +307,7 @@ const StoryViewScreen = ({navigation, route}) => {
               }}
               resizeMode={'contain'}
               onLoadEnd={_ => setLoaded(true)}
-              source={{uri: fileStorage.baseUrl + data[activeIndex].image}}
+              source={{uri: data[activeIndex].storiesImagePath}}
             />
           )}
           <Text

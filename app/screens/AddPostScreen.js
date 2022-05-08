@@ -755,6 +755,7 @@ export default function AddPostScreen({ navigation, route }) {
                 alignItems: 'center',
                 marginHorizontal: 5,
               }}>
+                {console.log(postData,"profile")}
               <UserProfilePicture
                 profilePicture={postData.userdata.profilePicturePath}
                 size={35}

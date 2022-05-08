@@ -44,7 +44,7 @@ export default function ListItem({
 }) {
 
   return (
-    <TouchableWithoutFeedback onPress={onPress}>
+    <TouchableWithoutFeedback onPress={onPress}  >
       <View style={[styles.listItem, style]} >
         {IconComponent}
         {image && (
