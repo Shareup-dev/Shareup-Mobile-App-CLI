@@ -30,11 +30,17 @@ export default function StoriesList({navigation, style}) {
       ])
         .then(res => {
           // getting user info from first element. and i spread it with list of stories - this is only for login user
-          const myStories = {...res[0]?.data[0]?.user, stories_List: res[0]?.data};
+          const myStories = {
+            ...res[0]?.data[0]?.user,
+            stories_List: res[0]?.data,
+          };
           const friendsStories = res[1]?.data;
 
           const array = friendsStories;
-          array.unshift(myStories); // merging (login user stories + his friends stories) #### first index should be login user stories
+
+          if (res[0].data.length) {
+            array.unshift(myStories); // merging (login user stories + his friends stories) #### first index should be login user stories
+          }
 
           dispatch(storiesAction.setStories(array));
         })
