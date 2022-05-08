@@ -216,71 +216,34 @@ export default function ActivityScreen({navigation}) {
         data={!isSearch ? users : searchResult}
         keyExtractor={item => item.id.toString()}
         renderItem={({item}) => (
-          // <ListItem
-          //   email={item.email}
-          //   user={item}
-          //   image={item.profilePicturePath}
-          //   title={item.firstName}
-          //   tabTitle={
-          //     //  sentto.filter(user => user.email === item.email)[0]
-          //     alreadySentTo.filter(user => user.email === item.email)[0]
-          //       ? 'Cancel Request'
-          //       : 'Send Request'
-          //   }
-          //   color={
-          //     alreadySentTo.filter(user => user.email === item.email)[0]
-          //       ? colors.iondigoDye
-          //       : colors.lighterGray
-          //   }
-          //   fontColor={
-          //     alreadySentTo.filter(user => user.email === item.email)[0]
-          //       ? colors.white
-          //       : colors.dark
-          //   }
-          //   subTitle={
-          //     alreadySentTo.filter(user => user.email === item.email)[0]
-          //       ? 'Request send'
-          //       : 'Recommended'
-          //   }
-          //   onPress={onSendRequest}
-          //   showCloseButton={false}
-          //   secondBtn={false}
-          //   fullWidth={true}
-          //   style={[defaultStyles.listItemStyle, defaultStyles.lightShadow]}
-          //   displayLeft={!isSearch ? true : false}
-          //   onPressProfile={() =>
-          //     navigation.navigate(routes.USER_PROFILE, item.email)
-          //   }
-          // />
-
-            <ListItem
-              email={item.email}
-              user={item}
-              image={item.profilePicturePath}
-              title={item.firstName}
-              tabTitle={
-                sentto.filter(user => user.email === item.email)[0]
-                  ? 'Sent'
-                  : 'Send Request'
-              }
-              color={
-                sentto.filter(user => user.email === item.email)[0]
-                  ? colors.iondigoDye
-                  : colors.lighterGray
-              }
-              fontColor={
-                sentto.filter(user => user.email === item.email)[0]
-                  ? colors.white
-                  : colors.dark
-              }
-              subTitle="Recommended"
-              onPress={onSendRequest}
-              style={[defaultStyles.listItemStyle, defaultStyles.lightShadow]}
-              displayLeft={true}
-              onPressProfile={() =>
-                navigation.navigate(routes.USER_PROFILE, item.email)
-              }
-            />
+          <ListItem
+            email={item.email}
+            user={item}
+            image={item.profilePicturePath}
+            title={item.firstName}
+            tabTitle={
+              sentto.filter(user => user.email === item.email)[0]
+                ? 'Sent'
+                : 'Send Request'
+            }
+            color={
+              sentto.filter(user => user.email === item.email)[0]
+                ? colors.iondigoDye
+                : colors.lighterGray
+            }
+            fontColor={
+              sentto.filter(user => user.email === item.email)[0]
+                ? colors.white
+                : colors.dark
+            }
+            subTitle="Recommended"
+            onPress={onSendRequest}
+            style={[defaultStyles.listItemStyle, defaultStyles.lightShadow]}
+            displayLeft={true}
+            onPressProfile={() =>
+              navigation.navigate(routes.FRIEND_PROFILE, {user: item})
+            }
+          />
         )}
       />
     </Screen>

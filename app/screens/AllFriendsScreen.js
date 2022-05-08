@@ -45,7 +45,6 @@ export default function AllFriendsScreen({navigation}) {
             // })
             UserService.deleteFriend(loggedInUser.id, friend.id).then(
               removeResp => {
-               
                 setFriends(previousFriends => {
                   return previousFriends.filter(
                     dost => dost.email !== friend.email,
@@ -95,6 +94,9 @@ export default function AllFriendsScreen({navigation}) {
               fontColor={colors.white}
               subTitle="Connected"
               onPress={UnfriendConfirmationDialog}
+              onPressProfile={_ =>
+                navigation.navigate(routes.FRIEND_PROFILE, {user: item})
+              }
               style={[defaultStyles.listItemStyle, defaultStyles.lightShadow]}
               displayLeft={true}
             />
