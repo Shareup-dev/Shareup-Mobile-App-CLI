@@ -159,7 +159,7 @@ export default function SwapScreen({navigation}) {
         
             <View style={[styles.container]}>
               <Image
-                source={{uri: fileStorage.baseUrl + item.thumbnail_name}}
+                source={{uri: item.thumbnail_url}}
                 style={styles.image}
               />
             </View>

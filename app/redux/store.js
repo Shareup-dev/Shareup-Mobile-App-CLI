@@ -18,10 +18,12 @@ import ConversationsSlice from "./ConversationsSlice";
 import postFeelings from "./postFeelings";
 import recentSearch from "./recentSearch";
 import postImageReducer from "./postImages";
+import reelActiveIndexReducer from "./ReelActiveIndex";
 
 
 export default store = configureStore({
   reducer: {
+    reelActiveIndex:reelActiveIndexReducer,
     like: likeReducer,
     postImages: postImageReducer.reducer,
     comments: commentsReducer,

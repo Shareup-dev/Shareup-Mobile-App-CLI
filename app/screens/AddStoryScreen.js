@@ -113,6 +113,7 @@ export default function AddStoryScreen({navigation}) {
       maxHeight: 500,
       maxWidth: 320,
       videoQuality: 'medium',
+    
     })
       .then(res => {
         if (res.didCancel) return;

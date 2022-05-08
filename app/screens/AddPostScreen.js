@@ -19,8 +19,6 @@ import {
   FlatList,
 } from 'react-native';
 import Icon from '../components/Icon';
-import StackActions from '@react-navigation/routers';
-import { ProgressBar, Colors } from 'react-native-paper';
 import { groupPostsActions } from '../redux/groupPosts';
 import EnhancedOptionsDrawer from '../components/drawers/EnhancedOptionsDrawer';
 import IconButton from '../components/buttons/IconButton';
@@ -304,7 +302,7 @@ export default function AddPostScreen({ navigation, route }) {
   };
 
   const handleButtonActivation = (text, images) => {
-    // console.log(text,images);
+
     if (text !== '' || text !== undefined) setIsButtonActive(true);
     if (images?.length > 0) setIsButtonActive(true);
     if (images?.length === 0 && text === '') setIsButtonActive(false);
@@ -328,7 +326,6 @@ export default function AddPostScreen({ navigation, route }) {
   //   });
     // try {
     //   const result = await pickImage().then((result) =>)
-    //   console.log("IMAGES",result);
     //   const uri = result.map(item => {
     //     return item.sourceURL;
     //   });
@@ -468,7 +465,9 @@ export default function AddPostScreen({ navigation, route }) {
 
   //........CREATE POST................//
   const createPost = () => {
-    if (text === '' && images.length === 0) {
+
+    
+    if (text === '' && Object.keys(file).length === 0) {
       setError("Can't Create empty post");
       alert(error)
     } else {
