@@ -248,7 +248,7 @@ const GroupFeedScreen = ({navigation, route}) => {
                           ? requested
                             ? 'Requested'
                             : 'Ask to Join'
-                          : 'Left Group'
+                          : 'Leave Group'
                       }
                       fontColor={colors.dark}
                       style={[styles.inviteButton]}

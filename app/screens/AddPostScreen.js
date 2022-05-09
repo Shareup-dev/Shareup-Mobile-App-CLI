@@ -140,6 +140,7 @@ export default function AddPostScreen({ navigation, route }) {
     },
     onPress: () => {
       // handelPickImage();
+      console.log("here");
       navigation.navigate(routes.KEEP_HANG,postType)
      //navigation.navigate(routes.ADDS_STORY)
     },
@@ -225,7 +226,7 @@ export default function AddPostScreen({ navigation, route }) {
 
   
   useEffect(()=>{
-    console.log("here");
+    
     if (postType === postTypes.HANG_SHARE) {
       setPlaceHolder(HANG_SHARE_TEXT);
       //setImages([postImages])
@@ -241,7 +242,7 @@ export default function AddPostScreen({ navigation, route }) {
   useFocusEffect(
     
     useCallback(() => {  
-      console.log("hereee");
+      
       if (postType === postTypes.HANG_SHARE) {
         setPlaceHolder(HANG_SHARE_TEXT);
         setIsOptionsVisible(false);

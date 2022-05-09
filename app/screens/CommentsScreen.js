@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext, useCallback } from 'react';
+import React, { useState, useRef, useContext, useCallback ,useEffect} from 'react';
 import { View, StyleSheet, FlatList, Keyboard, Animated, TouchableOpacity, Dimensions, Text } from 'react-native';
 
 import { Header, HeaderCloseIcon, HeaderTitle } from '../components/headers';
@@ -11,7 +11,8 @@ import { prepareDataForValidation } from 'formik';
 import colors from "../config/colors";
 import AuthContext from '../authContext';
 import { color } from 'react-native-reanimated';
-
+import { commentsActions } from "../../redux/comments";
+import {useDispatch, useSelector} from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import postService from '../services/post.service';
 import SwapService from '../services/swap.service'
@@ -28,6 +29,7 @@ export default function CommentsScreen({ navigation, route }) {
   //const [isUserLiked, setIsUserLiked] = useState(false);
   const [commentsList, setCommentsList] = useState([]);
   const [replyList, setReplyList] = useState([]);
+  const [isEdit,setIsEdit] = useState(false)
   const [commentContent, setCommentContent] = useState('');
   const [commentId, setCommentId] = useState('')
   const [isReply, setIsReply] = useState(false)
@@ -38,18 +40,23 @@ export default function CommentsScreen({ navigation, route }) {
  
   //const [frmReply,setFrmReply] = useState(fromReply)
 
-
+  useEffect(() => {
+    
+    }, [isEdit]);
 
   useFocusEffect(
     useCallback(() => {
+      
       loadComments();
       if (writeComment){
         commentTextFieldRef.current.focus();
       }
+      
       // loadStories();
       // return setActivityIndicator(false);
       return;
     }, [])
+   
   )
   const loadComments = async () => {
     if (postType === postTypes.SWAP) {
@@ -134,9 +141,7 @@ export default function CommentsScreen({ navigation, route }) {
     }
   };
   const handleEditComment = (status) => {
-    //<CommentTextField value={comment.content}/>
-    //commentTextFieldRef.current.value = "hello" //defaultValue = comment.content
-    //commentTextFieldRef.current.focus()
+    setIsEdit(status)
   }
   const handleReplyComment = (commentId, showReply) => {
     if (showReply) {
@@ -146,24 +151,12 @@ export default function CommentsScreen({ navigation, route }) {
       //     const replyArray = res.data//.reverse();
       //     setReplyList(replyArray)})
       //   .catch(e => console.error(e))
-      commentTextFieldRef.current.focus()
+      commentTextFieldRef.current.focus();
       setIsReply(true)
     } else {
       commentTextFieldRef.current.blur();
       setIsReply(false)
     }
-
-  };
-
-  const handleDeleteComment = (itemId) => {
-    postService.deleteComment(itemId)
-      .then(res => {
-        refreshComments();
-        Keyboard.dismiss();
-      })
-      .catch(e => console.error(e))
-
-    // scrollToListBottom();
 
   };
 
@@ -217,27 +210,28 @@ export default function CommentsScreen({ navigation, route }) {
             }
             isUserLiked={item.commentLiked}
             onInteraction={handleReactions}
-            handleDelete={handleDeleteComment}
+            //handleDelete={handleDeleteComment}
             onReply={handleReplyComment}
             handleEdit={handleEditComment}
             isReply={isReply}
             reply={replyList}
             postType={postType}
+            isEdit={isEdit}
           />
         )}
       />
-
+ {!isEdit &&(
       <View style={styles.textFieldContainer}>
         {/* <EmojiesBar addEmoji={addEmoji}/>  */}
         <View style={styles.textFieldContainer}>
-          <CommentTextField
-            onForwardPress={handleAddComment}
-            onChangeText={handleOnChangeText}
-            ref={commentTextFieldRef}
-            isReply={isReply}
-          />
+         <CommentTextField
+           onForwardPress={handleAddComment}
+           onChangeText={handleOnChangeText}
+           ref={commentTextFieldRef}
+           isReply={isReply}
+         />
         </View>
-      </View>
+      </View>) }
     </Screen>
   );
 }

@@ -47,8 +47,8 @@ export default function ListItem({
       <View style={[styles.listItem, style]}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           {IconComponent && (
-            <TouchableOpacity onPress={onPress}  style={{flexDirection: 'row', alignItems: 'center',    width: width / 3,}} >
-            {  IconComponent}
+            <TouchableOpacity onPress={console.log("onPress")}  style={{flexDirection: 'row', alignItems: 'center',    width: width / 3,}} >
+            { IconComponent}
               <View style={styles.detailsContainer}>
                 <Text
                   numberOfLines={1}
@@ -74,7 +74,7 @@ export default function ListItem({
             </TouchableOpacity>
           )}
           <TouchableOpacity
-            onPress={onPressProfile}
+            onPress={console.log("profile")}
             style={{
               flexDirection: 'row',
               alignItems: 'center',

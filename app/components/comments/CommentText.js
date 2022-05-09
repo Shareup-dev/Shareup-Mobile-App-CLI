@@ -1,10 +1,20 @@
 import React, { useCallback, useState, useEffect } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View,TextInput, StyleSheet, Text,Dimensions } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { Button,  } from "react-native-paper";
+import postService from "../../services/post.service";
+import colors from "../../config/colors";
+import { commentsActions } from "../../redux/comments";
+import {useDispatch, useSelector} from 'react-redux';
 
-export default function CommentText({ readMoreStyle, text, textStyle, style }) {
+const {width, height} = Dimensions.get('window');
+export default function CommentText({ readMoreStyle, comment, textStyle, style, isEdit,setIsEdit }) {
   const [showMoreButton, setShowMoreButton] = useState(false);
   const [textShown, setTextShown] = useState(false);
   const [numLines, setNumLines] = useState(undefined);
+  const [newComment, setNewComment] = useState(comment.content)
+  const dispatch = useDispatch();
+  const updatedComment = useSelector(state => state.commentsSlice);
 
   const toggleTextShown = () => {
     setTextShown(!textShown);
@@ -14,6 +24,20 @@ export default function CommentText({ readMoreStyle, text, textStyle, style }) {
     setNumLines(textShown ? undefined : 3);
   }, [textShown]);
 
+
+  const editCommentHandler = cid => {
+    postService
+      .editComment(cid, newComment)
+      .then(res => {
+        console.log(res.data);
+        if (res.status === 200) {
+        }
+        // const cmnt = {id:cid,comment:newComment}
+        // dispatch(commentsActions.setComment(cmnt)),
+        setIsEdit(false)
+      })
+      .catch(e => console.error(e.message));
+  };
   const onTextLayout = useCallback(
     (e) => {
       if (e.nativeEvent.lines.length > 3 && !textShown) {
@@ -26,15 +50,41 @@ export default function CommentText({ readMoreStyle, text, textStyle, style }) {
 
   return (
     <View style={styles.container}>
-      <Text
-        onTextLayout={onTextLayout}
-        numberOfLines={numLines}
-        style={textStyle}
-        ellipsizeMode="tail"
+      {isEdit ? (<View><TextInput
+        value={newComment}
+        autoFocus={true}
+        onChangeText={text => setNewComment(text)}
+        multiline={true}
+        style={{width:width - 155,
+                borderRadius:10,
+                backgroundColor:colors.white,
+                flex:1,
+                borderColor:colors.LightGray,
+                borderWidth:1,
+                padding:10
+              }}
       >
-        {text}
-      </Text>
-
+      </TextInput>
+        <TouchableOpacity
+          onPress={_ => editCommentHandler(comment.id)}
+          style={{
+            backgroundColor: colors.iondigoDye,
+            alignSelf: 'flex-end',
+            paddingVertical: 8,
+            paddingHorizontal: 15,
+            borderRadius: 5,
+            marginVertical: 5,
+          }}>
+          <Text style={{ color: '#fff', fontWeight: '600' }}>Update</Text>
+        </TouchableOpacity></View>) 
+        : <Text
+          onTextLayout={onTextLayout}
+          numberOfLines={numLines}
+          style={textStyle}
+          ellipsizeMode="tail"
+        >
+        {newComment?newComment: comment.content}
+      </Text>}
       {showMoreButton ? (
         <Text onPress={toggleTextShown} style={readMoreStyle}>
           {textShown ? "...Read Less" : "Read More..."}
@@ -46,6 +96,6 @@ export default function CommentText({ readMoreStyle, text, textStyle, style }) {
 
 const styles = StyleSheet.create({
   container: {
-    width: "80%",
+    width: "100%",
   },
 });
