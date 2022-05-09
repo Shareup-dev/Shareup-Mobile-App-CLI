@@ -1,25 +1,21 @@
-import React from 'react';
+import React from "react";
 import {
   StyleSheet,
   View,
   Image,
   TouchableWithoutFeedback,
   Text,
-  Touchable,
-  Dimensions,
-} from 'react-native';
+} from "react-native";
 
-import colors from '../../config/colors';
-import Tab from '../buttons/Tab';
-import Icon from '../Icon';
-import defaultStyles from '../../config/styles';
-import fileStorage from '../../config/fileStorage';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import colors from "../../config/colors";
+import Tab from "../buttons/Tab";
+import Icon from "../Icon";
+import defaultStyles from "../../config/styles";
+import fileStorage from "../../config/fileStorage";
 
 export default function ListItem({
-  email,
   title,
-  tabTitle = 'Send Request',
+  tabTitle = "Send Request",
   titleStyle,
   subTitle,
   image,
@@ -28,7 +24,6 @@ export default function ListItem({
   color,
   IconComponent,
   onPress,
-  onPressProfile,
   style,
   secondBtnAction,
   secondBtnTitle,
@@ -36,80 +31,36 @@ export default function ListItem({
   secondBtn = false,
   showCloseButton = true,
   fullWidth,
-  handleClose,
   displayFirstButton = true,
-  isBottomSheet = false,
 }) {
-  const {width} = Dimensions.get('window');
-
   return (
-    <View>
+    <TouchableWithoutFeedback onPress={onPress}>
       <View style={[styles.listItem, style]}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          {IconComponent && (
-            <TouchableOpacity onPress={onPress}  style={{flexDirection: 'row', alignItems: 'center',    width: width / 2,}} >
-            {  IconComponent}
-
-              <View style={styles.detailsContainer}>
-                <Text
-                  numberOfLines={1}
-                  style={[
-                    styles.title,
-                    defaultStyles.fontWeightMedium,
-                    titleStyle,
-                  ]}>
-                  {title}
-                </Text>
-
-                {subTitle && (
-                  <Text
-                    numberOfLines={2}
-                    style={[
-                      defaultStyles.listItemSubTitle,
-                      defaultStyles.fontWeightMedium,
-                    ]}>
-                    {subTitle}
-                  </Text>
-                )}
-              </View>
-            </TouchableOpacity>
+        {IconComponent}
+        {image && (
+          <Image
+            style={styles.image}
+            source={{ uri: fileStorage.baseUrl + image }}
+          />
+        )}
+        <View style={styles.detailsContainer}>
+          <Text
+            numberOfLines={1}
+            style={[styles.title, defaultStyles.fontWeightMedium, titleStyle]}
+          >
+            {title}
+          </Text>
+          {subTitle && (
+            <Text
+              numberOfLines={2}
+              style={[
+                defaultStyles.listItemSubTitle,
+                defaultStyles.fontWeightMedium,
+              ]}
+            >
+              {subTitle}
+            </Text>
           )}
-          <TouchableOpacity
-            onPress={console.log("profile")}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              width: width / 3,
-            }}>
-            {image && (
-              <>
-                <Image style={styles.image} source={{uri: image}} />
-
-                <View style={styles.detailsContainer}>
-                  <Text
-                    numberOfLines={1}
-                    style={[
-                      styles.title,
-                      defaultStyles.fontWeightMedium,
-                      titleStyle,
-                    ]}>
-                    {title}
-                  </Text>
-
-                  {subTitle && (
-                    <Text
-                      numberOfLines={2}
-                      style={[
-                        defaultStyles.listItemSubTitle,
-                        defaultStyles.fontWeightMedium,
-                      ]}>
-                      {subTitle}
-                    </Text>
-                  )}
-                </View>
-              </>
-            )}
-          </TouchableOpacity>
         </View>
 
         {displayLeft && (
@@ -117,7 +68,7 @@ export default function ListItem({
             <Tab
               title={tabTitle}
               titleStyle={styles.buttonTitle}
-              style={[styles.tab, {width: fullWidth ? 200 : 100}]}
+              style={[styles.tab, { width: fullWidth ? 200 : 100 }]}
               height={30}
               user={user}
               color={color}
@@ -128,7 +79,7 @@ export default function ListItem({
               <Tab
                 title={secondBtnTitle}
                 titleStyle={styles.buttonTitle}
-                style={[styles.tab, {width: fullWidth ? 200 : 100}]}
+                style={[styles.tab, { width: fullWidth ? 200 : 100 }]}
                 // fullWidth={false}
                 height={30}
                 user={user}
@@ -138,36 +89,33 @@ export default function ListItem({
               />
             )}
             {!secondBtn && showCloseButton && (
-              <TouchableOpacity onPress={handleClose}>
-                <Icon
-                  name="close"
-                  type="AntDesign"
-                  backgroundSizeRatio={0.5}
-                  size={30}
-                />
-              </TouchableOpacity>
+              <Icon
+                name="close"
+                type="AntDesign"
+                backgroundSizeRatio={0.5}
+                size={30}
+              />
             )}
           </View>
         )}
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
   listItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 10,
     paddingVertical: 17,
   },
-  detailsContainer: {marginLeft: 5, flex: 1},
-  image: {height: 50, width: 50, borderRadius: 35},
+  detailsContainer: { marginLeft: 5, flex: 1 },
+  image: { height: 50, width: 50, borderRadius: 35 },
   title: defaultStyles.listItemTitle,
   leftContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   tab: {
     borderRadius: 7,
