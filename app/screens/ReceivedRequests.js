@@ -22,6 +22,7 @@ import colors from '../config/colors';
 import ListItemEnhanced from '../components/lists/ListItemEnhanced';
 import { ListAccordionGroupContext } from 'react-native-paper/lib/typescript/components/List/ListAccordionGroup';
 import ListItemReceivedRequest from '../components/lists/ListItemReceivedRequest';
+import FriendCard from '../components/lists/FriendCard';
 
 export default function ReceivedRequests({navigation}) {
   const {userData: user} = useContext(authContext).userState;
@@ -102,7 +103,7 @@ export default function ReceivedRequests({navigation}) {
             data={requests}
             keyExtractor={item => item.id.toString()}
             renderItem={({item}) => (
-              <ListItem
+              <FriendCard
                 user={item}
                 image={item.profilePicturePath}
                 title={item.firstName}
@@ -135,7 +136,7 @@ export default function ReceivedRequests({navigation}) {
                 }
                 displayLeft={true}
                 showCloseButton={false}
-                onPressProfile={()=>redirectToProfile(item)}
+                onPressProfile={()=>  navigation.navigate(routes.FRIEND_PROFILE, {user: item})}
               />
             )}
           />

@@ -48,6 +48,8 @@ export default function ProfileTop({
       .catch(e => console.error(e.message));
   };
 
+  console.log(userStatus)
+
   const ActionButton = () => {
     switch (userStatus.state) {
       case 'Unfriend':
@@ -80,6 +82,24 @@ export default function ProfileTop({
             titleStyle={styles.editProfileButtonTitle}
             onPress={Unfriend}
           />
+        );
+      case 'FriendResponse':
+        return (
+          <View style={{flexDirection:'row'}}>
+          <Tab
+            title="Accept"
+            color={colors.iondigoDye}
+            style={styles.editProfileButton}
+            titleStyle={[styles.editProfileButtonTitle, {color: '#fff'}]}
+            onPress={Unfriend}
+          />
+          <Tab
+            title="Reject"
+            color={colors.LightGray}
+            style={styles.editProfileButton}
+            titleStyle={styles.editProfileButtonTitle}
+          />
+          </View>
         );
 
       default:
@@ -205,11 +225,13 @@ const styles = StyleSheet.create({
   editProfileButton: {
     marginTop: 20,
     marginBottom: 10,
+    flex: 1,
     borderRadius: 10,
   },
   editProfileButtonTitle: {
     fontSize: 14,
     fontWeight: '500',
+
   },
   storyCard: {
     marginVertical: 10,

@@ -19,6 +19,7 @@ import Icon from '../components/Icon';
 import Screen from '../components/Screen';
 import colors from '../../app/config/colors';
 import routes from '../navigation/routes';
+import FriendCard from '../components/lists/FriendCard';
 
 export default function AllFriendsScreen({navigation}) {
   const [friends, setFriends] = useState([]);
@@ -85,7 +86,7 @@ export default function AllFriendsScreen({navigation}) {
           ListHeaderComponent={() => <></>}
           keyExtractor={item => item.id.toString()}
           renderItem={({item}) => (
-            <ListItem
+            <FriendCard
               user={item}
               image={item.profilePicturePath}
               title={item.firstName}

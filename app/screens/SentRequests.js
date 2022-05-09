@@ -21,6 +21,7 @@ import colors from '../config/colors';
 import defaultStyles from '../config/styles';
 import ActivityScreen from './ActivityScreen';
 import routes from '../navigation/routes';
+import FriendCard from '../components/lists/FriendCard';
 
 export default function SentRequests({navigation}) {
   //const {user: loggedInUser} = useContext(authContext);
@@ -76,7 +77,7 @@ export default function SentRequests({navigation}) {
             data={sentto}
             keyExtractor={item => item.id.toString()}
             renderItem={({item}) => (
-              <ListItem
+              <FriendCard
                 user={item}
                 image={item.profilePicturePath}
                 title={item.firstName}

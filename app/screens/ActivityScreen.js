@@ -31,6 +31,7 @@ import Toast from 'react-native-toast-message';
 import userService from '../services/user.service';
 import {useFocusEffect} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import FriendCard from '../components/lists/FriendCard';
 
 export default function ActivityScreen({navigation}) {
   const [users, setusers] = useState([]);
@@ -216,7 +217,7 @@ export default function ActivityScreen({navigation}) {
         data={!isSearch ? users : searchResult}
         keyExtractor={item => item.id.toString()}
         renderItem={({item}) => (
-          <ListItem
+          <FriendCard 
             email={item.email}
             user={item}
             image={item.profilePicturePath}

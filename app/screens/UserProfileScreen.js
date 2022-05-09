@@ -101,14 +101,15 @@ export default function UserProfileScreen({navigation, route}) {
   const {width} = Dimensions.get('window');
   const ImagesAndVideosItem = ({item, index}) => (
     <TouchableOpacity
+
       onPress={_ => setImageSlider({state: true, index: index})}>
       <Image
         source={{uri: item.mediaPath}}
         style={{
-          width: (width - 30) / 3,
+          width: (width -22 ) / 3,
           borderRadius: 3,
           height: 150,
-          margin: 5,
+          margin: 2,
           backgroundColor: '#eee',
         }}
       />
@@ -132,11 +133,9 @@ export default function UserProfileScreen({navigation, route}) {
         }
       />
 
-      {console.log(media,"media")}
-
       <ImageView
         visible={imageSlider.state}
-        images={media.map(({media}) => ({uri: media.mediaPath}))}
+        images={media.map((media) => ({uri: media.mediaPath}))}
         keyExtractor={(item, index) => index.toString()}
         imageIndex={imageSlider.index}
         onRequestClose={() => {
@@ -174,17 +173,20 @@ export default function UserProfileScreen({navigation, route}) {
       )}
 
       {currentTab == IMAGE_VIDEOS && (
+        <View style={{marginHorizontal:5,marginBottom: 50}} > 
+          
         <FlatList
           data={media}
           numColumns={3}
           showsVerticalScrollIndicator={false}
           renderItem={({item, index}) => (
             <ImagesAndVideosItem item={item} index={index} />
-          )}
-          keyExtractor={(item, index) => index.toString()}
-          ListHeaderComponent={ListHeader}
-          ListEmptyComponent={ImagesAndVideosEmpty}
-        />
+            )}
+            keyExtractor={(item, index) => index.toString()}
+            ListHeaderComponent={ListHeader}
+            ListEmptyComponent={ImagesAndVideosEmpty}
+            />
+            </View>
       )}
 
       {currentTab == TAGS && (
