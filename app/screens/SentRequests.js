@@ -1,4 +1,4 @@
-import React, {useContext,useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Alert,
   TouchableWithoutFeedback,
-  
+  TouchableOpacity,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import Screen from '../components/Screen';
@@ -22,46 +22,42 @@ import defaultStyles from '../config/styles';
 import ActivityScreen from './ActivityScreen';
 import routes from '../navigation/routes';
 
-
 export default function SentRequests({navigation}) {
-  
   //const {user: loggedInUser} = useContext(authContext);
   const {userState} = useContext(authContext);
   const [sentto, setSentto] = useState([]);
-  const [fetch,setFetch] = useState(false)
+  const [fetch, setFetch] = useState(false);
   //let sentto = useSelector(state => state.sentRequests);
 
   useEffect(() => {
-    let mounted = true
-    if (mounted){
-    UserService.getFriendRequestSent(userState?.userData?.email).then(resp => {
-      setSentto(resp.data);
-      resp.data.forEach(request => {
-
-      });
-    });
+    let mounted = true;
+    if (mounted) {
+      UserService.getFriendRequestSent(userState?.userData?.email).then(
+        resp => {
+          setSentto(resp.data);
+          resp.data.forEach(request => {});
+        },
+      );
     }
-    return () => mounted = false
+    return () => (mounted = false);
   }, [fetch]);
- 
-  const redirectToProfile = (item) => {
-      navigation?.getState()?.routes[1]?.name === 'UserProfile'
-        ? null
-        : navigation.navigate(routes.USER_PROFILE, {
-            user: item,
-          })  
-  }
+
+  const redirectToProfile = item => {
+    navigation?.getState()?.routes[1]?.name === 'UserProfile'
+      ? null
+      : navigation.navigate(routes.USER_PROFILE, {
+          user: item,
+        });
+  };
   const onCancelRequest = friend => {
-    sentto = sentto.filter(dost => dost.email !== friend.email);
+    setSentto(prev => prev.filter(dost => dost.email !== friend.email));
     //store.dispatch(sentRequestsActions.setList(sentto));
     UserService.declineFriendRequest(userState?.userData?.id, friend.id).then(
-      resp => {
-
-      },
+      resp => {},
     );
-    setFetch(true)
-   //setSentto(alreadySentTo);   
-   }
+    setFetch(true);
+    //setSentto(alreadySentTo);
+  };
 
   const renderSentRequestsList = () => {
     if (sentto.length === 0) {
@@ -102,7 +98,9 @@ export default function SentRequests({navigation}) {
                 }
                 subTitle="Sent"
                 onPress={onCancelRequest}
-                onPressProfile={()=> redirectToProfile(item)}
+                onPressProfile={() =>
+                  navigation.navigate(routes.FRIEND_PROFILE, {user: item})
+                }
                 style={[defaultStyles.listItemStyle, defaultStyles.lightShadow]}
                 displayLeft={true}
               />
@@ -119,7 +117,7 @@ export default function SentRequests({navigation}) {
         backgroundColor={colors.white}
         left={
           <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
-             {/* reset(
+            {/* reset(
              {
                 index: 0,
                 actions: [

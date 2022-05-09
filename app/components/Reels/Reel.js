@@ -107,7 +107,7 @@ const RenderReels = ({item, index, navigation}) => {
             <View
               style={{
                 width: width,
-                height: height - StatusBar.currentHeight,
+                height: height ,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>

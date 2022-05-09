@@ -49,9 +49,11 @@ const PostActions = ({
       <View style={styles.userInfo}>
         <TouchableOpacity
           onPress={() =>
-            navigation?.getState()?.routes[1]?.name === 'UserProfile'
-              ? null
-              : navigation.navigate(routes.USER_PROFILE, {
+            postData.userdata?.id === userData.id
+              ? navigation.navigate(routes.USER_PROFILE, {
+                  user: postData.userdata,
+                })
+              : navigation.navigate(routes.FRIEND_PROFILE, {
                   user: postData.userdata,
                 })
           }>

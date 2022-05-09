@@ -52,10 +52,7 @@ export default function UpdateGender({navigation}) {
         title="Gender"
       />
       {loading && <Loading text="Saving.." modal />}
-      <TouchableOpacity
-        activeOpacity={1}
-        style={{flex: 1}}
-        onPress={_ => Keyboard.dismiss()}>
+      <View style={{flex: 1}}>
         <View style={styles.card}>
           <Text style={styles.label}>Gender</Text>
           <TouchableOpacity
@@ -83,7 +80,7 @@ export default function UpdateGender({navigation}) {
             <Text style={styles.btnText}>Update</Text>
           </TouchableOpacity>
         </View>
-      </TouchableOpacity>
+      </View>
     </KeyboardAvoidingView>
   );
 }
