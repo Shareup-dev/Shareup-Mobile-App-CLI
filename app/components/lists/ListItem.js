@@ -47,7 +47,7 @@ export default function ListItem({
       <View style={[styles.listItem, style]}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           {IconComponent && (
-            <TouchableOpacity onPress={onPress}  style={{flexDirection: 'row', alignItems: 'center',    width: width / 3,}} >
+            <TouchableOpacity onPress={onPress}  style={{flexDirection: 'row', alignItems: 'center',    width: width / 2,}} >
             {  IconComponent}
               <View style={styles.detailsContainer}>
                 <Text

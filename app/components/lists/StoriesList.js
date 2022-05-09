@@ -49,7 +49,14 @@ export default function StoriesList({navigation, style}) {
           setLoading(2);
         });
     };
-    fetchStories();
+    let mount = true;
+
+    if (mount) {
+      fetchStories();
+    }
+    return () => {
+      mount = false;
+    };
   }, []);
 
   const EmptyCard = () => {

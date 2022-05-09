@@ -15,6 +15,7 @@ class UserService {
     AuthAxios.post(`users/${email}/upload_profile_picture`, formdata);
   uploadCoverPicture = (email, formdata) =>
     AuthAxios.post(`users/${email}/upload_cover_picture`, formdata);
+  checkOptEmailVerified = (uid) => AuthAxios.get(`users/${uid}/contact_info/is_optional_email_verified`)  
 
   /*..............Friends..............*/
   searchFriends = (uid, keyword) =>

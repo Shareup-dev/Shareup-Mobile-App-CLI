@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Dimensions,
+  Platform,
 } from 'react-native';
 import Button from '../components/buttons/Button';
 import GiftDrawer from '../components/drawers/GiftDrawer';
@@ -33,6 +34,7 @@ export default function KeepHangScreen({navigation, route}) {
   const {width, height} = Dimensions.get('window');
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const {postTypes} = constants;
+
   //const [file, setFile] = useState([]);
   const hangList = [
     {
@@ -72,44 +74,29 @@ export default function KeepHangScreen({navigation, route}) {
       //compressImageQuality: 0.5,
     })
       .then(image => {
-        console.log(image);
-        image.filter(
-          img =>
-            // if (postType === postTypes.HANG_SHARE) {
-            //   dispatch(postImagesAction.addNewImages(img.sourceURL))
-            // }else{
-            dispatch(postImagesAction.setImages(img.sourceURL)),
-          // }
+        let array = [];
+        image.filter(img =>
+          array.push(Platform.OS === 'ios' ? img.sourceURL : img.path),
         );
-        navigation.navigate(routes.ADD_POST, {
-          postType: postType,
-        });
+
+        dispatch(postImagesAction.setImages(array)),
+          navigation.navigate(routes.ADD_POST, {
+            postType: postType,
+          });
       })
       .catch(error => console.error(error));
   };
   const handleCamera = async () => {
     try {
-      const result = await openCamera().then(result => {
+      openCamera().then(result => {
         const newImage = result.filter(img => {
           if (postType === postTypes.HANG_SHARE) {
             dispatch(postImagesAction.addNewImages(img.uri));
           } else {
             dispatch(postImagesAction.setImages(img.uri));
           }
-
-          // const result = await openCamera().then(result => {
-          //   console.log('IMAGES', result);
-          //   const newImage = result.filter(img => {
-          //     if (postType === postTypes.HANG_SHARE) {
-          //       dispatch(postImagesAction.addNewImages(img.uri));
-          //     } else {
-          //       dispatch(postImagesAction.setImages(img.uri));
-
-          //  }
         });
-        //if (!result.cancelled) onAddImage(uri);
-        // setFile(image)
-        console.log(postImages);
+
         navigation.navigate(routes.ADD_POST, {
           postType: postType,
         });
@@ -117,17 +104,6 @@ export default function KeepHangScreen({navigation, route}) {
     } catch (error) {
       console.error(error);
     }
-    // ImageCropPicker.openCamera({
-    //   mediaType:"photo",
-    //   //compressVideoPreset:"LowQuality",
-    // }).then(image => {
-
-    //     dispatch(postImagesAction.setImages(image.path))
-    //   setFile(image)
-    //   navigation.navigate(routes.ADD_POST,{
-    //     postType: postType,
-    //   })
-    // });
   };
   return (
     <Screen statusPadding={true}>

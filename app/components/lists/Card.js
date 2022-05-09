@@ -181,7 +181,7 @@ export default function Card({
 
   useFocusEffect(
     useCallback(() => {
-      reloadPost();
+      // reloadPost();
       loadImages();
     }, [postData.id]),
   );
@@ -239,7 +239,7 @@ export default function Card({
 
   const deletePost = async () => {
     const response = await PostService.deletePost(postData.id);
-    reloadPosts();
+    // reloadPosts();
     setIsOptionsVisible(false);
   };
 

@@ -60,6 +60,7 @@ export default function UpdateGender({navigation}) {
             style={{flexDirection: 'row', alignItems: 'center'}}>
             <RadioButton
               value="Male"
+              onPress={() => setChecked('Male')}
               status={checked === 'Male' ? 'checked' : 'unchecked'}
               color={colors.iondigoDye}
             />
@@ -70,6 +71,7 @@ export default function UpdateGender({navigation}) {
             style={{flexDirection: 'row', alignItems: 'center'}}>
             <RadioButton
               value="Female"
+              onPress={() => setChecked('Female')}
               color={colors.iondigoDye}
               status={checked === 'Female' ? 'checked' : 'unchecked'}
             />

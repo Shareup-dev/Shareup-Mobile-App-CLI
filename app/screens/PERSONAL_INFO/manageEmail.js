@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, StyleSheet, Text, TextInput} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import AuthContext from '../../authContext';
@@ -6,6 +6,7 @@ import {HeaderWithBackArrow} from '../../components/headers';
 import Loading from '../../components/Loading';
 import colors from '../../config/colors';
 import profileService from '../../services/profile.service';
+import userService from '../../services/user.service';
 
 export default function ManageEmail({navigation, route}) {
   const {title, value} = route.params;
@@ -13,12 +14,23 @@ export default function ManageEmail({navigation, route}) {
   const [loading, setLoading] = useState({state: false, content: 'Loading...'});
   const [emailVerifying, setEmailVerifying] = useState(false);
   const [otp, setOtp] = useState('');
+  const [emailStatus, setEmailStatus] = useState(null);
   const [error, setError] = useState('');
 
   const {
     userState: {userData},
     authActions,
   } = useContext(AuthContext);
+
+  useEffect(() => {
+    const checkOptEmailStatus = () => {
+      userService
+        .checkOptEmailVerified(userData.id)
+        .then(({data}) => setEmailStatus(data))
+        .catch(e => console.error(e.message));
+    };
+    checkOptEmailStatus();
+  }, []);
 
   const removeOptionalEmail = () => {
     setLoading({state: true, content: 'Deleting..'});
@@ -65,12 +77,23 @@ export default function ManageEmail({navigation, route}) {
         {loading.state && <Loading text={loading.content} modal />}
         <View style={styles.body}>
           <Text style={styles.title}>{value}</Text>
-          <Text>Pending</Text>
+          <Text>{emailStatus ? 'Verified' : 'Pending'}</Text>
           {!emailVerifying && (
             <View style={{flexDirection: 'row', alignSelf: 'flex-end'}}>
-              <TouchableOpacity onPress={verifyEmail} style={styles.btn}>
-                <Text style={{color: '#fff', fontWeight: '700'}}>Verify </Text>
-              </TouchableOpacity>
+              {emailStatus ? (
+                <TouchableOpacity style={styles.btn}>
+                  <Text style={{color: '#fff', fontWeight: '700'}}>
+                    Make it Primary
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={verifyEmail} style={styles.btn}>
+                  <Text style={{color: '#fff', fontWeight: '700'}}>
+                    Verify
+                  </Text>
+                </TouchableOpacity>
+              )}
+
               <TouchableOpacity
                 onPress={removeOptionalEmail}
                 style={[styles.btn, {backgroundColor: 'crimson'}]}>
@@ -123,7 +146,9 @@ export default function ManageEmail({navigation, route}) {
                   alignSelf: 'center',
                   alignItems: 'center',
                 }}>
-                <Text style={{color: colors.iondigoDye, fontWeight: '700'}} onPress={verifyEmail}>
+                <Text
+                  style={{color: colors.iondigoDye, fontWeight: '700'}}
+                  onPress={verifyEmail}>
                   Re-send
                 </Text>
               </TouchableOpacity>

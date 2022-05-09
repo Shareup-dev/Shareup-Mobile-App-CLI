@@ -18,26 +18,34 @@ import TrendingComponent from '../components/trending/TrendingComponent';
 import postService from '../services/post.service';
 import {useFocusEffect} from '@react-navigation/native';
 import constants from '../config/constants';
-import HangFeedCard from '../components/lists/HangFeedCard';
-import routes from '../navigation/routes';
+import { useDispatch, useSelector } from 'react-redux';
+import { feedPostsAction } from '../redux/feedPostsSlice';
+
+
 
 export default function NewsFeedScreen({navigation, route}) {
-  const {userState} = useContext(authContext);
-  const [posts, setPosts] = useState([]);
-  const [activityIndicator, setActivityIndicator] = useState(true);
-  useFocusEffect(
-    useCallback(() => {
-      
-      loadNews();
-    }, []),
-  );
 
+  const posts = useSelector(state => state.feedPosts);
+  const dispatch = useDispatch();
+
+
+  const {userState} = useContext(authContext);
+  const [activityIndicator, setActivityIndicator] = useState(true);
+  // useFocusEffect(
+  //   useCallback(() => {      
+  //     loadNews();
+  //   }, []),
+  // );
+useEffect(()=>{
+  loadNews();
+},[])
   const loadNews = () => {
     setActivityIndicator(true);
     postService
       .getNewsFeed(userState?.userData?.email)
       .then(({data}) => {
-        setPosts(data);
+        // setPosts(data);
+        dispatch(feedPostsAction.setFeedPosts(data))
       })
       .catch(e => console.error(e))
       .finally(hideActivityIndicator);

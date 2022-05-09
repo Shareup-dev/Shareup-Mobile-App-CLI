@@ -48,18 +48,12 @@ import RadioOptionDrawer from '../components/drawers/RadioOptionDrawer';
 import OptionBox from '../components/posts/OptionBox';
 import { useDispatch, useSelector } from 'react-redux';
 import { postFeelingsActions } from '../redux/postFeelings';
-import { ScrollView } from 'react-native-gesture-handler';
-import fileStorage from '../config/fileStorage';
 import UserProfilePicture from '../components/UserProfilePicture';
 import hangShareService from '../services/hangShare.service';
-import { swap } from 'formik';
 import { useFocusEffect } from '@react-navigation/native';
 import postService from '../services/post.service';
 import common from '../config/common';
-import { color } from 'react-native-reanimated';
-import ImagePicker from 'react-native-image-crop-picker';
 import {postImagesAction} from '../redux/postImages'
-import { removeImage } from '../redux/imagesPickerSlice';
 
 export default function AddPostScreen({ navigation, route }) {
   const { postType,groupId, swapImage, postData, isEdit} = route.params;
@@ -225,7 +219,6 @@ export default function AddPostScreen({ navigation, route }) {
 
   
   useEffect(()=>{
-    console.log("here");
     if (postType === postTypes.HANG_SHARE) {
       setPlaceHolder(HANG_SHARE_TEXT);
       //setImages([postImages])
@@ -241,7 +234,6 @@ export default function AddPostScreen({ navigation, route }) {
   useFocusEffect(
     
     useCallback(() => {  
-      console.log("hereee");
       if (postType === postTypes.HANG_SHARE) {
         setPlaceHolder(HANG_SHARE_TEXT);
         setIsOptionsVisible(false);
@@ -355,9 +347,10 @@ export default function AddPostScreen({ navigation, route }) {
 
   //........GROUP POST................//
   const group = () => {
-    if (text === '' && Object.keys(file).length === 0) {
+
+
+    if (text === '' && images.length === 0) {
       setError("Can't Create empty post");
-      alert(error)
     } else {
       const postContent = {
         text: text,
@@ -467,9 +460,8 @@ export default function AddPostScreen({ navigation, route }) {
   const createPost = () => {
 
     
-    if (text === '' && Object.keys(file).length === 0) {
+    if (text === '' && images.length === 0) {
       setError("Can't Create empty post");
-      alert(error)
     } else {
       const postContent = {
         text: text === '' ? DEFAULT_TEXT : text,

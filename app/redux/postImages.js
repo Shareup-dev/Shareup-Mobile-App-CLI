@@ -1,20 +1,20 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {createSlice} from '@reduxjs/toolkit';
 
 const postImages = createSlice({
-  name: "postImages",
+  name: 'postImages',
   initialState: [],
   reducers: {
     setImages: (previousState, newImages) => {
-        const Array = [...previousState,newImages.payload]
-      return (previousState =Array);
+      const Array = [...previousState, ...newImages.payload];
+      return (previousState = Array);
     },
-    removeAllImages: (previousState) => {
-        return (previousState = []);
-      },
+    removeAllImages: previousState => {
+      return (previousState = []);
+    },
     removeImage: (previousState, key) => {
-        const array = previousState.filter(item => item !== key.payload)
-        return (previousState =array);
-      },
+      const array = previousState.filter(item => item !== key.payload);
+      return (previousState = array);
+    },
     addNewImages: (previousImages, newImage) => {
       return (previousImages = newImage.payload);
     },

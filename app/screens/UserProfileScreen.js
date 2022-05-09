@@ -67,8 +67,8 @@ export default function UserProfileScreen({navigation, route}) {
       profileService.getAllMedia(user.id),
     ])
       .then(res => {
-          setPosts(res[0].data);
-          setMedia(res[1].data);
+        setPosts(res[0].data);
+        setMedia(res[1].data);
       })
       .catch(e => console.error(e.message))
       .finally(_ => {
@@ -132,13 +132,15 @@ export default function UserProfileScreen({navigation, route}) {
         }
       />
 
+      {console.log(media,"media")}
+
       <ImageView
         visible={imageSlider.state}
         images={media.map(({media}) => ({uri: media.mediaPath}))}
         keyExtractor={(item, index) => index.toString()}
         imageIndex={imageSlider.index}
         onRequestClose={() => {
-          setImageSlider(false);
+          setImageSlider(prev => ({...prev, state: false}));
         }}
       />
 

@@ -166,6 +166,8 @@ export default function AddStoryScreen({navigation}) {
 
   };
 
+  console.log("mode",mode)
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#000" barStyle="light-content" />
