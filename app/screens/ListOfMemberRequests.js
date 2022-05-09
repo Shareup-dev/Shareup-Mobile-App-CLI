@@ -73,14 +73,14 @@ export default function MemberRequest({navigation, route}) {
           }}>
           <Image
             source={
-              item?.user?.profilePicturePath
-                ? {uri:item?.user?.profilePicturePath}
+              item?.userdata?.profilePicturePath
+                ? {uri:item?.userdata?.profilePicturePath}
                 : require('../assets/images/group-texture.png')
             }
             style={styles.img}
           />
           <View style={styles.item}>
-            <Text style={styles.title}>{item.user.firstName}</Text>
+            <Text style={styles.title}>{item.userdata?.firstName}</Text>
             <Text>requesting to join </Text>
           </View>
         </View>
