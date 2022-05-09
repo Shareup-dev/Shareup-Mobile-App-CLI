@@ -26,7 +26,7 @@ export default store = configureStore({
     reelActiveIndex:reelActiveIndexReducer,
     like: likeReducer,
     postImages: postImageReducer.reducer,
-    comments: commentsReducer,
+    comments: commentsReducer.reducer,
     loggedInUserSlice: loggedInUserSlice.reducer,
     sentRequests,
     registationSlice: registrationSlice.reducer,

@@ -134,6 +134,7 @@ export default function AddPostScreen({ navigation, route }) {
     },
     onPress: () => {
       // handelPickImage();
+      console.log("here");
       navigation.navigate(routes.KEEP_HANG,postType)
      //navigation.navigate(routes.ADDS_STORY)
     },

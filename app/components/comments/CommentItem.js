@@ -31,6 +31,7 @@ export default function CommentItem({
   isUserLiked,
   onInteraction,
   handleDelete,
+  handleEdit,
   //handleLongPress,
   onReply,
   isReply,
@@ -41,6 +42,7 @@ export default function CommentItem({
   //isOptionsVisible,
   setNumberOfComments,
   refreshreply,
+  
 }) {
   //const isReply = false
   //const [shoereply]
@@ -49,6 +51,7 @@ export default function CommentItem({
   const [replyList,setReplyList] = useState([]);
   const [showReply,setshowReply] = useState(false)
   const { userState } = useContext(authContext);
+  const [isEdit,setIsEdit] = useState(false)
   const [time, setTime] = useState(
     moment(comment.published, "DD MMMM YYYY hh:mm:ss").fromNow()
   );
@@ -64,24 +67,41 @@ export default function CommentItem({
   const options = [ {
     title:  'Edit',
     icon: {
-      image: require('../../assets/post-options-icons/unfollow-icon.png'),
+      name : 'edit',
+      type : "Entypo",
+      size:15,
     },
     onPress: () => {
-      alert('Edit');
+      //alert('Edit');
+      setIsOptionsVisible(false)
+      setIsEdit(true)
+      handleEdit(isEdit)
     },
   },
   {
-    title:<Text style={{color:colors.red}}>Delete</Text>,
+    title:<Text>Delete</Text>,
     icon: {
-      image: require('../../assets/post-options-icons/delete-red-icon.png'),
+      name : 'delete',
+      color : "crimson",
+      size:20
     },
-    onPress: () => {alert('Edit');
-    //handleDelete(comment.id)
-      
-    },
+    onPress:()=>  Alert.alert('Delete', 'Are you sure you want to delete this image?', [
+      {text: 'Yes', onPress: () => handleDeleteComment()},
+      {text: 'No'},
+    ])
   },
 ];
- 
+const handleDeleteComment = () => {
+  postService.deleteComment(comment.id)
+    .then(res => {
+      refreshComments();
+      Keyboard.dismiss();
+    })
+    .catch(e => console.error(e))
+
+  // scrollToListBottom();
+
+};
 
   const handleLongPress = (commendId) =>{
     setIsOptionsVisible(true)
@@ -104,6 +124,22 @@ export default function CommentItem({
     setshowReply(false)
     onReply(comment.id,false)
   }
+  const handleEditComment = (status) => {
+    setIsEdit(status)
+  }
+  const handleReactions = async (cid) => {
+
+    const params = ({ reaction: "null" })
+    // postService.likeUnlikeComment(userState?.userData?.id, cid, params)
+    //   .then(res => {
+    //     refreshComments();
+    //     //setIsUserLiked(!isUserLiked)
+    //   })//need to get likePostIds 
+    //   .catch(e => console.error(e))
+
+    //refreshComments();
+  };
+   
   return (
     <>
      <TouchableWithoutFeedback onLongPress={()=>{handleLongPress(comment.id)}}>
@@ -120,9 +156,11 @@ export default function CommentItem({
             {/* <Text style={styles.comment}>{comment}</Text> */}
             <View style={styles.commentBody}>
               <CommentText
-                text={comment.content}
+                comment={comment}
                 textStyle={styles.comment}
                 readMoreStyle={styles.readMore}
+                isEdit={isEdit}
+                setIsEdit={setIsEdit}
               />
             </View>
 
@@ -187,10 +225,11 @@ export default function CommentItem({
                  item?.reactions?.length ? item?.reactions?.length : 0
                }
               // isUserLiked ={isUserLiked}
-              // onInteraction={handleReactions}
+               onInteraction={handleReactions}
                //handleDelete={handleDeleteComment}
                //onReply={handleReplyComment}
-               //handleEdit={handleEditComment}
+               handleEdit={handleEditComment}
+               isEdit={isEdit}
                //isReply={isReply}
                //reply = {replyList}
                postType={postType}
@@ -207,6 +246,7 @@ export default function CommentItem({
           <CommentsScreen route={{params: { comments: reply, userId: comment.user.id, commendId: comment.id, postType: postType, swapId: swapId, fromReply:true }}}/>
         ) : (<Text />)} */}
         {/* <Separator style={styles.separator} /> */}
+
         <OptionsDrawer
           options={options}
           isVisible={isOptionsVisible}

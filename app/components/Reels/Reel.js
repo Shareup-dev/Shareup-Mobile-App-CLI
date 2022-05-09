@@ -44,7 +44,7 @@ const RenderReels = ({item, index, navigation}) => {
         style={{
           justifyContent: 'space-between',
           width: width,
-          height: height - StatusBar.currentHeight,
+          height: height,
           backgroundColor: '#000',
         }}
         activeOpacity={1}
