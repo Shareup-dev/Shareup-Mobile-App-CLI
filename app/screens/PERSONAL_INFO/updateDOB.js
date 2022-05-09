@@ -19,20 +19,23 @@ import userService from '../../services/user.service';
 
 export default function UpdateDOB({navigation}) {
   const {
-    userState: {userData, username,birthday_date},
+    userState: {userData, username},
     authActions,
   } = useContext(AuthContext);
 
+  console.log(userData.birthday_date,"DOB")
+
+
   const [loading, setLoading] = useState(false);
   const [dob, setDOB] = useState(
-    birthday_date ? new Date(birthday_date) : new Date(),
+    userData.birthday_date ? new Date(userData.birthday_date) : new Date(),
   );
 
   const handleSubmit = _ => {
     setLoading(true);
     Keyboard.dismiss();
     userService
-      .editProfile(username, {...userData, birthday_date: dob})
+      .editProfile(username, {...userData, birthday_date: dob.toDateString()})
       .then(({status, data}) => {
         if (status === 200) {
           authActions.updateUserInfo(data);

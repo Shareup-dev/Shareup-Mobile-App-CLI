@@ -26,7 +26,6 @@ import {
 import SwapCard from '../components/lists/SwapCard';
 import postService from '../services/post.service';
 import profileService from '../services/profile.service';
-import fileStorage from '../config/fileStorage';
 
 const POSTS = 'posts';
 const IMAGE_VIDEOS = 'images&videos';
@@ -39,14 +38,13 @@ const tabs = [
 ];
 
 export default function UserProfileScreen({navigation, route}) {
-  const {params} = route;
   const [currentTab, setCurrentTab] = useState(POSTS);
 
   const {
     userState: {userData},
   } = useContext(authContext);
 
-  const [user, setUser] = useState(params?.user ? params?.user : userData);
+  const [user, setUser] = useState(userData);
 
   const [posts, setPosts] = useState([]);
   const [media, setMedia] = useState([]);
