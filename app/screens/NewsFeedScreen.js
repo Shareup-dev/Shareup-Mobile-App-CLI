@@ -20,6 +20,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import constants from '../config/constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {feedPostsAction} from '../redux/feedPostsSlice';
+import SharedPostCard from '../components/lists/SharedPostCard';
 
 export default function NewsFeedScreen({navigation, route}) {
   const posts = useSelector(state => state.feedPosts);
@@ -37,6 +38,7 @@ export default function NewsFeedScreen({navigation, route}) {
       .getNewsFeed(userState?.userData?.email)
       .then(({data}) => {
         dispatch(feedPostsAction.setFeedPosts(data));
+        console.log(data,"post data")
       })
       .catch(e => console.error(e))
       .finally(hideActivityIndicator);
@@ -52,6 +54,25 @@ export default function NewsFeedScreen({navigation, route}) {
               route={route}
               item={item}
               userId={item.userdata.id}
+            />
+          );
+        case constants.postTypes.SWAP:
+          return (
+            <SwapCard
+              navigation={navigation}
+              route={route}
+              item={item}
+              userId={item.userdata.id}
+            />
+          );
+        case "share":
+          return (
+            <SharedPostCard
+            user={item.userdata}
+            postData={item}
+            navigation={navigation}
+            reloadPosts={loadNews}
+            postType={item.allPostsType}
             />
           );
         case constants.postTypes.HANG_SHARE:

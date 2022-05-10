@@ -32,6 +32,8 @@ const PostActions = ({
   postType,
   swapId,
   onInteraction,
+  noActionBar,
+  noOptions,
 }) => {
   const fromReply = false;
   const actionsTabSizeRatio = 0.5;
@@ -105,73 +107,76 @@ const PostActions = ({
           />
         </View>
       </View>
+      {!noActionBar && (
+        <View style={styles.actionsBar}>
+          <View style={styles.likes}>
+            {isUserLiked ? (
+              <TouchableWithoutFeedback onPress={onInteraction}>
+                <Icon
+                  name="star"
+                  type="FontAwesome"
+                  size={17}
+                  color="#FFC107"
+                  backgroundSizeRatio={1}
+                  style={styles.star}
+                />
+              </TouchableWithoutFeedback>
+            ) : (
+              <TouchableWithoutFeedback onPress={onInteraction}>
+                <Icon
+                  name="star-o"
+                  type="FontAwesome"
+                  size={17}
+                  color="#FFC107"
+                  backgroundSizeRatio={1}
+                  style={styles.star}
+                />
+              </TouchableWithoutFeedback>
+            )}
 
-      <View style={styles.actionsBar}>
-        <View style={styles.likes}>
-          {isUserLiked ? (
-            <TouchableWithoutFeedback onPress={onInteraction}>
-              <Icon
-                name="star"
-                type="FontAwesome"
-                size={17}
-                color="#FFC107"
-                backgroundSizeRatio={1}
-                style={styles.star}
-              />
+            <Text style={styles.actionsText}>{numberOfReactions}</Text>
+          </View>
+
+          <View style={styles.commentsShares}>
+            <TouchableWithoutFeedback
+              onPress={() =>
+                navigation.navigate(routes.COMMENTS, {
+                  postId,
+                  userId,
+                  //comments,
+                  postType,
+                  swapId,
+                  fromReply,
+                })
+              }>
+              <Text style={[styles.actionsText, styles.comments]}>
+                {numberOfComments} Comments
+              </Text>
             </TouchableWithoutFeedback>
-          ) : (
-            <TouchableWithoutFeedback onPress={onInteraction}>
-              <Icon
-                name="star-o"
-                type="FontAwesome"
-                size={17}
-                color="#FFC107"
-                backgroundSizeRatio={1}
-                style={styles.star}
-              />
-            </TouchableWithoutFeedback>
-          )}
 
-          <Text style={styles.actionsText}>{numberOfReactions}</Text>
+            <Text style={styles.actionsText}>0 Shares</Text>
+          </View>
         </View>
-
-        <View style={styles.commentsShares}>
-          <TouchableWithoutFeedback
-            onPress={() =>
-              navigation.navigate(routes.COMMENTS, {
-                postId,
-                userId,
-                //comments,
-                postType,
-                swapId,
-                fromReply,
-              })
-            }>
-            <Text style={[styles.actionsText, styles.comments]}>
-              {numberOfComments} Comments
-            </Text>
-          </TouchableWithoutFeedback>
-
-          <Text style={styles.actionsText}>0 Shares</Text>
-        </View>
-      </View>
+      )}
 
       {postData.content !== '' && (
         <Text style={styles.postText}>{postData.content}</Text>
       )}
-      <TouchableOpacity
-        style={styles.menuButton}
-        onPress={() => {
-          setIsOptionsVisible(true);
-        }}>
-        <Icon
-          name="options"
-          type="SimpleLineIcons"
-          style={styles.optionsIcon}
-          size={20}
-          backgroundSizeRatio={1}
-        />
-      </TouchableOpacity>
+      {!noOptions && (
+        <TouchableOpacity
+          style={styles.menuButton}
+          onPress={() => {
+            setIsOptionsVisible(true);
+          }}>
+          <Icon
+            name="options"
+            type="SimpleLineIcons"
+            style={styles.optionsIcon}
+            size={20}
+            backgroundSizeRatio={1}
+          />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

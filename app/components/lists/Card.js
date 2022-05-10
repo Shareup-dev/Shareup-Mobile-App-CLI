@@ -43,6 +43,8 @@ export default function Card({
   style,
   navigation,
   postType,
+  noActionBar,
+  noOptions,
 }) {
   const {userState} = useContext(authContext);
   const [numberOfReactions, setNumberOfReactions] = useState(
@@ -52,7 +54,6 @@ export default function Card({
     postData.numberOfComments,
   );
 
-  
   const [isUserLiked, setIsUserLiked] = useState(postData.liked);
   const [comment, setComments] = useState(postData.comments);
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
@@ -61,9 +62,13 @@ export default function Card({
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [sliderWidth, setSliderWidth] = useState();
 
-  const onShareHandler = async () =>{
-    const result = await Share.share({message:"hello world",title:"hello",url:'www.google.qa'});
-  }
+  const onShareHandler = async () => {
+    const result = await Share.share({
+      message: 'hello world',
+      title: 'hello',
+      url: 'www.google.qa',
+    });
+  };
 
   const options = [
     {
@@ -88,10 +93,12 @@ export default function Card({
       title: 'Edit',
       icon: {image: require('../../assets/post-options-icons/swap-icon.png')},
       onPress: () => {
-        navigation.navigate(routes.ADD_POST,{postType: constants.postTypes.CREATE_POST,
+        navigation.navigate(routes.ADD_POST, {
+          postType: constants.postTypes.CREATE_POST,
           postData,
-          isEdit:true})
-          setIsOptionsVisible(false)
+          isEdit: true,
+        });
+        setIsOptionsVisible(false);
       },
     },
     {
@@ -102,7 +109,7 @@ export default function Card({
       onPress: () => {
         navigation.navigate(routes.ADD_POST, {
           postType: constants.postTypes.SHARE_POST,
-          postData
+          postData,
         });
       },
     },
@@ -111,7 +118,9 @@ export default function Card({
       icon: {
         image: require('../../assets/icons/share-point-icon.png'),
       },
-      onPress: () =>{ onShareHandler(); },
+      onPress: () => {
+        onShareHandler();
+      },
     },
     {
       title: userState?.userData?.id !== user?.id ? 'Unfollow' : '',
@@ -158,7 +167,7 @@ export default function Card({
     // d.toLocaleString('en-US', { timeZone: 'America/New_York' });
     const arrDate = postData.lastEdited.split(' ');
     const monthShort = arrDate[1].slice(0, 3);
-    
+
     setFormattedDate({
       day: arrDate[0],
       month: monthShort,
@@ -193,9 +202,7 @@ export default function Card({
   };
   const loadImages = () => {
     if (postData.media?.length !== 0) {
-      setImages(
-        postData.media?.map(image => image.mediaPath),
-      );
+      setImages(postData.media?.map(image => image.mediaPath));
     }
   };
   const checkIfLiked = () => {
@@ -278,7 +285,7 @@ export default function Card({
               setImageViewerVisible(true);
             }}
             //autoplay={true}
-           // circleLoop={true}
+            // circleLoop={true}
           />
 
           // <Image source={{ uri: images[0] }} style={styles.image} />
@@ -303,16 +310,20 @@ export default function Card({
           setIsOptionsVisible={setIsOptionsVisible}
           onInteraction={handleReactions}
           postType={postType}
+          noActionBar={noActionBar}
+          noOptions={noOptions}
         />
 
-        <PostOptionDrawer
-          source={'card'}
-          postId={postData.id}
-          postText={postData.content}
-          options={options}
-          isVisible={isOptionsVisible}
-          setIsVisible={setIsOptionsVisible}
-        />
+        {!noOptions && (
+          <PostOptionDrawer
+            source={'card'}
+            postId={postData.id}
+            postText={postData.content}
+            options={options}
+            isVisible={isOptionsVisible}
+            setIsVisible={setIsOptionsVisible}
+          />
+        )}
       </View>
     </TouchableWithoutFeedback>
   );
