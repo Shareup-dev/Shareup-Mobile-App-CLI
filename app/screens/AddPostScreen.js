@@ -19,7 +19,7 @@ import {
   FlatList,
 } from 'react-native';
 import Icon from '../components/Icon';
-import { groupPostsActions } from '../redux/groupPosts';
+import {groupPostsActions} from '../redux/groupPosts';
 import EnhancedOptionsDrawer from '../components/drawers/EnhancedOptionsDrawer';
 import IconButton from '../components/buttons/IconButton';
 import Text from '../components/Text';
@@ -29,7 +29,7 @@ import AuthContext from '../UserContext';
 import PostService from '../services/post.service';
 import swapService from '../services/swap.service';
 import routes from '../navigation/routes';
-import { useImagePicker } from '../hooks';
+import {useImagePicker} from '../hooks';
 import Header from '../components/headers/Header';
 import constants from '../config/constants';
 import defaultStyles from '../config/styles';
@@ -43,24 +43,24 @@ import {
 import OptionsDrawer from '../components/drawers/OptionsDrawer';
 import store from '../redux/store';
 import ImageInputList from '../components/ImageInputList';
-import { feedPostsAction } from '../redux/feedPostsSlice';
+import {feedPostsAction} from '../redux/feedPostsSlice';
 import RadioOptionDrawer from '../components/drawers/RadioOptionDrawer';
 import OptionBox from '../components/posts/OptionBox';
-import { useDispatch, useSelector } from 'react-redux';
-import { postFeelingsActions } from '../redux/postFeelings';
+import {useDispatch, useSelector} from 'react-redux';
+import {postFeelingsActions} from '../redux/postFeelings';
 import UserProfilePicture from '../components/UserProfilePicture';
 import hangShareService from '../services/hangShare.service';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import postService from '../services/post.service';
 import common from '../config/common';
-import {postImagesAction} from '../redux/postImages'
+import {postImagesAction} from '../redux/postImages';
 
-export default function AddPostScreen({ navigation, route }) {
-  const { postType,groupId, swapImage, postData, isEdit} = route.params;
+export default function AddPostScreen({navigation, route}) {
+  const {postType, groupId, swapImage, postData, isEdit} = route.params;
   const flatListRef = useRef();
-  const { loadingIndicator, setloadingIndicator } = useContext(AuthContext);
-  const postImages = useSelector(state => state.postImages)
-  const { userData: user } = useContext(authContext)?.userState;
+  const {loadingIndicator, setloadingIndicator} = useContext(AuthContext);
+  const postImages = useSelector(state => state.postImages);
+  const {userData: user} = useContext(authContext)?.userState;
   const [loading, setLoading] = useState(false);
   const [tagedUserData, setTagedUserData] = useState([]);
   const [placeholder, setPlaceHolder] = useState('We Share, Do you?');
@@ -68,9 +68,9 @@ export default function AddPostScreen({ navigation, route }) {
   const dispatch = useDispatch();
   const postFeel = useSelector(state => state.postFeel);
 
-  const { postTypes } = constants;
+  const {postTypes} = constants;
 
-  const DEFAULT_TEXT = 'We Share, Do You ?'
+  const DEFAULT_TEXT = 'We Share, Do You ?';
   const SWAP_DEFAULT_TEXT = 'Hi all \n I want to Swap ...';
   const HANG_SHARE_TEXT = 'Please anyone want this,can have it';
 
@@ -82,35 +82,35 @@ export default function AddPostScreen({ navigation, route }) {
     [
       {
         title: 'Share Feed',
-        icon: { image: require('../assets/icons/gray-feed-icon.png') },
+        icon: {image: require('../assets/icons/gray-feed-icon.png')},
         onPress: () => {
           alert('Share Feed');
         },
       },
       {
         title: 'Share time',
-        icon: { image: require('../assets/icons/gray-share-time-icon.png') },
+        icon: {image: require('../assets/icons/gray-share-time-icon.png')},
         onPress: () => {
           alert('Share time');
         },
       },
       {
         title: 'Share Friends',
-        icon: { image: require('../assets/icons/gray-share-friends-icon.png') },
+        icon: {image: require('../assets/icons/gray-share-friends-icon.png')},
         onPress: () => {
           alert('Share Friends');
         },
       },
       {
         title: 'Share Point',
-        icon: { image: require('../assets/icons/gray-share-point-icon.png') },
+        icon: {image: require('../assets/icons/gray-share-point-icon.png')},
         onPress: () => {
           alert('Share Point');
         },
       },
       {
         title: 'Share Groups',
-        icon: { image: require('../assets/icons/gray-share-groups-icon.png') },
+        icon: {image: require('../assets/icons/gray-share-groups-icon.png')},
         onPress: () => {
           alert('Share Groups');
         },
@@ -124,87 +124,89 @@ export default function AddPostScreen({ navigation, route }) {
           alert('Sell and Share');
         },
       },
-    ]
+    ];
   }, []);
 
-  const createPostoptions = [{
-    title: 'Photos',
-    icon: {
-      image: require('../assets/add-post-options-icons/photo-gradient-icon.png'),
+  const createPostoptions = [
+    {
+      title: 'Photos',
+      icon: {
+        image: require('../assets/add-post-options-icons/photo-gradient-icon.png'),
+      },
+      onPress: () => {
+        // handelPickImage();
+        navigation.navigate(routes.KEEP_HANG, postType);
+        //navigation.navigate(routes.ADDS_STORY)
+      },
     },
-    onPress: () => {
-      // handelPickImage();
-      console.log("here");
-      navigation.navigate(routes.KEEP_HANG,postType)
-     //navigation.navigate(routes.ADDS_STORY)
+    {
+      title: 'Tag People',
+      icon: {
+        image: require('../assets/add-post-options-icons/tag-people-gradient-icon.png'),
+      },
+      onPress: () => {
+        navigation.navigate(routes.TAG_PEOPLE);
+      },
     },
-  },
-  {
-    title: 'Tag People',
-    icon: {
-      image: require('../assets/add-post-options-icons/tag-people-gradient-icon.png'),
+    {
+      title: 'Sell and Share',
+      icon: {
+        image: require('../assets/add-post-options-icons/sell-and-share-gradient-icon.png'),
+      },
+      onPress: () => {
+        alert('Sell and Share');
+      },
     },
-    onPress: () => {
-      navigation.navigate(routes.TAG_PEOPLE);
+    {
+      title: 'Feeling/Activity',
+      icon: {
+        image: require('../assets/add-post-options-icons/feeling-gradient-icon.png'),
+      },
+      onPress: () => {
+        navigation.navigate(routes.FEELING_ACTIVITY);
+      },
     },
-  },
-  {
-    title: 'Sell and Share',
-    icon: {
-      image: require('../assets/add-post-options-icons/sell-and-share-gradient-icon.png'),
+    {
+      title: 'Location',
+      icon: {
+        image: require('../assets/add-post-options-icons/location-gradient-icon.png'),
+      },
+      onPress: () => {
+        alert('Location');
+      },
     },
-    onPress: () => {
-      alert('Sell and Share');
+    {
+      title: 'Live',
+      icon: {
+        image: require('../assets/add-post-options-icons/live-gradient-icon.png'),
+      },
+      onPress: () => {
+        alert('Live');
+      },
     },
-  },
-  {
-    title: 'Feeling/Activity',
-    icon: {
-      image: require('../assets/add-post-options-icons/feeling-gradient-icon.png'),
+  ];
+  const sharePostOptions = [
+    {
+      title: 'Tag People',
+      icon: {
+        image: require('../assets/add-post-options-icons/tag-people-gradient-icon.png'),
+      },
+      onPress: () => {
+        navigation.navigate(routes.TAG_PEOPLE);
+      },
     },
-    onPress: () => {
-      navigation.navigate(routes.FEELING_ACTIVITY);
-    },
-  },
-  {
-    title: 'Location',
-    icon: {
-      image: require('../assets/add-post-options-icons/location-gradient-icon.png'),
-    },
-    onPress: () => {
-      alert('Location');
-    },
-  },
-  {
-    title: 'Live',
-    icon: {
-      image: require('../assets/add-post-options-icons/live-gradient-icon.png'),
-    },
-    onPress: () => {
-      alert('Live');
-    },
-  },
-  ]
-  const sharePostOptions = [{
-    title: 'Tag People',
-    icon: {
-      image: require('../assets/add-post-options-icons/tag-people-gradient-icon.png'),
-    },
-    onPress: () => {
-      navigation.navigate(routes.TAG_PEOPLE);
-    },
-  },
 
-  {
-    title: 'Feeling/Activity',
-    icon: {
-      image: require('../assets/add-post-options-icons/feeling-gradient-icon.png'),
+    {
+      title: 'Feeling/Activity',
+      icon: {
+        image: require('../assets/add-post-options-icons/feeling-gradient-icon.png'),
+      },
+      onPress: () => {
+        navigation.navigate(routes.FEELING_ACTIVITY);
+      },
     },
-    onPress: () => {
-      navigation.navigate(routes.FEELING_ACTIVITY);
-    },
-  },]
-  const privacyOptions = useMemo(() => common.privacyOptions, [],);
+  ];
+  const privacyOptions = useMemo(() => common.privacyOptions, []);
 
   const [error, setError] = useState('');
   const [text, setText] = useState('');
@@ -218,48 +220,45 @@ export default function AddPostScreen({ navigation, route }) {
   const [progress, setProgress] = useState(0);
   const [postPrivacyOption, setPostPrivacyOption] = useState(privacyOptions[0]); // object to present the current privacy option
 
-  
-  useEffect(()=>{
+  useEffect(() => {
     if (postType === postTypes.HANG_SHARE) {
       setPlaceHolder(HANG_SHARE_TEXT);
       //setImages([postImages])
-    }else if (postType === postTypes.SWAP) {
+    } else if (postType === postTypes.SWAP) {
       setPlaceHolder(SWAP_DEFAULT_TEXT);
       //setImages([swapImage]);
-    }else{
+    } else {
       setPlaceHolder(DEFAULT_TEXT);
-     // setImages([postImages])
+      // setImages([postImages])
     }
-    
-  })
+  });
   useFocusEffect(
-    
-    useCallback(() => {  
+    useCallback(() => {
       if (postType === postTypes.HANG_SHARE) {
         setPlaceHolder(HANG_SHARE_TEXT);
         setIsOptionsVisible(false);
-         setImages(postImages)
-        handleButtonActivation(text,postImages)
+        setImages(postImages);
+        handleButtonActivation(text, postImages);
       }
       if (postType === postTypes.SWAP) {
         setPlaceHolder(SWAP_DEFAULT_TEXT);
-          setImages([swapImage]);
+        setImages([swapImage]);
         handleButtonActivation(text, [swapImage]);
       } else {
         setPlaceHolder(DEFAULT_TEXT);
-         setImages(postImages)
-        handleButtonActivation(text,postImages)
+        setImages(postImages);
+        handleButtonActivation(text, postImages);
       }
-      if (isEdit) { loadImages(); }
+      if (isEdit) {
+        loadImages();
+      }
       return;
-    }, [swapImage,postImages]),
+    }, [swapImage, postImages]),
   );
 
   const loadImages = () => {
     if (postData.media?.length !== 0) {
-      setImages(
-        postData.media?.map(image => image.mediaPath),
-      );
+      setImages(postData.media?.map(image => image.mediaPath));
     }
   };
   const setTagedUser = userData => {
@@ -295,7 +294,6 @@ export default function AddPostScreen({ navigation, route }) {
   };
 
   const handleButtonActivation = (text, images) => {
-
     if (text !== '' || text !== undefined) setIsButtonActive(true);
     if (images?.length > 0) setIsButtonActive(true);
     if (images?.length === 0 && text === '') setIsButtonActive(false);
@@ -310,22 +308,22 @@ export default function AddPostScreen({ navigation, route }) {
   //     multiple: true,
   //     cropping: true
   //   }).then(image => {
-      
+
   //     setFile(image);
   //     const uri = image.map(item => {
   //       return item.sourceURL;
   //     });
   //     onAddImage(uri);
   //   });
-    // try {
-    //   const result = await pickImage().then((result) =>)
-    //   const uri = result.map(item => {
-    //     return item.sourceURL;
-    //   });
-    //   if (!result.cancelled) onAddImage(uri);
-    // } catch (error) {
-    //   console.error(error);
-    // }
+  // try {
+  //   const result = await pickImage().then((result) =>)
+  //   const uri = result.map(item => {
+  //     return item.sourceURL;
+  //   });
+  //   if (!result.cancelled) onAddImage(uri);
+  // } catch (error) {
+  //   console.error(error);
+  // }
   // };
 
   const onAddImage = uri => {
@@ -339,7 +337,7 @@ export default function AddPostScreen({ navigation, route }) {
 
   const onRemoveImage = uri => {
     const updatedImages = images.filter(images => images !== uri);
-    dispatch(postImagesAction.removeImage(uri))
+    dispatch(postImagesAction.removeImage(uri));
     setImages(updatedImages);
     handleButtonActivation(text, updatedImages);
   };
@@ -348,8 +346,6 @@ export default function AddPostScreen({ navigation, route }) {
 
   //........GROUP POST................//
   const group = () => {
-
-
     if (text === '' && images.length === 0) {
       setError("Can't Create empty post");
     } else {
@@ -359,25 +355,30 @@ export default function AddPostScreen({ navigation, route }) {
         groupId: groupId,
       };
       const formData = createPostFormData(postContent);
-      PostService.createPost(user.id, formData).then(resp => {
-        let existingPosts = store.getState().groupPosts;
-        // setloadingIndicator(false)
-        store.dispatch(
-          groupPostsActions.setPosts([resp.data, ...existingPosts]),
-        );
-        store.dispatch(feedPostsAction.addFeedPost(resp.data));
-        // const popAction = StackActions.pop(1);
-        navigation.navigate(routes.GROUP_FEED, resp.data.group);
-        // navigation.dispatch(popAction);
-      }).catch(e => {
-        console.error(e);
-      }).finally(_ => {setLoading(false); clearFields();});
+      PostService.createPost(user.id, formData)
+        .then(resp => {
+          let existingPosts = store.getState().groupPosts;
+          // setloadingIndicator(false)
+          store.dispatch(
+            groupPostsActions.setPosts([resp.data, ...existingPosts]),
+          );
+          store.dispatch(feedPostsAction.addFeedPost(resp.data));
+          // const popAction = StackActions.pop(1);
+          navigation.navigate(routes.GROUP_FEED, resp.data.group);
+          // navigation.dispatch(popAction);
+        })
+        .catch(e => {
+          console.error(e);
+        })
+        .finally(_ => {
+          setLoading(false);
+          clearFields();
+        });
     }
-  }
+  };
 
   //........SWAP POST................//
   const swap = () => {
-    console.log("SWAPPPP");
     const swapContent = {
       text: text === '' ? SWAP_DEFAULT_TEXT : text,
       images: [swapImage],
@@ -393,7 +394,8 @@ export default function AddPostScreen({ navigation, route }) {
         })
         .catch(e => {
           console.error(e);
-        }).finally(_ => setLoading(false));
+        })
+        .finally(_ => setLoading(false));
     } else {
       swapService
         .createSwap(user.id, formData)
@@ -403,16 +405,19 @@ export default function AddPostScreen({ navigation, route }) {
         })
         .catch(e => {
           console.error(e);
-        }).finally(_ => {setLoading(false); clearFields();});
+        })
+        .finally(_ => {
+          setLoading(false);
+          clearFields();
+        });
     }
-  }
+  };
 
   //........HANG SHARE POST................//
   const hangShare = () => {
-    console.log("HANG_SHARE");
     const swapContent = {
       text: text === '' ? HANG_SHARE_TEXT : text,
-      category: "gifts",
+      category: 'gifts',
       images: images,
     };
     const formData = createPostFormData(swapContent);
@@ -425,7 +430,8 @@ export default function AddPostScreen({ navigation, route }) {
         })
         .catch(e => {
           console.error(e);
-        }).finally(_ => setLoading(false));;
+        })
+        .finally(_ => setLoading(false));
     } else {
       hangShareService
         .createHang(user.id, formData)
@@ -435,9 +441,13 @@ export default function AddPostScreen({ navigation, route }) {
         })
         .catch(e => {
           console.error(e);
-        }).finally(_ => {setLoading(false); clearFields();});;
+        })
+        .finally(_ => {
+          setLoading(false);
+          clearFields();
+        });
     }
-  }
+  };
   //........SHARE POST................//
   const sharePost = () => {
     // const postContent = {
@@ -454,13 +464,14 @@ export default function AddPostScreen({ navigation, route }) {
         navigation.navigate(routes.FEED);
       })
       .catch(e => console.error(e.message))
-      .finally(_ => {setLoading(false); clearFields();});
-  }
+      .finally(_ => {
+        setLoading(false);
+        clearFields();
+      });
+  };
 
   //........CREATE POST................//
   const createPost = () => {
-
-    
     if (text === '' && images.length === 0) {
       setError("Can't Create empty post");
     } else {
@@ -480,7 +491,8 @@ export default function AddPostScreen({ navigation, route }) {
           })
           .catch(e => {
             console.error(e);
-          }).finally(_ => setLoading(false));
+          })
+          .finally(_ => setLoading(false));
       } else {
         PostService.createPost(user.id, formData)
           .then(resp => {
@@ -490,39 +502,31 @@ export default function AddPostScreen({ navigation, route }) {
           })
           .catch(e => {
             console.error(e);
-          }).finally(_ => {setLoading(false); clearFields();});
+          })
+          .finally(_ => {
+            setLoading(false);
+            clearFields();
+          });
         //setProgress(prog)
       }
     }
-  }
+  };
 
   const handleAddPost = async () => {
-    console.log("Type",postType);
-    // setloadingIndicator(true)
     setLoading(true);
     switch (postType) {
       case postTypes.GROUP_POST:
-        console.log(postType);
-        group();
-        break
+        return group();
       case postTypes.SWAP:
-        console.log(postType);
-        swap();
-        break
+        return swap();
       case postTypes.HANG_SHARE:
-        console.log(postType);
-        hangShare();
-        break
-      case postTypes.SHARE_POST:
-        console.log(postType);
-        sharePost();
-        break
-      case postTypes.CREATE_POST:
-        console.log(postType);
-        createPost();
-        break
-    }
+        return hangShare();
 
+      case postTypes.SHARE_POST:
+        return sharePost();
+      case postTypes.CREATE_POST:
+        return createPost();
+    }
   };
 
   // used to change the position of the enhanced drawer,
@@ -547,7 +551,7 @@ export default function AddPostScreen({ navigation, route }) {
     setImages([]);
     setIsButtonActive(false);
     textInputRef.current.clear();
-    dispatch(postImagesAction.removeAllImages())
+    dispatch(postImagesAction.removeAllImages());
   };
 
   const handelPrivacySetting = value => {
@@ -557,9 +561,7 @@ export default function AddPostScreen({ navigation, route }) {
     setIsPrivacyOptionsVisible(!isPrivacyOptionsVisible);
   };
 
-  useEffect(() => { }, [postPrivacyOption]);
-
-
+  useEffect(() => {}, [postPrivacyOption]);
 
   const renderHeader = () => {
     if (postType === postTypes.HANG_SHARE && images.length === 0)
@@ -574,7 +576,7 @@ export default function AddPostScreen({ navigation, route }) {
           right={
             <SpecialHeaderButton
               title="Keep Hang"
-              onPress={() => navigation.navigate(routes.KEEP_HANG,postType)}
+              onPress={() => navigation.navigate(routes.KEEP_HANG, postType)}
             />
           }
         />
@@ -596,7 +598,7 @@ export default function AddPostScreen({ navigation, route }) {
               {postType === postTypes.CREATE_POST && postTypes.CREATE_POST}
               {postType === postTypes.SHARE_UP && postTypes.SHARE_UP}
               {postType === postTypes.GROUP_POST && postTypes.GROUP_POST}
-              {postType === postTypes.SHARE_POST && 'Share post'}
+              {postType === postTypes.SHARE_POST && postTypes.SHARE_POST}
               {postType === postTypes.HANG_SHARE && postTypes.HANG_SHARE}
             </HeaderTitle>
           }
@@ -611,25 +613,23 @@ export default function AddPostScreen({ navigation, route }) {
       );
   };
 
-  const { width, height } = Dimensions.get('window');
+  const {width, height} = Dimensions.get('window');
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const onViewRef = React.useRef(({ viewableItems }) => {
+  const onViewRef = React.useRef(({viewableItems}) => {
     setActiveIndex(viewableItems[0].index);
   });
-  const viewConfigRef = React.useRef({ viewAreaCoveragePercentThreshold: 50 });
+  const viewConfigRef = React.useRef({viewAreaCoveragePercentThreshold: 50});
 
   return (
     <Screen>
       {renderHeader()}
       <View style={[styles.topContainer]}>
-        {/* pointerEvents={loading?'none':'auto'} > */}
-        {/** User */}
         <View style={styles.row}>
           <Image
             source={
               user.profilePicture
-                ? { uri: user.profilePicturePath }
+                ? {uri: user.profilePicturePath}
                 : require('../assets/default-profile-picture.png')
             }
             style={defaultStyles.circledProfilePicture}
@@ -671,18 +671,18 @@ export default function AddPostScreen({ navigation, route }) {
 
           {(postType === postTypes.HANG_SHARE ||
             postType === postTypes.SHARE_UP) && (
-              <IconButton
-                onPress={() => navigation.navigate(routes.KEEP_HANG,postType)}
-                IconComponent={
-                  <Icon
-                    image={require('../assets/icons/squared-add-icon.png')}
-                    color={colors.iondigoDye}
-                    backgroundSizeRatio={0.8}
-                  />
-                }
-                style={styles.plusIcon}
-              />
-            )}
+            <IconButton
+              onPress={() => navigation.navigate(routes.KEEP_HANG, postType)}
+              IconComponent={
+                <Icon
+                  image={require('../assets/icons/squared-add-icon.png')}
+                  color={colors.iondigoDye}
+                  backgroundSizeRatio={0.8}
+                />
+              }
+              style={styles.plusIcon}
+            />
+          )}
         </View>
 
         {/**Content */}
@@ -696,10 +696,10 @@ export default function AddPostScreen({ navigation, route }) {
               ) : (
                 <Icon name={postFeel.icon} color={postFeel.color} />
               )}
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text
                   style={
-                    (styles.postFeelText, { fontWeight: '700', fontSize: 14 })
+                    (styles.postFeelText, {fontWeight: '700', fontSize: 14})
                   }>
                   {postFeel.feeling}
                 </Text>
@@ -748,19 +748,23 @@ export default function AddPostScreen({ navigation, route }) {
                 alignItems: 'center',
                 marginHorizontal: 5,
               }}>
-                {console.log(postData,"profile")}
               <UserProfilePicture
                 profilePicture={postData.userdata.profilePicturePath}
                 size={35}
               />
               <Text
-                style={{ fontSize: 15, marginHorizontal: 5, fontWeight: '600' }}>
+                style={{fontSize: 15, marginHorizontal: 5, fontWeight: '600'}}>
                 {`${postData.userdata?.firstName} ${postData.userdata?.lastName}`}
               </Text>
             </View>
-            {postData.content && (
-              <Text style={{ fontSize: 14, margin: 5 }}>{postData.content}</Text>
+            {console.log(postData.content)}
+            <View style={{margin: 5}} >
+            {postData.content!=="" && (
+                <Text style={{fontSize: 14, }}>
+                  {postData?.content}
+                </Text>
             )}
+            </View>
 
             <FlatList
               onViewableItemsChanged={onViewRef.current}
@@ -770,13 +774,13 @@ export default function AddPostScreen({ navigation, route }) {
               pagingEnabled
               showsHorizontalScrollIndicator={false}
               data={postData.media}
-              keyExtractor={({ item }, index) => index.toString()}
-              renderItem={({ item }) => {
+              keyExtractor={({item}, index) => index.toString()}
+              renderItem={({item}) => {
                 return (
                   <Image
-                    style={{ width: width - 42, height: 200 }}
+                    style={{width: width - 42, height: 200}}
                     resizeMode={'cover'}
-                    source={{ uri: item.mediaPath}}
+                    source={{uri: item.mediaPath}}
                   />
                 );
               }}
@@ -789,7 +793,7 @@ export default function AddPostScreen({ navigation, route }) {
                   alignSelf: 'center',
                 }}>
                 {postData.media?.length > 1 &&
-                  postData.media.map(({ media }, index) => (
+                  postData.media.map(({media}, index) => (
                     <TouchableOpacity
                       key={index}
                       style={{
@@ -946,7 +950,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
-  textInput: { height: '15%', textAlignVertical: 'top', marginTop: 10, },
+  textInput: {height: '15%', textAlignVertical: 'top', marginTop: 10},
   image: {
     width: '100%',
     height: 250,

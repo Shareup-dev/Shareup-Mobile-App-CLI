@@ -11,7 +11,8 @@ import {
   Alert,
   Keyboard,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Text,
 } from 'react-native';
 
 import colors from '../config/colors';
@@ -25,7 +26,6 @@ import AuthContext from '../authContext';
 import Video from 'react-native-video';
 import storyService from '../services/story.service';
 import {ProgressBar} from 'react-native-paper';
-
 
 export default function AddStoryScreen({navigation}) {
   let cameraRef;
@@ -44,7 +44,7 @@ export default function AddStoryScreen({navigation}) {
   const scale = useRef(new Animated.Value(0)).current;
 
   const [duration, setDuration] = useState(10000);
-  const [caption, setCaption] = useState("");
+  const [caption, setCaption] = useState('');
 
   // const options = {
   //   onUploadProgress: e => {
@@ -113,7 +113,6 @@ export default function AddStoryScreen({navigation}) {
       maxHeight: 500,
       maxWidth: 320,
       videoQuality: 'medium',
-    
     })
       .then(res => {
         if (res.didCancel) return;
@@ -163,17 +162,16 @@ export default function AddStoryScreen({navigation}) {
         setIsUploading(false);
         navigation.goBack();
       });
-
   };
 
-  console.log("mode",mode)
+  const {width, height} = Dimensions.get('window');
 
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#000" barStyle="light-content" />
       {screen === 'capture' ? (
         <RNCamera
-          style={[styles.camera,{display: mode === 'video' ? 'none' : 'flex'}]}
+          style={[styles.camera]}
           ratio={'16:9'}
           captureAudio={true}
           ref={ref => {
@@ -181,7 +179,7 @@ export default function AddStoryScreen({navigation}) {
           }}
           type={cameraType}>
           <CameraBottomActions
-          title={'Story'}
+            title={'Story'}
             onPickFile={imagePickHandler}
             onCapture={onCapture}
             onRevertCamera={handelRevertCamera}
@@ -207,80 +205,83 @@ export default function AddStoryScreen({navigation}) {
         </RNCamera>
       ) : (
         <KeyboardAvoidingView behavior={'height'} style={styles.storyImgViewer}>
-
-          <TouchableOpacity activeOpacity={.9} onPress={Keyboard.dismiss}>
+          <TouchableOpacity activeOpacity={1} onPress={Keyboard.dismiss}>
             <>
-          <CameraHeader
-            title="Story"
-            onClosePress={() => setScreen('capture')}
-          />
-          <View style={styles.forwardArrow}>
-            <View style={styles.caption}>
-
-            <TextInput placeholder="Caption" value={caption} onChangeText={e => setCaption(e)} multiline  />
-            </View>
-            <TouchableOpacity
-              activeOpacity={0.6}
-              disabled={isUploading}
-              onPress={addStoryHandler}>
-              <Icon
-                type={'AntDesign'}
-                color={'#333'}
-                name={'arrowright'}
-                size={50}
-                style={{
-                  marginLeft: 5,
-                }}
+              <CameraHeader
+                title="Story"
+                onClosePress={() => setScreen('capture')}
               />
-            </TouchableOpacity>
-          </View>
+              <View style={styles.forwardArrow}>
+                <View style={styles.caption}>
+                  <TextInput
+                    placeholder="Caption"
+                    value={caption}
+                    onChangeText={e => setCaption(e)}
+                    multiline
+                  />
+                </View>
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  disabled={isUploading}
+                  onPress={addStoryHandler}>
+                  <Icon
+                    type={'AntDesign'}
+                    color={'#333'}
+                    name={'arrowright'}
+                    size={50}
+                    style={{
+                      marginLeft: 5,
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
 
-          {mode === 'photo' ? (
-            <Image
-              source={story}
-              resizeMode={'contain'}
-              style={{
-                height: '100%',
-                width: '100%',
-                zIndex: -10,
-                backgroundColor: '#000',
-              }}
-            />
-          ) : (
-            <Video
-              resizeMode={'cover'}
-              style={[styles.backgroundVideo]}
-              source={{uri: story.uri}}
-              repeat
-            />
-          )}
+              {mode === 'photo' ? (
+                <Image
+                  source={story}
+                  resizeMode={'contain'}
+                  style={styles.backgroundMedia}
+                />
+              ) : (
+                <Video
+                  resizeMode={'contain'}
+                  style={[styles.backgroundMedia]}
+                  source={{
+                    uri: story.uri,
+                  }}
+                  repeat
+                />
+              )}
             </>
-      
-      </TouchableOpacity>
-        
-          
+          </TouchableOpacity>
         </KeyboardAvoidingView>
-
       )}
-      <ProgressBar indeterminate={isUploading} visible={isUploading} color={colors.iondigoDye}  />
+      <ProgressBar
+        indeterminate={isUploading}
+        visible={isUploading}
+        color={colors.iondigoDye}
+      />
     </View>
   );
 }
 const styles = StyleSheet.create({
+  backgroundMedia: {
+    zIndex: -10,
+    width: '100%',
+    height: '100%',
+    backgroundColor:'#333'
+  },
   caption: {
     paddingHorizontal: 15,
     backgroundColor: colors.white,
     borderRadius: 30,
-    justifyContent:'center',
+    justifyContent: 'center',
     fontSize: 18,
     maxHeight: 100,
-    height:'100%',
+    height: '100%',
     width: '85%',
   },
-  backgroundVideo: {
-    flex: 1,
-    zIndex: -5,
-  },
+
   container: {
     flex: 1,
   },
@@ -293,13 +294,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   forwardArrow: {
-    marginBottom:'8%',    
+    marginBottom: '8%',
     position: 'absolute',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems:'center',
+    alignItems: 'center',
     width: '100%',
     bottom: 20,
+    zIndex: 10,
     paddingRight: 15,
     paddingLeft: 10,
   },

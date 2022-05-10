@@ -18,34 +18,25 @@ import TrendingComponent from '../components/trending/TrendingComponent';
 import postService from '../services/post.service';
 import {useFocusEffect} from '@react-navigation/native';
 import constants from '../config/constants';
-import { useDispatch, useSelector } from 'react-redux';
-import { feedPostsAction } from '../redux/feedPostsSlice';
-
-
+import {useDispatch, useSelector} from 'react-redux';
+import {feedPostsAction} from '../redux/feedPostsSlice';
 
 export default function NewsFeedScreen({navigation, route}) {
-
   const posts = useSelector(state => state.feedPosts);
   const dispatch = useDispatch();
 
-
   const {userState} = useContext(authContext);
   const [activityIndicator, setActivityIndicator] = useState(true);
-  // useFocusEffect(
-  //   useCallback(() => {      
-  //     loadNews();
-  //   }, []),
-  // );
-useEffect(()=>{
-  loadNews();
-},[])
+
+  useEffect(() => {
+    loadNews();
+  }, []);
   const loadNews = () => {
     setActivityIndicator(true);
     postService
       .getNewsFeed(userState?.userData?.email)
       .then(({data}) => {
-        // setPosts(data);
-        dispatch(feedPostsAction.setFeedPosts(data))
+        dispatch(feedPostsAction.setFeedPosts(data));
       })
       .catch(e => console.error(e))
       .finally(hideActivityIndicator);
@@ -71,14 +62,14 @@ useEffect(()=>{
               item={item}
               userId={item.userdata.id}
             />
-          // <HangFeedCard //style={styles.listItem}
-          //   user={item.userdata}
-          //   postData={item}
-          //   navigation={navigation}
-          //   reloadPosts={loadNews}
-          //   postType={item.allPostsType}
-          //   onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item }) }}
-          // />
+            // <HangFeedCard //style={styles.listItem}
+            //   user={item.userdata}
+            //   postData={item}
+            //   navigation={navigation}
+            //   reloadPosts={loadNews}
+            //   postType={item.allPostsType}
+            //   onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item }) }}
+            // />
           );
         default:
           return (
@@ -99,7 +90,7 @@ useEffect(()=>{
   };
 
   const ActivityIndicatorComponent = ({style}) => (
-    <View style={[styles.listFooter,style]}>
+    <View style={[styles.listFooter, style]}>
       <ActivityIndicator size="large" color={colors.iondigoDye} />
     </View>
   );
@@ -118,13 +109,15 @@ useEffect(()=>{
         data={posts}
         initialNumToRender={5}
         ListHeaderComponent={ListHeader}
-        keyExtractor={(post,i) => i.toString()}
+        keyExtractor={(post, i) => i.toString()}
         showsVerticalScrollIndicator={false}
         renderItem={renderItem}
         ListEmptyComponent={() => (
           <>
             {activityIndicator ? (
-              <ActivityIndicatorComponent style={{alignSelf: 'center', marginVertical: 50}} />
+              <ActivityIndicatorComponent
+                style={{alignSelf: 'center', marginVertical: 50}}
+              />
             ) : (
               <Text style={{alignSelf: 'center', marginVertical: 50}}>
                 No posts Available
@@ -157,7 +150,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  
+
   postedDate: {
     marginHorizontal: 10,
     color: colors.grayX11Gray,
