@@ -66,6 +66,6 @@ export default Object.freeze({
   HANG_FLOW_SCREEN:'HangFlowScreen',
   SHIPPING_ADDRESS:'ShippingAddress',
   HELP_SUPPORT:'HelpAndSupportScreen',
-  ACCOUNT_SETTINGS:'AccountSettingsScreen'
-
+  ACCOUNT_SETTINGS:'AccountSettingsScreen',
+  SHAREUP_CAMERA:'ShareupCameraScreen'
 });

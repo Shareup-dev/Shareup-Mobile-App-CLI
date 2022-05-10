@@ -133,9 +133,7 @@ export default function AddPostScreen({ navigation, route }) {
       image: require('../assets/add-post-options-icons/photo-gradient-icon.png'),
     },
     onPress: () => {
-      // handelPickImage();
-      console.log("here");
-      navigation.navigate(routes.KEEP_HANG,postType)
+      navigation.navigate(routes.SHAREUP_CAMERA,postType)
      //navigation.navigate(routes.ADDS_STORY)
     },
   },
@@ -235,6 +233,7 @@ export default function AddPostScreen({ navigation, route }) {
   useFocusEffect(
     
     useCallback(() => {  
+      console.log(postImages);
       if (postType === postTypes.HANG_SHARE) {
         setPlaceHolder(HANG_SHARE_TEXT);
         setIsOptionsVisible(false);
