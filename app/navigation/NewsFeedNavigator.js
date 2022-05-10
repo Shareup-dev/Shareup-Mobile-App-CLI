@@ -27,7 +27,7 @@ import UpdateEmail from '../screens/PERSONAL_INFO/updateEmail';
 import ManageEmail from '../screens/PERSONAL_INFO/manageEmail';
 import UpdatePassword from '../screens/PERSONAL_INFO/updatePassword';
 import FriendsProfileScreen from '../screens/FriendsProfileScreen';
-
+import ShareupCameraScreen from '../screens/ShareupCameraScreen';
 
 export default function NewsFeedNavigator() {
   const Stack = createNativeStackNavigator();
@@ -209,6 +209,13 @@ export default function NewsFeedNavigator() {
       <Stack.Screen
         name={routes.SEARCH_SCREEN}
         component={SearchScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={routes.SHAREUP_CAMERA}
+        component={ShareupCameraScreen}
         options={{
           headerShown: false,
         }}

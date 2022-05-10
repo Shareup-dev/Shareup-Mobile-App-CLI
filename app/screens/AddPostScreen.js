@@ -127,18 +127,17 @@ export default function AddPostScreen({navigation, route}) {
     ];
   }, []);
 
-  const createPostoptions = [
-    {
-      title: 'Photos',
-      icon: {
-        image: require('../assets/add-post-options-icons/photo-gradient-icon.png'),
-      },
-      onPress: () => {
-        // handelPickImage();
-        navigation.navigate(routes.KEEP_HANG, postType);
-        //navigation.navigate(routes.ADDS_STORY)
-      },
+
+  const createPostoptions = [{
+    title: 'Photos',
+    icon: {
+      image: require('../assets/add-post-options-icons/photo-gradient-icon.png'),
     },
+    onPress: () => {
+      navigation.navigate(routes.SHAREUP_CAMERA,postType)
+     //navigation.navigate(routes.ADDS_STORY)
+    },
+  },
     {
       title: 'Tag People',
       icon: {
@@ -233,6 +232,7 @@ export default function AddPostScreen({navigation, route}) {
     }
   });
   useFocusEffect(
+
     useCallback(() => {
       if (postType === postTypes.HANG_SHARE) {
         setPlaceHolder(HANG_SHARE_TEXT);
