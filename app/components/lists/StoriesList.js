@@ -19,8 +19,6 @@ export default function StoriesList({navigation, style}) {
   const dispatch = useDispatch();
   const stories = useSelector(state => state.stories);
 
-  // console.log("my new",story)
-
   useEffect(() => {
     const fetchStories = () => {
       setLoading(1);

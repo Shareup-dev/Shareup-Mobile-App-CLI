@@ -9,10 +9,13 @@ import colors from '../config/colors';
 import Screen from '../components/Screen';
 import {launchImageLibrary,launchCamera} from 'react-native-image-picker';
 import routes from '../navigation/routes';
-
+import constants from '../config/constants';
+import {postImagesAction} from '../redux/postImages';
+import {useDispatch, useSelector} from 'react-redux';
 
 export default function SwapScreen({navigation, route}) {
   // const [imageUri, setImageUri] = useState('');
+  const dispatch = useDispatch();
   const [file, setFile] = useState({});
   const imagePickHandler = () => {
     launchImageLibrary({
@@ -21,14 +24,17 @@ export default function SwapScreen({navigation, route}) {
       selectionLimit: 1,
     }).then(({didCancel, assets}) => {
       if (!didCancel) {
-        setFile(assets[0]);
-        navigation.navigate(routes.SWAP_DISPLAY, {
-          swapImage: assets[0].uri,
-          returnSwap: route.params?.returnSwap
-            ? route.params.returnSwap
-            : false,
-          swapPostId: route.params?.swapPostId,
-        });
+        console.log("1",assets);
+        //setFile(assets[0]);
+        // navigation.navigate(routes.SWAP_DISPLAY, {
+        //   swapImage: assets[0].uri,
+        //   returnSwap: route.params?.returnSwap
+        //     ? route.params.returnSwap
+        //     : false,
+        //   swapPostId: route.params?.swapPostId,
+        // });
+        dispatch(postImagesAction.setImages(assets)),
+        navigation.navigate(routes.ADD_POST,{postType:constants.postTypes.SWAP});
       }
     });
   };
@@ -41,14 +47,16 @@ export default function SwapScreen({navigation, route}) {
       
     }).then(({didCancel, assets}) => {
       if (!didCancel) {
-        setFile(assets[0]);
-        navigation.navigate(routes.SWAP_DISPLAY, {
-          swapImage: assets[0].uri,
-          returnSwap: route.params?.returnSwap
-            ? route.params.returnSwap
-            : false,
-          swapPostId: route.params?.swapPostId,
-        });
+        // setFile(assets[0]);
+        // navigation.navigate(routes.SWAP_DISPLAY, {
+        //   swapImage: assets[0].uri,
+        //   returnSwap: route.params?.returnSwap
+        //     ? route.params.returnSwap
+        //     : false,
+        //   swapPostId: route.params?.swapPostId,
+        // });
+        dispatch(postImagesAction.setImages(assets)),
+        navigation.navigate(routes.ADD_POST,{postType:constants.postTypes.SWAP});
       }
     });
   };

@@ -56,7 +56,7 @@ import common from '../config/common';
 import {postImagesAction} from '../redux/postImages';
 
 export default function AddPostScreen({navigation, route}) {
-  const {postType, groupId, swapImage, postData, isEdit} = route.params;
+  const {postType, groupId, postData, isEdit} = route.params;
   const flatListRef = useRef();
   const {loadingIndicator, setloadingIndicator} = useContext(AuthContext);
   const postImages = useSelector(state => state.postImages);
@@ -129,7 +129,7 @@ export default function AddPostScreen({navigation, route}) {
 
 
   const createPostoptions = [{
-    title: 'Photos',
+    title: 'Photo/Video',
     icon: {
       image: require('../assets/add-post-options-icons/photo-gradient-icon.png'),
     },
@@ -210,7 +210,7 @@ export default function AddPostScreen({navigation, route}) {
   const [error, setError] = useState('');
   const [text, setText] = useState('');
   //const { file, pickImage, clearFile } = useImagePicker();
-
+  const [imageUriArray,setImageUriArray] = useState([])
   const [displayImage, setDisplayImage] = useState(false);
   const [isButtonActive, setIsButtonActive] = useState(false);
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
@@ -220,46 +220,34 @@ export default function AddPostScreen({navigation, route}) {
   const [postPrivacyOption, setPostPrivacyOption] = useState(privacyOptions[0]); // object to present the current privacy option
 
   useEffect(() => {
+    loadImages()
     if (postType === postTypes.HANG_SHARE) {
       setPlaceHolder(HANG_SHARE_TEXT);
-      //setImages([postImages])
+      setIsOptionsVisible(false);
     } else if (postType === postTypes.SWAP) {
       setPlaceHolder(SWAP_DEFAULT_TEXT);
-      //setImages([swapImage]);
     } else {
       setPlaceHolder(DEFAULT_TEXT);
-      // setImages([postImages])
     }
-  });
-  useFocusEffect(
+  },[postImages]);
 
-    useCallback(() => {
-      if (postType === postTypes.HANG_SHARE) {
-        setPlaceHolder(HANG_SHARE_TEXT);
-        setIsOptionsVisible(false);
-        setImages(postImages);
-        handleButtonActivation(text, postImages);
-      }
-      if (postType === postTypes.SWAP) {
-        setPlaceHolder(SWAP_DEFAULT_TEXT);
-        setImages([swapImage]);
-        handleButtonActivation(text, [swapImage]);
-      } else {
-        setPlaceHolder(DEFAULT_TEXT);
-        setImages(postImages);
-        handleButtonActivation(text, postImages);
-      }
-      if (isEdit) {
-        loadImages();
-      }
-      return;
-    }, [swapImage, postImages]),
-  );
 
   const loadImages = () => {
+    console.log("postimg",postImages);
+    if(isEdit){
     if (postData.media?.length !== 0) {
       setImages(postData.media?.map(image => image.mediaPath));
     }
+  }else{
+    // if (postImages.length !== 0){
+    const selectedImageUris = postImages?.map(image => {
+      return image["uri"];
+    })
+    setImageUriArray(selectedImageUris)
+    setImages(postImages)
+    handleButtonActivation(text, postImages);
+  }
+  // }
   };
   const setTagedUser = userData => {
     setTagedUserData(userData);
@@ -338,6 +326,7 @@ export default function AddPostScreen({navigation, route}) {
   const onRemoveImage = uri => {
     const updatedImages = images.filter(images => images !== uri);
     dispatch(postImagesAction.removeImage(uri));
+    
     setImages(updatedImages);
     handleButtonActivation(text, updatedImages);
   };
@@ -351,7 +340,7 @@ export default function AddPostScreen({navigation, route}) {
     } else {
       const postContent = {
         text: text,
-        images: images,
+        images: imageUriArray,
         groupId: groupId,
       };
       const formData = createPostFormData(postContent);
@@ -381,7 +370,7 @@ export default function AddPostScreen({navigation, route}) {
   const swap = () => {
     const swapContent = {
       text: text === '' ? SWAP_DEFAULT_TEXT : text,
-      images: [swapImage],
+      images: imageUriArray,
     };
 
     const formData = createPostFormData(swapContent);
@@ -418,7 +407,7 @@ export default function AddPostScreen({navigation, route}) {
     const swapContent = {
       text: text === '' ? HANG_SHARE_TEXT : text,
       category: 'gifts',
-      images: images,
+      images: imageUriArray,
     };
     const formData = createPostFormData(swapContent);
     if (isEdit) {
@@ -477,7 +466,7 @@ export default function AddPostScreen({navigation, route}) {
     } else {
       const postContent = {
         text: text === '' ? DEFAULT_TEXT : text,
-        images: images,
+        images: imageUriArray,
         feeling: postFeel.feeling ? postFeel.feeling : null,
         groupId: groupId,
       };
@@ -721,13 +710,9 @@ export default function AddPostScreen({navigation, route}) {
         ) : null}
         <TextInput
           placeholder={isEdit ? postData.content : placeholder}
-          //   postType === postTypes.SWAP
-          //     ? SWAP_DEFAULT_TEXT
-          //     : postType === postTypes.HANG_SHARE ? 'Please Anyone want it,can have it' :'We Share, Do you?'
-          // }
           placeholderTextColor={isEdit ? colors.dark : colors.dimGray}
           style={styles.textInput}
-          numberOfLines={10}
+          // numberOfLines={10}
           multiline={true}
           onChangeText={handleOnChangeText}
           ref={textInputRef}

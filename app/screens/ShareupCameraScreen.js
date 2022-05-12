@@ -86,29 +86,35 @@ export default function ShareupCameraScreen({navigation,route}) {
       let photo = await cameraRef.takePictureAsync({
         skipProcessing: true,
         quality: 0.5,
-      });
-      setStory(photo);
-    } else if (mode === 'video') {
-      if (capturing) {
-        return StopRecording();
-      }
-      setCapturing(true);
-      startProgress();
-
-      const video = await cameraRef.recordAsync({
-        // maxDuration: 10,
-        // quality: RNCamera.Constants.VideoQuality['288p'],
-        quality: RNCamera.Constants.VideoQuality['480p'],
-        orientation: 'portrait',
-        mirrorVideo: Platform.OS == 'ios', // allows me to get a .mp4 video on iOS (it's .mov otherwise)
-        mute: false,
-        codec: Platform.OS == 'ios' ? RNCamera.Constants.VideoCodec.H264 : undefined,
-    })
-        .then(data => { console.log(data); })
+      }).then(res => { 
+          console.log(res);
+            dispatch(postImagesAction.setImages([res])),
+            navigation.navigate(routes.ADD_POST,{postType:postType})
+        })
         .catch(error => { console.log(error); })
+     
+    } 
+    // else if (mode === 'video') {
+    //   if (capturing) {
+    //     return StopRecording();
+    //   }
+    //   setCapturing(true);
+    //   startProgress();
 
-      //setStory(video);
-    }
+    //   const video = await cameraRef.recordAsync({
+    //     // maxDuration: 10,
+    //     // quality: RNCamera.Constants.VideoQuality['288p'],
+    //     quality: RNCamera.Constants.VideoQuality['480p'],
+    //     orientation: 'portrait',
+    //     mirrorVideo: Platform.OS == 'ios', // allows me to get a .mp4 video on iOS (it's .mov otherwise)
+    //     mute: false,
+    //     codec: Platform.OS == 'ios' ? RNCamera.Constants.VideoCodec.H264 : undefined,
+    // })
+    //     .then(data => { console.log(data); })
+    //     .catch(error => { console.log(error); })
+
+    //   //setStory(video);
+    // }
     //setScreen('view');
   }
 
@@ -117,24 +123,24 @@ export default function ShareupCameraScreen({navigation,route}) {
       quality: 0.5,
       mediaType: mode,
       durationLimit: 1,
-      selectionLimit: 1,
       maxHeight: 500,
       maxWidth: 320,
       videoQuality: 'medium',
+      selectionLimit:5
     
     })
       .then(res => {
         if (res.didCancel) return;
-        else if (res.assets[0].duration > 30) {
+        else if (res.assets[0].duration > 3000) {
           Alert.alert('Ops..', "Sorry you can't upload this video", [null], {
             cancelable: true,
           });
         } else {
-            console.log(res.assets[0]["uri"]);
-            dispatch(postImagesAction.setImages([res.assets[0]["uri"]])),
+            dispatch(postImagesAction.setImages(res.assets)),
             navigation.navigate(routes.ADD_POST,{postType:postType});
         //   setStory(res.assets[0]);
         //   setScreen('view');
+        
         }
       })
       .catch(e => {
@@ -181,9 +187,9 @@ export default function ShareupCameraScreen({navigation,route}) {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="#000" barStyle="light-content" />
+      <StatusBar backgroundColor="#0000" barStyle="light-content" />
         <RNCamera
-          style={[styles.camera,{display: mode === 'video' ? 'none' : 'flex'}]}
+          style={[styles.camera]}
           ratio={'16:9'}
           captureAudio={true}
           ref={ref => {

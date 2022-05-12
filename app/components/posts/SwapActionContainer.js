@@ -7,7 +7,6 @@ import Tab from "../buttons/Tab";
 import constants from "../../config/constants";
 
 export default function SwapActionContainer({item}) {
-  console.log(item.content);
   return (
     <View style={styles.container}>
       <View style={styles.categoryContainer}>

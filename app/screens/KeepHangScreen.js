@@ -18,13 +18,14 @@ import Separator from '../components/Separator';
 import colors from '../config/colors';
 import constants from '../config/constants';
 import routes from '../navigation/routes';
-
-import ImageCropPicker from 'react-native-image-crop-picker';
+import * as ImagePicker from 'react-native-image-picker';
+//import ImageCropPicker from 'react-native-image-crop-picker';
 import {useDispatch, useSelector} from 'react-redux';
 import {State} from 'react-native-gesture-handler';
 import store from '../redux/store';
 import {useImagePicker} from '../hooks';
 import {postImagesAction} from '../redux/postImages';
+
 
 export default function KeepHangScreen({navigation, route}) {
   const dispatch = useDispatch();
@@ -34,7 +35,6 @@ export default function KeepHangScreen({navigation, route}) {
   const {width, height} = Dimensions.get('window');
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const {postTypes} = constants;
-
   //const [file, setFile] = useState([]);
   const hangList = [
     {
@@ -63,47 +63,30 @@ export default function KeepHangScreen({navigation, route}) {
     },
     {id: 5, title: '', image: ''},
   ];
-
-  const handleImagePicker = () => {
-    ImageCropPicker.openPicker({
-      mediaType: 'any',
-      width: width,
-      height: height,
-      multiple: true,
-      cropping: true,
-      //compressImageQuality: 0.5,
-    })
-      .then(image => {
-        let array = [];
-        image.filter(img =>
-          array.push(Platform.OS === 'ios' ? img.sourceURL : img.path),
-        );
-
-        dispatch(postImagesAction.setImages(array)),
+  const handleImagePicker = async () => {
+    ImagePicker.launchImageLibrary({
+      mediaType: 'photo',
+     selectionLimit: 5,
+    }).then(image => {
+      dispatch(postImagesAction.setImages(image.assets)),
           navigation.navigate(routes.ADD_POST, {
             postType: postType,
           });
-      })
-      .catch(error => console.error(error));
+    }).catch(error => console.error(error));
   };
-  const handleCamera = async () => {
-    try {
-      openCamera().then(result => {
-        const newImage = result.filter(img => {
-          if (postType === postTypes.HANG_SHARE) {
-            dispatch(postImagesAction.addNewImages(img.uri));
-          } else {
-            dispatch(postImagesAction.setImages(img.uri));
-          }
-        });
 
-        navigation.navigate(routes.ADD_POST, {
-          postType: postType,
-        });
-      });
-    } catch (error) {
-      console.error(error);
-    }
+ 
+  const handleCamera = async () => {
+   ImagePicker.launchCamera({
+      mediaType: 'photo',
+     
+    }).then(image => {
+      dispatch(postImagesAction.setImages(image.assets)),
+          navigation.navigate(routes.ADD_POST, {
+            postType: postType,
+          });
+     return image;
+    });
   };
   return (
     <Screen statusPadding={true}>
