@@ -6,7 +6,7 @@ import {
   TouchableWithoutFeedback,
   Alert,
 } from 'react-native';
-
+import Video from 'react-native-video';
 import {MaterialCommunityIcons} from 'react-native-vector-icons';
 
 import colors from '../config/colors';
@@ -21,12 +21,11 @@ export default function ImageInput({imageUri, onChangeImage, isSwap}) {
   //   const {granted} = await ImagePicker.requestCameraPermissionsAsync();
   //   if (!granted) alert('You need to enable permission to access the library');
   // };
-
   const onPress = () => {
     if (!imageUri) selectImage();
     else
       Alert.alert('Delete', 'Are you sure you want to delete this image?', [
-        {text: 'Yes', onPress: () => onChangeImage(null)},
+        {text: 'Yes', onPress: () => onChangeImage(imageUri)},
         {text: 'No'},
       ]);
   };
@@ -59,7 +58,18 @@ export default function ImageInput({imageUri, onChangeImage, isSwap}) {
             size={25}
             onPress={onPress}
           />
-          <Image source={{uri: imageUri}} style={styles.Image} />
+          {imageUri["type"] === "image/jpg"
+          ?<Image source={{uri: imageUri["uri"]}} style={styles.Image} />
+          :<Video
+          resizeMode={'contain'}
+          style={[styles.Image]}
+          source={{
+            uri: imageUri["uri"],
+          }}
+          repeat={true}
+        />
+
+          }
         </>
       ) : (
         isSwap && (
@@ -96,5 +106,11 @@ const styles = StyleSheet.create({
     right: 5,
     zIndex: 1,
     opacity: 0.8,
+  },
+  backgroundMedia: {
+    zIndex: -10,
+    width: '100%',
+    height: '100%',
+    backgroundColor:'#333'
   },
 });

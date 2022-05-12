@@ -7,13 +7,6 @@ export default function useImagesPicker() {
   const [file, setFile] = useState([]);
 
   const pickImage = async() => {
-    // ImagePicker.launchImageLibrary({
-    //   mediaType: 'photo',
-    //  selectionLimit: 5,
-    // }).then(image => {
-    //   setFile(image);
-    //  return image;
-    // });
     try {
       const result = await ImagePicker.launchImageLibrary({
         mediaType: 'photo',
@@ -29,17 +22,9 @@ export default function useImagesPicker() {
     }
   };
   const openCamera = async() => {
-    // ImagePicker.launchImageLibrary({
-    //   mediaType: 'photo',
-    //  selectionLimit: 5,
-    // }).then(image => {
-    //   setFile(image);
-    //  return image;
-    // });
     try {
      
       const result = await ImagePicker.launchCamera({
-        //cameraType:"back",
         quality: 0.5,
       });
       setFile(result.assets);

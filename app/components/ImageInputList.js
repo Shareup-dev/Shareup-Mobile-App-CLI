@@ -18,8 +18,6 @@ export default function ImageInputList({
   isSwap,
 }) {
   const scrollView = useRef();
-  //const imageUrisSet = imageUris.map((imageUris) => imageUris.replace('file:', ''));
-
   return (
       <View style={styles.container}>
       <ScrollView
@@ -28,15 +26,15 @@ export default function ImageInputList({
         showsVerticalScrollIndicator = {false}
         onContentSizeChange={() => scrollView.current.scrollToEnd()}
       >
-        {imageUris.map((uri) => (
+        {imageUris.map((image) => (
 
-          <View key={uri} style={isSwap ? null : styles.imagePadding}>
+          <View key={image["uri"]} style={isSwap ? null : styles.imagePadding}>
             <ImageInput
-              imageUri={uri}
-              onChangeImage={() => onRemoveImage(uri)}
+              imageUri={image}
+              onChangeImage={() => onRemoveImage(image["uri"])}
             />
             {isSwap &&
-              imageUris.indexOf(uri) == 0 &&
+              imageUris.indexOf(image) == 0 &&
               imageUris.length === 2 && (
                 <Icon
                 image={require('../assets/icons/swap-icon.png')}
@@ -47,12 +45,12 @@ export default function ImageInputList({
         ))}
 
         {isSwap && imageUris.length < 2 && (
-
           <ImageInput
             onChangeImage={(uri) => onAddImage(uri)}
             isSwap={isSwap}
           />
-        )}
+        )
+        }
       </ScrollView>
     </View>
   );

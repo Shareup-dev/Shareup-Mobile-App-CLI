@@ -47,8 +47,6 @@ export default function ProfileTop({
       .then(({status}) => status === 200 && setUserStatus(prev => ({...prev,state:"Unfriend"})))
       .catch(e => console.error(e.message));
   };
-
-
   const ActionButton = () => {
     switch (userStatus.state) {
       case 'Unfriend':

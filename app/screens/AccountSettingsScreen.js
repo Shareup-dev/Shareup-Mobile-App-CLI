@@ -88,7 +88,7 @@ export default function AccountSettingsScreen({ navigation }) {
     
 
     const Item = ({ item }) => {
-     return (
+        return (
             <View style={styles.item}>
 
                 <ListItem
