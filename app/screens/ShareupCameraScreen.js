@@ -137,6 +137,7 @@ export default function ShareupCameraScreen({navigation,route}) {
           });
         } else {
             dispatch(postImagesAction.setImages(res.assets)),
+
             navigation.navigate(routes.ADD_POST,{postType:postType});
         //   setStory(res.assets[0]);
         //   setScreen('view');
@@ -183,7 +184,6 @@ export default function ShareupCameraScreen({navigation,route}) {
 
   };
 
-  console.log("mode",mode)
 
   return (
     <View style={styles.container}>

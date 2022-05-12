@@ -26,8 +26,12 @@ import AuthContext from '../authContext';
 import Video from 'react-native-video';
 import storyService from '../services/story.service';
 import {ProgressBar} from 'react-native-paper';
+import { useDispatch } from 'react-redux';
+import { storiesAction } from '../redux/stories';
 
 export default function AddStoryScreen({navigation}) {
+
+  const dispatch = useDispatch();
   let cameraRef;
   let playerRef = useRef();
 
@@ -156,7 +160,7 @@ export default function AddStoryScreen({navigation}) {
 
     storyService
       .addStory(userData.id, storyData)
-      .then(res => res)
+      .then(({data}) => storiesAction.addNewStory(data) )
       .catch(e => console.error(e.message))
       .finally(_ => {
         setIsUploading(false);

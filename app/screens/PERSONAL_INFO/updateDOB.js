@@ -22,10 +22,6 @@ export default function UpdateDOB({navigation}) {
     userState: {userData, username},
     authActions,
   } = useContext(AuthContext);
-
-  console.log(userData.birthday_date,"DOB")
-
-
   const [loading, setLoading] = useState(false);
   const [dob, setDOB] = useState(
     userData.birthday_date ? new Date(userData.birthday_date) : new Date(),

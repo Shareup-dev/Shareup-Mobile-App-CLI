@@ -7,7 +7,6 @@ export default function useImagesPicker() {
   const [file, setFile] = useState([]);
 
   const pickImage = async() => {
-   
     try {
       const result = await ImagePicker.launchImageLibrary({
         mediaType: 'photo',

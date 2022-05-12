@@ -1,6 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { View, StyleSheet, Text, TouchableWithoutFeedback } from "react-native";
 import Icon from "../components/Icon";
 import colors from "../config/colors";
 import defaultStyles from "../config/styles";

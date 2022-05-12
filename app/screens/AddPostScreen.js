@@ -742,7 +742,6 @@ export default function AddPostScreen({navigation, route}) {
                 {`${postData.userdata?.firstName} ${postData.userdata?.lastName}`}
               </Text>
             </View>
-            {console.log(postData.content)}
             <View style={{margin: 5}} >
             {postData.content!=="" && (
                 <Text style={{fontSize: 14, }}>
