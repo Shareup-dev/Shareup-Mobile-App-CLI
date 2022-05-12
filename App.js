@@ -1,8 +1,5 @@
 import React from 'react';
-import {StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {SafeAreaView} from 'react-native';
-
 import OfflineNotice from './app/components/OfflineNotice';
 import Toast from 'react-native-toast-message';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -10,12 +7,26 @@ import ShareupAuthentication from './app/util/ShareupAuthentication';
 
 export default function App() {
   console.disableYellowBox = true;
+
+  const config = {
+    screens: {
+      PostDetailScreen: {
+        path: 'post/:id',
+        parse: {
+          id: id => `${id}`,
+        },
+      },
+    },
+  };
+  const linking = {
+    prefixes: ['shareup://', 'https://shareup.qa'],
+    config,
+  };
   return (
     <>
-    <SafeAreaView></SafeAreaView>
       <OfflineNotice />
       <GestureHandlerRootView style={{flex: 1}}>
-        <NavigationContainer>
+        <NavigationContainer linking={linking}>
           <ShareupAuthentication />
         </NavigationContainer>
       </GestureHandlerRootView>

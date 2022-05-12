@@ -11,7 +11,6 @@ export default function useImagesPicker() {
     //   mediaType: 'photo',
     //  selectionLimit: 5,
     // }).then(image => {
-    //   console.log(image);
     //   setFile(image);
     //  return image;
     // });
@@ -34,7 +33,6 @@ export default function useImagesPicker() {
     //   mediaType: 'photo',
     //  selectionLimit: 5,
     // }).then(image => {
-    //   console.log(image);
     //   setFile(image);
     //  return image;
     // });
@@ -44,7 +42,6 @@ export default function useImagesPicker() {
         //cameraType:"back",
         quality: 0.5,
       });
-      console.log(result)
       setFile(result.assets);
       return result.assets;
     } catch (error) {

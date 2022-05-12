@@ -29,7 +29,6 @@ export default function CommentText({ readMoreStyle, comment, textStyle, style, 
     postService
       .editComment(cid, newComment)
       .then(res => {
-        console.log(res.data);
         if (res.status === 200) {
         }
         // const cmnt = {id:cid,comment:newComment}

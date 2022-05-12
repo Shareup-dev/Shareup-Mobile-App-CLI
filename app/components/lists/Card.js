@@ -5,7 +5,6 @@ import {
   TouchableWithoutFeedback,
   Alert,
   Text,
-  Share,
 } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {SliderBox} from 'react-native-image-slider-box';
@@ -13,16 +12,14 @@ import {SliderBox} from 'react-native-image-slider-box';
 import colors from '../../config/colors';
 import defaultStyles from '../../config/styles';
 import authContext from '../../authContext';
-import UserService from '../../services/user.service';
 import PostService from '../../services/post.service';
 
 import PostOptionDrawer from '../drawers/PostOptionsDrawer';
-import fileStorage from '../../config/fileStorage';
 import ImageView from 'react-native-image-viewing';
 import PostActions from '../PostActions';
-import {color} from 'react-native-reanimated';
 import routes from '../../navigation/routes';
 import constants from '../../config/constants';
+import Share from 'react-native-share';
 export default function Card({
   user,
   //postId,
@@ -63,11 +60,17 @@ export default function Card({
   const [sliderWidth, setSliderWidth] = useState();
 
   const onShareHandler = async () => {
-    const result = await Share.share({
+    Share.open({
       message: 'hello world',
-      title: 'hello',
-      url: 'www.google.qa',
-    });
+      title:"Sharing Post",
+      url: 'shareup://app/PostDetailScreen',
+    })
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        err && console.log(err);
+      });
   };
 
   const options = [

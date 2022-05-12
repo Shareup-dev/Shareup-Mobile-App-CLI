@@ -130,7 +130,6 @@ export default function ShareupCameraScreen({navigation,route}) {
             cancelable: true,
           });
         } else {
-            console.log(res.assets[0]["uri"]);
             dispatch(postImagesAction.setImages([res.assets[0]["uri"]])),
             navigation.navigate(routes.ADD_POST,{postType:postType});
         //   setStory(res.assets[0]);
@@ -177,7 +176,6 @@ export default function ShareupCameraScreen({navigation,route}) {
 
   };
 
-  console.log("mode",mode)
 
   return (
     <View style={styles.container}>

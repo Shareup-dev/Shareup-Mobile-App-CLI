@@ -48,7 +48,6 @@ export default function ProfileTop({
       .catch(e => console.error(e.message));
   };
 
-  console.log(userStatus)
 
   const ActionButton = () => {
     switch (userStatus.state) {

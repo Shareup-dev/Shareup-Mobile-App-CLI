@@ -38,7 +38,6 @@ export default function NewsFeedScreen({navigation, route}) {
       .getNewsFeed(userState?.userData?.email)
       .then(({data}) => {
         dispatch(feedPostsAction.setFeedPosts(data));
-        console.log(data,"post data")
       })
       .catch(e => console.error(e))
       .finally(hideActivityIndicator);

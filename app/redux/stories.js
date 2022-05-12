@@ -8,8 +8,9 @@ const stories = createSlice({
       return (previousState = newStories.payload);
     },
     addNewStory: (previousStories, newStory) => {
-      let allStories = [...previousStories, newStory.payload];
-      return (previousStories = allStories);
+      // let allStories = [...previousStories, newStory.payload];
+      // return (previousStories = allStories);
+      return (previousStories );
     },
   },
 });

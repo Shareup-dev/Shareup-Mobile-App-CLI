@@ -225,7 +225,8 @@ export default function GroupsScreen({navigation}) {
           titleStyle={styles.tabTitle}
         /> */}
       </View>
-      <View>
+      <View style={{backgroundColor: '#fff', marginTop: 5, flex: 1}}>
+        <View>
         <ScrollView
           style={styles.listContainer}
           showsVerticalScrollIndicator={false}>
@@ -240,6 +241,8 @@ export default function GroupsScreen({navigation}) {
                   paddingHorizontal: 15,
                   paddingVertical: 10,
                   borderRadius: 10,
+                  borderColor: '#cacaca60',
+                  borderWidth: 1,
                 }}>
                 {search.result.length === 0 && (
                   <Text
@@ -256,27 +259,28 @@ export default function GroupsScreen({navigation}) {
             </>
           )}
         </ScrollView>
-        <FlatList
-          data={feed.state}
-          initialNumToRender={5}
-          keyExtractor={(post, i) => i.toString()}
-          showsVerticalScrollIndicator={false}
-          ListHeaderComponent={HeaderComponent}
-          renderItem={renderItem}
-          ListEmptyComponent={() => (
-            <>
-              {feed.loading ? (
-                <ActivityIndicatorComponent
-                  style={{alignSelf: 'center', marginVertical: 50}}
-                />
-              ) : (
-                <Text style={{alignSelf: 'center', marginVertical: 50}}>
-                  No posts Available
-                </Text>
-              )}
-            </>
-          )}
-        />
+          <FlatList
+            data={feed.state}
+            initialNumToRender={5}
+            keyExtractor={(post, i) => i.toString()}
+            showsVerticalScrollIndicator={false}
+            ListHeaderComponent={HeaderComponent}
+            renderItem={renderItem}
+            ListEmptyComponent={() => (
+              <>
+                {feed.loading ? (
+                  <ActivityIndicatorComponent
+                    style={{alignSelf: 'center', marginVertical: 50}}
+                  />
+                ) : (
+                  <Text style={{alignSelf: 'center', marginVertical: 50}}>
+                    No posts Available
+                  </Text>
+                )}
+              </>
+            )}
+          />
+        </View>
       </View>
     </View>
   );
@@ -306,6 +310,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     paddingHorizontal: 10,
+
     marginBottom: 10,
     paddingVertical: 10,
   },

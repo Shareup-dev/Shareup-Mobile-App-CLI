@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -15,10 +15,14 @@ import Card from './Card';
 import moment from 'moment';
 import postService from '../../services/post.service';
 import Icon from '../Icon';
+import PostOptionDrawer from '../drawers/PostOptionsDrawer';
+import constants from '../../config/constants';
 
 export default function SharedPostCard(props) {
-    const {postData, navigation, ...rest} = props;
+  const {postData, navigation, ...rest} = props;
+
   const [isUserLiked, setIsUserLiked] = useState(postData.liked);
+  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [numberOfReactions, setNumberOfReactions] = useState(0);
   const {
     userState: {userData},
@@ -28,6 +32,88 @@ export default function SharedPostCard(props) {
     moment(postData.published, 'DD MMMM YYYY hh:mm:ss').fromNow(),
     // null
   );
+
+  const options = [
+    {
+      title: 'Save post',
+      icon: {
+        image: require('../../assets/post-options-icons/save-post-icon.png'),
+      },
+      onPress: () => {
+        savePost(postData.id);
+      },
+    },
+    {
+      title: 'Hide my profile',
+      icon: {
+        image: require('../../assets/post-options-icons/hide-profile-icon.png'),
+      },
+      onPress: () => {
+        savePost(postData.id);
+      },
+    },
+    {
+      title: 'Edit',
+      icon: {image: require('../../assets/post-options-icons/swap-icon.png')},
+      onPress: () => {
+        navigation.navigate(routes.ADD_POST, {
+          postType: constants.postTypes.CREATE_POST,
+          postData,
+          isEdit: true,
+        });
+        setIsOptionsVisible(false);
+      },
+    },
+    {
+      title: 'Share friends',
+      icon: {
+        image: require('../../assets/post-options-icons/share-friends-icon.png'),
+      },
+      onPress: () => {
+        navigation.navigate(routes.ADD_POST, {
+          postType: constants.postTypes.SHARE_POST,
+          postData: postData.post,
+        });
+      },
+    },
+    {
+      title: 'Share via',
+      icon: {
+        image: require('../../assets/icons/share-point-icon.png'),
+      },
+      onPress: () => {
+        // onShareHandler();
+      },
+    },
+    {
+      title: userData?.id !== postData.userdata?.id ? 'Unfollow' : '',
+      icon: {
+        image: require('../../assets/post-options-icons/unfollow-icon.png'),
+      },
+      onPress: () => {
+        alert('Unfollow');
+      },
+    },
+    {
+      title:
+        userData?.id !== postData.userdata?.id ? (
+          <Text style={{color: colors.dark}}>Report</Text>
+        ) : (
+          <Text style={{color: colors.red}}>Delete</Text>
+        ),
+      icon: {
+        image:
+          userData?.id !== postData.userdata?.id
+            ? require('../../assets/post-options-icons/report-icon.png')
+            : require('../../assets/post-options-icons/delete-red-icon.png'),
+      },
+      onPress: () => {
+        userData?.id !== postData.userdata?.id
+          ? alert('Report')
+          : showDeleteAlert();
+      },
+    },
+  ];
 
   const HeaderComponent = () => {
     return (
@@ -128,6 +214,27 @@ export default function SharedPostCard(props) {
         {postData.content !== '' && (
           <Text style={styles.postText}>{postData.content}</Text>
         )}
+        <TouchableOpacity
+          style={styles.menuButton}
+          onPress={() => {
+            setIsOptionsVisible(true);
+          }}>
+          <Icon
+            name="options"
+            type="SimpleLineIcons"
+            style={styles.optionsIcon}
+            size={20}
+            backgroundSizeRatio={1}
+          />
+        </TouchableOpacity>
+        <PostOptionDrawer
+          source={'card'}
+          postId={postData.id}
+          postText={postData.content}
+          options={options}
+          isVisible={isOptionsVisible}
+          setIsVisible={setIsOptionsVisible}
+        />
       </View>
     );
   };
@@ -135,7 +242,19 @@ export default function SharedPostCard(props) {
   return (
     <View style={[styles.card, defaultStyles.cardBorder]}>
       <HeaderComponent />
-      <Card {...rest} noActionBar noOptions postData={postData.post} navigation={navigation} />
+      {postData.post ? (
+        <Card
+          {...rest}
+          noActionBar
+          noOptions
+          postData={postData.post}
+          navigation={navigation}
+        />
+      ) : (
+        <View style={{alignItems: 'center', paddingVertical: 10}}>
+          <Text>Post unavailable</Text>
+        </View>
+      )}
       <FooterComponent />
     </View>
   );
@@ -144,6 +263,11 @@ export default function SharedPostCard(props) {
 const styles = StyleSheet.create({
   comments: {
     marginRight: 10,
+  },
+  menuButton: {
+    padding: 3,
+    alignSelf: 'flex-end',
+    marginTop: -5,
   },
   actionsText: {
     fontSize: 12,

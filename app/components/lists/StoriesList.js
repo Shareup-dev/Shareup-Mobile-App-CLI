@@ -1,4 +1,5 @@
-import React, {useContext, useEffect, useState} from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import React, {useContext, useEffect,useCallback, useState} from 'react';
 import {View, StyleSheet, SectionList, Text} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {useDispatch, useSelector} from 'react-redux';
@@ -19,45 +20,89 @@ export default function StoriesList({navigation, style}) {
   const dispatch = useDispatch();
   const stories = useSelector(state => state.stories);
 
-  // console.log("my new",story)
+  useFocusEffect(
+    useCallback(
 
-  useEffect(() => {
-    const fetchStories = () => {
-      setLoading(1);
-      Promise.all([
-        storiesService.getStoriesByEmail(username),
-        storiesService.getStoriesOfFriends(userData.id),
-      ])
-        .then(res => {
-          // getting user info from first element. and i spread it with list of stories - this is only for login user
-          const myStories = {
-            ...res[0]?.data[0]?.user,
-            stories_List: res[0]?.data,
-          };
-          const friendsStories = res[1]?.data;
+      () => {
+     
+        const fetchStories = () => {
+          setLoading(1);
+          Promise.all([
+            storiesService.getStoriesByEmail(username),
+            storiesService.getStoriesOfFriends(userData.id),
+          ])
+            .then(res => {
+              // getting user info from first element. and i spread it with list of stories - this is only for login user
+              const myStories = {
+                ...res[0]?.data[0]?.user,
+                stories_List: res[0]?.data,
+              };
+              const friendsStories = res[1]?.data;
+    
+              const array = friendsStories;
+    
+              if (res[0].data.length) {
+                array.unshift(myStories); // merging (login user stories + his friends stories) #### first index should be login user stories
+              }
+    
+              dispatch(storiesAction.setStories(array));
+            })
+            .catch(e => console.error(e.message))
+            .finally(_ => {
+              setLoading(2);
+            });
+        };
+        let mount = true;
+    
+        if (mount) {
+          fetchStories();
+        }
+        return () => {
+          mount = false;
+        };
+      },
+      [],
+    )
+    
+  )
 
-          const array = friendsStories;
+  // useEffect(() => {
+  //   const fetchStories = () => {
+  //     setLoading(1);
+  //     Promise.all([
+  //       storiesService.getStoriesByEmail(username),
+  //       storiesService.getStoriesOfFriends(userData.id),
+  //     ])
+  //       .then(res => {
+  //         // getting user info from first element. and i spread it with list of stories - this is only for login user
+  //         const myStories = {
+  //           ...res[0]?.data[0]?.user,
+  //           stories_List: res[0]?.data,
+  //         };
+  //         const friendsStories = res[1]?.data;
 
-          if (res[0].data.length) {
-            array.unshift(myStories); // merging (login user stories + his friends stories) #### first index should be login user stories
-          }
+  //         const array = friendsStories;
 
-          dispatch(storiesAction.setStories(array));
-        })
-        .catch(e => console.error(e.message))
-        .finally(_ => {
-          setLoading(2);
-        });
-    };
-    let mount = true;
+  //         if (res[0].data.length) {
+  //           array.unshift(myStories); // merging (login user stories + his friends stories) #### first index should be login user stories
+  //         }
 
-    if (mount) {
-      fetchStories();
-    }
-    return () => {
-      mount = false;
-    };
-  }, []);
+  //         dispatch(storiesAction.setStories(array));
+  //       })
+  //       .catch(e => console.error(e.message))
+  //       .finally(_ => {
+  //         setLoading(2);
+  //       });
+  //   };
+  //   let mount = true;
+
+  //   if (mount) {
+  //     fetchStories();
+  //   }
+  //   return () => {
+  //     mount = false;
+  //   };
+  // }, []);
 
   const EmptyCard = () => {
     return (
