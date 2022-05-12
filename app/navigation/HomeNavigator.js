@@ -27,6 +27,7 @@ import ShippingAddress from '../screens/ShippingAddress';
 import ChatScreen from '../screens/ChatScreen';
 import HelpAndSupportScreen from '../screens/HelpAndSupportScreen';
 import AccountSettingsScreen from '../screens/AccountSettingsScreen';
+import PostById from '../screens/PostById';
 
 const Stack = createNativeStackNavigator();
 const headerHeight = useHeaderHeight;
@@ -38,6 +39,7 @@ export default function HomeNavigator(props) {
       }}>
       <Stack.Screen name={routes.APP_NAVIGATOR} component={AppNavigator} />
       <Stack.Screen name={routes.CHAT_SCREEN} component={ChatScreen} />
+      <Stack.Screen name={routes.POST_BY_ID} component={PostById} />
       <Stack.Screen
         name={routes.STORY_VIEW_SCREEN}
         component={StoryViewScreen}
@@ -63,15 +65,32 @@ export default function HomeNavigator(props) {
         component={MessagesNavigator}
       />
       <Stack.Screen name={routes.REEL_PLAYER} component={ReelPlayer} />
-      <Stack.Screen name={routes.SAVED_POST_SCREEN} component={SavedPostsScreen} />
-      <Stack.Screen name={routes.POST_DETAILS_SCREEN} component={PostDetailScreen} />
-      <Stack.Screen name={routes.HANG_FLOW_SCREEN} component={HangFlowScreen}/>
-      <Stack.Screen name={routes.Add_NEW_FRIEND} component={AddNewFriendScreen}/>
-      <Stack.Screen name={routes.ALL_FRIENDS} component={AllFriendsScreen}/>
-      <Stack.Screen name={routes.SHIPPING_ADDRESS} component={ShippingAddress}/>
-      <Stack.Screen name={routes.HELP_SUPPORT} component={HelpAndSupportScreen}/>
-      <Stack.Screen name={routes.ACCOUNT_SETTINGS} component={AccountSettingsScreen}/>
-      
+      <Stack.Screen
+        name={routes.SAVED_POST_SCREEN}
+        component={SavedPostsScreen}
+      />
+      <Stack.Screen
+        name={routes.POST_DETAILS_SCREEN}
+        component={PostDetailScreen}
+      />
+      <Stack.Screen name={routes.HANG_FLOW_SCREEN} component={HangFlowScreen} />
+      <Stack.Screen
+        name={routes.Add_NEW_FRIEND}
+        component={AddNewFriendScreen}
+      />
+      <Stack.Screen name={routes.ALL_FRIENDS} component={AllFriendsScreen} />
+      <Stack.Screen
+        name={routes.SHIPPING_ADDRESS}
+        component={ShippingAddress}
+      />
+      <Stack.Screen
+        name={routes.HELP_SUPPORT}
+        component={HelpAndSupportScreen}
+      />
+      <Stack.Screen
+        name={routes.ACCOUNT_SETTINGS}
+        component={AccountSettingsScreen}
+      />
     </Stack.Navigator>
   );
 }

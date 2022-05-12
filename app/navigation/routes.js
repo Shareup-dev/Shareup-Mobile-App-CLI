@@ -67,5 +67,6 @@ export default Object.freeze({
   SHIPPING_ADDRESS:'ShippingAddress',
   HELP_SUPPORT:'HelpAndSupportScreen',
   ACCOUNT_SETTINGS:'AccountSettingsScreen',
-  SHAREUP_CAMERA:'ShareupCameraScreen'
+  SHAREUP_CAMERA:'ShareupCameraScreen',
+  POST_BY_ID:'PostByID'
 });

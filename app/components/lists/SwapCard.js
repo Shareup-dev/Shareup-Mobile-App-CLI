@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext} from 'react';
-import {View, StyleSheet, TouchableOpacity, Text,Alert,Share} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
 import {useSelector} from 'react-redux';
 import ImageView from 'react-native-image-viewing';
 import {SliderBox} from 'react-native-image-slider-box';
@@ -10,228 +10,249 @@ import PostActions from '../PostActions';
 import defaultStyles from '../../config/styles';
 import SwapActionContainer from '../posts/SwapActionContainer';
 import AuthContext from '../../authContext';
-import onShare from '../Share';
 import swapService from '../../services/swap.service';
+
+import Share from 'react-native-share';
+
 const imageSize = 160;
-const SwapCard = React.memo(({item, navigation, userId, style,reloadPosts}) => {
-  const actionsTabSizeRatio = 0.5;
-  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
-  const [numberOfComments, setNumberOfComments] = useState(
-    item.numberOfComments,
-  ); 
-  const [sliderWidth, setSliderWidth] = useState();
-  const [currentImage, setCurrentImage] = useState();
-  const [images, setImages] = useState([]);
-  const [imageViewerVisible, setImageViewerVisible] = useState(false);
-  const swapedPosts = useSelector(state => state.swapedImages);
+const SwapCard = React.memo(
+  ({item, navigation, userId, style, reloadPosts}) => {
+    const actionsTabSizeRatio = 0.5;
+    const [isOptionsVisible, setIsOptionsVisible] = useState(false);
+    const [numberOfComments, setNumberOfComments] = useState(
+      item.numberOfComments,
+    );
+    const [sliderWidth, setSliderWidth] = useState();
+    const [currentImage, setCurrentImage] = useState();
+    const [images, setImages] = useState([]);
+    const [imageViewerVisible, setImageViewerVisible] = useState(false);
+    const swapedPosts = useSelector(state => state.swapedImages);
 
-  const {userState} = useContext(AuthContext);
+    const {userState} = useContext(AuthContext);
 
-  const getSwapedImage = swapId => {
-    let foundSwap = swapedPosts.filter(swap => swap.swapPostId === swapId)[0];
-    if (foundSwap) {
-      return {imagePath: foundSwap.swapImage, found: true};
-    } else {
-      let image = {
-        imagePath: '../assets/icons/swap-square-dashed.png',
-        found: false,
-      };
-      return image;
-    }
-  };
+    const getSwapedImage = swapId => {
+      let foundSwap = swapedPosts.filter(swap => swap.swapPostId === swapId)[0];
+      if (foundSwap) {
+        return {imagePath: foundSwap.swapImage, found: true};
+      } else {
+        let image = {
+          imagePath: '../assets/icons/swap-square-dashed.png',
+          found: false,
+        };
+        return image;
+      }
+    };
 
-  useEffect(() => {
-    loadImages();
-  }, []);
+    useEffect(() => {
+      loadImages();
+    }, []);
 
-  const {userData : user} =
-    useContext(AuthContext)?.userState;
-  const loadImages = () => {
-    if (item.media.length !== 0) {
-      setImages(item.media.map(image =>  image.mediaPath));
-    }
-  };
+    const {userData: user} = useContext(AuthContext)?.userState;
+    const loadImages = () => {
+      if (item.media.length !== 0) {
+        setImages(item.media.map(image => image.mediaPath));
+      }
+    };
 
-  const options = [
-    {
-      title: 'Save post',
-      icon: {
-        image: require('../../assets/post-options-icons/save-post-icon.png'),
+    const onShareHandler = async () => {
+      Share.open({
+        message: item?.content,
+        title: 'Sharing Post',
+        url: `https://shareup.qa/post/${item.id}`,
+      })
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          err && console.log(err);
+        });
+    };
+
+    const options = [
+      {
+        title: 'Save post',
+        icon: {
+          image: require('../../assets/post-options-icons/save-post-icon.png'),
+        },
+        onPress: () => {
+          alert('Save post');
+        },
       },
-      onPress: () => {
-        alert('Save post');
+      {
+        title: 'Hide my profile',
+        icon: {
+          image: require('../../assets/post-options-icons/hide-profile-icon.png'),
+        },
+        onPress: () => {
+          alert('Save post');
+        },
       },
-    },
-    {
-      title: 'Hide my profile',
-      icon: {
-        image: require('../../assets/post-options-icons/hide-profile-icon.png'),
+      {
+        title: 'Edit',
+        icon: {image: require('../../assets/post-options-icons/swap-icon.png')},
+        onPress: () => {
+          navigation.navigate(routes.ADD_POST, {
+            postType: constants.postTypes.CREATE_POST,
+            postData,
+            isEdit: true,
+          });
+          setIsOptionsVisible(false);
+        },
       },
-      onPress: () => {
-        alert('Save post');
+      {
+        title: 'Share Via',
+        icon: {
+          image: require('../../assets/post-options-icons/share-friends-icon.png'),
+        },
+        onPress: () => {
+          onShareHandler()
+        },
       },
-    },
-    {
-      title: 'Edit',
-      icon: {image: require('../../assets/post-options-icons/swap-icon.png')},
-      onPress: () => {
-        navigation.navigate(routes.ADD_POST,{postType: constants.postTypes.CREATE_POST,
-          postData,
-          isEdit:true})
-          setIsOptionsVisible(false)
-      },
-    },
-    {
-      title: 'Share friends',
-      icon: {
-        image: require('../../assets/post-options-icons/share-friends-icon.png'),
-      },
-      onPress: () => {
-        onShare();
-      },
-    },
-    // {
-    //   title: 'Unfollow',
-    //   icon: {
-    //     image: require('../../assets/post-options-icons/unfollow-icon.png'),
-    //   },
-    //   onPress: () => {
-    //     alert('Unfollow');
-    //   },
-    // },
-    // {
-    //   title: 'Report',
-    //   icon: {
-    //     image: require('../../assets/post-options-icons/report-icon.png'),
-    //   },
-    //   onPress: () => {
-    //     alert('Report');
-    //   },
-    // },
-    {
-      title:  userState?.userData?.id !== user?.id ? (
-        <Text style={{color: colors.dark}}>Report</Text>
-      ) : (
-        <Text style={{color: colors.red}}>Delete</Text>
-      ),
-      icon: {
-        image:
+      // {
+      //   title: 'Unfollow',
+      //   icon: {
+      //     image: require('../../assets/post-options-icons/unfollow-icon.png'),
+      //   },
+      //   onPress: () => {
+      //     alert('Unfollow');
+      //   },
+      // },
+      // {
+      //   title: 'Report',
+      //   icon: {
+      //     image: require('../../assets/post-options-icons/report-icon.png'),
+      //   },
+      //   onPress: () => {
+      //     alert('Report');
+      //   },
+      // },
+      {
+        title:
+          userState?.userData?.id !== user?.id ? (
+            <Text style={{color: colors.dark}}>Report</Text>
+          ) : (
+            <Text style={{color: colors.red}}>Delete</Text>
+          ),
+        icon: {
+          image:
+            userState?.userData?.id !== user?.id
+              ? require('../../assets/post-options-icons/report-icon.png')
+              : require('../../assets/post-options-icons/delete-red-icon.png'),
+        },
+        onPress: () => {
           userState?.userData?.id !== user?.id
-            ? require('../../assets/post-options-icons/report-icon.png')
-            : require('../../assets/post-options-icons/delete-red-icon.png'),
+            ? alert('Report')
+            : showDeleteAlert();
+        },
       },
-      onPress: () => {
-        userState?.userData?.id !== user?.id
-          ? alert('Report')
-          : showDeleteAlert();
-      },
-    },
-  ];
-  const showDeleteAlert = () =>
-  Alert.alert('Delete', 'Are you sure to delete this post', [
-    {
-      text: 'Yes',
-      onPress: deletePost,
-      style: 'cancel',
-    },
-    {
-      text: 'No',
-      style: 'cancel',
-    },
-  ]) 
+    ];
+    const showDeleteAlert = () =>
+      Alert.alert('Delete', 'Are you sure to delete this post', [
+        {
+          text: 'Yes',
+          onPress: deletePost,
+          style: 'cancel',
+        },
+        {
+          text: 'No',
+          style: 'cancel',
+        },
+      ]);
 
-const deletePost = async () => {
- 
-   swapService.deleteSwap(item.id)
-    .then(res => {})
-    .catch(e => console.error(e));
-  
-    reloadPosts();
-};
-  const onLayout = e => {
-    setSliderWidth(e.nativeEvent.layout.width);
-  };
+    const deletePost = async () => {
+      swapService
+        .deleteSwap(item.id)
+        .then(res => {})
+        .catch(e => console.error(e));
 
-  return (
-    <View style={[styles.card, defaultStyles.cardBorder, style]}>
-      {currentImage && (
-        <ImageView
-          visible={imageViewerVisible}
-          images={[{uri: currentImage}]}
-          imageIndex={0}
-          onRequestClose={() => {
-            setImageViewerVisible(false);
-          }}
-        />
-      )}
+      reloadPosts();
+    };
+    const onLayout = e => {
+      setSliderWidth(e.nativeEvent.layout.width);
+    };
 
-      {/** Post Image */}
-      <View style={styles.imageContainer} onLayout={onLayout}>
-        {images.length !== 0 && (
-          <SliderBox
-            images={images}
-            ImageComponentStyle={styles.image}
-            imageLoadingColor={colors.iondigoDye}
-            //parentWidth={sliderWidth}
-            onCurrentImagePressed={index => {
-              setCurrentImage(images[index]);
-              setImageViewerVisible(true);
+    return (
+      <View style={[styles.card, defaultStyles.cardBorder, style]}>
+        {currentImage && (
+          <ImageView
+            visible={imageViewerVisible}
+            images={[{uri: currentImage}]}
+            imageIndex={0}
+            onRequestClose={() => {
+              setImageViewerVisible(false);
             }}
-            paginationBoxStyle={styles.sliderDotBox}
-            dotStyle={styles.sliderDot}
-            activeOpacity={1}
-            dotColor={colors.iondigoDye}
-            backgroundColor={colors.lighterGray}
           />
         )}
 
-        {userState?.userData.id !== userId && <SwapActionContainer item={item} />}
-      </View>
+        {/** Post Image */}
+        <View style={styles.imageContainer} onLayout={onLayout}>
+          {images.length !== 0 && (
+            <SliderBox
+              images={images}
+              ImageComponentStyle={styles.image}
+              imageLoadingColor={colors.iondigoDye}
+              //parentWidth={sliderWidth}
+              onCurrentImagePressed={index => {
+                setCurrentImage(images[index]);
+                setImageViewerVisible(true);
+              }}
+              paginationBoxStyle={styles.sliderDotBox}
+              dotStyle={styles.sliderDot}
+              activeOpacity={1}
+              dotColor={colors.iondigoDye}
+              backgroundColor={colors.lighterGray}
+            />
+          )}
 
-      <PostActions
-        comments={item.comments}
-        swapId={item.id}
-        //firstName={item.userdata.firstName}
-        //userEmail={item.userdata.email}
-        isUserLiked={false}
-        navigation={navigation}
-        numberOfComments={`${item.numberOfComments}`}
-        numberOfReactions={`${0}`}
-        postId={item.id}
-        postText={item.content}
-       // profileImage={item.userdata.profilePicture}
-        userId={userId}
-        setIsOptionsVisible={setIsOptionsVisible}
-        postType={item.allPostsType}
-        postData={item}
-        //profileImage={profileImage}
-       
-       // isVisible={isOptionsVisible}
-       // setIsVisible={setIsOptionsVisible}
-       
-        //onInteraction={handleReactions}
-        
-      />
+          {userState?.userData.id !== userId && (
+            <SwapActionContainer item={item} />
+          )}
+        </View>
 
-      <View style={{flexDirection: 'row'}}>
-        <TouchableOpacity
-          style={styles.menuButton}
-          onPress={() => {
-            setIsOptionsVisible(true);
-          }}></TouchableOpacity>
-
-        <PostOptionDrawer
-          source={'newfeed'}
-          options={options}
-          isVisible={isOptionsVisible}
-          setIsVisible={setIsOptionsVisible}
+        <PostActions
+          comments={item.comments}
+          swapId={item.id}
+          //firstName={item.userdata.firstName}
+          //userEmail={item.userdata.email}
+          isUserLiked={false}
+          navigation={navigation}
+          numberOfComments={`${item.numberOfComments}`}
+          numberOfReactions={`${0}`}
           postId={item.id}
           postText={item.content}
+          // profileImage={item.userdata.profilePicture}
+          userId={userId}
+          setIsOptionsVisible={setIsOptionsVisible}
+          postType={item.allPostsType}
+          postData={item}
+          //profileImage={profileImage}
+
+          // isVisible={isOptionsVisible}
+          // setIsVisible={setIsOptionsVisible}
+
+          //onInteraction={handleReactions}
         />
+
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity
+            style={styles.menuButton}
+            onPress={() => {
+              setIsOptionsVisible(true);
+            }}></TouchableOpacity>
+
+          <PostOptionDrawer
+            source={'newfeed'}
+            options={options}
+            isVisible={isOptionsVisible}
+            setIsVisible={setIsOptionsVisible}
+            postId={item.id}
+            postText={item.content}
+          />
+        </View>
       </View>
-    </View>
-  );
-});
+    );
+  },
+);
 
 const borderRadius = 10;
 export default SwapCard;

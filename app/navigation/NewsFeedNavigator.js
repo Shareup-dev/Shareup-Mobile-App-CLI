@@ -28,6 +28,7 @@ import ManageEmail from '../screens/PERSONAL_INFO/manageEmail';
 import UpdatePassword from '../screens/PERSONAL_INFO/updatePassword';
 import FriendsProfileScreen from '../screens/FriendsProfileScreen';
 import ShareupCameraScreen from '../screens/ShareupCameraScreen';
+import PostById from '../screens/PostById';
 
 export default function NewsFeedNavigator() {
   const Stack = createNativeStackNavigator();
@@ -45,14 +46,15 @@ export default function NewsFeedNavigator() {
           header: ({navigation}) => <CustomHeaderBar navigation={navigation} />,
         }}
       />
-   <Stack.Screen
+      <Stack.Screen
         name={routes.USER_PROFILE}
         component={UserProfileScreen}
         options={{
           headerShown: false,
         }}
       />
-   <Stack.Screen
+
+      <Stack.Screen
         name={routes.FRIEND_PROFILE}
         component={FriendsProfileScreen}
         options={{
@@ -60,7 +62,6 @@ export default function NewsFeedNavigator() {
         }}
       />
 
-    
       <Stack.Screen
         name={routes.PERSONAL_INFORMATION}
         component={PersonalInfoSettings}
@@ -140,7 +141,6 @@ export default function NewsFeedNavigator() {
           headerShown: false,
         }}
       />
-    
 
       <Stack.Screen
         name={routes.GROUP_FEED}
@@ -155,7 +155,7 @@ export default function NewsFeedNavigator() {
         options={{
           headerShown: false,
         }}
-      /> 
+      />
 
       {/* there are no use of this  */}
       <Stack.Screen

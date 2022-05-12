@@ -120,7 +120,7 @@ export default function Drawer({isVisible, setIsVisible}) {
       title: 'Saved Swaps',
       icon: require('../assets/icons/saved-swap-colored-icon.png'),
       onPress: () => {
-        alert("saved swap")
+        navigation.navigate(routes.POST_BY_ID)
        },
     },
   ];
