@@ -4,14 +4,14 @@ import OfflineNotice from './app/components/OfflineNotice';
 import Toast from 'react-native-toast-message';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import ShareupAuthentication from './app/util/ShareupAuthentication';
-import routes from './app/navigation/routes';
+
 
 export default function App() {
   console.disableYellowBox = true;
 
   const config = {
     screens: {
-      'PostByID': {
+      PostByID: {
         path: 'post/:id',
         parse: {
           id: id => `${id}`,

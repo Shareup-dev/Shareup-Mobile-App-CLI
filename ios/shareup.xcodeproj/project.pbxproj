@@ -58,6 +58,7 @@
 		EC8EB22127CCDA4E00A188C3 /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = text; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		EC8EB22227CCDA4E00A188C3 /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = text; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		EC8EB22327CCDA4E00A188C3 /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = text; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		ECC8E1BB282CF0EE000B11D2 /* shareup.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = shareup.entitlements; path = shareup/shareup.entitlements; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FB4A9C9EED3462C295800AF4 /* Pods-shareup.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-shareup.debug.xcconfig"; path = "Target Support Files/Pods-shareup/Pods-shareup.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -102,6 +103,7 @@
 		13B07FAE1A68108700A75B9A /* shareup */ = {
 			isa = PBXGroup;
 			children = (
+				ECC8E1BB282CF0EE000B11D2 /* shareup.entitlements */,
 				EC8EB21327CCD9E500A188C3 /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -532,6 +534,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = shareup/shareup.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -564,6 +567,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = shareup/shareup.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
