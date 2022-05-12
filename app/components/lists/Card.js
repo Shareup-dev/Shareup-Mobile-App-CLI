@@ -61,9 +61,9 @@ export default function Card({
 
   const onShareHandler = async () => {
     Share.open({
-      message: 'hello world',
+      message: postData?.content,
       title:"Sharing Post",
-      url: 'shareup://app/PostDetailScreen',
+      url: `https://shareup.qa/post/${postData.id}`,
     })
       .then(res => {
         console.log(res);

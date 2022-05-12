@@ -1,0 +1,13 @@
+{
+    "applinks":{
+      "apps": [],
+      "details" : [
+        {
+          "appID" :"58XAX2PAXV.org.reactjs.native.example.shareupApp",
+          "paths" : [ "*" ]
+        }
+      ]
+    }
+}
+
+  
