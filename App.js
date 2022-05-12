@@ -4,6 +4,7 @@ import OfflineNotice from './app/components/OfflineNotice';
 import Toast from 'react-native-toast-message';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import ShareupAuthentication from './app/util/ShareupAuthentication';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
   console.disableYellowBox = true;
@@ -23,6 +24,7 @@ export default function App() {
     config,
   };
   return (
+   
     <>
       <OfflineNotice />
       <GestureHandlerRootView style={{flex: 1}}>
