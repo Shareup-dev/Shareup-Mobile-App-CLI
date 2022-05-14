@@ -92,7 +92,7 @@ export default function AddReelScreen({navigation}) {
     })
       .then(res => {
         if (res.didCancel) return;
-        else if (res.assets[0].duration > 15) {
+        else if (res.assets[0].duration > 20) {
           Alert.alert('Ops..', "Sorry you can't upload this video", [null], {
             cancelable: true,
           });

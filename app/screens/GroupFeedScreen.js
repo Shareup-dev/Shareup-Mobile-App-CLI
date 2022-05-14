@@ -103,7 +103,7 @@ const GroupFeedScreen = ({navigation, route}) => {
   };
 
   const checkOwner = () => {
-   if (userData.id === groupData.userdata?.id) return true;
+   if (userData.id === groupData.owner?.id) return true;
    else 
    return false;
   };
@@ -151,7 +151,6 @@ const GroupFeedScreen = ({navigation, route}) => {
       </View>
     );
   };
-
   return (
     <Screen style={styles.feedContainer}>
       <HeaderWithBackArrow

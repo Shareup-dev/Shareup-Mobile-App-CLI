@@ -61,7 +61,7 @@ export default function ManageEmail({navigation, route}) {
 
     profileService
       .verifyOTP(userData.id, otp)
-      .then(res => console.log(res))
+      .then(res => res)
       .catch(({response: {status, data}}) => {
         if (status === 400) setError('Wrong OPT');
       })

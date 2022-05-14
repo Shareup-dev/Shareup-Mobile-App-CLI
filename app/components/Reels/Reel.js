@@ -114,12 +114,15 @@ const RenderReels = ({item, index, navigation}) => {
               <Loading noBackground />
             </View>
           ) : null}
+       
             <Video
+
               style={{
                 width: width,
                 height: height - StatusBar.currentHeight,
                 zIndex: -10,
               }}
+              maxBitRate={2000000} // 2 megabits
               onLoadStart={_ => setLoaded(false)}
               source={{uri: item?.video_url}}
               repeat

@@ -24,7 +24,6 @@ export default function SwapScreen({navigation, route}) {
       selectionLimit: 1,
     }).then(({didCancel, assets}) => {
       if (!didCancel) {
-        console.log("1",assets);
         //setFile(assets[0]);
         // navigation.navigate(routes.SWAP_DISPLAY, {
         //   swapImage: assets[0].uri,

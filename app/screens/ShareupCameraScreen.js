@@ -87,11 +87,11 @@ export default function ShareupCameraScreen({navigation,route}) {
         skipProcessing: true,
         quality: 0.5,
       }).then(res => { 
-          console.log(res);
+    
             dispatch(postImagesAction.setImages([res])),
             navigation.navigate(routes.ADD_POST,{postType:postType})
         })
-        .catch(error => { console.log(error); })
+        .catch(error => { console.error(error); })
      
     } 
     // else if (mode === 'video') {

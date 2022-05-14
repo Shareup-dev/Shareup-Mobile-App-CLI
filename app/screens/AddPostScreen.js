@@ -233,7 +233,6 @@ export default function AddPostScreen({navigation, route}) {
 
 
   const loadImages = () => {
-    console.log("postimg",postImages);
     if(isEdit){
     if (postData.media?.length !== 0) {
       setImages(postData.media?.map(image => image.mediaPath));
