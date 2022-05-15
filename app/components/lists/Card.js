@@ -36,6 +36,7 @@ export default function Card({
   const [numberOfReactions, setNumberOfReactions] = useState(
     postData.numberOfReaction,
   );
+
   const [numberOfComments, setNumberOfComments] = useState(
     postData.numberOfComments,
   );
@@ -47,6 +48,7 @@ export default function Card({
   const [currentImage, setCurrentImage] = useState();
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [sliderWidth, setSliderWidth] = useState();
+
 
   const onShareHandler = async () => {
     Share.open({
@@ -265,9 +267,14 @@ export default function Card({
         )}
 
         {/** Post Image */}
+     
 
         {images?.length !== 0 && (
-          <CustomImageSlider media={postData.media} width={width - 32} height={250} />
+          <CustomImageSlider
+            media={postData.media}
+            width={width - 32}
+            height={250}
+          />
         )}
 
         <PostActions

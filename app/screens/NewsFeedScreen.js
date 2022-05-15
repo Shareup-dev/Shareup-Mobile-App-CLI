@@ -118,7 +118,6 @@ export default function NewsFeedScreen({navigation, route}) {
     <Screen style={styles.container} statusPadding={false}>
       <FlatList
         data={posts}
-        initialNumToRender={5}
         ListHeaderComponent={ListHeader}
         keyExtractor={(post, i) => i.toString()}
         showsVerticalScrollIndicator={false}
