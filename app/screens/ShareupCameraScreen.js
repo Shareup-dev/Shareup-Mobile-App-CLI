@@ -120,11 +120,11 @@ export default function ShareupCameraScreen({navigation,route}) {
 
   const imagePickHandler = () => {
     launchImageLibrary({
-      quality: 0.5,
+      //quality: 0.5,
       mediaType: mode,
       durationLimit: 1,
-      maxHeight: 500,
-      maxWidth: 320,
+     // maxHeight: 500,
+      //maxWidth: 320,
       videoQuality: 'medium',
       selectionLimit:5
     

@@ -55,15 +55,6 @@ export default function NewsFeedScreen({navigation, route}) {
               userId={item.userdata.id}
             />
           );
-        case constants.postTypes.SWAP:
-          return (
-            <SwapCard
-              navigation={navigation}
-              route={route}
-              item={item}
-              userId={item.userdata.id}
-            />
-          );
         case "share":
           return (
             <SharedPostCard

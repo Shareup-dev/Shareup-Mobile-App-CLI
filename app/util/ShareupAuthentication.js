@@ -9,6 +9,7 @@ import AuthContext from '../authContext';
 import {AuthNavigator} from '../navigation';
 import userService from '../services/user.service';
 import HomeNavigator from '../navigation/HomeNavigator';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ShareupAuthentication() {
   const initState = {
@@ -150,6 +151,7 @@ export default function ShareupAuthentication() {
     );
   } else {
     return (
+      
       <AuthContext.Provider value={{authActions, userState}}>
         <Provider store={store}>
           {userState.userToken ? <HomeNavigator /> : <AuthNavigator />}

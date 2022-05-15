@@ -98,7 +98,7 @@ export default function Card({
       onPress: () => {
         navigation.navigate(routes.ADD_POST, {
           postType: constants.postTypes.CREATE_POST,
-          postData,
+          postData:postData,
           isEdit: true,
         });
         setIsOptionsVisible(false);

@@ -112,7 +112,9 @@ export default function AccountSettingsScreen({ navigation }) {
     }
 
     return (
+       
         <Screen style={styles.container}>
+
             <Header
                 left={<HeaderCloseIcon onPress={() => navigation.goBack()} />}
                 middle={
@@ -141,8 +143,9 @@ export default function AccountSettingsScreen({ navigation }) {
 
             </View>
 
-
+            
         </Screen>
+       
 
     );
 }

@@ -1,9 +1,13 @@
 import React from 'react';
+import { SafeAreaView } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import OfflineNotice from './app/components/OfflineNotice';
 import Toast from 'react-native-toast-message';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import ShareupAuthentication from './app/util/ShareupAuthentication';
+
+//import { SafeAreaFrameContext, SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+//import { SafeAreaViewComponent } from 'react-native';
 
 
 export default function App() {
@@ -25,6 +29,7 @@ export default function App() {
   };
   return (
     <>
+    <SafeAreaView style={{flex:1}}>
       <OfflineNotice />
       <GestureHandlerRootView style={{flex: 1}}>
         <NavigationContainer linking={linking}>
@@ -32,6 +37,7 @@ export default function App() {
         </NavigationContainer>
       </GestureHandlerRootView>
       <Toast />
-    </>
+      </SafeAreaView>
+      </>
   );
 }

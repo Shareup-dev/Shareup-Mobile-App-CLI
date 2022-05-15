@@ -1,5 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import colors from "../../config/colors";
 /**
  * pass a component for {left, middle, right} props
@@ -12,6 +13,7 @@ export default function Header({
   headerContainerStyle,
 }) {
   return (
+    <SafeAreaView>
     <View
       style={[
         styles.container,
@@ -23,6 +25,7 @@ export default function Header({
       <View>{middle}</View>
       <View>{right}</View>
     </View>
+    </SafeAreaView>
   );
 }
 

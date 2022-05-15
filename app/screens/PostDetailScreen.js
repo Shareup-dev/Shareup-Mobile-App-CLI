@@ -23,6 +23,7 @@ import {SliderBox} from 'react-native-image-slider-box';
 import Separator from '../components/Separator';
 import PostOptionDrawer from '../components/drawers/PostOptionsDrawer';
 import {ScrollView} from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function PostDetailScreen({navigation, route}) {
   const {postData} = route.params;
@@ -112,6 +113,7 @@ export default function PostDetailScreen({navigation, route}) {
   };
   return (
     <Screen>
+      <SafeAreaView></SafeAreaView>
       <Header
         backgroundColor={colors.white}
         left={

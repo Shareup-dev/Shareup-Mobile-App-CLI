@@ -85,7 +85,7 @@ export default function CommentItem({
       color : "crimson",
       size:20
     },
-    onPress:()=>  Alert.alert('Delete', 'Are you sure you want to delete this image?', [
+    onPress:()=>  Alert.alert('Delete', 'Are you sure you want to delete this comment?', [
       {text: 'Yes', onPress: () => handleDeleteComment()},
       {text: 'No'},
     ])

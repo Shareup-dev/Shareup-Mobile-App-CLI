@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
+import {SafeAreaViewBase, SafeAreaViewComponent, StyleSheet, TouchableWithoutFeedback, View,SafeAreaView} from 'react-native';
 
 import AddPostButton from './AddPostButton';
 import AddPostScreen from '../screens/AddPostScreen';
@@ -17,6 +17,7 @@ import NewsFeedNavigator from './NewsFeedNavigator';
 import GroupNavigator from './GroupNavigator';
 import {useSelector} from 'react-redux';
 import CustomHeaderBar from './CustomHeaderBar';
+// import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 const {postTypes} = constants;
 
@@ -45,6 +46,7 @@ export default function AppNavigator() {
   };
   return (
     <>
+    <SafeAreaView></SafeAreaView>
       <Tab.Navigator
         screenOptions={{
           tabBarShowLabel: false,
