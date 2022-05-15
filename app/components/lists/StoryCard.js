@@ -3,6 +3,7 @@ import {View, StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
 
 import colors from '../../config/colors';
 import routes from '../../navigation/routes';
+import BetterImage from '../betterImage/BetterImage';
 
 
 export default function StoryCard({style, navigation, data}) {
@@ -14,7 +15,7 @@ export default function StoryCard({style, navigation, data}) {
   return (
     <TouchableOpacity onPress={addStoryHandler} activeOpacity={0.8}>
       <View style={[styles.container, style]}>
-        <Image
+        <BetterImage
           source={{uri: stories_List[0]?.storiesImagePath}}
           style={{height: '100%', width: '100%',backgroundColor:'#34343460'}}
         />

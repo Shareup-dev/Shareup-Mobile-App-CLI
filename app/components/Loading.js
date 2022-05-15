@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, ActivityIndicator, Text, Modal, Dimensions} from 'react-native';
+import {View, StyleSheet, ActivityIndicator, Text,  Dimensions} from 'react-native';
 import colors from '../config/colors';
 
 export default React.memo(function Loading(props) {

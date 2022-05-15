@@ -25,6 +25,7 @@ import authContext from '../authContext';
 import axios from 'axios';
 import ReelsService from '../services/Reels.service';
 import AuthContext from '../authContext';
+import BetterImage from '../components/betterImage/BetterImage';
 const width = Dimensions.get('window').width / 2 - 15;
 const height = Dimensions.get('window').height / 3;
 
@@ -129,6 +130,7 @@ export default function SwapScreen({navigation}) {
           </View>
         }
       />
+      
 
       <FlatList
         contentContainerStyle={[
@@ -158,7 +160,7 @@ export default function SwapScreen({navigation}) {
             }}>
    
             <View style={[styles.container]}>
-              <Image
+              <BetterImage
                 source={{uri: item.thumbnail_url}}
                 style={styles.image}
               />

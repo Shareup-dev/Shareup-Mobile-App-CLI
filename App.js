@@ -6,9 +6,6 @@ import Toast from 'react-native-toast-message';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import ShareupAuthentication from './app/util/ShareupAuthentication';
 
-//import { SafeAreaFrameContext, SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-//import { SafeAreaViewComponent } from 'react-native';
-
 
 export default function App() {
   console.disableYellowBox = true;
@@ -27,9 +24,10 @@ export default function App() {
     prefixes: ['shareup://', 'https://shareup.qa'],
     config,
   };
+  
   return (
     <>
-    <SafeAreaView style={{flex:1}}>
+    <SafeAreaView style={{flex: 1}}>
       <OfflineNotice />
       <GestureHandlerRootView style={{flex: 1}}>
         <NavigationContainer linking={linking}>

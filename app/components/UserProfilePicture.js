@@ -1,10 +1,11 @@
 import React, {useContext, useState} from 'react';
-import {Image, View, StyleSheet, TouchableOpacity} from 'react-native';
+import { View, StyleSheet, TouchableOpacity} from 'react-native';
 
 import AuthContext from '../authContext';
 import fileStorage from '../config/fileStorage';
 import Icon from './Icon';
 import colors from '../config/colors';
+import BetterImage from './betterImage/BetterImage';
 
 export default function UserProfilePicture({
   size = 100,
@@ -20,9 +21,8 @@ export default function UserProfilePicture({
   );
   return (
     <View>
-      <Image
-        source={
-          // require('../assets/default-profile-picture.png')
+      <BetterImage
+        source={ 
           {uri:picture}
         }
         style={[{width: size, height: size, borderRadius: size / 2}, style]}

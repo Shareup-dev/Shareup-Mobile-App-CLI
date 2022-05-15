@@ -5,9 +5,9 @@ import {
   TouchableWithoutFeedback,
   Alert,
   Text,
+  Dimensions,
 } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
-import {SliderBox} from 'react-native-image-slider-box';
 
 import colors from '../../config/colors';
 import defaultStyles from '../../config/styles';
@@ -20,21 +20,10 @@ import PostActions from '../PostActions';
 import routes from '../../navigation/routes';
 import constants from '../../config/constants';
 import Share from 'react-native-share';
+import CustomImageSlider from '../ImageSlider/CustomImageSlider';
 export default function Card({
   user,
-  //postId,
-  //userId,
   postData,
-  //firstName,
-  //lastName,
-  //userEmail,
-  //date,
-  //postText,
-  //postImages,
-  //profileImage,
-  //reactions,
-  //comments,
-  //post,
   reloadPosts,
   onPress,
   style,
@@ -96,7 +85,7 @@ export default function Card({
       onPress: () => {
         navigation.navigate(routes.ADD_POST, {
           postType: constants.postTypes.CREATE_POST,
-          postData:postData,
+          postData: postData,
           isEdit: true,
         });
         setIsOptionsVisible(false);
@@ -257,6 +246,8 @@ export default function Card({
     setSliderWidth(e.nativeEvent.layout.width);
   };
 
+  const {width} = Dimensions.get('window');
+
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View
@@ -276,20 +267,7 @@ export default function Card({
         {/** Post Image */}
 
         {images?.length !== 0 && (
-          <SliderBox
-            images={images}
-            ImageComponentStyle={styles.image}
-            imageLoadingColor={colors.iondigoDye}
-            // parentWidth={sliderWidth / 1.04}
-            onCurrentImagePressed={index => {
-              setCurrentImage(images[index]);
-              setImageViewerVisible(true);
-            }}
-            //autoplay={true}
-            // circleLoop={true}
-          />
-
-          // <Image source={{ uri: images[0] }} style={styles.image} />
+          <CustomImageSlider media={postData.media} width={width - 32} height={250} />
         )}
 
         <PostActions
@@ -337,8 +315,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     marginTop: 10,
     overflow: 'hidden',
-    // padding: 7,
-    // paddingHorizontal: 6,
   },
   image: {
     width: '100%',

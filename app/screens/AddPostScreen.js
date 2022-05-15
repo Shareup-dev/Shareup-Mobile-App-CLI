@@ -54,6 +54,8 @@ import {useFocusEffect} from '@react-navigation/native';
 import postService from '../services/post.service';
 import common from '../config/common';
 import {postImagesAction} from '../redux/postImages';
+import BetterImage from '../components/betterImage/BetterImage';
+import CustomImageSlider from '../components/ImageSlider/CustomImageSlider';
 
 export default function AddPostScreen({navigation, route}) {
   const {postType, groupId, postData, isEdit} = route.params;
@@ -127,17 +129,17 @@ export default function AddPostScreen({navigation, route}) {
     ];
   }, []);
 
-
-  const createPostoptions = [{
-    title: 'Photo/Video',
-    icon: {
-      image: require('../assets/add-post-options-icons/photo-gradient-icon.png'),
+  const createPostoptions = [
+    {
+      title: 'Photo/Video',
+      icon: {
+        image: require('../assets/add-post-options-icons/photo-gradient-icon.png'),
+      },
+      onPress: () => {
+        navigation.navigate(routes.SHAREUP_CAMERA, postType);
+        //navigation.navigate(routes.ADDS_STORY)
+      },
     },
-    onPress: () => {
-      navigation.navigate(routes.SHAREUP_CAMERA,postType)
-     //navigation.navigate(routes.ADDS_STORY)
-    },
-  },
     {
       title: 'Tag People',
       icon: {
@@ -210,7 +212,7 @@ export default function AddPostScreen({navigation, route}) {
   const [error, setError] = useState('');
   const [text, setText] = useState('');
   //const { file, pickImage, clearFile } = useImagePicker();
-  const [imageUriArray,setImageUriArray] = useState([])
+  const [imageUriArray, setImageUriArray] = useState([]);
   const [displayImage, setDisplayImage] = useState(false);
   const [isButtonActive, setIsButtonActive] = useState(false);
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
@@ -220,7 +222,7 @@ export default function AddPostScreen({navigation, route}) {
   const [postPrivacyOption, setPostPrivacyOption] = useState(privacyOptions[0]); // object to present the current privacy option
 
   useEffect(() => {
-    loadImages()
+    loadImages();
     if (postType === postTypes.HANG_SHARE) {
       setPlaceHolder(HANG_SHARE_TEXT);
       setIsOptionsVisible(false);
@@ -229,24 +231,23 @@ export default function AddPostScreen({navigation, route}) {
     } else {
       setPlaceHolder(DEFAULT_TEXT);
     }
-  },[postImages]);
-
+  }, [postImages]);
 
   const loadImages = () => {
-    if(isEdit){
-    if (postData.media?.length !== 0) {
-      setImages(postData.media?.map(image => image.mediaPath));
+    if (isEdit) {
+      if (postData.media?.length !== 0) {
+        setImages(postData.media?.map(image => image.mediaPath));
+      }
+    } else {
+      // if (postImages.length !== 0){
+      const selectedImageUris = postImages?.map(image => {
+        return image['uri'];
+      });
+      setImageUriArray(selectedImageUris);
+      setImages(postImages);
+      handleButtonActivation(text, postImages);
     }
-  }else{
-    // if (postImages.length !== 0){
-    const selectedImageUris = postImages?.map(image => {
-      return image["uri"];
-    })
-    setImageUriArray(selectedImageUris)
-    setImages(postImages)
-    handleButtonActivation(text, postImages);
-  }
-  // }
+    // }
   };
   const setTagedUser = userData => {
     setTagedUserData(userData);
@@ -325,7 +326,7 @@ export default function AddPostScreen({navigation, route}) {
   const onRemoveImage = uri => {
     const updatedImages = images.filter(images => images !== uri);
     dispatch(postImagesAction.removeImage(uri));
-    
+
     setImages(updatedImages);
     handleButtonActivation(text, updatedImages);
   };
@@ -741,61 +742,12 @@ export default function AddPostScreen({navigation, route}) {
                 {`${postData.userdata?.firstName} ${postData.userdata?.lastName}`}
               </Text>
             </View>
-            <View style={{margin: 5}} >
-            {postData.content!=="" && (
-                <Text style={{fontSize: 14, }}>
-                  {postData?.content}
-                </Text>
-            )}
+            <View style={{marginTop: 20, marginHorizontal:5,marginBottom:5}}>
+              {postData.content !== '' && (
+                <Text style={{fontSize: 14}}>{postData?.content}</Text>
+              )}
             </View>
-
-            <FlatList
-              onViewableItemsChanged={onViewRef.current}
-              viewabilityConfig={viewConfigRef.current}
-              horizontal
-              ref={flatListRef}
-              pagingEnabled
-              showsHorizontalScrollIndicator={false}
-              data={postData.media}
-              keyExtractor={({item}, index) => index.toString()}
-              renderItem={({item}) => {
-                return (
-                  <Image
-                    style={{width: width - 42, height: 200}}
-                    resizeMode={'cover'}
-                    source={{uri: item.mediaPath}}
-                  />
-                );
-              }}
-            />
-            <View>
-              <View
-                style={{
-                  marginVertical: 5,
-                  flexDirection: 'row',
-                  alignSelf: 'center',
-                }}>
-                {postData.media?.length > 1 &&
-                  postData.media.map(({media}, index) => (
-                    <TouchableOpacity
-                      key={index}
-                      style={{
-                        width: activeIndex === index ? 15 : 6,
-                        height: 6,
-                        borderRadius: 5,
-                        backgroundColor: '#333',
-                        marginHorizontal: 3,
-                      }}
-                      onPress={_ =>
-                        flatListRef.current.scrollToIndex({
-                          animated: true,
-                          index: '' + index,
-                        })
-                      }
-                    />
-                  ))}
-              </View>
-            </View>
+            <CustomImageSlider width={width - 42}  height={200} media={postData.media} />
           </View>
         )}
         <ImageInputList
