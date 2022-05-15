@@ -22,8 +22,8 @@ const ShippingAddress = ({ navigation, route }) => {
       phone_number:"1234567890"
     };
     hangShareService.acceptHang(userState.userData.id,postData.id,data)
-    .then((res)=> {console.log(res.data);})
-    .catch((e)=>{console.log(e);})
+    .then((res)=> res.data)
+    .catch((e)=>{console.error(e);})
   }
   return (
     <Screen>

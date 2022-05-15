@@ -214,7 +214,7 @@ export default function HangFeedCard({
    
     hangShareService.deleteHang(userState.userData.id,postData.id)
     .then((res)=> {})
-    .catch((e)=>{console.log("error",e);})
+    .catch((e)=>{console.error("error",e);})
     reloadPosts();
     setIsOptionsVisible(false);
   };

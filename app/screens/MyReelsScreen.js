@@ -156,7 +156,7 @@ export default function SwapScreen({navigation}) {
                 data: renderList(),
               });
             }}>
-        
+   
             <View style={[styles.container]}>
               <Image
                 source={{uri: item.thumbnail_url}}

@@ -57,7 +57,7 @@ export default function UpdateEmail({navigation}) {
 
     profileService
       .sendOTPtoVerifyEmail(userData.id, {email: email})
-      .then(res => console.log(res))
+      .then(res => res)
       .catch(e => console.error(e))
       .finally(_ => setVerifying(false));
   };

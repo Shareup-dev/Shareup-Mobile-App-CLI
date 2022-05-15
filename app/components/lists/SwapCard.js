@@ -60,11 +60,9 @@ const SwapCard = React.memo(
         title: 'Sharing Post',
         url: `https://shareup.qa/post/${item.id}`,
       })
-        .then(res => {
-          console.log(res);
-        })
+        .then(res => res)
         .catch(err => {
-          err && console.log(err);
+          err && console.error(err);
         });
     };
 
