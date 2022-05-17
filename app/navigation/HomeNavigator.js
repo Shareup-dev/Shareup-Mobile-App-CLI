@@ -28,6 +28,8 @@ import ChatScreen from '../screens/ChatScreen';
 import HelpAndSupportScreen from '../screens/HelpAndSupportScreen';
 import AccountSettingsScreen from '../screens/AccountSettingsScreen';
 import PostById from '../screens/PostById';
+import MapViewScreen from '../screens/MapViewScreen';
+
 
 const Stack = createNativeStackNavigator();
 const headerHeight = useHeaderHeight;
@@ -91,6 +93,9 @@ export default function HomeNavigator(props) {
         name={routes.ACCOUNT_SETTINGS}
         component={AccountSettingsScreen}
       />
+      <Stack.Screen
+        name={routes.MAP_VIEW}
+        component={MapViewScreen}/>
     </Stack.Navigator>
   );
 }

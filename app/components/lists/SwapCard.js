@@ -13,6 +13,8 @@ import AuthContext from '../../authContext';
 import swapService from '../../services/swap.service';
 
 import Share from 'react-native-share';
+import constants from '../../config/constants';
+import routes from '../../navigation/routes';
 
 const imageSize = 160;
 const SwapCard = React.memo(
@@ -168,6 +170,13 @@ const SwapCard = React.memo(
     const onLayout = e => {
       setSliderWidth(e.nativeEvent.layout.width);
     };
+    const acceptHang = () => {
+      navigation.navigate(routes.SHIPPING_ADDRESS,item)
+    }
+    const acceptSwap = () => {
+      navigation.navigate(routes.CHECKOUT,{postType:item.allPostsType})
+
+    }
 
     return (
       <View style={[styles.card, defaultStyles.cardBorder, style]}>
@@ -203,7 +212,10 @@ const SwapCard = React.memo(
           )}
 
           {userState?.userData.id !== userId && (
-            <SwapActionContainer item={item} />
+            <SwapActionContainer 
+            item={item}
+            onPress={item.allPostsType === constants.postTypes.SWAP?acceptSwap:acceptHang}
+             />
           )}
         </View>
 
