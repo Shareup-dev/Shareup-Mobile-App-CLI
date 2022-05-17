@@ -21,6 +21,8 @@ import swapService from '../../services/swap.service';
 
 import Share from 'react-native-share';
 import CustomImageSlider from '../ImageSlider/CustomImageSlider';
+import constants from '../../config/constants';
+import routes from '../../navigation/routes';
 
 const imageSize = 160;
 const SwapCard = React.memo(
@@ -176,6 +178,13 @@ const SwapCard = React.memo(
     const onLayout = e => {
       setSliderWidth(e.nativeEvent.layout.width);
     };
+    const acceptHang = () => {
+      navigation.navigate(routes.SHIPPING_ADDRESS,item)
+    }
+    const acceptSwap = () => {
+      navigation.navigate(routes.CHECKOUT,{postType:item.allPostsType})
+
+    }
 
     const {width} = Dimensions.get('window');
 
@@ -195,26 +204,15 @@ const SwapCard = React.memo(
         {/** Post Image */}
         <View style={styles.imageContainer} onLayout={onLayout}>
           {images.length !== 0 && (
-            // <SliderBox
-            //   images={images}
-            //   ImageComponentStyle={styles.image}
-            //   imageLoadingColor={colors.iondigoDye}
-            //   //parentWidth={sliderWidth}
-            //   onCurrentImagePressed={index => {
-            //     setCurrentImage(images[index]);
-            //     setImageViewerVisible(true);
-            //   }}
-            //   paginationBoxStyle={styles.sliderDotBox}
-            //   dotStyle={styles.sliderDot}
-            //   activeOpacity={1}
-            //   dotColor={colors.iondigoDye}
-            //   backgroundColor={colors.lighterGray}
-            // />
+          
             <CustomImageSlider media={item.media} width={width - 32} height={250} />
           )}
 
           {userState?.userData.id !== userId && (
-            <SwapActionContainer item={item} />
+            <SwapActionContainer 
+            item={item}
+            onPress={item.allPostsType === constants.postTypes.SWAP?acceptSwap:acceptHang}
+             />
           )}
         </View>
 

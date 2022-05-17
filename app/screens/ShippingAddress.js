@@ -1,5 +1,5 @@
 import React, { useState,useContext } from "react";
-import { View, Text, StyleSheet, Image, TextInput, Platform } from "react-native";
+import { View, Text, StyleSheet, Image, TextInput, Platform ,Pressable} from "react-native";
 import { Button } from "react-native-paper";
 import AppButton from "../components/buttons/Button";
 import { Header, HeaderCloseIcon, HeaderTitle } from "../components/headers";
@@ -12,6 +12,7 @@ import authContext from '../authContext';
 import hangShareService from "../services/hangShare.service";
 
 const ShippingAddress = ({ navigation, route }) => {
+  const [region,setRegion] = useState({})
   const postData = route.params;
   const { userState } = useContext(authContext);
   const [showMessageScreen,setShowMessageScreen] = useState(true);
@@ -45,15 +46,18 @@ const ShippingAddress = ({ navigation, route }) => {
         <View style={styles.imageContainer}>
           <Image source={require("../assets/icons/googleMapsIcon.png")} />
         </View>
+        <Pressable onPress={()=>{navigation.navigate(routes.MAP_VIEW,{location:setRegion()})}}>
         <Text style={styles.subTitle}>
-          Please allow the location when prompted
+          select Location on Map 
         </Text>
+        </Pressable>
         <View style={styles.phoneNumberContainer}>
           <Text style={styles.counteryCode}>QA +974</Text>
           <TextInput
-            keyboardType={"phone-pad"}
+            keyboardType={"number-pad"}
             maxLength={8}
             placeholder={"Enter your mobile number"}
+            returnKeyType={"done"}
           />
         </View>
         <AppButton

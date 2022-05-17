@@ -6,7 +6,8 @@ import defaultStyles from "../../config/styles";
 import Tab from "../buttons/Tab";
 import constants from "../../config/constants";
 
-export default function SwapActionContainer({item}) {
+export default function SwapActionContainer({item,onPress}) {
+
   return (
     <View style={styles.container}>
       <View style={styles.categoryContainer}>
@@ -32,6 +33,7 @@ export default function SwapActionContainer({item}) {
         fontColor={colors.white}
         width={80}
         style={styles.swapTab}
+        onPress={onPress}
       />
     </View>
   );

@@ -68,5 +68,6 @@ export default Object.freeze({
   HELP_SUPPORT:'HelpAndSupportScreen',
   ACCOUNT_SETTINGS:'AccountSettingsScreen',
   SHAREUP_CAMERA:'ShareupCameraScreen',
-  POST_BY_ID:'PostByID'
+  POST_BY_ID:'PostByID',
+  MAP_VIEW:'MapViewScreen'
 });
