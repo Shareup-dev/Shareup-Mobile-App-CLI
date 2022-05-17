@@ -46,7 +46,7 @@ export default function Card({
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [images, setImages] = useState([]);
   const [currentImage, setCurrentImage] = useState();
-  const [imageViewerVisible, setImageViewerVisible] = useState(false);
+  // const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [sliderWidth, setSliderWidth] = useState();
 
 
@@ -255,7 +255,7 @@ export default function Card({
       <View
         style={[styles.card, defaultStyles.cardBorder, style]}
         onLayout={onLayout}>
-        {currentImage && (
+        {/* {currentImage && (
           <ImageView
             visible={imageViewerVisible}
             images={[{uri: currentImage}]}
@@ -264,7 +264,7 @@ export default function Card({
               setImageViewerVisible(false);
             }}
           />
-        )}
+        )} */}
 
         {/** Post Image */}
      

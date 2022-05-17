@@ -14,6 +14,7 @@ import Tab from '../buttons/Tab';
 import Icon from '../Icon';
 import defaultStyles from '../../config/styles';
 import fileStorage from '../../config/fileStorage';
+import BetterImage from '../betterImage/BetterImage';
 
 export default function FriendCard({
   title,
@@ -41,7 +42,7 @@ export default function FriendCard({
         onPress={onPressProfile}
         style={{flexDirection: 'row', alignItems: 'center', minWidth:width /3}}>
         <>
-          {image && <Image style={styles.image} source={{uri: image}} />}
+          {image && <BetterImage style={styles.image} source={{uri: image}} />}
           <View style={styles.detailsContainer}>
             <Text
               numberOfLines={1}

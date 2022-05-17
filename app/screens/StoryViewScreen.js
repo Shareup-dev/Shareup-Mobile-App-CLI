@@ -24,20 +24,21 @@ import DownModal from '../components/drawers/DownModal';
 import storyService from '../services/story.service';
 import AuthContext from '../authContext';
 import UserProfilePicture from '../components/UserProfilePicture';
-
+import moment from 'moment';
 
 const windowWidth = Dimensions.get('screen').width;
 
 const StoryViewScreen = ({navigation, route}) => {
   const {
-    data: {stories_List: data, firstName, lastName,  id: userID},
-      } = route.params;
+    data: {stories_List: data, firstName, lastName, id: userID, ...rest},
+  } = route.params;
 
   const {
     userState: {userData},
   } = useContext(AuthContext);
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [modelOpen, setModelOpen] = useState(false);
   const [paused, setPaused] = useState(false);
   const [Loaded, setLoaded] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -112,8 +113,19 @@ const StoryViewScreen = ({navigation, route}) => {
     Animated.timing(width[activeIndex]).stop();
   };
 
+  const addStoryViewer = () => {
+    if (userData.id === userID) {
+      return;
+    }
+    storyService
+      .AddViews(data[activeIndex].id, userData.id)
+      .then(res => res)
+      .catch(e => console.error(e.message));
+  };
+
   const handleCloseModel = () => {
     setMenuOpen(false);
+    setModelOpen(false);
     startProgress();
   };
 
@@ -138,6 +150,7 @@ const StoryViewScreen = ({navigation, route}) => {
   useEffect(() => {
     if (Loaded) {
       startProgress();
+      addStoryViewer();
     }
     // return () => {
     //   Animated.timing(width[activeIndex]).stop();
@@ -185,6 +198,30 @@ const StoryViewScreen = ({navigation, route}) => {
     );
   };
 
+  const StoriesViewers = () => {
+    return (
+      <View style={styles.menuContainer}>
+        <View style={{alignItems: 'center'}}>
+          <View
+            style={{
+              backgroundColor: '#cacaca',
+              width: 80,
+              height: 6,
+              borderRadius: 6,
+            }}
+          />
+        </View>
+
+        <View style={styles.menu}>
+          <View>
+            <Text style={styles.menuText}>Viewed by</Text>
+            <Text>10 Views</Text>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
   const StorySlides = memo(() => {
     return (
       <View style={{position: 'absolute', zIndex: 10}}>
@@ -226,7 +263,20 @@ const StoryViewScreen = ({navigation, route}) => {
                 size={55}
               />
             </View>
-            <Text style={styles.userName}>{`${firstName} ${lastName}`}</Text>
+            <View>
+              <Text
+                style={[
+                  styles.userName,
+                  styles.textShadow,
+                ]}>{`${firstName} ${lastName}`}</Text>
+
+              <Text style={[styles.date, styles.textShadow]}>
+                {moment(
+                  data[activeIndex].date,
+                  'DD MMMM YYYY hh:mm:ss',
+                ).fromNow()}
+              </Text>
+            </View>
           </View>
           <View style={{flexDirection: 'row'}}>
             {userData.id === userID && (
@@ -258,11 +308,15 @@ const StoryViewScreen = ({navigation, route}) => {
                 size={54}
                 color={'#fff'}
                 backgroundColor={'#fff'}
+                style={styles.shadow}
                 noBackground={true}
               />
             </TouchableOpacity>
             <DownModal isVisible={menuOpen} setIsVisible={handleCloseModel}>
               <DropDownMenu />
+            </DownModal>
+            <DownModal isVisible={modelOpen} setIsVisible={handleCloseModel}>
+              <StoriesViewers />
             </DownModal>
           </View>
         </View>
@@ -271,64 +325,109 @@ const StoryViewScreen = ({navigation, route}) => {
   }, []);
 
   return (
-        <TouchableOpacity
-        
-          activeOpacity={1}
-          onPressIn={() => {
-            setPaused(true);
-            pauseProgress();
+    <TouchableOpacity
+      activeOpacity={1}
+      onPressIn={() => {
+        setPaused(true);
+        pauseProgress();
+      }}
+      onPressOut={() => {
+        setPaused(false);
+        startProgress();
+      }}>
+      <StorySlides />
+      {data[activeIndex]?.video ? (
+        <Video
+          ref={ref => (this.player = ref)}
+          paused={paused}
+          onLoad={_ => setLoaded(true)}
+          resizeMode={'cover'}
+          style={{
+            width: '100%',
+            height: '100%',
+            backgroundColor: '#000',
           }}
-          onPressOut={() => {
-            setPaused(false);
-            startProgress();
+          source={{
+            uri: data[activeIndex].storiesVideoPath,
+          }}
+        />
+      ) : (
+        <Image
+          style={{
+            width: '100%',
+            height: '100%',
+            backgroundColor: '#000',
+          }}
+          resizeMode={'contain'}
+          onLoadEnd={_ => setLoaded(true)}
+          source={{uri: data[activeIndex].storiesImagePath}}
+        />
+      )}
+      <View
+        style={{
+          zIndex: 100,
+          position: 'absolute',
+          bottom: 50,
+          width: '100%',
+          paddingHorizontal: 20,
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
           }}>
-          <StorySlides />
-          {data[activeIndex]?.video ? (
-            <Video
-              ref={ref => (this.player = ref)}
-              paused={paused}
-              onLoad={_ => setLoaded(true)}
-              resizeMode={'cover'}
-              style={{
-                width: '100%',
-                height: '100%',
-                backgroundColor: '#000',
-              }}
-              source={{
-                uri: data[activeIndex].storiesVideoPath,
-              }}
-            />
-          ) : (
-            <Image
-              style={{
-                width: '100%',
-                height: '100%',
-                backgroundColor: '#000',
-              }}
-              resizeMode={'contain'}
-              onLoadEnd={_ => setLoaded(true)}
-              source={{uri: data[activeIndex].storiesImagePath}}
-            />
-          )}
           <Text
-            style={{
-              zIndex: 100,
-              position: 'absolute',
-              bottom: 50,
-              left: 15,
-              fontSize: 16,
-              fontWeight: '600',
-              color: '#fff',
-            }}>
+            style={[
+              {
+                fontSize: 15,
+                maxWidth: '70%',
+                color: '#fff',
+              },
+              styles.textShadow,
+            ]}>
             {data[activeIndex].caption}
           </Text>
-        </TouchableOpacity>
+          {userData.id === userID && (
+            <TouchableOpacity
+              style={{flexDirection: 'row', alignItems: 'center'}}
+              onPress={_ => {
+                setPaused(true);
+                pauseProgress();
+                setModelOpen(true);
+              }}>
+              <>
+                <Icon
+                  name="eye-outline"
+                  type="Ionicons"
+                  size={45}
+                  color={'#fff'}
+                  backgroundSizeRatio={0.4}
+                  noBackground
+                  style={{
+                    marginHorizontal: -5,
+                  }}
+                />
+                <Text
+                  style={[
+                    {color: '#fff'},
+                    styles.textShadow,
+                  ]}>{`${10} Views`}</Text>
+              </>
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+    </TouchableOpacity>
   );
 };
 
 export default StoryViewScreen;
 
 const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+  },
   menuContainer: {},
   menu: {
     paddingHorizontal: 20,
@@ -386,14 +485,23 @@ const styles = StyleSheet.create({
   userName: {
     maxWidth: windowWidth / 2,
     color: '#fdfdfd',
-    textShadowColor: 'black',
 
-    textShadowOffset: {width: 0, height: 0},
-    textShadowRadius: 8,
     fontWeight: '800',
     marginLeft: 20,
     fontSize: 18,
     fontWeight: '600',
+  },
+  date: {
+    maxWidth: windowWidth / 2,
+    color: '#cacaca',
+    marginLeft: 20,
+    fontSize: 13,
+  },
+  textShadow: {
+    textShadowColor: 'black',
+
+    textShadowOffset: {width: 0, height: 0},
+    textShadowRadius: 8,
   },
   shadow: {
     shadowColor: '#fff',

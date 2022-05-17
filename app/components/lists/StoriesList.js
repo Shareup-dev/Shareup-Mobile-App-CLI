@@ -1,5 +1,6 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {View, StyleSheet, SectionList, Text} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
+import {View, StyleSheet, Text} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {useDispatch, useSelector} from 'react-redux';
 import AuthContext from '../../authContext';
@@ -19,43 +20,77 @@ export default function StoriesList({navigation, style}) {
   const dispatch = useDispatch();
   const stories = useSelector(state => state.stories);
 
-  useEffect(() => {
-    const fetchStories = () => {
-      setLoading(1);
-      Promise.all([
-        storiesService.getStoriesByEmail(username),
-        storiesService.getStoriesOfFriends(userData.id),
-      ])
-        .then(res => {
-          // getting user info from first element. and i spread it with list of stories - this is only for login user
-          const myStories = {
-            ...res[0]?.data[0]?.user,
-            stories_List: res[0]?.data,
-          };
-          const friendsStories = res[1]?.data;
+  // useEffect(() => {
+  //   const fetchStories = () => {
+  //     setLoading(1);
+  //     Promise.all([
+  //       storiesService.getStoriesByEmail(username),
+  //       storiesService.getStoriesOfFriends(userData.id),
+  //     ])
+  //       .then(res => {
+  //         // getting user info from first element. and i spread it with list of stories - this is only for login user
+  //         const myStories = {
+  //           ...res[0]?.data[0]?.user,
+  //           stories_List: res[0]?.data,
+  //         };
+  //         const friendsStories = res[1]?.data;
 
-          const array = friendsStories;
+  //         const array = friendsStories;
 
-          if (res[0].data.length) {
-            array.unshift(myStories); // merging (login user stories + his friends stories) #### first index should be login user stories
-          }
+  //         if (res[0].data.length) {
+  //           array.unshift(myStories); // merging (login user stories + his friends stories) #### first index should be login user stories
+  //         }
 
-          dispatch(storiesAction.setStories(array));
-        })
-        .catch(e => console.error(e.message))
-        .finally(_ => {
-          setLoading(2);
-        });
-    };
-    let mount = true;
+  //         dispatch(storiesAction.setStories(array));
+  //       })
+  //       .catch(e => console.error(e.message))
+  //       .finally(_ => {
+  //         setLoading(2);
+  //       });
+  //   };
+  //   let mount = true;
 
-    if (mount) {
+  //   if (mount) {
+  //     fetchStories();
+  //   }
+  //   return () => {
+  //     mount = false;
+  //   };
+  // }, []);
+
+  const fetchStories = () => {
+    setLoading(1);
+    Promise.all([
+      storiesService.getStoriesByEmail(username),
+      storiesService.getStoriesOfFriends(userData.id),
+    ])
+      .then(res => {
+        // getting user info from first element. and i spread it with list of stories - this is only for login user
+        const myStories = {
+          ...res[0]?.data[0]?.user,
+          stories_List: res[0]?.data,
+        };
+        const friendsStories = res[1]?.data;
+
+        const array = friendsStories;
+
+        if (res[0].data.length) {
+          array.unshift(myStories); // merging (login user stories + his friends stories) #### first index should be login user stories
+        }
+
+        dispatch(storiesAction.setStories(array));
+      })
+      .catch(e => console.error(e.message))
+      .finally(_ => {
+        setLoading(2);
+      });
+  };
+
+  useFocusEffect(
+    useCallback(() => {
       fetchStories();
-    }
-    return () => {
-      mount = false;
-    };
-  }, []);
+    }, []),
+  );
 
   const EmptyCard = () => {
     return (

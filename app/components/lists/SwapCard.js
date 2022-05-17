@@ -1,5 +1,12 @@
 import React, {useEffect, useState, useContext} from 'react';
-import {View, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  Alert,
+  Dimensions,
+} from 'react-native';
 import {useSelector} from 'react-redux';
 import ImageView from 'react-native-image-viewing';
 import {SliderBox} from 'react-native-image-slider-box';
@@ -13,6 +20,7 @@ import AuthContext from '../../authContext';
 import swapService from '../../services/swap.service';
 
 import Share from 'react-native-share';
+import CustomImageSlider from '../ImageSlider/CustomImageSlider';
 
 const imageSize = 160;
 const SwapCard = React.memo(
@@ -103,7 +111,7 @@ const SwapCard = React.memo(
           image: require('../../assets/post-options-icons/share-friends-icon.png'),
         },
         onPress: () => {
-          onShareHandler()
+          onShareHandler();
         },
       },
       // {
@@ -169,6 +177,8 @@ const SwapCard = React.memo(
       setSliderWidth(e.nativeEvent.layout.width);
     };
 
+    const {width} = Dimensions.get('window');
+
     return (
       <View style={[styles.card, defaultStyles.cardBorder, style]}>
         {currentImage && (
@@ -185,21 +195,22 @@ const SwapCard = React.memo(
         {/** Post Image */}
         <View style={styles.imageContainer} onLayout={onLayout}>
           {images.length !== 0 && (
-            <SliderBox
-              images={images}
-              ImageComponentStyle={styles.image}
-              imageLoadingColor={colors.iondigoDye}
-              //parentWidth={sliderWidth}
-              onCurrentImagePressed={index => {
-                setCurrentImage(images[index]);
-                setImageViewerVisible(true);
-              }}
-              paginationBoxStyle={styles.sliderDotBox}
-              dotStyle={styles.sliderDot}
-              activeOpacity={1}
-              dotColor={colors.iondigoDye}
-              backgroundColor={colors.lighterGray}
-            />
+            // <SliderBox
+            //   images={images}
+            //   ImageComponentStyle={styles.image}
+            //   imageLoadingColor={colors.iondigoDye}
+            //   //parentWidth={sliderWidth}
+            //   onCurrentImagePressed={index => {
+            //     setCurrentImage(images[index]);
+            //     setImageViewerVisible(true);
+            //   }}
+            //   paginationBoxStyle={styles.sliderDotBox}
+            //   dotStyle={styles.sliderDot}
+            //   activeOpacity={1}
+            //   dotColor={colors.iondigoDye}
+            //   backgroundColor={colors.lighterGray}
+            // />
+            <CustomImageSlider media={item.media} width={width - 32} height={250} />
           )}
 
           {userState?.userData.id !== userId && (

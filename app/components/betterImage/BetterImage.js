@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {View, StyleSheet,} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import colors from '../../config/colors';
 
 export default function BetterImage({style, ...props}) {
   // const [isLoaded, setIsLoaded] = useState(false);
@@ -17,6 +18,6 @@ export default function BetterImage({style, ...props}) {
 const styles = StyleSheet.create({
   container: { },
   imgCard: { 
-    backgroundColor: '#cacaca60',
+    backgroundColor: colors.lighterGray,
   },
 });
