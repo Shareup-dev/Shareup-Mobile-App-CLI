@@ -1,10 +1,8 @@
 
 import React, { useEffect, useState } from "react";
-import { View,StyleSheet } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView,StyleSheet } from "react-native";
 import MapView from 'react-native-maps'
 import { Marker } from 'react-native-maps';
-import Tab from "../components/tab-bar/Tab";
 import AppButton from "../components/buttons/Tab";
 import colors from "../config/colors";
 import Geolocation from '@react-native-community/geolocation';

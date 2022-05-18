@@ -19,7 +19,6 @@ import LinkButton from '../components/buttons/LinkButton';
 
 import routes from './routes';
 import {useNavigation} from '@react-navigation/native';
-import {ScrollView} from 'react-native-gesture-handler';
 
 
 

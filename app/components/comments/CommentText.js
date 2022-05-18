@@ -1,10 +1,7 @@
 import React, { useCallback, useState, useEffect } from "react";
-import { View,TextInput, StyleSheet, Text,Dimensions } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { Button,  } from "react-native-paper";
+import { View,TextInput, StyleSheet, Text,Dimensions,TouchableOpacity } from "react-native";
 import postService from "../../services/post.service";
 import colors from "../../config/colors";
-import { commentsActions } from "../../redux/comments";
 import {useDispatch, useSelector} from 'react-redux';
 
 const {width, height} = Dimensions.get('window');

@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Image,
   Text,
+  ScrollView,
+  SafeAreaView,
 } from 'react-native';
 //import Text from "../components/Text";
 import Tab from '../components/buttons/Tab';
@@ -22,8 +24,7 @@ import ImageView from 'react-native-image-viewing';
 import {SliderBox} from 'react-native-image-slider-box';
 import Separator from '../components/Separator';
 import PostOptionDrawer from '../components/drawers/PostOptionsDrawer';
-import {ScrollView} from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 export default function PostDetailScreen({navigation, route}) {
   const {postData} = route.params;

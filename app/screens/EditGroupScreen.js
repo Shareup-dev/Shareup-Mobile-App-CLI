@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TextInput, Touchable} from 'react-native';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity} from 'react-native';
 
 import Screen from '../components/Screen';
 import Icon from '../components/Icon';

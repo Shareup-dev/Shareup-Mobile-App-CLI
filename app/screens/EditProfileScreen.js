@@ -5,6 +5,7 @@ import {
   View,
   TextInput,
   KeyboardAvoidingView,
+  ScrollView
 } from 'react-native';
 
 import {Header, HeaderTitle} from '../components/headers';
@@ -14,7 +15,6 @@ import colors from '../config/colors';
 import LinkButton from '../components/buttons/LinkButton';
 import Section from '../components/Section';
 import TextField from '../components/TextField';
-import {ScrollView} from 'react-native-gesture-handler';
 import {TouchableOpacity, Image} from 'react-native';
 import AuthContext from '../authContext';
 import {Formik} from 'formik';
@@ -22,7 +22,6 @@ import userService from '../services/user.service';
 import LoadingComponent from '../components/Loading';
 import Icon from '../components/Icon';
 import {launchImageLibrary} from 'react-native-image-picker';
-import fileStorage from '../config/fileStorage';
 import routes from '../navigation/routes';
 
 export default function EditProfileScreen({navigation}) {
@@ -318,6 +317,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginBottom: 25,
+    backgroundColor:'#fff'
   },
   headerActionBtn: {
     color: colors.iondigoDye,

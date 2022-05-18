@@ -1,7 +1,6 @@
 import {useFocusEffect} from '@react-navigation/native';
-import React, {useCallback, useContext, useEffect, useState} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
+import React, {useCallback, useContext,  useState} from 'react';
+import {FlatList,View, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import AuthContext from '../../authContext';
 import colors from '../../config/colors';

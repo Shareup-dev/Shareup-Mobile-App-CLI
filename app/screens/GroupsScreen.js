@@ -109,45 +109,36 @@ export default function GroupsScreen({navigation}) {
   };
 
   const renderItem = ({item}) => {
-    {
-      switch (item.allPostsType) {
-        case constants.postTypes.SWAP:
-          return (
-            <SwapCard
-              navigation={navigation}
-              route={route}
-              item={item}
-              userId={item.userdata.id}
-            />
-          );
-        case constants.postTypes.HANG_SHARE:
-          return (
-            <SwapCard
-              navigation={navigation}
-              route={route}
-              item={item}
-              userId={item.userdata.id}
-            />
-            // <HangFeedCard //style={styles.listItem}
-            //   user={item.userdata}
-            //   postData={item}
-            //   navigation={navigation}
-            //   reloadPosts={loadNews}
-            //   postType={item.allPostsType}
-            //   onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item }) }}
-            // />
-          );
-        default:
-          return (
-            <Card
-              user={item.userdata}
-              postData={item}
-              navigation={navigation}
-              reloadPosts={fetchFeed}
-              postType={item.allPostsType}
-            />
-          );
-      }
+    switch (item.allPostsType) {
+      case constants.postTypes.SWAP:
+        return (
+          <SwapCard
+            navigation={navigation}
+            route={route}
+            item={item}
+            userId={item.userdata.id}
+          />
+        );
+      case constants.postTypes.HANG_SHARE:
+        return (
+          <SwapCard
+            navigation={navigation}
+            route={route}
+            item={item}
+            userId={item.userdata.id}
+          />
+      
+        );
+      default:
+        return (
+          <Card
+            user={item.userdata}
+            postData={item}
+            navigation={navigation}
+            reloadPosts={fetchFeed}
+            postType={item.allPostsType}
+          />
+        );
     }
   };
 
@@ -227,38 +218,38 @@ export default function GroupsScreen({navigation}) {
       </View>
       <View style={{backgroundColor: '#fff', marginTop: 5, flex: 1}}>
         <View>
-        <ScrollView
-          style={styles.listContainer}
-          showsVerticalScrollIndicator={false}>
-          {search.loading === 2 && (
-            <>
-              <Text style={[{marginVertical: 5}, styles.title]}>
-                {`Search Results`}
-              </Text>
-              <View
-                style={{
-                  backgroundColor: '#fdfdfd',
-                  paddingHorizontal: 15,
-                  paddingVertical: 10,
-                  borderRadius: 10,
-                  borderColor: '#cacaca60',
-                  borderWidth: 1,
-                }}>
-                {search.result.length === 0 && (
-                  <Text
-                    style={{
-                      textAlign: 'center',
-                      marginVertical: 15,
-                      fontSize: 15,
-                    }}>{`Groups not found`}</Text>
-                )}
-                {search.result.map((result, i) => (
-                  <SearchResultCard item={result} key={i} />
-                ))}
-              </View>
-            </>
-          )}
-        </ScrollView>
+          <ScrollView
+            style={styles.listContainer}
+            showsVerticalScrollIndicator={false}>
+            {search.loading === 2 && (
+              <>
+                <Text style={[{marginVertical: 5}, styles.title]}>
+                  {`Search Results`}
+                </Text>
+                <View
+                  style={{
+                    backgroundColor: '#fdfdfd',
+                    paddingHorizontal: 15,
+                    paddingVertical: 10,
+                    borderRadius: 10,
+                    borderColor: '#cacaca60',
+                    borderWidth: 1,
+                  }}>
+                  {search.result.length === 0 && (
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        marginVertical: 15,
+                        fontSize: 15,
+                      }}>{`Groups not found`}</Text>
+                  )}
+                  {search.result.map((result, i) => (
+                    <SearchResultCard item={result} key={i} />
+                  ))}
+                </View>
+              </>
+            )}
+          </ScrollView>
           <FlatList
             data={feed.state}
             initialNumToRender={5}

@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, StyleSheet, Text, TextInput} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {View,TouchableOpacity, StyleSheet, Text, TextInput} from 'react-native';
 import AuthContext from '../../authContext';
 import {HeaderWithBackArrow} from '../../components/headers';
 import Loading from '../../components/Loading';

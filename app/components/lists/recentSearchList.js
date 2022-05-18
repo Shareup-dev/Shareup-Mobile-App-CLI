@@ -1,10 +1,8 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet,FlatList } from "react-native";
 
 import Text from "../Text";
-import defaultStyles from "../../config/styles";
 import colors from "../../config/colors";
-import { FlatList } from "react-native-gesture-handler";
 
 export default function RecentSearchList({options, subtitle, align = 'center', containerStyle }) {
   return (

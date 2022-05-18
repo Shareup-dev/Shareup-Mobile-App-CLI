@@ -19,7 +19,7 @@ const RenderReels = ({item, index, navigation}) => {
   const {
     id,
     reactions,
-    userdata: user,    
+    userdata: user,
     content,
     published,
     thumbnail_name,
@@ -49,7 +49,7 @@ const RenderReels = ({item, index, navigation}) => {
         }}
         activeOpacity={1}
         onPress={_ => setMute(prev => !prev)}
-        onLongPress={_ => setPaused(prev => !prev)}>
+        onLongPress={_ => loaded && setPaused(prev => !prev)}>
         <View style={styles.Header}>
           <Text style={styles.HeaderText}>Share Reels</Text>
           <View style={styles.iconContainer}>
@@ -77,13 +77,13 @@ const RenderReels = ({item, index, navigation}) => {
             </TouchableOpacity>
           </View>
         </View>
-        {mute && (
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          {paused && loaded ? (
             <View
               style={{
                 backgroundColor: '#33333320',
@@ -91,7 +91,7 @@ const RenderReels = ({item, index, navigation}) => {
                 borderRadius: 40,
               }}>
               <Icon
-                name={'volume-off'}
+                name={'pause'}
                 noBackground
                 type="Fontisto"
                 size={35}
@@ -100,37 +100,56 @@ const RenderReels = ({item, index, navigation}) => {
                 style={{opacity: 0.4}}
               />
             </View>
-          </View>
-        )}
+          ) : (
+            mute && (
+              <View
+                style={{
+                  backgroundColor: '#33333320',
+                  padding: 15,
+                  borderRadius: 40,
+                }}>
+                <Icon
+                  name={'volume-off'}
+                  noBackground
+                  type="Fontisto"
+                  size={35}
+                  backgroundSizeRatio={0.6}
+                  color="#fff"
+                  style={{opacity: 0.4}}
+                />
+              </View>
+            )
+          )}
+        </View>
+
         <View style={styles.video}>
           {!loaded ? (
             <View
               style={{
                 width: width,
-                height: height ,
+                height: height,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
               <Loading noBackground />
             </View>
           ) : null}
-       
-            <Video
 
-              style={{
-                width: width,
-                height: height - StatusBar.currentHeight,
-                zIndex: -10,
-              }}
-              maxBitRate={2000000} // 2 megabits
-              onLoadStart={_ => setLoaded(false)}
-              source={{uri: item?.video_url}}
-              repeat
-              onLoad={_ => setLoaded(true)}
-              muted={mute}
-              paused={paused}
-              resizeMode="cover"
-            />
+          <Video
+            style={{
+              width: width,
+              height: height - StatusBar.currentHeight,
+              zIndex: -10,
+            }}
+            maxBitRate={2000000} // 2 megabits
+            onLoadStart={_ => setLoaded(false)}
+            source={{uri: item?.video_url}}
+            repeat
+            onLoad={_ => setLoaded(true)}
+            muted={mute}
+            paused={paused}
+            resizeMode="cover"
+          />
         </View>
         <BottomCard
           numberOfComments={numberOfComments}

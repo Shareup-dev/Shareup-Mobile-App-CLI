@@ -44,6 +44,7 @@ function CustomImageSlider({media, width, height}) {
         />
         {media.map((image, index) => (
           <TouchableOpacity
+            key={index}
             onPress={() => setImageSlider({state: true, index: index})}>
             <BetterImage
               key={index}

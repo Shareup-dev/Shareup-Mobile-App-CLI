@@ -1,15 +1,11 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, TextInput,TouchableWithoutFeedback } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import {ScrollView, View, Text, Image, StyleSheet, TextInput,TouchableWithoutFeedback } from "react-native";
 import AppButton from "../components/buttons/Button";
-import { Header, HeaderCloseIcon, HeaderTitle } from "../components/headers";
-import Screen from "../components/Screen";
+import { Header, HeaderTitle } from "../components/headers";
 import colors from "../config/colors";
 import constants from "../config/constants";
 import routes from "../navigation/routes";
 import Icon from "../components/Icon";
-import OptionBox from "../components/posts/OptionBox";
-import common from "../config/common";
 
 const Checkout = ({ navigation, route }) => {
   const  {postType,item}  = route.params;

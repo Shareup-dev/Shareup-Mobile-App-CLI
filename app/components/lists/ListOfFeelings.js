@@ -1,6 +1,5 @@
 import React, { useContext, useMemo } from "react";
-import { View, StyleSheet, Text, Image } from "react-native";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { View, StyleSheet, Text, Image,ScrollView, TouchableOpacity } from "react-native";
 import { useDispatch } from "react-redux";
 import { postFeelingsActions } from "../../redux/postFeelings";
 import { data as Feelings } from "../Data/activitiesAndFeelings";

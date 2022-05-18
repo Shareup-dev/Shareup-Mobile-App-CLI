@@ -1,6 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {View, Text, StyleSheet, TextInput} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import {ScrollView,View, Text, StyleSheet, TextInput} from 'react-native';
 
 import Screen from '../components/Screen';
 import AppButton from '../components/buttons/Button';

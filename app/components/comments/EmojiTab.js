@@ -1,6 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Text, FlatList } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity,View, StyleSheet, Text, FlatList } from "react-native";
 import colors from "../../config/colors";
 
 export default function EmojiTab({ emoji }) {

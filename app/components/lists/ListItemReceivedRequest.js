@@ -5,16 +5,13 @@ import {
   Image,
   TouchableWithoutFeedback,
   Text,
-  Touchable,
-  Animated, Easing,
+TouchableOpacity
 } from 'react-native';
 
 import colors from '../../config/colors';
 import Tab from '../buttons/Tab';
 import Icon from '../Icon';
 import defaultStyles from '../../config/styles';
-import fileStorage from '../../config/fileStorage';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export default function ListItemReceivedRequest({
   email,

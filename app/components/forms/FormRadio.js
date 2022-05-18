@@ -1,11 +1,10 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text,TouchableWithoutFeedback } from "react-native";
 import { useFormikContext } from "formik";
 import { RadioButton } from "react-native-paper";
 
 import colors from "../../config/colors";
 import ErrorMessage from "./ErrorMessage";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import defaultStyles from "../../config/styles";
 
 export default function FormRadio({ name, style }) {

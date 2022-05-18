@@ -1,6 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Text, Image } from "react-native";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { View, StyleSheet, Text, ScrollView, TouchableOpacity } from "react-native";
 import { useDispatch } from "react-redux";
 import { postFeelingsActions } from "../../redux/postFeelings";
 import Icon from "../Icon";

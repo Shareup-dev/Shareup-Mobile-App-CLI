@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text,FlatList } from "react-native";
 import DownModal from "./DownModal";
 import { HeaderButton } from "../headers";
 import defaultStyles from "../../config/styles";
 import colors from "../../config/colors";
 import Separator from "../Separator";
 import { RadioButton } from "react-native-paper";
-import { FlatList } from "react-native-gesture-handler";
 import RadioItem from "./RadioItem";
 
 export default function RadioOptionDrawer({

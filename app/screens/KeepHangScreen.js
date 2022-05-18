@@ -7,7 +7,6 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Dimensions,
-  Platform,
 } from 'react-native';
 import Button from '../components/buttons/Button';
 import GiftDrawer from '../components/drawers/GiftDrawer';
@@ -21,8 +20,6 @@ import routes from '../navigation/routes';
 import * as ImagePicker from 'react-native-image-picker';
 //import ImageCropPicker from 'react-native-image-crop-picker';
 import {useDispatch, useSelector} from 'react-redux';
-import {State} from 'react-native-gesture-handler';
-import store from '../redux/store';
 import {useImagePicker} from '../hooks';
 import {postImagesAction} from '../redux/postImages';
 

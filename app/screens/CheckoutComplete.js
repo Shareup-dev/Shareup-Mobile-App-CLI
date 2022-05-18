@@ -1,14 +1,11 @@
 import React,{useContext} from "react";
-import { View, Text, Image, StyleSheet, Button } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import AppButton from "../components/buttons/Button";
+import { TouchableOpacity,View, Text, Image, StyleSheet,  } from "react-native";
 import Screen from "../components/Screen";
 import colors from "../config/colors";
 import routes from "../navigation/routes";
 import store from "../redux/store";
 import { swapedImagesAction } from "../redux/swapedImages";
 import constants from "../config/constants";
-import hangShareService from "../services/hangShare.service";
 import authContext from "../authContext";
 
 const CheckoutComplete = ({ navigation, route }) => {

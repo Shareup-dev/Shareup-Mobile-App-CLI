@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState, useContext} from 'react'
 import {
   View,
   StyleSheet,
@@ -6,8 +6,8 @@ import {
   Text,
   Alert,
   Dimensions,
-} from 'react-native';
-import {useSelector} from 'react-redux';
+} from 'react-native'
+import {useSelector} from 'react-redux'
 import ImageView from 'react-native-image-viewing';
 import {SliderBox} from 'react-native-image-slider-box';
 import colors from '../../config/colors';
@@ -179,12 +179,11 @@ const SwapCard = React.memo(
       setSliderWidth(e.nativeEvent.layout.width);
     };
     const acceptHang = () => {
-      navigation.navigate(routes.SHIPPING_ADDRESS,item)
-    }
+      navigation.navigate(routes.SHIPPING_ADDRESS, item);
+    };
     const acceptSwap = () => {
-      navigation.navigate(routes.CHECKOUT,{postType:item.allPostsType})
-
-    }
+      navigation.navigate(routes.CHECKOUT, {postType: item.allPostsType});
+    };
 
     const {width} = Dimensions.get('window');
 
@@ -204,15 +203,22 @@ const SwapCard = React.memo(
         {/** Post Image */}
         <View style={styles.imageContainer} onLayout={onLayout}>
           {images.length !== 0 && (
-          
-            <CustomImageSlider media={item.media} width={width - 32} height={250} />
+            <CustomImageSlider
+              media={item.media}
+              width={width - 32}
+              height={250}
+            />
           )}
 
           {userState?.userData.id !== userId && (
-            <SwapActionContainer 
-            item={item}
-            onPress={item.allPostsType === constants.postTypes.SWAP?acceptSwap:acceptHang}
-             />
+            <SwapActionContainer
+              item={item}
+              onPress={
+                item.allPostsType === constants.postTypes.SWAP
+                  ? acceptSwap
+                  : acceptHang
+              }
+            />
           )}
         </View>
 

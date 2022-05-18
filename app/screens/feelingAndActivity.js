@@ -1,5 +1,5 @@
-import React, { useContext, useMemo, useState } from "react";
-import { View, StyleSheet, Text, Image, Touchable } from "react-native";
+import React, {  useMemo } from "react";
+import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 
 import Screen from "../components/Screen";
 import colors from "../config/colors";
@@ -11,7 +11,6 @@ import ListOfFeelings from "../components/lists/ListOfFeelings";
 import ListOfActivities from "../components/lists/ListOfactivities";
 import { useDispatch, useSelector } from "react-redux";
 import Icon from "../components/Icon";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { postFeelingsActions } from "../redux/postFeelings";
 
 export default function FeelingAndActivity({ navigation }) {

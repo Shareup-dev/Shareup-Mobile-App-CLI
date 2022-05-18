@@ -1,19 +1,15 @@
 import React, {useContext, useEffect, useState, useCallback} from 'react';
 import {
   StyleSheet,
-  Text,
   View,
   FlatList,
-  Image,
-  Alert,
-  Touchable,
+  TouchableOpacity
 } from 'react-native';
 
 import Screen from '../components/Screen';
 import TextField from '../components/TextField';
 import Tab from '../components/buttons/Tab';
 import Separator from '../components/Separator';
-import ListItem from '../components/lists/ListItem';
 import defaultStyles from '../config/styles';
 import ListHeader from '../components/lists/ListHeader';
 import colors from '../config/colors';
@@ -22,15 +18,11 @@ import UserProfilePicture from '../components/UserProfilePicture';
 import routes from '../navigation/routes';
 import authContext from '../authContext';
 import UserService from '../services/user.service';
-import FriendService from '../services/FriendService';
 import store from '../redux/store';
 import {sentRequestsActions} from '../redux/sentRequests';
-import {receivedRequestsAction} from '../redux/receivedRequest';
 import {useSelector} from 'react-redux';
-import Toast from 'react-native-toast-message';
 import userService from '../services/user.service';
 import {useFocusEffect} from '@react-navigation/native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import FriendCard from '../components/lists/FriendCard';
 
 export default function ActivityScreen({navigation}) {

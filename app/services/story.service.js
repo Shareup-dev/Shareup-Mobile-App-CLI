@@ -10,7 +10,7 @@ class Story {
   getStoriesOfFriends = uid => AuthAxios.get(`stories/friends_stories_new/${uid}`);
 
   // Get all story’s viewers
-  getStoryViewers = (sid, pageno, pagesize = 10) =>
+  getStoryViewers = (sid, pageno = 1, pagesize = 10) =>
     AuthAxios({
       method: 'GET',
       url: `stories/views/${sid}`,

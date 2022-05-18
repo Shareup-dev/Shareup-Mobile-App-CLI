@@ -6,10 +6,8 @@ import {
   TextInput,
   TouchableOpacity,
   Dimensions,
-  ScrollView,
+  FlatList,
 } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
-import { Item } from 'react-native-paper/lib/typescript/components/List/List';
 import {HeaderWithBackArrow} from '../components/headers';
 import Icon from '../components/Icon';
 import colors from '../config/colors';

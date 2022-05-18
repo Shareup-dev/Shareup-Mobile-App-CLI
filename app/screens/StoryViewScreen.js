@@ -15,6 +15,7 @@ import {
   Dimensions,
   Alert,
   Animated,
+  FlatList,
 } from 'react-native';
 
 import Video from 'react-native-video';
@@ -25,6 +26,7 @@ import storyService from '../services/story.service';
 import AuthContext from '../authContext';
 import UserProfilePicture from '../components/UserProfilePicture';
 import moment from 'moment';
+import routes from '../navigation/routes';
 
 const windowWidth = Dimensions.get('screen').width;
 
@@ -38,6 +40,11 @@ const StoryViewScreen = ({navigation, route}) => {
   } = useContext(AuthContext);
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [viewers, setViewers] = useState({
+    loading: false,
+    state: [],
+    page: 1,
+  });
   const [modelOpen, setModelOpen] = useState(false);
   const [paused, setPaused] = useState(false);
   const [Loaded, setLoaded] = useState(false);
@@ -147,10 +154,21 @@ const StoryViewScreen = ({navigation, route}) => {
     ]);
   };
 
+  const getStoryViewers = () => {
+    if (userData.id === userID) {
+      storyService
+        .getStoryViewers(data[activeIndex].id)
+        .then(({data}) => setViewers(prev => ({...prev, state: data})))
+        .catch(e => console.error(e.message));
+    }
+    return;
+  };
+
   useEffect(() => {
     if (Loaded) {
       startProgress();
       addStoryViewer();
+      getStoryViewers();
     }
     // return () => {
     //   Animated.timing(width[activeIndex]).stop();
@@ -198,9 +216,24 @@ const StoryViewScreen = ({navigation, route}) => {
     );
   };
 
+  const ViewerCard = ({item}) => {
+    return (
+      <TouchableOpacity
+      activeOpacity={1}
+        style={[styles.viewerCard, styles.row]}
+        // onPress={_ => navigation.navigate(routes.FRIEND_PROFILE, {user: item})}
+        >
+        <UserProfilePicture profilePicture={item.profilePicture} size={45} />
+        <Text style={styles.viewerCardText}>
+          {`${item.firstName} ${item.lastName}`}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+
   const StoriesViewers = () => {
     return (
-      <View style={styles.menuContainer}>
+      <View style={[styles.menuContainer, {marginBottom: 10}]}>
         <View style={{alignItems: 'center'}}>
           <View
             style={{
@@ -213,10 +246,15 @@ const StoryViewScreen = ({navigation, route}) => {
         </View>
 
         <View style={styles.menu}>
-          <View>
-            <Text style={styles.menuText}>Viewed by</Text>
-            <Text>10 Views</Text>
-          </View>
+          <Text style={styles.menuText}>Viewed by</Text>
+          <Text>{data[activeIndex].views} Views</Text>
+        </View>
+        <View>
+          <FlatList
+            data={viewers.state}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={ViewerCard}
+          />
         </View>
       </View>
     );
@@ -367,7 +405,7 @@ const StoryViewScreen = ({navigation, route}) => {
         style={{
           zIndex: 100,
           position: 'absolute',
-          bottom: 50,
+          bottom: 30,
           width: '100%',
           paddingHorizontal: 20,
         }}>
@@ -412,7 +450,7 @@ const StoryViewScreen = ({navigation, route}) => {
                   style={[
                     {color: '#fff'},
                     styles.textShadow,
-                  ]}>{`${10} Views`}</Text>
+                  ]}>{`${data[activeIndex].views} Views`}</Text>
               </>
             </TouchableOpacity>
           )}
@@ -425,8 +463,19 @@ const StoryViewScreen = ({navigation, route}) => {
 export default StoryViewScreen;
 
 const styles = StyleSheet.create({
+  viewerCardText: {
+    fontSize: 15,
+    color: '#333',
+    fontWeight: '600',
+    marginHorizontal: 5,
+  },
+  viewerCard: {
+    marginHorizontal: 15,
+    marginVertical: 2,
+  },
   row: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   menuContainer: {},
   menu: {

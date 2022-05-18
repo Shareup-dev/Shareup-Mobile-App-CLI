@@ -5,7 +5,6 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  Button,
 } from 'react-native';
 import moment from 'moment';
 import colors from '../config/colors';
@@ -13,9 +12,6 @@ import Text from '../components/Text';
 import Tab from '../components/buttons/Tab';
 import Icon from '../components/Icon';
 import routes from '../navigation/routes';
-import fileStorage from '../config/fileStorage';
-import AppButton from '../components/buttons/Tab';
-import {BaseButton, RawButton} from 'react-native-gesture-handler';
 import constants from '../config/constants';
 import AuthContext from '../authContext';
 

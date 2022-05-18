@@ -1,6 +1,6 @@
 import axios from 'axios';
-import settings from '../config/settings';
-import AuthService from './old/auth.services';
+import settings from '../../config/settings';
+import AuthService from './auth.services';
 
 const baseURL = `${settings.apiUrl}`;
 let authAxios = null;
@@ -11,7 +11,7 @@ const authenticate = async () => {
       authAxios = axios.create({
         baseURL: `${baseURL}/api/v1/`,
         headers: {
-          Authorization: `Bearer ${res.userToken}`,
+          Authorization: `Bearer ${res.jwt}`,
           'Access-Control-Allow-Origin': '*',
         },
       });
@@ -22,25 +22,25 @@ const authenticate = async () => {
   );
 };
 authenticate();
-class ReelService {
-  addReel = async (userId, reelData) => {
+class StoryService {
+  addStory = async (userId, storyData) => {
     try {
-      const result = await authAxios.post(`/reelslocal/${userId}`, reelData);
+      const result = await authAxios.post(`/Stories/${userId}`, storyData);
       return result;
     } catch (error) {
-      console.error('An error occurred while posting reel: ', error);
+      console.error('An error occurred while posting stories: ', error);
       return error;
     }
   };
-  getReels = async () => {
+  getStories = async () => {
     try {
-      const result = await authAxios.get(`/reels`);
+      const result = await authAxios.get(`/stories`);
       return result;
     } catch (error) {
-      console.error('An error occurred while getting reel: ', error);
+      console.error('An error occurred while getting stories: ', error);
       return error;
     }
   };
 }
 
-export default new ReelService();
+export default new StoryService();
