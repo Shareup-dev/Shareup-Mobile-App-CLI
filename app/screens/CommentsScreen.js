@@ -162,7 +162,9 @@ export default function CommentsScreen({ navigation, route }) {
 
   const refreshComments = async () => {
     setRefreshing(true);
+    
     loadComments();
+    
     setRefreshing(false);
   };
 
@@ -213,10 +215,11 @@ export default function CommentsScreen({ navigation, route }) {
             //handleDelete={handleDeleteComment}
             onReply={handleReplyComment}
             handleEdit={handleEditComment}
-            isReply={isReply}
+            isReply={false}
             reply={replyList}
             postType={postType}
             isEdit={isEdit}
+            refresh={refreshing}
           />
         )}
       />

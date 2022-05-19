@@ -28,8 +28,6 @@ class PostService {
     AuthAxios.post(`comment/${userid}/${postid}`,comment)
   deleteComment = commentid => 
     AuthAxios.delete(`comment/delete/${commentid}`)
-  replay = (uid,commentId,data) =>
-    AuthAxios.post(`comment/reply/${uid}/${commentId}`,data)
   likeUnlikeComment = (uid,cid,params) =>
     AuthAxios.put(`comment/${uid}/like-unlike/${cid}`,params)
   editComment = (cid,comment) => 
@@ -40,12 +38,28 @@ class PostService {
         content:comment
       }
     })
-  
-
-  getAllComments = (uid,pid) =>
+    getAllComments = (uid,pid) =>
     AuthAxios.get(`comment/${uid}/get_comments/${pid}`)
-  getAllReply = (cid) => 
-    AuthAxios.get(`comment/get_replies/${cid}`)
+   
+
+/******************** REPLY *******************/
+ 
+deleteReply = rid => 
+  AuthAxios.delete(`reply/delete/${rid}`)
+replay = (uid,commentId,data) =>
+  AuthAxios.post(`comment/reply/${uid}/${commentId}`,data)
+likeUnlikeReply = (uid,rid,params) =>
+  AuthAxios.put(`reply/${uid}/like-unlike/${rid}`,params)
+editReply = (rid,reply) => 
+  AuthAxios({
+    method:'PUT',
+    url:`reply/edit/${rid}`,
+    params:{
+      content:reply
+    }
+  })
+  getAllReply = (uid,cid) => 
+    AuthAxios.get(`comment/${uid}/get_replies/${cid}`)
 }
 const config = {
   onUploadProgress: progressEvent => {

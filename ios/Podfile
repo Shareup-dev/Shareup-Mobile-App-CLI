@@ -17,7 +17,7 @@ target 'shareup' do
     pod 'react-native-camera', path: '../node_modules/react-native-camera'
 
     pod 'react-native-maps', :path => '../node_modules/react-native-maps'
-    pod 'GoogleMaps'
+   # pod 'GoogleMaps'
 
     target 'shareupTests' do
       inherit! :complete

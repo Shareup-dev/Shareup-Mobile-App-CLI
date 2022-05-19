@@ -24,6 +24,8 @@ import PostOptionDrawer from "../drawers/PostOptionsDrawer";
 import postService from "../../services/post.service";
 import { useFocusEffect } from "@react-navigation/native";
 import OptionsDrawer from "../drawers/OptionsDrawer";
+import ReplyList from "../lists/ReplyList";
+
 export default function CommentItem({
   fromReply,
   comment,
@@ -41,13 +43,13 @@ export default function CommentItem({
   //setIsOptionsVisible,
   //isOptionsVisible,
   setNumberOfComments,
-  refreshreply,
+  refresh,
   
 }) {
   //const isReply = false
   //const [shoereply]
   const [isOptionsVisible,setIsOptionsVisible] = useState(false);
-  //const [isUserLiked, setIsUserLiked] = useState(false);
+  const [refreshing, setRefreshing] = useState(refresh);
   const [replyList,setReplyList] = useState([]);
   const [showReply,setshowReply] = useState(false)
   const { userState } = useContext(authContext);
@@ -56,12 +58,12 @@ export default function CommentItem({
     moment(comment.published, "DD MMMM YYYY hh:mm:ss").fromNow()
   );
   useEffect(() => {
-   
-    //loadReply();
+   console.log("itsme");
+   // loadReply();
     // loadStories();
     // return setActivityIndicator(false);
     return;
-  },[refreshreply])
+  },[])
 
   
   const options = [ {
@@ -91,14 +93,25 @@ export default function CommentItem({
     ])
   },
 ];
+const refreshComments = async () => {
+  setRefreshing(true)
+};
 const handleDeleteComment = () => {
+  if (isReply){
+    postService.deleteReply(comment.id)
+    .then(res => {
+      refreshComments();
+      //Keyboard.dismiss();
+    })
+    .catch(e => console.error(e))
+  }else{
   postService.deleteComment(comment.id)
     .then(res => {
       refreshComments();
       Keyboard.dismiss();
     })
     .catch(e => console.error(e))
-
+  }
   // scrollToListBottom();
 
 };
@@ -107,9 +120,10 @@ const handleDeleteComment = () => {
     setIsOptionsVisible(true)
   }
 
-  const loadReply = (commentId) =>{
-    postService.getAllReply(commentId)
+  const loadReply = () =>{
+    postService.getAllReply(userState.userData.id,comment.id)
     .then(res => {
+      console.log("allReply",res.data);
       const replyArray = res.data//.reverse();
       setReplyList(replyArray)})
     .catch(e => console.error(e))
@@ -118,7 +132,7 @@ const handleDeleteComment = () => {
   const handleReply = (commentId) =>{
     onReply(commentId,true);
     setshowReply(true);
-    loadReply(commentId);
+    //loadReply();
   }
   const hideReply = () =>{
     setshowReply(false)
@@ -127,15 +141,16 @@ const handleDeleteComment = () => {
   const handleEditComment = (status) => {
     setIsEdit(status)
   }
+  
   const handleReactions = async (cid) => {
 
     const params = ({ reaction: "null" })
-    // postService.likeUnlikeComment(userState?.userData?.id, cid, params)
-    //   .then(res => {
-    //     refreshComments();
-    //     //setIsUserLiked(!isUserLiked)
-    //   })//need to get likePostIds 
-    //   .catch(e => console.error(e))
+    postService.likeUnlikeReply(userState?.userData?.id, cid, params)
+      .then(res => {
+        loadReply();
+        //setIsUserLiked(!isUserLiked)
+      })//need to get likePostIds 
+      .catch(e => console.error(e))
 
     //refreshComments();
   };
@@ -160,6 +175,7 @@ const handleDeleteComment = () => {
                 textStyle={styles.comment}
                 readMoreStyle={styles.readMore}
                 isEdit={isEdit}
+                isReply={isReply}
                 setIsEdit={setIsEdit}
               />
             </View>
@@ -208,37 +224,14 @@ const handleDeleteComment = () => {
           </View>
           </View>
           </TouchableWithoutFeedback>
-          {showReply && (  
-          <View style={styles.replayContainer}>
-          <Text style={{color:colors.iondigoDye,fontSize:12}} onPress={hideReply}>-- Hide replies</Text>
-           <FlatList 
-           data={replyList}
-           keyExtractor={comment => comment.id.toString()}
-           //ref={commentsListRef}
-           //onContentSizeChange={scrollToListBottom}
-           //refreshing={refreshing}
-           //onRefresh={refreshComments}
-           renderItem={({item}) => (
-             <CommentItem
-               comment={item}
-               reactionsLength={
-                 item?.reactions?.length ? item?.reactions?.length : 0
-               }
-              // isUserLiked ={isUserLiked}
-               onInteraction={handleReactions}
-               //handleDelete={handleDeleteComment}
-               //onReply={handleReplyComment}
-               handleEdit={handleEditComment}
-               isEdit={isEdit}
-               //isReply={isReply}
-               //reply = {replyList}
-               postType={postType}
-               //fromReply={fromReply}
-               //isOptionVisible = {isOptionsVisible}
-              // setIsOptionVisible = {setIsOptionsVisible}
-             />
-           )}
-         />
+          {showReply && ( 
+          <View style={styles.replayContainer}> 
+          <Text style={{color:colors.iondigoDye,fontSize:12}} onPress={hideReply}>-- Hide replies</Text> 
+          <ReplyList 
+          comment={comment}
+          postType={postType}
+          refresh={refreshing}
+          />
           </View>
           )}
         <Separator style={styles.separator} />

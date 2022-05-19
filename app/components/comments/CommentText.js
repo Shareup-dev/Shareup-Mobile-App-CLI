@@ -5,7 +5,7 @@ import colors from "../../config/colors";
 import {useDispatch, useSelector} from 'react-redux';
 
 const {width, height} = Dimensions.get('window');
-export default function CommentText({ readMoreStyle, comment, textStyle, style, isEdit,setIsEdit }) {
+export default function CommentText({ readMoreStyle, comment, textStyle, style, isEdit,setIsEdit,isReply }) {
   const [showMoreButton, setShowMoreButton] = useState(false);
   const [textShown, setTextShown] = useState(false);
   const [numLines, setNumLines] = useState(undefined);
@@ -23,6 +23,18 @@ export default function CommentText({ readMoreStyle, comment, textStyle, style, 
 
 
   const editCommentHandler = cid => {
+    if(isReply){
+      postService
+      .editReply(cid, newComment)
+      .then(res => {
+        if (res.status === 200) {
+        }
+        // const cmnt = {id:cid,comment:newComment}
+        // dispatch(commentsActions.setComment(cmnt)),
+        setIsEdit(false)
+      })
+      .catch(e => console.error(e.message));
+    }else{
     postService
       .editComment(cid, newComment)
       .then(res => {
@@ -33,6 +45,7 @@ export default function CommentText({ readMoreStyle, comment, textStyle, style, 
         setIsEdit(false)
       })
       .catch(e => console.error(e.message));
+    }
   };
   const onTextLayout = useCallback(
     (e) => {
