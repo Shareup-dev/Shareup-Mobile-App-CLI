@@ -185,7 +185,7 @@ const handleDeleteComment = () => {
               <Text style={styles.stars}>
                 {reactionsLength} {reactionsLength < 2 ? "Star" : "Stars"}
               </Text>
-              <LinkButton title="Reply" style={styles.reply} onPress={() => !comment.comment ?  handleReply(comment.id):{}} />
+              <LinkButton title="Reply" style={styles.reply} onPress={() =>  handleReply(comment)} />
             </View>
           </View>
 

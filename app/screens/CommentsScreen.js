@@ -31,7 +31,7 @@ export default function CommentsScreen({ navigation, route }) {
   const [replyList, setReplyList] = useState([]);
   const [isEdit,setIsEdit] = useState(false)
   const [commentContent, setCommentContent] = useState('');
-  const [commentId, setCommentId] = useState('')
+  const [comment, setComment] = useState('')
   const [isReply, setIsReply] = useState(false)
   // needed to setup list refreshing
   const [refreshing, setRefreshing] = useState(false);
@@ -143,15 +143,16 @@ export default function CommentsScreen({ navigation, route }) {
   const handleEditComment = (status) => {
     setIsEdit(status)
   }
-  const handleReplyComment = (commentId, showReply) => {
+  const handleReplyComment = (comment, showReply) => {
     if (showReply) {
-      setCommentId(commentId)
+      setComment(comment)
       //  postService.getAllReply(commentId)
       //   .then(res => {
       //     const replyArray = res.data//.reverse();
       //     setReplyList(replyArray)})
       //   .catch(e => console.error(e))
       commentTextFieldRef.current.focus();
+     
       setIsReply(true)
     } else {
       commentTextFieldRef.current.blur();
@@ -169,6 +170,7 @@ export default function CommentsScreen({ navigation, route }) {
   };
 
   const handleOnChangeText = text => {
+    // setComment(...text )
     setCommentContent(text);
   };
 
@@ -228,6 +230,7 @@ export default function CommentsScreen({ navigation, route }) {
         {/* <EmojiesBar addEmoji={addEmoji}/>  */}
         <View style={styles.textFieldContainer}>
          <CommentTextField
+          comment={comment}
            onForwardPress={handleAddComment}
            onChangeText={handleOnChangeText}
            ref={commentTextFieldRef}
