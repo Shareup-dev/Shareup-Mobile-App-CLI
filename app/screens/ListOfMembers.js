@@ -11,7 +11,6 @@ import DownModal from '../components/drawers/DownModal';
 import AuthContext from '../authContext';
 import {HeaderWithBackArrow} from '../components/headers';
 import Icon from '../components/Icon';
-import fileStorage from '../config/fileStorage';
 import groupService from '../services/group.service';
 import AppTextField from '../components/TextField';
 

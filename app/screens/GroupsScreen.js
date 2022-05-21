@@ -6,7 +6,6 @@ import {
   Image,
   FlatList,
   ScrollView,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 
@@ -17,7 +16,6 @@ import Text from '../components/Text';
 import colors from '../config/colors';
 import {HeaderWithBackArrow} from '../components/headers';
 import routes from '../navigation/routes';
-import fileStorage from '../config/fileStorage';
 import authContext from '../authContext';
 import groupService from '../services/group.service';
 import {useFocusEffect} from '@react-navigation/native';

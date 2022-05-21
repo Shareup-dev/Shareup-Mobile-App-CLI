@@ -9,9 +9,7 @@ import {
 } from 'react-native'
 import {useSelector} from 'react-redux'
 import ImageView from 'react-native-image-viewing';
-import {SliderBox} from 'react-native-image-slider-box';
 import colors from '../../config/colors';
-import fileStorage from '../../config/fileStorage';
 import PostOptionDrawer from '../drawers/PostOptionsDrawer';
 import PostActions from '../PostActions';
 import defaultStyles from '../../config/styles';
@@ -19,7 +17,6 @@ import SwapActionContainer from '../posts/SwapActionContainer';
 import AuthContext from '../../authContext';
 import swapService from '../../services/swap.service';
 
-import Share from 'react-native-share';
 import CustomImageSlider from '../ImageSlider/CustomImageSlider';
 import constants from '../../config/constants';
 import routes from '../../navigation/routes';

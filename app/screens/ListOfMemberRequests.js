@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,10 +7,8 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import {array} from 'yup';
 import {HeaderWithBackArrow} from '../components/headers';
 import colors from '../config/colors';
-import fileStorage from '../config/fileStorage';
 // import routes from '../navigation/routes';
 import groupService from '../services/group.service';
 

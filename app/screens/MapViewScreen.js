@@ -13,7 +13,6 @@ export default function MapViewScreen ({navigation,location}) {
     useEffect(() => {
         Geolocation.getCurrentPosition((pos) => {
           const crd = pos.coords;
-          console.log(crd);
           setRegion({
             latitude: crd.latitude,
             longitude: crd.longitude,
@@ -21,7 +20,7 @@ export default function MapViewScreen ({navigation,location}) {
             longitudeDelta: 0.0421,
           });
         }).catch((err) => {
-          console.log(err);
+          console.error(err);
         });
       }, []);
     

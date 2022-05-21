@@ -11,7 +11,6 @@ import {
 import AuthContext from '../authContext';
 import {HeaderWithBackArrow} from '../components/headers';
 import Icon from '../components/Icon';
-import fileStorage from '../config/fileStorage';
 import routes from '../navigation/routes';
 import groupService from '../services/group.service';
 

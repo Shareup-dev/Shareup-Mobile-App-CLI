@@ -1,23 +1,14 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {View, StyleSheet,} from 'react-native';
+import React from 'react';
+import { StyleSheet} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import colors from '../../config/colors';
 
 export default function BetterImage({style, ...props}) {
-  // const [isLoaded, setIsLoaded] = useState(false);
-
-  return (
-    <View style={styles.container}>
-      <FastImage
-        style={[styles.imgCard, style]}        
-        {...props} />
-    </View>
-  );
+  return <FastImage style={[styles.imgCard, style]} {...props} />;
 }
 
 const styles = StyleSheet.create({
-  container: { },
-  imgCard: { 
+  imgCard: {
     backgroundColor: colors.lighterGray,
   },
 });

@@ -14,7 +14,6 @@ import reelScreenDetector from "./reelScreenDetector";
 import groupScreenDetector from "./groupScreenDetector";
 import feedPostsReducer from "./feedPostsSlice";
 import messagesReducer from "./messagesSlice";
-import ConversationsSlice from "./ConversationsSlice";
 import postFeelings from "./postFeelings";
 import recentSearch from "./recentSearch";
 import postImageReducer from "./postImages";
@@ -39,7 +38,6 @@ export default store = configureStore({
     groupScreenDetector:groupScreenDetector.reducer,
     feedPosts: feedPostsReducer,
     messages: messagesReducer,
-    conversations: ConversationsSlice,
     postFeel: postFeelings,
     recentSearch:recentSearch,
     

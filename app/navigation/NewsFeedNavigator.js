@@ -17,18 +17,17 @@ import SwapDisplay from '../screens/SwapDisplay';
 import ShippingAddress from '../screens/ShippingAddress';
 import Checkout from '../screens/Checkout';
 import CheckoutComplete from '../screens/CheckoutComplete';
-// import AddCommentsOnReels from '../screens/addCommentsOnReels';
+
 import SearchScreen from '../screens/SearchScreen';
 import PersonalInfoSettings from '../screens/PersonalInfoSettings';
-import UpdateName from '../screens/PERSONAL_INFO/UpdateName';
-import UpdateGender from '../screens/PERSONAL_INFO/updateGender';
-import UpdateDOB from '../screens/PERSONAL_INFO/updateDOB';
-import UpdateEmail from '../screens/PERSONAL_INFO/updateEmail';
-import ManageEmail from '../screens/PERSONAL_INFO/manageEmail';
-import UpdatePassword from '../screens/PERSONAL_INFO/updatePassword';
+import UpdateName from '../components/PersonalInformation/UpdateName';
+import UpdateGender from '../components/PersonalInformation/updateGender';
+import UpdateDOB from '../components/PersonalInformation/updateDOB';
+import UpdateEmail from '../components/PersonalInformation/updateEmail';
+import ManageEmail from '../components/PersonalInformation/manageEmail';
+import UpdatePassword from '../components/PersonalInformation/updatePassword';
 import FriendsProfileScreen from '../screens/FriendsProfileScreen';
 import ShareupCameraScreen from '../screens/ShareupCameraScreen';
-import PostById from '../screens/PostById';
 
 export default function NewsFeedNavigator() {
   const Stack = createNativeStackNavigator();

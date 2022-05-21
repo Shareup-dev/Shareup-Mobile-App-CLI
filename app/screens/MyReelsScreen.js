@@ -13,16 +13,12 @@ import {
 import Screen from '../components/Screen';
 import HeaderWithBackArrow from '../components/headers/HeaderWithBackArrow';
 import TabBar from '../components/tab-bar/Bar';
-import LongCard from '../components/lists/LongCard';
 
 import colors from '../config/colors';
 import defaultStyle from '../config/styles';
-import fileStorage from '../config/fileStorage';
 import store from '../redux/store';
 import reelScreenDetector from '../redux/reelScreenDetector';
 import routes from '../navigation/routes';
-import authContext from '../authContext';
-import axios from 'axios';
 import ReelsService from '../services/Reels.service';
 import AuthContext from '../authContext';
 import BetterImage from '../components/betterImage/BetterImage';

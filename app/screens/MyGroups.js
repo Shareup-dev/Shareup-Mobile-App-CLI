@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import AuthContext from '../authContext';
 import {HeaderWithBackArrow} from '../components/headers';
-import fileStorage from '../config/fileStorage';
 import routes from '../navigation/routes';
 import groupService from '../services/group.service';
 

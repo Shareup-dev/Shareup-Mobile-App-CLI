@@ -20,19 +20,6 @@ export default function ChatsList({
     setRefreshing(false);
   };
 
-  // const chats = [
-  //   {
-  //     id: 1,
-  //     title: "Chat Title",
-  //     profilePicture: user.profilePicturePath,
-  //     lastMessage: "this is the last message",
-  //     lastMessageTime: "1:00 AM",
-  //     numberOfUnreadMessages: "",
-  //     lastMessageStatus: "",
-  //     isActive: "",
-  //   },
-  // ];
-
   return (
     <ListWrapper loading={loading}>
       <FlatList
@@ -51,7 +38,6 @@ export default function ChatsList({
             onPress={() => {
               navigation.navigate(routes.CHAT_ROOM, {
                 contact: item.contact,
-                conversationId: item.id,
               });
             }}
           />

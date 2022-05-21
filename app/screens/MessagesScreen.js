@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {useSelector} from 'react-redux';
 
 import Screen from '../components/Screen';
 import {HeaderWithBackArrow} from '../components/headers';
@@ -8,13 +7,10 @@ import UserProfilePicture from '../components/UserProfilePicture';
 import authContext from '../authContext';
 import TextField from '../components/TextField';
 import Bar from '../components/tab-bar/Bar';
-import FancyAddButton from '../components/buttons/FancyAddButton';
 import colors from '../config/colors';
 import UserService from '../services/user.service';
 import ChatsList from '../components/messages/ChatsList';
-import conversation from '../backendless/conversation';
 import FriendsList from '../components/messages/FriendsList';
-import useConversationListener from '../backendless/useConversationListener';
 
 const CHATS = 'Chats';
 const FRIENDS = 'Friends';
@@ -31,29 +27,19 @@ const tabes = [
 export default function MessagesScreen({navigation}) {
   const {userData: user} = useContext(authContext).userState;
 
-  const {addConversationListener, removeConversationListener} =
-    useConversationListener();
-
   const [friends, setFriends] = useState([]);
 
   const [loading, setLoading] = useState(false);
   const [currentTab, setCurrentTab] = useState(CHATS);
 
-  const chats = useSelector(state => state.conversations.list);
 
   useEffect(() => {
     loadData();
-    addConversationListener(user.id);
-
-    return () => {
-      // removeConversationListener();
-    };
   }, []);
 
   const loadData = async () => {
     setLoading(true);
     await getFriends();
-    await getChats();
     setLoading(false);
   };
 
@@ -63,9 +49,6 @@ export default function MessagesScreen({navigation}) {
     });
   };
 
-  const getChats = async () => {
-    const result = await conversation.getConversations(user.id);
-  };
 
   const handleTabbed = name => {
     setCurrentTab(name);
@@ -105,7 +88,6 @@ export default function MessagesScreen({navigation}) {
           navigation={navigation}
           chats={chats}
           loading={loading}
-          refreshChats={getChats}
         />
       )}
       {currentTab == FRIENDS && (

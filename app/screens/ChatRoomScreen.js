@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import {useSelector} from 'react-redux';
 
-import {useMessages} from '../backendless';
 import Screen from '../components/Screen';
 import {ChatRoomHeader} from '../components/headers';
 import MessageTextField from '../components/messages/MessageTextField';
@@ -24,31 +23,14 @@ import authContext from '../authContext';
 export default function ChatRoomScreen({navigation, route}) {
   const {user} = useContext(authContext);
 
-  const {contact, conversationId} = route.params;
+  const {contact, } = route.params;
 
   const messages = useSelector(state => state.messages);
 
   const messagesListRef = useRef();
 
-  const {
-    subscribeToChannel,
-    loadConversationMessages,
-    updateStoredMessages,
-    unsubscribeToChannel,
-    sendMessage,
-    loading,
-  } = useMessages(conversationId);
 
-  useEffect(() => {
-    loadConversationMessages(user.id, contact.id);
 
-    subscribeToChannel();
-
-    return () => {
-      unsubscribeToChannel();
-      store.dispatch(messagesAction.setMessages([]));
-    };
-  }, [conversationId]);
 
   const renderListEmpty = () => (
     <View style={styles.emptyMessagesContainer}>
@@ -72,13 +54,7 @@ export default function ChatRoomScreen({navigation, route}) {
       />
       <View style={styles.separator} />
 
-      {loading && messages.length == 0 && (
-        <ActivityIndicator
-          size="large"
-          color={colors.iondigoDye}
-          style={styles.activityIndicator}
-        />
-      )}
+
 
       <FlatList
         data={messages}
@@ -89,27 +65,17 @@ export default function ChatRoomScreen({navigation, route}) {
           />
         )}
         keyExtractor={message => message.objectId}
-        onEndReached={() => updateStoredMessages(conversationId)}
         onEndReachedThreshold={0.5}
         inverted={true}
         ref={messagesListRef}
         extraData={messages}
-        ListFooterComponent={() =>
-          loading && messages.length > 10 ? (
-            <ActivityIndicator
-              size="large"
-              color={colors.iondigoDye}
-              style={styles.activityIndicator}
-            />
-          ) : null
-        }
+     
       />
 
       <MessageTextField
         style={styles.messageTextFieldContainer}
         forwardRef={messagesListRef}
         contactId={contact.id}
-        onSend={sendMessage}
       />
     </Screen>
   );

@@ -11,7 +11,6 @@ import Tab from '../buttons/Tab';
 import colors from '../../config/colors';
 import defaultStyle from '../../config/styles';
 import routes from '../../navigation/routes';
-import fileStorage from '../../config/fileStorage';
 import GroupService from '../../services/group.service';
 import AuthContext from '../../authContext';
 

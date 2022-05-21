@@ -18,12 +18,7 @@ import colors from '../config/colors';
 import {HeaderWithBackArrow} from '../components/headers';
 import UserProfilePicture from '../components/UserProfilePicture';
 import routes from '../navigation/routes';
-import authContext from '../authContext';
 import UserService from '../services/user.service';
-import FriendService from '../services/FriendService';
-import store from '../redux/store';
-import userService from '../services/user.service';
-import {useFocusEffect} from '@react-navigation/native';
 //import { recentSearchActions } from '../redux/recentSearch';
 
 

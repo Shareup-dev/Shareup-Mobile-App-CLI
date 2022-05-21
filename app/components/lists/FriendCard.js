@@ -2,8 +2,6 @@ import React from 'react';
 import {
   StyleSheet,
   View,
-  Image,
-  TouchableWithoutFeedback,
   Text,
   TouchableOpacity,
   Dimensions,
@@ -13,7 +11,6 @@ import colors from '../../config/colors';
 import Tab from '../buttons/Tab';
 import Icon from '../Icon';
 import defaultStyles from '../../config/styles';
-import fileStorage from '../../config/fileStorage';
 import BetterImage from '../betterImage/BetterImage';
 
 export default function FriendCard({
