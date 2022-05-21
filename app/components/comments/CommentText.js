@@ -74,6 +74,19 @@ export default function CommentText({ readMoreStyle, comment, textStyle, style, 
               }}
       >
       </TextInput>
+      <View style={{flexDirection:"row",alignSelf:"flex-end",paddingHorizontal:10}}><TouchableOpacity
+          onPress={_ => setIsEdit(false)}
+          style={{
+            backgroundColor: colors.iondigoDye,
+            alignSelf: "auto",
+            paddingVertical: 8,
+            paddingHorizontal: 15,
+            borderRadius: 5,
+            marginVertical: 5,
+            marginHorizontal:5
+          }}>
+          <Text style={{ color: '#fff', fontWeight: '600' }}>Cancel</Text>
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={_ => editCommentHandler(comment.id)}
           style={{
@@ -85,7 +98,7 @@ export default function CommentText({ readMoreStyle, comment, textStyle, style, 
             marginVertical: 5,
           }}>
           <Text style={{ color: '#fff', fontWeight: '600' }}>Update</Text>
-        </TouchableOpacity></View>) 
+        </TouchableOpacity></View></View>) 
         : <Text
           onTextLayout={onTextLayout}
           numberOfLines={numLines}

@@ -205,7 +205,7 @@ const handleDeleteComment = () => {
                 <Icon
                   name="star"
                   type="AntDesign"
-                  size={isReply?20:15}
+                  size={15}
                   color={colors.iondigoDye}
                   backgroundSizeRatio={1}
                 />
@@ -215,7 +215,7 @@ const handleDeleteComment = () => {
                 <Icon
                   name="staro"
                   type="AntDesign"
-                  size={isReply?20:15}
+                  size={15}
                   color={colors.iondigoDye}
                   backgroundSizeRatio={1}
                 />

@@ -19,7 +19,7 @@ import postFeelings from "./postFeelings";
 import recentSearch from "./recentSearch";
 import postImageReducer from "./postImages";
 import reelActiveIndexReducer from "./ReelActiveIndex";
-import replayList from "./replyList";
+
 
 export default store = configureStore({
   reducer: {
@@ -42,6 +42,6 @@ export default store = configureStore({
     conversations: ConversationsSlice,
     postFeel: postFeelings,
     recentSearch:recentSearch,
-    replayList:replayList.reducer
+    
   },
 });

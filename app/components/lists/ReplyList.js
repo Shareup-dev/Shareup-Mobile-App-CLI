@@ -25,8 +25,7 @@ import postService from "../../services/post.service";
 // import { useFocusEffect } from "@react-navigation/native";
 // import OptionsDrawer from "../drawers/OptionsDrawer";
 import CommentItem from "../comments/CommentItem";
-import { replayListAction } from "../../redux/replyList";
-import { useSelector,useDispatch } from "react-redux";
+
 export default function ReplyList({
   // fromReply,
   comment,
@@ -51,10 +50,9 @@ export default function ReplyList({
   //const [shoereply]
   // const [isOptionsVisible,setIsOptionsVisible] = useState(false);
   //const [isUserLiked, setIsUserLiked] = useState(false);
-  //const [replyList,setReplyList] = useState([]);
+  const [replyList,setReplyList] = useState([]);
   // const [showReply,setshowReply] = useState(false)
-  const dispatch = useDispatch();
-  const replyList = useSelector(state => state.replyList);
+  
   const { userState } = useContext(authContext);
   const [isEdit,setIsEdit] = useState(false)
   const [time, setTime] = useState(
@@ -115,10 +113,11 @@ const handleDeleteComment = () => {
     postService.getAllReply(userState.userData.id,comment.id)
     .then(res => {
       const replyArray = res.data//.reverse();
-      dispatch(replayListAction.setState(res.data))
-      //setReplyList(replyArray)
+      console.log(replyArray);
+      setReplyList(replyArray)
     })
     .catch(e => console.error(e))
+    console.log("from state",replyList);
   }
 
   const handleReply = (commentId) =>{
