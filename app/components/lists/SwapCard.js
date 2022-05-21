@@ -23,6 +23,7 @@ import Share from 'react-native-share';
 import CustomImageSlider from '../ImageSlider/CustomImageSlider';
 import constants from '../../config/constants';
 import routes from '../../navigation/routes';
+import onShareHandler from '../Share';
 
 const imageSize = 160;
 const SwapCard = React.memo(
@@ -64,17 +65,7 @@ const SwapCard = React.memo(
       }
     };
 
-    const onShareHandler = async () => {
-      Share.open({
-        message: item?.content,
-        title: 'Sharing Post',
-        url: `https://shareup.qa/post/${item.id}`,
-      })
-        .then(res => res)
-        .catch(err => {
-          err && console.error(err);
-        });
-    };
+   
 
     const options = [
       {
@@ -113,7 +104,7 @@ const SwapCard = React.memo(
           image: require('../../assets/post-options-icons/share-friends-icon.png'),
         },
         onPress: () => {
-          onShareHandler();
+          onShareHandler(item);
         },
       },
       // {

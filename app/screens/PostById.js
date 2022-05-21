@@ -8,7 +8,9 @@ import SwapCard from '../components/lists/SwapCard';
 import Loading from '../components/Loading';
 import constants from '../config/constants';
 import routes from '../navigation/routes';
+import hangShareService from '../services/hangShare.service';
 import postService from '../services/post.service';
+import swapService from '../services/swap.service';
 
 export default function PostById({navigation, route}) {
   const {params} = route;
@@ -17,15 +19,33 @@ export default function PostById({navigation, route}) {
     loading: false,
   });
 
+  
+
+  const postTypeService = () => {
+    switch (params.postType) {
+      case 'swap':
+        return swapService.getSwapById(params.id);
+      case 'share':
+        return postService.getSharedPostById(params.id);
+      case 'hangShare':
+        return hangShareService.getHangShareByID(params.id);
+      default:
+        return postService.getPostByPostId(params.id);
+    }
+  };
+
   useFocusEffect(
     useCallback(() => {
       const fetchPost = () => {
         if (params?.id) {
           setPost(prev => ({...prev, loading: true}));
-          postService
-            .getPostByPostId(params.id)
+
+          postTypeService()
             .then(({data}) => setPost(prev => ({...prev, state: data})))
-            .catch(e => console.error(e.message))
+            .catch(e => {
+              console.error(e.message);
+              setPost(prev => ({...prev, state: null}));
+            })
             .finally(_ => setPost(prev => ({...prev, loading: false})));
         }
       };
@@ -61,7 +81,6 @@ export default function PostById({navigation, route}) {
               user={item.userdata}
               postData={item}
               navigation={navigation}
-              reloadPosts={loadNews}
               postType={item.allPostsType}
             />
           );
@@ -88,7 +107,7 @@ export default function PostById({navigation, route}) {
             <View
               style={{
                 alignItems: 'center',
-                marginVertical:25
+                marginVertical: 25,
               }}>
               <Text>Post not found</Text>
             </View>

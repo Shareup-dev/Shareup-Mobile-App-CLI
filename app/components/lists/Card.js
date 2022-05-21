@@ -19,8 +19,8 @@ import ImageView from 'react-native-image-viewing';
 import PostActions from '../PostActions';
 import routes from '../../navigation/routes';
 import constants from '../../config/constants';
-import Share from 'react-native-share';
 import CustomImageSlider from '../ImageSlider/CustomImageSlider';
+import onShareHandler from '../Share';
 export default function Card({
   user,
   postData,
@@ -50,17 +50,6 @@ export default function Card({
   const [sliderWidth, setSliderWidth] = useState();
 
 
-  const onShareHandler = async () => {
-    Share.open({
-      message: postData?.content,
-      title: 'Sharing Post',
-      url: `https://shareup.qa/post/${postData.id}`,
-    })
-      .then(res => res)
-      .catch(err => {
-        err && console.error(err);
-      });
-  };
 
   const options = [
     {
@@ -111,7 +100,7 @@ export default function Card({
         image: require('../../assets/icons/share-point-icon.png'),
       },
       onPress: () => {
-        onShareHandler();
+        onShareHandler(postData);
       },
     },
     {
@@ -267,7 +256,6 @@ export default function Card({
         )} */}
 
         {/** Post Image */}
-     
 
         {images?.length !== 0 && (
           <CustomImageSlider

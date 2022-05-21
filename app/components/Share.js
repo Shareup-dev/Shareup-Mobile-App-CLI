@@ -1,24 +1,15 @@
-import React from 'react';
-import { Share, View, Button } from 'react-native';
+import  Share  from "react-native-share";
 
-    const onShare = async () => {
-        try {
-          const result = await Share.share({
-            message:
-              'Shareup| share working!',
-          });
-          if (result.action === Share.sharedAction) {
-            if (result.activityType) {
-              // shared with activity type of result.activityType
-            } else {
-              // shared
-            }
-          } else if (result.action === Share.dismissedAction) {
-            // dismissed
-          }
-        } catch (error) {
-          alert(error.message);
-        }
-      };
+const onShareHandler = (postData) => {
+  Share.open({
+    message: postData?.content,
+    title: 'Sharing Post',
+    url: `https://shareup.qa/post/${postData.id}/${postData.allPostsType}`,
+  })
+    .then(res => res)
+    .catch(err => {
+      err && console.error(err);
+    });
+};
 
-export default onShare;
+export default onShareHandler;
