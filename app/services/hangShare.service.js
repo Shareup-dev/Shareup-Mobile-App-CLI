@@ -16,6 +16,7 @@ class HangShareService {
         AuthAxios.put(`hangshare/${uid}/edit/${hsid}`,data)    
     deleteHang = (uid,hsid) => 
         AuthAxios.delete(`hangshare/${uid}/delete/${hsid}`)
+    getHangShareByID = (id) => AuthAxios.get(`hangshare/${id}`)
                           
 }
 export default new HangShareService();

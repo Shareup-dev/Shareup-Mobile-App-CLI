@@ -16,6 +16,7 @@ import {
   Alert,
   Animated,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 
 import Video from 'react-native-video';
@@ -26,7 +27,6 @@ import storyService from '../services/story.service';
 import AuthContext from '../authContext';
 import UserProfilePicture from '../components/UserProfilePicture';
 import moment from 'moment';
-import routes from '../navigation/routes';
 
 const windowWidth = Dimensions.get('screen').width;
 
@@ -44,6 +44,7 @@ const StoryViewScreen = ({navigation, route}) => {
     loading: false,
     state: [],
     page: 1,
+    refreshing: false,
   });
   const [modelOpen, setModelOpen] = useState(false);
   const [paused, setPaused] = useState(false);
@@ -154,11 +155,37 @@ const StoryViewScreen = ({navigation, route}) => {
     ]);
   };
 
-  const getStoryViewers = () => {
+  const getStoryViewers = (pageno = 1) => {
     if (userData.id === userID) {
       storyService
-        .getStoryViewers(data[activeIndex].id)
-        .then(({data}) => setViewers(prev => ({...prev, state: data})))
+        .getStoryViewers(data[activeIndex].id, pageno)
+        .then(({data}) => {
+          if (Array.isArray(data)) {
+            setViewers(prev => ({...prev, state: data}));
+          }
+        })
+        .catch(e => console.error(e.message));
+    }
+    return;
+  };
+
+  const handleRefresh = () => {
+    getStoryViewers();
+  };
+
+  const handleOnReachTheEnd = () => {
+    if (userData.id === userID) {
+      storyService
+        .getStoryViewers(data[activeIndex].id, viewers.page + 1)
+        .then(({data}) => {
+          if (Array.isArray(data)) {
+            setViewers(prev => ({
+              ...prev,
+              state: [...data, ...prev.state],
+              page: prev.page + 1,
+            }));
+          }
+        })
         .catch(e => console.error(e.message));
     }
     return;
@@ -219,44 +246,15 @@ const StoryViewScreen = ({navigation, route}) => {
   const ViewerCard = ({item}) => {
     return (
       <TouchableOpacity
-      activeOpacity={1}
-        style={[styles.viewerCard, styles.row]}
+        activeOpacity={1}
+        style={[styles.viewerCard, styles.row,]}
         // onPress={_ => navigation.navigate(routes.FRIEND_PROFILE, {user: item})}
-        >
+      >
         <UserProfilePicture profilePicture={item.profilePicture} size={45} />
         <Text style={styles.viewerCardText}>
           {`${item.firstName} ${item.lastName}`}
         </Text>
       </TouchableOpacity>
-    );
-  };
-
-  const StoriesViewers = () => {
-    return (
-      <View style={[styles.menuContainer, {marginBottom: 10}]}>
-        <View style={{alignItems: 'center'}}>
-          <View
-            style={{
-              backgroundColor: '#cacaca',
-              width: 80,
-              height: 6,
-              borderRadius: 6,
-            }}
-          />
-        </View>
-
-        <View style={styles.menu}>
-          <Text style={styles.menuText}>Viewed by</Text>
-          <Text>{data[activeIndex].views} Views</Text>
-        </View>
-        <View>
-          <FlatList
-            data={viewers.state}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={ViewerCard}
-          />
-        </View>
-      </View>
     );
   };
 
@@ -353,9 +351,6 @@ const StoryViewScreen = ({navigation, route}) => {
             <DownModal isVisible={menuOpen} setIsVisible={handleCloseModel}>
               <DropDownMenu />
             </DownModal>
-            <DownModal isVisible={modelOpen} setIsVisible={handleCloseModel}>
-              <StoriesViewers />
-            </DownModal>
           </View>
         </View>
       </View>
@@ -363,106 +358,156 @@ const StoryViewScreen = ({navigation, route}) => {
   }, []);
 
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPressIn={() => {
-        setPaused(true);
-        pauseProgress();
-      }}
-      onPressOut={() => {
-        setPaused(false);
-        startProgress();
-      }}>
-      <StorySlides />
-      {data[activeIndex]?.video ? (
-        <Video
-          ref={ref => (this.player = ref)}
-          paused={paused}
-          onLoad={_ => setLoaded(true)}
-          resizeMode={'cover'}
-          style={{
-            width: '100%',
-            height: '100%',
-            backgroundColor: '#000',
-          }}
-          source={{
-            uri: data[activeIndex].storiesVideoPath,
-          }}
-        />
-      ) : (
-        <Image
-          style={{
-            width: '100%',
-            height: '100%',
-            backgroundColor: '#000',
-          }}
-          resizeMode={'contain'}
-          onLoadEnd={_ => setLoaded(true)}
-          source={{uri: data[activeIndex].storiesImagePath}}
-        />
-      )}
-      <View
-        style={{
-          zIndex: 100,
-          position: 'absolute',
-          bottom: 30,
-          width: '100%',
-          paddingHorizontal: 20,
+    <>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPressIn={() => {
+          setPaused(true);
+          pauseProgress();
+        }}
+        onPressOut={() => {
+          setPaused(false);
+          startProgress();
         }}>
+        <StorySlides />
+        {data[activeIndex]?.video ? (
+          <Video
+            ref={ref => (this.player = ref)}
+            paused={paused}
+            onLoad={_ => setLoaded(true)}
+            resizeMode={'cover'}
+            style={{
+              width: '100%',
+              height: '100%',
+              backgroundColor: '#000',
+            }}
+            source={{
+              uri: data[activeIndex].storiesVideoPath,
+            }}
+          />
+        ) : (
+          <Image
+            style={{
+              width: '100%',
+              height: '100%',
+              backgroundColor: '#000',
+            }}
+            resizeMode={'contain'}
+            onLoadEnd={_ => setLoaded(true)}
+            source={{uri: data[activeIndex].storiesImagePath}}
+          />
+        )}
         <View
           style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
+            zIndex: 100,
+            position: 'absolute',
+            bottom: 30,
+            width: '100%',
+            paddingHorizontal: 20,
           }}>
-          <Text
-            style={[
-              {
-                fontSize: 15,
-                maxWidth: '70%',
-                color: '#fff',
-              },
-              styles.textShadow,
-            ]}>
-            {data[activeIndex].caption}
-          </Text>
-          {userData.id === userID && (
-            <TouchableOpacity
-              style={{flexDirection: 'row', alignItems: 'center'}}
-              onPress={_ => {
-                setPaused(true);
-                pauseProgress();
-                setModelOpen(true);
-              }}>
-              <>
-                <Icon
-                  name="eye-outline"
-                  type="Ionicons"
-                  size={45}
-                  color={'#fff'}
-                  backgroundSizeRatio={0.4}
-                  noBackground
-                  style={{
-                    marginHorizontal: -5,
-                  }}
-                />
-                <Text
-                  style={[
-                    {color: '#fff'},
-                    styles.textShadow,
-                  ]}>{`${data[activeIndex].views} Views`}</Text>
-              </>
-            </TouchableOpacity>
-          )}
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <Text
+              style={[
+                {
+                  fontSize: 15,
+                  maxWidth: '70%',
+                  color: '#fff',
+                },
+                styles.textShadow,
+              ]}>
+              {data[activeIndex].caption}
+            </Text>
+            {userData.id === userID && (
+              <TouchableOpacity
+                style={{flexDirection: 'row', alignItems: 'center'}}
+                onPress={_ => {
+                  setPaused(true);
+                  pauseProgress();
+                  setModelOpen(true);
+                }}>
+                <>
+                  <Icon
+                    name="eye-outline"
+                    type="Ionicons"
+                    size={45}
+                    color={'#fff'}
+                    backgroundSizeRatio={0.4}
+                    noBackground
+                    style={{
+                      marginHorizontal: -5,
+                    }}
+                  />
+                  <Text
+                    style={[
+                      {color: '#fff'},
+                      styles.textShadow,
+                    ]}>{`${data[activeIndex].views} Views`}</Text>
+                </>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+      <DownModal isVisible={modelOpen} setIsVisible={handleCloseModel}>
+        <View style={[styles.menuContainer, styles.customDownModel]}>
+          <View style={{alignItems: 'center'}}>
+            <View
+              style={{
+                backgroundColor: '#cacaca',
+                width: 80,
+                height: 6,
+                borderRadius: 6,
+              }}
+            />
+          </View>
+          <View
+            style={[
+              styles.menu,
+              {
+                borderBottomColor: '#cacaca',
+                borderBottomWidth: 1,
+                marginBottom: 5,
+              },
+            ]}>
+            <Text style={styles.menuText}>Viewed by</Text>
+            <Text>{data[activeIndex].views} Views</Text>
+          </View>
+
+          <View>
+            <FlatList
+              refreshing={viewers.refreshing}
+              onRefresh={handleRefresh}
+              data={viewers.state}
+              keyExtractor={(item, index) => index.toString()}
+              onEndReached={handleOnReachTheEnd}
+              
+              ListEmptyComponent={_ => (
+                <View style={{alignItems: 'center', marginVertical: 5}}>
+                  <Text>No viewers</Text>
+                </View>
+              )}
+              renderItem={({item})=> <ViewerCard item={item} />}
+            />
+          </View>
+        </View>
+      </DownModal>
+    </>
   );
 };
 
 export default StoryViewScreen;
 
 const styles = StyleSheet.create({
+  customDownModel: {
+    paddingBottom: 60,
+    height: 300,
+    backgroundColor: '#fff',
+  },
   viewerCardText: {
     fontSize: 15,
     color: '#333',
@@ -470,8 +515,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   viewerCard: {
-    marginHorizontal: 15,
-    marginVertical: 2,
+    paddingHorizontal: 15,
+    paddingVertical: 6,
   },
   row: {
     flexDirection: 'row',

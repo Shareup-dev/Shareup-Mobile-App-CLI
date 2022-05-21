@@ -18,6 +18,7 @@ import Icon from '../Icon';
 import PostOptionDrawer from '../drawers/PostOptionsDrawer';
 import constants from '../../config/constants';
 import Share from 'react-native-share';
+import onShareHandler from '../Share';
 
 
 export default function SharedPostCard(props) {
@@ -34,17 +35,7 @@ export default function SharedPostCard(props) {
     moment(postData.published, 'DD MMMM YYYY hh:mm:ss').fromNow(),
     // null
   );
-  const onShareHandler = async () => {
-    Share.open({
-      message: postData?.content,
-      title:"Sharing Post",
-      url: `https://shareup.qa/post/${postData.id}`,
-    })
-      .then(res => res)
-      .catch(err => {
-        err && console.error(err);
-      });
-  };
+ 
   const options = [
     {
       title: 'Save post',
@@ -94,7 +85,7 @@ export default function SharedPostCard(props) {
         image: require('../../assets/icons/share-point-icon.png'),
       },
       onPress: () => {
-        onShareHandler();
+        onShareHandler(postData);
       },
     },
     {

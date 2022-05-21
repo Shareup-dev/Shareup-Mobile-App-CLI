@@ -22,6 +22,7 @@ class PostService {
   savePost = (uid, pid) => AuthAxios.put(`posts/${uid}/save-unsave/${pid}`);
 
   sharePost = (uid,pid,data) => AuthAxios.post(`share/${uid}/${pid}`,data);
+  getSharedPostById = (id) => AuthAxios.get(`share/${id}`)
 
   /******************** COMMENT *******************/
   addComment = (userid, postid, comment) => 
