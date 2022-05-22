@@ -323,6 +323,7 @@ export default function AddPostScreen({ navigation, route }) {
       const formData = createPostFormData(postContent);
       PostService.createPost(user.id, formData)
         .then(resp => {
+          console.log("data::",resp.data);
           let existingPosts = store.getState().groupPosts;
           // setloadingIndicator(false)
           store.dispatch(
@@ -355,7 +356,8 @@ export default function AddPostScreen({ navigation, route }) {
       swapService
         .editSwap(postData.id, formData)
         .then(resp => {
-          store.dispatch(feedPostsAction.addFeedPost(resp.data));
+          store.dispatch(feedPostsAction.updateFeedPost(resp.data));
+          //store.dispatch(feedPostsAction.addFeedPost(resp.data));
           navigation.navigate(routes.FEED);
         })
         .catch(e => {
@@ -391,7 +393,8 @@ export default function AddPostScreen({ navigation, route }) {
       hangShareService
         .editHang(user.id, postData.id, formData)
         .then(resp => {
-          store.dispatch(feedPostsAction.addFeedPost(resp.data));
+          store.dispatch(feedPostsAction.updateFeedPost(resp.data));
+          //store.dispatch(feedPostsAction.addFeedPost(resp.data));
           navigation.navigate(routes.FEED);
         })
         .catch(e => {
@@ -451,7 +454,8 @@ export default function AddPostScreen({ navigation, route }) {
       if (isEdit) {
         PostService.editPost(postData.id, formData)
           .then(resp => {
-            store.dispatch(feedPostsAction.addFeedPost(resp.data));
+            console.log(resp.data);
+            store.dispatch(feedPostsAction.updateFeedPost(resp.data));
             dispatch(postFeelingsActions.setDefault());
             navigation.navigate(routes.FEED);
           })
@@ -509,6 +513,7 @@ export default function AddPostScreen({ navigation, route }) {
     navigation.navigate(routes.FEED);
     dispatch(postFeelingsActions.setDefault());
   };
+  
 
   const clearFields = () => {
     setText('');

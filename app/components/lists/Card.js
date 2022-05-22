@@ -24,6 +24,7 @@ import onShareHandler from '../Share';
 import { useDispatch } from 'react-redux';
 import { updatePostModeAction } from '../../redux/updateMode';
 import { updatePostDataAction } from '../../redux/updatePostData';
+import { feedPostsAction } from '../../redux/feedPostsSlice';
 
 export default function Card({
   user,
@@ -231,8 +232,14 @@ export default function Card({
       },
     ]);
 
-  const deletePost = async () => {
-    const response = await PostService.deletePost(postData.id);
+  const deletePost = () => {
+     PostService.deletePost(postData.id).then(res => {
+       if (res.status === 200){
+            dispatch(feedPostsAction.removeFeedPost(postData.id));
+            navigation.navigate(routes.FEED);
+       }
+     })
+     .catch(error => alert(error))
     // reloadPosts();
     setIsOptionsVisible(false);
   };

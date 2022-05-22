@@ -28,11 +28,12 @@ import onShareHandler from '../Share';
 import { useDispatch } from 'react-redux';
 import { updatePostModeAction } from '../../redux/updateMode';
 import { updatePostDataAction } from '../../redux/updatePostData';
+import { feedPostsAction } from '../../redux/feedPostsSlice';
 
 
 const imageSize = 160;
 const SwapCard = React.memo(
-  ({item, navigation, userId, style, reloadPosts,onPress}) => {
+  ({item, navigation, userId, style,reloadPosts,onPress}) => {
     const actionsTabSizeRatio = 0.5;
     const [isOptionsVisible, setIsOptionsVisible] = useState(false);
     const [numberOfComments, setNumberOfComments] = useState(
@@ -181,8 +182,13 @@ const SwapCard = React.memo(
     const deletePost = async () => {
       swapService
         .deleteSwap(item.id)
-        .then(res => {})
-        .catch(e => console.error(e));
+        .then(res => {
+          if (res.status === 200){
+            dispatch(feedPostsAction.removeFeedPost(postData.id));
+            navigation.navigate(routes.FEED);
+          }
+        })
+        .catch(e => alert(e));
 
       reloadPosts();
     };

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   TouchableWithoutFeedback,
+  Alert
 } from 'react-native';
 import AuthContext from '../../authContext';
 import colors from '../../config/colors';
@@ -60,15 +61,15 @@ export default function SharedPostCard(props) {
       },
     },
     {
-      title: 'Edit',
+      title: userData?.id !== postData.userdata?.id ? '':'Edit',
       icon: {image: require('../../assets/post-options-icons/swap-icon.png')},
       onPress: () => {
-        dispatch(updatePostModeAction.setState(true))
-        dispatch(updatePostDataAction.setState(postData))
-        navigation.navigate(routes.ADD_POST, {
-          postType: constants.postTypes.SHARE_POST,
-        });
-        setIsOptionsVisible(false);
+        // dispatch(updatePostModeAction.setState(true))
+        // dispatch(updatePostDataAction.setState(postData))
+        // navigation.navigate(routes.ADD_POST, {
+        //   postType: constants.postTypes.SHARE_POST,
+        // });
+        // setIsOptionsVisible(false);
       },
     },
     {
@@ -124,6 +125,30 @@ export default function SharedPostCard(props) {
     },
   ];
 
+  const showDeleteAlert = () =>
+      Alert.alert('Delete', 'Are you sure to delete this post', [
+        {
+          text: 'Yes',
+          onPress: ()=> {},
+          style: 'cancel',
+        },
+        {
+          text: 'No',
+          style: 'cancel',
+        },
+      ]);
+
+    const deletePost = async () => {
+      swapService
+        .deleteSwap(item.id)
+        .then(res => {
+          if (res.status === 200){
+            dispatch(feedPostsAction.removeFeedPost(postData.id));
+            navigation.navigate(routes.FEED);
+          }
+        })
+        .catch(e => alert(e));
+      }
   const HeaderComponent = () => {
     return (
       <View style={{paddingTop: 10, paddingHorizontal: 15}}>
