@@ -7,7 +7,7 @@ export default React.forwardRef(function CommentTextField(
   {onForwardPress, onChangeText, isReply,comment, ...otherProps},
   ref,
 ) {
-  // console.log("commenyyy",comment);
+ 
   // const [value,setValue]=useState("@" + comment?.user?.firstName)
   return (
     <View style={styles.container}>

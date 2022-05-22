@@ -21,6 +21,7 @@ import constants from '../config/constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {feedPostsAction} from '../redux/feedPostsSlice';
 import SharedPostCard from '../components/lists/SharedPostCard';
+import routes from '../navigation/routes';
 
 export default function NewsFeedScreen({navigation, route}) {
   const posts = useSelector(state => state.feedPosts);
@@ -30,6 +31,7 @@ export default function NewsFeedScreen({navigation, route}) {
   const [activityIndicator, setActivityIndicator] = useState(true);
 
   useEffect(() => {
+    console.log("posts");
     loadNews();
   }, []);
   const loadNews = () => {
@@ -53,6 +55,7 @@ export default function NewsFeedScreen({navigation, route}) {
               route={route}
               item={item}
               userId={item.userdata.id}
+              onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item }) }}
             />
           );
         case "share":
@@ -72,6 +75,7 @@ export default function NewsFeedScreen({navigation, route}) {
               route={route}
               item={item}
               userId={item.userdata.id}
+              onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item }) }}
             />
             // <HangFeedCard //style={styles.listItem}
             //   user={item.userdata}
@@ -90,6 +94,7 @@ export default function NewsFeedScreen({navigation, route}) {
               navigation={navigation}
               reloadPosts={loadNews}
               postType={item.allPostsType}
+              onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item }) }}
             />
           );
       }

@@ -6,6 +6,7 @@ import {
   Text,
   Alert,
   Dimensions,
+  TouchableWithoutFeedback
 } from 'react-native'
 import {useSelector} from 'react-redux'
 import ImageView from 'react-native-image-viewing';
@@ -16,15 +17,18 @@ import defaultStyles from '../../config/styles';
 import SwapActionContainer from '../posts/SwapActionContainer';
 import AuthContext from '../../Contexts/authContext';
 import swapService from '../../services/swap.service';
-
 import CustomImageSlider from '../ImageSlider/CustomImageSlider';
 import constants from '../../config/constants';
 import routes from '../../navigation/routes';
 import onShareHandler from '../Share';
+import { useDispatch } from 'react-redux';
+import { updatePostModeAction } from '../../redux/updateMode';
+import { updatePostDataAction } from '../../redux/updatePostData';
+
 
 const imageSize = 160;
 const SwapCard = React.memo(
-  ({item, navigation, userId, style, reloadPosts}) => {
+  ({item, navigation, userId, style, reloadPosts,onPress}) => {
     const actionsTabSizeRatio = 0.5;
     const [isOptionsVisible, setIsOptionsVisible] = useState(false);
     const [numberOfComments, setNumberOfComments] = useState(
@@ -35,7 +39,7 @@ const SwapCard = React.memo(
     const [images, setImages] = useState([]);
     const [imageViewerVisible, setImageViewerVisible] = useState(false);
     const swapedPosts = useSelector(state => state.swapedImages);
-
+    const dispatch = useDispatch()
     const {userState} = useContext(AuthContext);
 
     const getSwapedImage = swapId => {
@@ -84,13 +88,28 @@ const SwapCard = React.memo(
         },
       },
       {
-        title: 'Edit',
+        title: userState?.userData?.id === user?.id ? 'Edit' : '',
         icon: {image: require('../../assets/post-options-icons/swap-icon.png')},
         onPress: () => {
+          dispatch(updatePostModeAction.setState(true))
+          dispatch(updatePostDataAction.setState(item))
+          dispatch(postImagesAction.setImages(item.media?.map(image => image.mediaPath)))
           navigation.navigate(routes.ADD_POST, {
-            postType: constants.postTypes.CREATE_POST,
-            postData,
-            isEdit: true,
+            postType: item.allPostsType,
+          });
+          setIsOptionsVisible(false);
+        },
+      },
+      {
+        title: 'Share friends',
+        icon: {
+          image: require('../../assets/post-options-icons/share-friends-icon.png'),
+        },
+        onPress: () => {
+          dispatch(updatePostDataAction.setState(item))
+          navigation.navigate(routes.ADD_POST, {
+            postType: constants.postTypes.SHARE_POST,
+            // postData,
           });
           setIsOptionsVisible(false);
         },
@@ -176,6 +195,7 @@ const SwapCard = React.memo(
     const {width} = Dimensions.get('window');
 
     return (
+      <TouchableWithoutFeedback onPress={onPress}>
       <View style={[styles.card, defaultStyles.cardBorder, style]}>
         {currentImage && (
           <ImageView
@@ -192,7 +212,7 @@ const SwapCard = React.memo(
         <View style={styles.imageContainer} onLayout={onLayout}>
           {images.length !== 0 && (
             <CustomImageSlider
-              media={item.media}
+              media={item?.media}
               width={width - 32}
               height={250}
             />
@@ -251,6 +271,7 @@ const SwapCard = React.memo(
           />
         </View>
       </View>
+      </TouchableWithoutFeedback>
     );
   },
 );

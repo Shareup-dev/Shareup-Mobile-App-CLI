@@ -87,8 +87,11 @@ export default function ShareupCameraScreen({navigation,route}) {
         skipProcessing: true,
         quality: 0.5,
       }).then(res => { 
-    
-            dispatch(postImagesAction.setImages([res])),
+           
+            const uris = res.map(item => {
+              return item.uri;
+            });
+            dispatch(postImagesAction.setImages(uris)),
             navigation.navigate(routes.ADD_POST,{postType:postType})
         })
         .catch(error => { console.error(error); })
@@ -136,7 +139,10 @@ export default function ShareupCameraScreen({navigation,route}) {
             cancelable: true,
           });
         } else {
-            dispatch(postImagesAction.setImages(res.assets)),
+          const uris = res.assets.map(item => {
+                  return item.uri;
+                });
+            dispatch(postImagesAction.setImages(uris)),
 
             navigation.navigate(routes.ADD_POST,{postType:postType});
         //   setStory(res.assets[0]);

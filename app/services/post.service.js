@@ -14,8 +14,8 @@ class PostService {
     AuthAxios.get(`posts/${email}/saved_posts`)
   deletePost = postId =>
     AuthAxios.delete(`posts/${postId}`)
-  editPost = postId =>
-    AuthAxios.put(`posts/${postId}`)
+  editPost = (postId,data) =>
+    AuthAxios.put(`posts/${postId}`,data)
   getPosts = () => 
     AuthAxios.get(`posts`)
   likePost = (uid, pid,emoji) => AuthAxios.put(`posts/${uid}/like-unlike/${pid}`, {emoji: emoji});

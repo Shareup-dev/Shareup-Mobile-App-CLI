@@ -32,7 +32,10 @@ export default function SwapScreen({navigation, route}) {
         //     : false,
         //   swapPostId: route.params?.swapPostId,
         // });
-        dispatch(postImagesAction.setImages(assets)),
+        const uris = assets.map(item => {
+          return item.uri;
+        });
+        dispatch(postImagesAction.setImages(uris)),
         navigation.navigate(routes.ADD_POST,{postType:constants.postTypes.SWAP});
       }
     });
@@ -54,7 +57,10 @@ export default function SwapScreen({navigation, route}) {
         //     : false,
         //   swapPostId: route.params?.swapPostId,
         // });
-        dispatch(postImagesAction.setImages(assets)),
+        const uris = assets.map(item => {
+          return item.uri;
+        });
+        dispatch(postImagesAction.setImages(uris)),
         navigation.navigate(routes.ADD_POST,{postType:constants.postTypes.SWAP});
       }
     });

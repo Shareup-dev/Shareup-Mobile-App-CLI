@@ -13,7 +13,7 @@ import colors from '../../config/colors';
 import defaultStyles from '../../config/styles';
 import authContext from '../../Contexts/authContext';
 import PostService from '../../services/post.service';
-
+import { postImagesAction } from '../../redux/postImages';
 import PostOptionDrawer from '../drawers/PostOptionsDrawer';
 import ImageView from 'react-native-image-viewing';
 import PostActions from '../PostActions';
@@ -21,6 +21,10 @@ import routes from '../../navigation/routes';
 import constants from '../../config/constants';
 import CustomImageSlider from '../ImageSlider/CustomImageSlider';
 import onShareHandler from '../Share';
+import { useDispatch } from 'react-redux';
+import { updatePostModeAction } from '../../redux/updateMode';
+import { updatePostDataAction } from '../../redux/updatePostData';
+
 export default function Card({
   user,
   postData,
@@ -48,8 +52,7 @@ export default function Card({
   const [currentImage, setCurrentImage] = useState();
   // const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [sliderWidth, setSliderWidth] = useState();
-
-
+  const dispatch = useDispatch()
 
   const options = [
     {
@@ -71,13 +74,14 @@ export default function Card({
       },
     },
     {
-      title: 'Edit',
+      title: userState?.userData?.id === user?.id ? 'Edit' : '',
       icon: {image: require('../../assets/post-options-icons/swap-icon.png')},
       onPress: () => {
+        dispatch(updatePostModeAction.setState(true))
+        dispatch(updatePostDataAction.setState(postData))
+        dispatch(postImagesAction.setImages(postData.media?.map(image => image.mediaPath)))
         navigation.navigate(routes.ADD_POST, {
           postType: constants.postTypes.CREATE_POST,
-          postData: postData,
-          isEdit: true,
         });
         setIsOptionsVisible(false);
       },
@@ -88,10 +92,12 @@ export default function Card({
         image: require('../../assets/post-options-icons/share-friends-icon.png'),
       },
       onPress: () => {
+        dispatch(updatePostDataAction.setState(postData))
         navigation.navigate(routes.ADD_POST, {
           postType: constants.postTypes.SHARE_POST,
-          postData,
+          // postData,
         });
+        setIsOptionsVisible(false);
       },
     },
     {
@@ -259,7 +265,7 @@ export default function Card({
 
         {images?.length !== 0 && (
           <CustomImageSlider
-            media={postData.media}
+            media={postData?.media}
             width={width - 32}
             height={250}
           />
