@@ -1,106 +1,122 @@
 import React, {useState, useRef, useContext, useCallback} from 'react';
-import {View, StyleSheet, FlatList, Keyboard} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Keyboard,
+  KeyboardAvoidingView,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 
 import {Header, HeaderCloseIcon, HeaderTitle} from '../components/headers';
 import Screen from '../components/Screen';
-import CommentItem from '../components/comments/CommentItem';
 import CommentTextField from '../components/comments/CommentTextField';
 import constants from '../config/constants';
-import AuthContext from '../authContext';
+import AuthContext from '../Contexts/authContext';
 
 import {useFocusEffect} from '@react-navigation/native';
 import postService from '../services/post.service';
 import SwapService from '../services/swap.service';
 import {CommentsList} from '../components/comments';
+import CommentsContext from '../Contexts/commentsContext';
+import colors from '../config/colors';
+import {CommentText} from '../components/comments';
 
 export default function CommentsScreen({navigation, route}) {
-  const {postId, postType, swapId, fromDetailScreen, writeComment} =
-    route.params;
-  const commentsListRef = useRef();
-  const commentTextFieldRef = useRef();
-
-  const [commentsList, setCommentsList] = useState([]);
-  const [replyList, setReplyList] = useState([]);
-  const [isEdit, setIsEdit] = useState(false);
-  const [commentContent, setCommentContent] = useState('');
-  const [commentId, setCommentId] = useState('');
-  const [isReply, setIsReply] = useState(false);
-
-  const [refreshing, setRefreshing] = useState(false);
-  const {userState} = useContext(AuthContext);
   const {postTypes} = constants;
+  const commentTextFieldRef = useRef();
+  const {userState} = useContext(AuthContext);
+  const {
+    postId,
+    postType,
+    swapId,
+    fromDetailScreen,
+    writeComment = true,
+  } = route.params;
 
+  const [comments, setComments] = useState({
+    loading: false,
+    state: [],
+  });
+  const [isReplied, setIsReplied] = useState(false);
+  const [isReply, setIsReply] = useState(false);
+  const [selectedComment, setSelectedComment] = useState(null);
+  const [commentContent, setCommentContent] = useState('');
+
+  const handleOnChangeText = text => {
+    setCommentContent(text);
+  };
+
+  const focusTextField = () => commentTextFieldRef.current.focus();
 
   useFocusEffect(
     useCallback(() => {
       loadComments();
       if (writeComment) {
-        commentTextFieldRef.current.focus();
+        focusTextField();
       }
-
       return;
     }, []),
   );
-  const loadComments = async () => {
+
+  const loadComments = () => {
+    setComments(prev => ({...prev, loading: true}));
     if (postType === postTypes.SWAP) {
       SwapService.getSwapComment(swapId)
-        .then(res => {
-          const commentArray = res.data; //.reverse();
-          setCommentsList(commentArray);
+        .then(({data}) => {
+          setComments(prev => ({...prev, state: data}));
         })
-        .catch(e => console.error(e.message));
-      setCommentsList(response.data.comments);
+        .catch(e => console.error(e.message))
+        .finally(_ => setComments(prev => ({...prev, loading: false})));
     } else {
       postService
         .getAllComments(userState?.userData?.id, postId)
-        .then(res => {
-          const commentArray = res.data; //.reverse();
-          setCommentsList(commentArray);
+        .then(({data}) => {
+          setComments(prev => ({...prev, state: data}));
         })
-        .catch(e => console.error(e.message));
+        .catch(e => console.error(e.message))
+        .finally(_ => setComments(prev => ({...prev, loading: false})));
     }
   };
 
-  const handleCancel = () => {
-    navigation.goBack();
-  };
-
+  const handleCancel = () => navigation.goBack();
   const handleAddComment = async () => {
     if (isReply) {
       if (postType === postTypes.SWAP) {
         const comment = {content: commentContent};
-        postService
+        await postService
           .addSwapComment(userState?.userData?.id, swapId, comment.content)
           .then(resp => {
-            refreshComments();
             setCommentContent('');
             commentTextFieldRef.current.clear();
             Keyboard.dismiss();
-          });
+          })
+          .finally(() => setIsReplied(true));
       } else {
         const comment = {content: commentContent};
         if (commentContent !== '') {
-          postService
-            .replay(userState?.userData?.id, commentId, comment)
+          await postService
+            .replay(userState?.userData?.id, selectedComment.id, comment)
             .then(res => {
-              refreshComments();
               setCommentContent('');
               commentTextFieldRef.current.clear();
               Keyboard.dismiss();
             })
-            .catch(e => console.error('1', e));
+            .catch(e => console.error('1', e))
+            .finally(() => setIsReplied(true));
         }
       }
+      cancelReplyComment();
     } else {
       if (postType === 'swap') {
         const comment = {content: commentContent};
-        SwapService.createSwapcomment(
+        await SwapService.createSwapcomment(
           userState?.userData?.id,
           swapId,
           comment.content,
         )
           .then(resp => {
-            refreshComments();
             setCommentContent('');
             commentTextFieldRef.current.clear();
             Keyboard.dismiss();
@@ -109,11 +125,9 @@ export default function CommentsScreen({navigation, route}) {
       } else {
         const comment = {content: commentContent};
         if (commentContent !== '') {
-          postService
+          await postService
             .addComment(userState?.userData?.id, postId, comment)
-            .then(res => {
-              refreshComments();
-              setCommentContent('');
+            .then(({data}) => {
               commentTextFieldRef.current.clear();
               Keyboard.dismiss();
             })
@@ -121,72 +135,87 @@ export default function CommentsScreen({navigation, route}) {
         }
       }
     }
-  };
-  const handleEditComment = status => {
-    setIsEdit(status);
-  };
-  const handleReplyComment = (commentId, showReply) => {
-    if (showReply) {
-      setCommentId(commentId);
-      commentTextFieldRef.current.focus();
-      setIsReply(true);
-    } else {
-      commentTextFieldRef.current.blur();
-      setIsReply(false);
-    }
-  };
-
-  const refreshComments = async () => {
-    setRefreshing(true);
     await loadComments();
-    setRefreshing(false);
   };
 
-  const handleOnChangeText = text => {
-    setCommentContent(text);
-  };
-
-  const handleReactions = async cid => {
-    const params = {reaction: 'null'};
-    postService
-      .likeUnlikeComment(userState?.userData?.id, cid, params)
-      .then(res => {
-        refreshComments();
-      })
-      .catch(e => console.error(e));
+  const cancelReplyComment = () => {
+    setIsReply(false);
+    setSelectedComment(null);
+    setIsReplied(false);
   };
 
   return (
-    <Screen style={styles.container}>
-      {!fromDetailScreen && (
-        <Header
-          left={<HeaderCloseIcon onPress={handleCancel} />}
-          middle={<HeaderTitle>Comments</HeaderTitle>}
-        />
-      )}
-      <CommentsList data={commentsList}  />
-
-      {!isEdit && (
-        <View style={styles.textFieldContainer}>
-          <View style={styles.textFieldContainer}>
-            <CommentTextField
-              onForwardPress={handleAddComment}
-              onChangeText={handleOnChangeText}
-              ref={commentTextFieldRef}
-              isReply={isReply}
+    <CommentsContext.Provider
+      value={{
+        setSelectedComment,
+        setIsReply,
+        focusTextField,
+        isReplied,
+      }}>
+      <Screen style={styles.container}>
+        {!fromDetailScreen && (
+          <Header
+            left={<HeaderCloseIcon onPress={handleCancel} />}
+            middle={<HeaderTitle>Comments</HeaderTitle>}
+          />
+        )}
+        <View style={styles.commentContainer}>
+          <KeyboardAvoidingView>
+            <CommentsList
+              data={comments.state}
+              refreshing={comments.loading}
+              onRefreshing={loadComments}
             />
-          </View>
+          </KeyboardAvoidingView>
         </View>
-      )}
-    </Screen>
+
+        <View style={styles.textFieldContainer}>
+          {isReply && selectedComment && (
+            <View
+              style={{
+                margin: 5,
+              }}>
+              <CommentText>{selectedComment.content}</CommentText>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    color: colors.iondigoDye,
+                  }}>{`Reply to: ${selectedComment.user.firstName}`}</Text>
+                <TouchableOpacity onPress={cancelReplyComment}>
+                  <Text
+                    style={{
+                      color: colors.red,
+                      marginHorizontal: 15,
+                    }}>{`Cancel`}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+          <CommentTextField
+            onForwardPress={handleAddComment}
+            ref={commentTextFieldRef}
+            isReply={isReply}
+            onChangeText={handleOnChangeText}
+          />
+        </View>
+      </Screen>
+    </CommentsContext.Provider>
   );
 }
 
 const styles = StyleSheet.create({
   textFieldContainer: {
-    marginHorizontal: 15,
+    paddingHorizontal: 15,
     marginBottom: 25,
     marginTop: 15,
+  },
+  commentContainer: {
+    justifyContent: 'space-between',
+    flex: 1,
   },
   container: {},
   replayContainer: {

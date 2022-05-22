@@ -17,7 +17,7 @@ import colors from '../config/colors';
 import Icon from '../components/Icon';
 import routes from '../navigation/routes';
 import {useFocusEffect} from '@react-navigation/native';
-import authContext from '../authContext';
+import authContext from '../Contexts/authContext';
 import postService from '../services/post.service';
 import CommentsScreen from './CommentsScreen';
 import ImageView from 'react-native-image-viewing';

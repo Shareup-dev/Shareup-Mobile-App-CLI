@@ -18,7 +18,7 @@ import colors from '../../config/colors';
 // import Icon from "../Icon";
 // import LinkButton from "../buttons/LinkButton";
 // import CommentText from "./CommentText";
-import authContext from '../../authContext';
+import authContext from '../../Contexts/authContext';
 // import { Button } from "react-native-paper";
 // import PostOptionDrawer from "../drawers/PostOptionsDrawer";
 import postService from '../../services/post.service';

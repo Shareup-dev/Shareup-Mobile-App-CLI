@@ -8,7 +8,7 @@ import {
   Touchable,
   TouchableOpacity,
 } from 'react-native';
-import AuthContext from '../authContext';
+import AuthContext from '../Contexts/authContext';
 import {HeaderWithBackArrow} from '../components/headers';
 import routes from '../navigation/routes';
 import groupService from '../services/group.service';

@@ -2,7 +2,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import React, {useCallback, useContext,  useState} from 'react';
 import {FlatList,View, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import AuthContext from '../../authContext';
+import AuthContext from '../../Contexts/authContext';
 import colors from '../../config/colors';
 import {storiesAction} from '../../redux/stories';
 import storiesService from '../../services/story.service';

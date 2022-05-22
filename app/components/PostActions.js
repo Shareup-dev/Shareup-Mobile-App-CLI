@@ -13,7 +13,7 @@ import Tab from '../components/buttons/Tab';
 import Icon from '../components/Icon';
 import routes from '../navigation/routes';
 import constants from '../config/constants';
-import AuthContext from '../authContext';
+import AuthContext from '../Contexts/authContext';
 
 const PostActions = ({
   postId,

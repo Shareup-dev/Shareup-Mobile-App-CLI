@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Keyboard,
 } from 'react-native';
-import AuthContext from '../../authContext';
+import AuthContext from '../../Contexts/authContext';
 import {HeaderWithBackArrow} from '../../components/headers';
 import colors from '../../config/colors';
 import * as Yup from 'yup';

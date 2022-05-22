@@ -4,7 +4,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import Screen from '../components/Screen';
 import {HeaderWithBackArrow} from '../components/headers';
 import UserProfilePicture from '../components/UserProfilePicture';
-import authContext from '../authContext';
+import authContext from '../Contexts/authContext';
 import TextField from '../components/TextField';
 import Bar from '../components/tab-bar/Bar';
 import colors from '../config/colors';

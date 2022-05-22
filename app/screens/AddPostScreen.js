@@ -24,7 +24,7 @@ import EnhancedOptionsDrawer from '../components/drawers/EnhancedOptionsDrawer';
 import IconButton from '../components/buttons/IconButton';
 import Text from '../components/Text';
 import Screen from '../components/Screen';
-import authContext from '../authContext';
+import authContext from '../Contexts/authContext';
 import AuthContext from '../UserContext';
 import PostService from '../services/post.service';
 import swapService from '../services/swap.service';

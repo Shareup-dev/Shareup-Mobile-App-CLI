@@ -8,7 +8,7 @@ import routes from '../navigation/routes';
 import defaultStyles from '../config/styles';
 import RegistrationContainer from '../components/forms/RegistrationContainer';
 import authService from '../services/auth.service';
-import AuthContext from '../authContext';
+import AuthContext from '../Contexts/authContext';
 
 const validationSchema = Yup.object().shape({
   password: Yup.string().required().min(3).label('Password'),

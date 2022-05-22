@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react';
 import { View, StyleSheet, } from 'react-native';
 
-import AuthContext from '../authContext';
+import AuthContext from '../Contexts/authContext';
 import Icon from './Icon';
 import colors from '../config/colors';
 import BetterImage from './betterImage/BetterImage';

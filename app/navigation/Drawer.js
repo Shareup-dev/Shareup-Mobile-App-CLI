@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 
-import authContext from '../authContext';
+import authContext from '../Contexts/authContext';
 import Icon from '../components/Icon';
 import colors from '../config/colors';
 import defaultStyles from '../config/styles';

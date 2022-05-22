@@ -5,11 +5,10 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import {removeAxiosToken, setTokenForAxios} from '../services/authHeader';
 import store from '../redux/store';
 import {Provider} from 'react-redux';
-import AuthContext from '../authContext';
+import AuthContext from '../Contexts/authContext';
 import {AuthNavigator} from '../navigation';
 import userService from '../services/user.service';
 import HomeNavigator from '../navigation/HomeNavigator';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ShareupAuthentication() {
   const initState = {

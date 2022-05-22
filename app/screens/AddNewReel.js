@@ -1,15 +1,12 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   StyleSheet,
   View,
   Dimensions,
-  Image,
-  Animated,
   TouchableOpacity,
   TextInput,
   StatusBar,
   Alert,
-  Text,
 } from 'react-native';
 
 import colors from '../config/colors';
@@ -19,7 +16,7 @@ import CameraBottomActions from '../components/CameraBottomActions';
 import CameraHeader from '../components/headers/CameraHeader';
 import Icon from '../components/Icon';
 import {launchImageLibrary} from 'react-native-image-picker';
-import AuthContext from '../authContext';
+import AuthContext from '../Contexts/authContext';
 import Video from 'react-native-video';
 import ReelService from '../services/Reels.service';
 import {ProgressBar} from 'react-native-paper';

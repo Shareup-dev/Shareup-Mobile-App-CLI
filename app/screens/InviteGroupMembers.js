@@ -13,7 +13,7 @@ import defaultStyles from '../config/styles';
 import ListHeader from '../components/lists/ListHeader';
 import colors from '../config/colors';
 import routes from '../navigation/routes';
-import authContext from '../authContext';
+import authContext from '../Contexts/authContext';
 import UserService from '../services/user.service';
 import GroupService from '../services/group.service';
 import Icon from '../components/Icon';

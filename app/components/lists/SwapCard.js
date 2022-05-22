@@ -14,7 +14,7 @@ import PostOptionDrawer from '../drawers/PostOptionsDrawer';
 import PostActions from '../PostActions';
 import defaultStyles from '../../config/styles';
 import SwapActionContainer from '../posts/SwapActionContainer';
-import AuthContext from '../../authContext';
+import AuthContext from '../../Contexts/authContext';
 import swapService from '../../services/swap.service';
 
 import CustomImageSlider from '../ImageSlider/CustomImageSlider';

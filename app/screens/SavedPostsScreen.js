@@ -8,7 +8,7 @@ import Icon from '../components/Icon';
 import routes from '../navigation/routes';
 import SavedListItem from '../components/lists/SavedListItem';
 import { useFocusEffect } from '@react-navigation/native';
-import authContext from '../authContext';
+import authContext from '../Contexts/authContext';
 import postService from '../services/post.service';
 
 export default function SavedPostsScreen({ navigation, route }) {

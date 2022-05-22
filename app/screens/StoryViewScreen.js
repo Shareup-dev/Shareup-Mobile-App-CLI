@@ -24,7 +24,7 @@ import Icon from '../components/Icon';
 import colors from '../config/colors';
 import DownModal from '../components/drawers/DownModal';
 import storyService from '../services/story.service';
-import AuthContext from '../authContext';
+import AuthContext from '../Contexts/authContext';
 import UserProfilePicture from '../components/UserProfilePicture';
 import moment from 'moment';
 

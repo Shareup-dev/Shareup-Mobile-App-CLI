@@ -6,7 +6,7 @@ import defaultStyles from '../../config/styles';
 import ListItem from '../lists/ListItem';
 import EmptyNotice from './EmptyNotice';
 import ListWrapper from './ListWrapper';
-import AuthContext from '../../authContext';
+import AuthContext from '../../Contexts/authContext';
 
 export default function FriendsList({navigation, friends, loading, refresh}) {
   const [refreshing, setRefreshing] = useState(false);

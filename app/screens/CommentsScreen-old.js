@@ -12,7 +12,7 @@ import Screen from '../components/Screen';
 import CommentItem from '../components/comments/CommentItem';
 import CommentTextField from '../components/comments/CommentTextField';
 import constants from '../config/constants';
-import AuthContext from '../authContext';
+import AuthContext from '../Contexts/authContext';
 
 import {useFocusEffect} from '@react-navigation/native';
 import postService from '../services/post.service';

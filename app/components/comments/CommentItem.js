@@ -14,7 +14,7 @@ import UserProfilePicture from '../UserProfilePicture';
 import Icon from '../Icon';
 import LinkButton from '../buttons/LinkButton';
 import CommentText from './CommentText';
-import authContext from '../../authContext';
+import authContext from '../../Contexts/authContext';
 import postService from '../../services/post.service';
 import OptionsDrawer from '../drawers/OptionsDrawer';
 import ReplyList from '../lists/ReplyList';

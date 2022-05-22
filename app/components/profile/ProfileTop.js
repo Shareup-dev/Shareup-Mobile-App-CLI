@@ -8,7 +8,7 @@ import IconBar from '../tab-bar/IconBar';
 import routes from '../../navigation/routes';
 import Posts from './Posts';
 import StoriesList from '../lists/StoriesList';
-import AuthContext from '../../authContext';
+import AuthContext from '../../Contexts/authContext';
 import FriendService from '../../services/friends.service';
 
 const profilePictureSize = 70;

@@ -14,7 +14,7 @@ import AlternativeRegistrationContainer from '../components/AlternativeRegistrat
 import AuthService from '../services/auth.service';
 import LinkButton from '../components/buttons/LinkButton';
 import Separator from '../components/Separator';
-import authContext from '../authContext';
+import authContext from '../Contexts/authContext';
 import colors from '../config/colors';
 import routes from '../navigation/routes';
 

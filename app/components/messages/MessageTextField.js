@@ -1,7 +1,7 @@
 import React, {useState, useContext, useRef} from 'react';
 import {View, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
 
-import authContext from '../../authContext';
+import authContext from '../../Contexts/authContext';
 import colors from '../../config/colors';
 import Icon from '../Icon';
 

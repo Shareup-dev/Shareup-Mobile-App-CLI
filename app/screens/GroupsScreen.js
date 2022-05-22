@@ -16,7 +16,7 @@ import Text from '../components/Text';
 import colors from '../config/colors';
 import {HeaderWithBackArrow} from '../components/headers';
 import routes from '../navigation/routes';
-import authContext from '../authContext';
+import authContext from '../Contexts/authContext';
 import groupService from '../services/group.service';
 import {useFocusEffect} from '@react-navigation/native';
 import constants from '../config/constants';

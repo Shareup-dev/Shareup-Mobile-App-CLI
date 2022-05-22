@@ -1,7 +1,7 @@
 import moment from 'moment';
 import React, { useContext, useState } from 'react';
 import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
-import AuthContext from '../../authContext';
+import AuthContext from '../../Contexts/authContext';
 import routes from '../../navigation/routes';
 import ReelsService from '../../services/Reels.service';
 import Icon from '../Icon';

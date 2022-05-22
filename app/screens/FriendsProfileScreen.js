@@ -14,7 +14,7 @@ import HeaderWithBackArrow from '../components/headers/HeaderWithBackArrow';
 import Icon from '../components/Icon';
 import Screen from '../components/Screen';
 import colors from '../config/colors';
-import authContext from '../authContext';
+import authContext from '../Contexts/authContext';
 import Card from '../components/lists/Card';
 import ImageView from 'react-native-image-viewing';
 

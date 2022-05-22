@@ -6,7 +6,7 @@ import routes from "../navigation/routes";
 import store from "../redux/store";
 import { swapedImagesAction } from "../redux/swapedImages";
 import constants from "../config/constants";
-import authContext from "../authContext";
+import authContext from "../Contexts/authContext";
 
 const CheckoutComplete = ({ navigation, route }) => {
   const  {postType,swapedPostId,item } = route.params;

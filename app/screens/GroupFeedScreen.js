@@ -21,7 +21,7 @@ import routes from '../navigation/routes';
 import {HeaderWithBackArrow} from '../components/headers';
 import Tab from '../components/buttons/Tab';
 
-import AuthContext from '../authContext';
+import AuthContext from '../Contexts/authContext';
 import DownModal from '../components/drawers/DownModal';
 import groupScreenDetector from '../redux/groupScreenDetector';
 

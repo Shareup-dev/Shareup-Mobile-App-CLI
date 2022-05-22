@@ -16,7 +16,7 @@ import colors from '../config/colors';
 import {HeaderWithBackArrow} from '../components/headers';
 import UserProfilePicture from '../components/UserProfilePicture';
 import routes from '../navigation/routes';
-import authContext from '../authContext';
+import authContext from '../Contexts/authContext';
 import UserService from '../services/user.service';
 import store from '../redux/store';
 import {sentRequestsActions} from '../redux/sentRequests';

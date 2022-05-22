@@ -13,15 +13,11 @@ import {Header, HeaderTitle} from '../components/headers';
 import Icon from '../components/Icon';
 import UserService from '../services/user.service';
 import routes from '../navigation/routes';
-import authContext from '../authContext';
+import authContext from '../Contexts/authContext';
 import defaultStyles from '../config/styles';
 //import FriendService from '../services/FriendService';
 import ListHeader from '../components/lists/ListHeader';
-import ListItem from '../components/lists/ListItem';
 import colors from '../config/colors';
-import ListItemEnhanced from '../components/lists/ListItemEnhanced';
-import { ListAccordionGroupContext } from 'react-native-paper/lib/typescript/components/List/ListAccordionGroup';
-import ListItemReceivedRequest from '../components/lists/ListItemReceivedRequest';
 import FriendCard from '../components/lists/FriendCard';
 
 export default function ReceivedRequests({navigation}) {

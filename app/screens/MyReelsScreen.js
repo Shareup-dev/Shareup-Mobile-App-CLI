@@ -20,7 +20,7 @@ import store from '../redux/store';
 import reelScreenDetector from '../redux/reelScreenDetector';
 import routes from '../navigation/routes';
 import ReelsService from '../services/Reels.service';
-import AuthContext from '../authContext';
+import AuthContext from '../Contexts/authContext';
 import BetterImage from '../components/betterImage/BetterImage';
 const width = Dimensions.get('window').width / 2 - 15;
 const height = Dimensions.get('window').height / 3;

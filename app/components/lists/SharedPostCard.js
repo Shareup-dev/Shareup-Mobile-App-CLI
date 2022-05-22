@@ -7,7 +7,7 @@ import {
   Image,
   TouchableWithoutFeedback,
 } from 'react-native';
-import AuthContext from '../../authContext';
+import AuthContext from '../../Contexts/authContext';
 import colors from '../../config/colors';
 import defaultStyles from '../../config/styles';
 import routes from '../../navigation/routes';

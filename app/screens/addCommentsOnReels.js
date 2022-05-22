@@ -10,7 +10,7 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
-import AuthContext from '../authContext';
+import AuthContext from '../Contexts/authContext';
 import CommentTextField from '../components/comments/CommentTextField';
 import {HeaderWithBackArrow} from '../components/headers';
 import moment from 'moment';

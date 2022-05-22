@@ -1,15 +1,18 @@
 import React, {useRef} from 'react';
-import {FlatList, View,} from 'react-native';
+import {FlatList, View} from 'react-native';
 import {CommentCard} from '.';
 
-export default function CommentsList(props) {
-  const {data, refreshing, replayComment = false} = props;
+export default function CommentsList({
+  data,
+  refreshing,
+  replyComment = false,
+  onRefreshing,
+}) {
   const commentsListRef = useRef();
 
   const scrollToListBottom = () => {
     commentsListRef.current.scrollToEnd({animated: true});
   };
-
 
   return (
     <View>
@@ -19,8 +22,9 @@ export default function CommentsList(props) {
         ref={commentsListRef}
         onContentSizeChange={scrollToListBottom}
         refreshing={refreshing}
+        onRefresh={onRefreshing}
         renderItem={({item}) => (
-          <CommentCard comment={item} replayComment={replayComment} />
+          <CommentCard comment={item} replyComment={replyComment} onRefreshing={onRefreshing} />
         )}
       />
     </View>

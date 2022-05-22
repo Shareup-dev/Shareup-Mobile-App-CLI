@@ -4,7 +4,7 @@ import GroupService from '../../services/group.service';
 
 import GroupJoinCard from './GroupJoinCard';
 import colors from '../../config/colors';
-import AuthContext from '../../authContext';
+import AuthContext from '../../Contexts/authContext';
 
 export default function JoinGroupList({props, navigation}) {
   const [allGroups, setallGroups] = useState([]);

@@ -8,7 +8,7 @@ import Icon from '../components/Icon';
 import ListItem from '../components/lists/ListItem';
 import defaultStyles from '../config/styles';
 import UserService from '../services/user.service';
-import authContext from '../authContext';
+import authContext from '../Contexts/authContext';
 import FriendService from '../services/friends.service';
 import store from '../redux/store';
 import {sentRequestsActions} from '../redux/sentRequests';

@@ -18,7 +18,7 @@ import defaultStyles from '../config/styles';
 import MessageItem from '../components/messages/MessageItem';
 import store from '../redux/store';
 import {messagesAction} from '../redux/messagesSlice';
-import authContext from '../authContext';
+import authContext from '../Contexts/authContext';
 
 export default function ChatRoomScreen({navigation, route}) {
   const {user} = useContext(authContext);

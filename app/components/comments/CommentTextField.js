@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {View, StyleSheet, TextInput,TouchableOpacity} from 'react-native';
 import colors from '../../config/colors';
 import Icon from '../Icon';
 
 export default React.forwardRef(function CommentTextField(
-  {onForwardPress, onChangeText, isReply, ...otherProps},
+  {onForwardPress, onChangeText, isReply,comment, ...otherProps},
   ref,
 ) {
+  // console.log("commenyyy",comment);
+  // const [value,setValue]=useState("@" + comment?.user?.firstName)
   return (
     <View style={styles.container}>
       <TextInput
@@ -14,6 +16,7 @@ export default React.forwardRef(function CommentTextField(
         placeholderTextColor={colors.mediumGray}
         style={styles.textInput}
         onChangeText={onChangeText}
+        // value={isReply && value}
         ref={ref}
         autoFocus={isReply}
         {...otherProps}

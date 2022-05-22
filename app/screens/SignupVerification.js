@@ -9,8 +9,7 @@ import defaultStyles from '../config/styles';
 import RegistrationContainer from '../components/forms/RegistrationContainer';
 import colors from '../config/colors';
 import authService from '../services/auth.service';
-import authContext from '../authContext';
-import Loading from '../components/Loading';
+import authContext from '../Contexts/authContext';
 
 const validationSchema = Yup.object().shape({
   otp: Yup.string('Invalid Code')

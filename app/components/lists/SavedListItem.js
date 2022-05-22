@@ -3,7 +3,7 @@ import { StyleSheet, View, TouchableWithoutFeedback, Alert, Image,Text, Touchabl
 import { useFocusEffect } from '@react-navigation/native';
 import colors from '../../config/colors';
 import Icon from '../Icon';
-import authContext from '../../authContext';
+import authContext from '../../Contexts/authContext';
 import PostService from '../../services/post.service';
 //import Text from "../../components/Text";
 import PostOptionDrawer from '../drawers/PostOptionsDrawer';
