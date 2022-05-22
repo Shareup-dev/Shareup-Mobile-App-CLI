@@ -12,7 +12,7 @@ import {useSelector} from 'react-redux';
 import Screen from '../components/Screen';
 import {Header, HeaderTitle} from '../components/headers';
 import Icon from '../components/Icon';
-import authContext from '../authContext';
+import authContext from '../Contexts/authContext';
 import ListItem from '../components/lists/ListItem';
 import UserService from '../services/user.service';
 import store from '../redux/store';

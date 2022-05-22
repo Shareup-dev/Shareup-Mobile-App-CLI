@@ -16,7 +16,7 @@ import LinkButton from '../components/buttons/LinkButton';
 import Section from '../components/Section';
 import TextField from '../components/TextField';
 import {TouchableOpacity, Image} from 'react-native';
-import AuthContext from '../authContext';
+import AuthContext from '../Contexts/authContext';
 import {Formik} from 'formik';
 import userService from '../services/user.service';
 import LoadingComponent from '../components/Loading';

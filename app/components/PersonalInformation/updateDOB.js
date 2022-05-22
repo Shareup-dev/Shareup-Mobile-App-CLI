@@ -7,31 +7,33 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import AuthContext from '../../authContext';
+import AuthContext from '../../Contexts/authContext';
 import {HeaderWithBackArrow} from '../../components/headers';
 import colors from '../../config/colors';
-import * as Yup from 'yup';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Loading from '../../components/Loading';
 import userService from '../../services/user.service';
 
-export default function UpdatePassword({navigation}) {
+export default function UpdateDOB({navigation}) {
   const {
     userState: {userData, username},
     authActions,
   } = useContext(AuthContext);
-
   const [loading, setLoading] = useState(false);
+  const [dob, setDOB] = useState(
+    userData.birthday_date ? new Date(userData.birthday_date) : new Date(),
+  );
 
-  const handleSubmit = values => {
+  const handleSubmit = _ => {
     setLoading(true);
     Keyboard.dismiss();
     userService
-      .editProfile(username, values)
+      .editProfile(username, {...userData, birthday_date: dob.toDateString()})
       .then(({status, data}) => {
         if (status === 200) {
-
           authActions.updateUserInfo(data);
           setLoading(false);
           navigation.goBack();
@@ -40,55 +42,64 @@ export default function UpdatePassword({navigation}) {
       .catch(e => console.error(e.message));
   };
 
-  const validation = Yup.object().shape({
-    password: Yup.string().required().label('Password'),
-    confirmPassword: Yup.string().required().label('Confirm Password'),
-  });
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = date => {
+    setDOB(date);
+    hideDatePicker();
+  };
 
   return (
     <KeyboardAvoidingView style={styles.container}>
       <HeaderWithBackArrow
         onBackButton={_ => navigation.goBack()}
-        title="Change Password"
+        title="Date of Birth"
       />
       {loading && <Loading text="Saving.." modal />}
       <TouchableOpacity
-      activeOpacity={1}
+        activeOpacity={1}
         style={{flex: 1}}
         onPress={_ => Keyboard.dismiss()}>
-        <Formik
-          initialValues={{
-              password:'',
-              confirmPassword:''
-          }}
-          onSubmit={handleSubmit}
-          validationSchema={validation}>
-          {({values, handleChange, handleSubmit, handleBlur, errors}) => (
-            <View style={styles.card}>
-              <Text style={styles.label}>Password</Text>
-              <TextInput
-                value={values['password']}
-                onBlur={handleBlur('password')}
-                onChangeText={handleChange('password')}
-                style={[styles.input,{borderColor: errors['password'] ? "crimson":"#cacaca" }]}
-              />
-              {/* <Text style={styles.error}>{errors['firstName']}</Text> */}
+        <View style={styles.card}>
+          <Text style={styles.label}>Date of birth</Text>
 
-              <Text style={styles.label}>Confirm Password</Text>
-              <TextInput
-                style={[styles.input,{borderColor: errors['confirmPassword'] ? "crimson":"#cacaca" }]}
-                value={values['confirmPassword']}
-                onBlur={handleBlur('confirmPassword')}
-                onChangeText={handleChange('confirmPassword')}
-              />
-              {/* <Text style={styles.error}>{errors['lastName']}</Text> */}
-
-              <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
-                <Text style={styles.btnText}>Change</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </Formik>
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode="date"
+            onConfirm={handleConfirm}
+            date={dob}
+            maximumDate={new Date()}
+            onCancel={hideDatePicker}
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <TouchableOpacity onPress={showDatePicker}>
+              <Text
+                style={{
+                  margin: 5,
+                  fontSize: 18,
+                  fontWeight: '700',
+                }}>
+                {dob.toDateString()}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
+              <Text style={styles.btnText}>Update</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </TouchableOpacity>
     </KeyboardAvoidingView>
   );
@@ -120,7 +131,7 @@ const styles = StyleSheet.create({
   card: {
     marginVertical: 10,
     marginHorizontal: 5,
-    padding: 5,
+    padding: 15,
     backgroundColor: '#fff',
   },
   label: {

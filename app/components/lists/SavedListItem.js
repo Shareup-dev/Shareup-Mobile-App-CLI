@@ -3,12 +3,10 @@ import { StyleSheet, View, TouchableWithoutFeedback, Alert, Image,Text, Touchabl
 import { useFocusEffect } from '@react-navigation/native';
 import colors from '../../config/colors';
 import Icon from '../Icon';
-import authContext from '../../authContext';
-import UserService from '../../services/user.service';
+import authContext from '../../Contexts/authContext';
 import PostService from '../../services/post.service';
 //import Text from "../../components/Text";
 import PostOptionDrawer from '../drawers/PostOptionsDrawer';
-import fileStorage from '../../config/fileStorage';
 import ImageView from 'react-native-image-viewing';
 
 export default function SavedListItem({

@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {StyleSheet, Text} from 'react-native';
 import Button from '../components/buttons/LinkButton';
 import Screen from '../components/Screen';
-import authContext from '../authContext';
+import authContext from '../Contexts/authContext';
 
 export default function AccountScreen(props) {
   const {user, setUser} = useContext(authContext);

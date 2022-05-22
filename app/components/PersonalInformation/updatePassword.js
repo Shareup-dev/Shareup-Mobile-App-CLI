@@ -7,17 +7,16 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import AuthContext from '../../authContext';
+import AuthContext from '../../Contexts/authContext';
 import {HeaderWithBackArrow} from '../../components/headers';
 import colors from '../../config/colors';
 import * as Yup from 'yup';
 import Loading from '../../components/Loading';
 import userService from '../../services/user.service';
 
-export default function UpdateName({navigation}) {
+export default function UpdatePassword({navigation}) {
   const {
     userState: {userData, username},
     authActions,
@@ -42,15 +41,15 @@ export default function UpdateName({navigation}) {
   };
 
   const validation = Yup.object().shape({
-    firstName: Yup.string().required().label('First name'),
-    lastName: Yup.string().required().label('Last name'),
+    password: Yup.string().required().label('Password'),
+    confirmPassword: Yup.string().required().label('Confirm Password'),
   });
 
   return (
     <KeyboardAvoidingView style={styles.container}>
       <HeaderWithBackArrow
         onBackButton={_ => navigation.goBack()}
-        title="Name"
+        title="Change Password"
       />
       {loading && <Loading text="Saving.." modal />}
       <TouchableOpacity
@@ -58,31 +57,34 @@ export default function UpdateName({navigation}) {
         style={{flex: 1}}
         onPress={_ => Keyboard.dismiss()}>
         <Formik
-          initialValues={userData}
+          initialValues={{
+              password:'',
+              confirmPassword:''
+          }}
           onSubmit={handleSubmit}
           validationSchema={validation}>
           {({values, handleChange, handleSubmit, handleBlur, errors}) => (
             <View style={styles.card}>
-              <Text style={styles.label}>First Name</Text>
+              <Text style={styles.label}>Password</Text>
               <TextInput
-                value={values['firstName']}
-                onBlur={handleBlur('firstName')}
-                onChangeText={handleChange('firstName')}
-                style={[styles.input,{borderColor: errors['firstName'] ? "crimson":"#cacaca" }]}
+                value={values['password']}
+                onBlur={handleBlur('password')}
+                onChangeText={handleChange('password')}
+                style={[styles.input,{borderColor: errors['password'] ? "crimson":"#cacaca" }]}
               />
               {/* <Text style={styles.error}>{errors['firstName']}</Text> */}
 
-              <Text style={styles.label}>Last Name</Text>
+              <Text style={styles.label}>Confirm Password</Text>
               <TextInput
-                style={[styles.input,{borderColor: errors['lastName'] ? "crimson":"#cacaca" }]}
-                value={values['lastName']}
-                onBlur={handleBlur('lastName')}
-                onChangeText={handleChange('lastName')}
+                style={[styles.input,{borderColor: errors['confirmPassword'] ? "crimson":"#cacaca" }]}
+                value={values['confirmPassword']}
+                onBlur={handleBlur('confirmPassword')}
+                onChangeText={handleChange('confirmPassword')}
               />
               {/* <Text style={styles.error}>{errors['lastName']}</Text> */}
 
               <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
-                <Text style={styles.btnText}>Update</Text>
+                <Text style={styles.btnText}>Change</Text>
               </TouchableOpacity>
             </View>
           )}

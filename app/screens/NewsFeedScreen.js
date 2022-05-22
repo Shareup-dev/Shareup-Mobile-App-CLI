@@ -7,7 +7,7 @@ import {
   View,
   Text,
 } from 'react-native';
-import authContext from '../authContext';
+import authContext from '../Contexts/authContext';
 import Screen from '../components/Screen';
 import Card from '../components/lists/Card';
 import FeedTop from '../components/FeedTop';

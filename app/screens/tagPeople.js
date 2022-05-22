@@ -7,12 +7,7 @@ import colors from '../config/colors';
 import {HeaderButton, HeaderWithBackArrow} from '../components/headers';
 import {Checkbox} from 'react-native-paper';
 import UserService from '../services/user.service';
-import authContext from '../authContext';
-
-// const usersData = [
-//   { name: "john Mac", img: "../assets/images/reel2.png" },
-//   { name: "Kaneshamoorthi Lokeesan", img: "../assets/images/reel2.png" },
-// ];
+import authContext from '../Contexts/authContext';
 
 export default function TagPeople({navigation, TagedUserData}) {
   const [tagPeople, setTagPeople] = useState([]);

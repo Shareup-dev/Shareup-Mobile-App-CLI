@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import {Header, HeaderTitle} from '../components/headers';
-import authContext from '../authContext';
+import authContext from '../Contexts/authContext';
 import UserService from '../services/user.service';
 import defaultStyles from '../config/styles';
 //import FriendService from '../services/FriendService';

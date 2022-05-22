@@ -22,7 +22,7 @@ import CameraBottomActions from '../components/CameraBottomActions';
 import CameraHeader from '../components/headers/CameraHeader';
 import Icon from '../components/Icon';
 import {launchImageLibrary} from 'react-native-image-picker';
-import AuthContext from '../authContext';
+import AuthContext from '../Contexts/authContext';
 import Video from 'react-native-video';
 import storyService from '../services/story.service';
 import {ProgressBar} from 'react-native-paper';

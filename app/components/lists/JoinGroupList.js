@@ -1,13 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {View, StyleSheet, FlatList, Text} from 'react-native';
 import GroupService from '../../services/group.service';
-import fileStorage from '../../config/fileStorage';
 
 import GroupJoinCard from './GroupJoinCard';
-import {userGroupActions} from '../../redux/userGroups';
-import store from '../../redux/store';
 import colors from '../../config/colors';
-import AuthContext from '../../authContext';
+import AuthContext from '../../Contexts/authContext';
 
 export default function JoinGroupList({props, navigation}) {
   const [allGroups, setallGroups] = useState([]);

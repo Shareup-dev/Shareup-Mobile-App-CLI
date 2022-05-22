@@ -11,7 +11,7 @@ import {useFocusEffect} from '@react-navigation/native';
 
 import colors from '../../config/colors';
 import defaultStyles from '../../config/styles';
-import authContext from '../../authContext';
+import authContext from '../../Contexts/authContext';
 import PostService from '../../services/post.service';
 import { postImagesAction } from '../../redux/postImages';
 import PostOptionDrawer from '../drawers/PostOptionsDrawer';

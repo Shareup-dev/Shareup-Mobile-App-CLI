@@ -9,7 +9,6 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
-import {useSelector} from 'react-redux';
 
 import Icon from '../components/Icon';
 import Card from '../components/lists/Card';
@@ -21,9 +20,8 @@ import routes from '../navigation/routes';
 
 import {HeaderWithBackArrow} from '../components/headers';
 import Tab from '../components/buttons/Tab';
-import fileStorage from '../config/fileStorage';
 
-import AuthContext from '../authContext';
+import AuthContext from '../Contexts/authContext';
 import DownModal from '../components/drawers/DownModal';
 import groupScreenDetector from '../redux/groupScreenDetector';
 

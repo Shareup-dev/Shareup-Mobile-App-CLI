@@ -11,7 +11,6 @@ import colors from "../../config/colors";
 import Tab from "../buttons/Tab";
 import Icon from "../Icon";
 import defaultStyles from "../../config/styles";
-import fileStorage from "../../config/fileStorage";
 
 export default function ListItem({
   title,
@@ -40,7 +39,7 @@ export default function ListItem({
         {image && (
           <Image
             style={styles.image}
-            source={{ uri: fileStorage.baseUrl + image }}
+            source={{ uri:  image }}
           />
         )}
         <View style={styles.detailsContainer}>

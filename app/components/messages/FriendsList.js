@@ -6,8 +6,7 @@ import defaultStyles from '../../config/styles';
 import ListItem from '../lists/ListItem';
 import EmptyNotice from './EmptyNotice';
 import ListWrapper from './ListWrapper';
-import conversation from '../../backendless/conversation';
-import AuthContext from '../../authContext';
+import AuthContext from '../../Contexts/authContext';
 
 export default function FriendsList({navigation, friends, loading, refresh}) {
   const [refreshing, setRefreshing] = useState(false);
@@ -21,22 +20,7 @@ export default function FriendsList({navigation, friends, loading, refresh}) {
   };
 
   const directToChatRoom = async item => {
-    // let currentConversation = await conversation.findConversation(
-    //   user.id,
-    //   item.id,
-    // );
 
-    // if (currentConversation === null) {
-    //   currentConversation = await conversation.createConversation(
-    //     user.id,
-    //     item.id,
-    //   );
-    // }
-
-    // navigation.navigate(routes.CHAT_ROOM, {
-    //   contact: item,
-    //   conversationId: currentConversation.objectId,
-    // });
     navigation.navigate(routes.CHAT_SCREEN);
   };
 

@@ -1,6 +1,5 @@
 import React,{useContext} from 'react';
 import { Text } from 'react-native-paper';
-//import AuthContext from '../authContext';
 //const {userData: loggedInUser} = useContext(AuthContext).userState;
 
 const common = {

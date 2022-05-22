@@ -1,258 +1,226 @@
-import React, { useState, useRef, useContext, useCallback ,useEffect} from 'react';
-import { View, StyleSheet, FlatList, Keyboard, Animated, TouchableOpacity, Dimensions, Text } from 'react-native';
+import React, {useState, useRef, useContext, useCallback} from 'react';
+import {
+  View,
+  StyleSheet,
+  Keyboard,
+  KeyboardAvoidingView,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 
-import { Header, HeaderCloseIcon, HeaderTitle } from '../components/headers';
+import {Header, HeaderCloseIcon, HeaderTitle} from '../components/headers';
 import Screen from '../components/Screen';
-import CommentItem from '../components/comments/CommentItem';
 import CommentTextField from '../components/comments/CommentTextField';
-import EmojiesBar from '../components/comments/EmojiesBar';
 import constants from '../config/constants';
-import { prepareDataForValidation } from 'formik';
-import colors from "../config/colors";
-import AuthContext from '../authContext';
-import { color } from 'react-native-reanimated';
-import { commentsActions } from "../../redux/comments";
-import {useDispatch, useSelector} from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
+import AuthContext from '../Contexts/authContext';
+
+import {useFocusEffect} from '@react-navigation/native';
 import postService from '../services/post.service';
-import SwapService from '../services/swap.service'
+import SwapService from '../services/swap.service';
+import {CommentsList} from '../components/comments';
+import CommentsContext from '../Contexts/commentsContext';
+import colors from '../config/colors';
+import {CommentText} from '../components/comments';
 
-
-
-//import UserService from '../services/UserService';
-
-export default function CommentsScreen({ navigation, route }) {
-  const { userId, postId, setNumberOfComments, postType, swapId,fromDetailScreen,writeComment } =
-    route.params;
-  const commentsListRef = useRef();
+export default function CommentsScreen({navigation, route}) {
+  const {postTypes} = constants;
   const commentTextFieldRef = useRef();
-  //const [isUserLiked, setIsUserLiked] = useState(false);
-  const [commentsList, setCommentsList] = useState([]);
-  const [replyList, setReplyList] = useState([]);
-  const [isEdit,setIsEdit] = useState(false)
+  const {userState} = useContext(AuthContext);
+  const {
+    postId,
+    postType,
+    swapId,
+    fromDetailScreen,
+    writeComment = true,
+  } = route.params;
+
+  const [comments, setComments] = useState({
+    loading: false,
+    state: [],
+  });
+  const [isReplied, setIsReplied] = useState(false);
+  const [isReply, setIsReply] = useState(false);
+  const [selectedComment, setSelectedComment] = useState(null);
   const [commentContent, setCommentContent] = useState('');
-  const [comment, setComment] = useState('')
-  const [isReply, setIsReply] = useState(false)
-  // needed to setup list refreshing
-  const [refreshing, setRefreshing] = useState(false);
-  const { userState } = useContext(AuthContext);
-  const { postTypes } = constants;
- 
-  //const [frmReply,setFrmReply] = useState(fromReply)
-
-  useEffect(() => {
-    
-    }, [isEdit]);
-
-  useFocusEffect(
-    useCallback(() => {
-      
-      loadComments();
-      if (writeComment){
-        commentTextFieldRef.current.focus();
-      }
-      
-      // loadStories();
-      // return setActivityIndicator(false);
-      return;
-    }, [])
-   
-  )
-  const loadComments = async () => {
-    if (postType === postTypes.SWAP) {
-      SwapService.getSwapComment(swapId).then((res) => {
-        const commentArray = res.data//.reverse();
-        setCommentsList(commentArray)
-      }).catch(e => console.error(e.message))
-      setCommentsList(response.data.comments);
-    } else {
-      postService.getAllComments(userState?.userData?.id, postId)
-        .then(res => {
-          const commentArray = res.data//.reverse();
-          setCommentsList(commentArray)
-        })
-        .catch(e => console.error(e.message))
-    }
-  };
-
-  const handleCancel = () => {
-    navigation.goBack();
-  };
-
-
-  const hideReply = () => {
-
-
-    //<CommentsScreen route={{params: { comments: reply, userId: comment.user.id, commendId: comment.id, postType: postType, swapId: swapId, fromReply:true }}}/>
-  }
-  const handleAddComment = async () => {
-
-    if (isReply) {
-      if (postType === postTypes.SWAP) {
-        const comment = { content: commentContent };
-        postService.addSwapComment(userState?.userData?.id, swapId, comment.content).then(resp => {
-          refreshComments();
-          setCommentContent('');
-          commentTextFieldRef.current.clear();
-          Keyboard.dismiss();
-          // scrollToListBottom();
-        });
-      } else {
-        //const reply = {reply: commentContent};
-        const comment = { content: commentContent };
-        if (commentContent !== '') {
-          postService.replay(userState?.userData?.id, commentId, comment)
-            .then(res => {
-              refreshComments();
-              setCommentContent('');
-              commentTextFieldRef.current.clear();
-              Keyboard.dismiss();
-            })
-            .catch(e => console.error("1", e))
-
-          // scrollToListBottom();
-        }
-      }
-    } else {
-      if (postType === 'swap') {
-        const comment = { content: commentContent };
-        SwapService.createSwapcomment(userState?.userData?.id, swapId, comment.content).then(resp => {
-          refreshComments();
-          setCommentContent('');
-          commentTextFieldRef.current.clear();
-          Keyboard.dismiss();
-          // scrollToListBottom();
-        }).catch(console.error(e))
-      } else {
-        const comment = { content: commentContent };
-        if (commentContent !== '') {
-          postService.addComment(userState?.userData?.id, postId, comment)
-            .then(res => {
-              refreshComments();
-              setCommentContent('');
-              commentTextFieldRef.current.clear();
-              Keyboard.dismiss();
-            })
-            .catch(e => console.error( e))
-
-          // scrollToListBottom();
-        }
-      }
-    }
-  };
-  const handleEditComment = (status) => {
-    setIsEdit(status)
-  }
-  const handleReplyComment = (comment, showReply) => {
-    if (showReply) {
-      setComment(comment)
-      //  postService.getAllReply(commentId)
-      //   .then(res => {
-      //     const replyArray = res.data//.reverse();
-      //     setReplyList(replyArray)})
-      //   .catch(e => console.error(e))
-      commentTextFieldRef.current.focus();
-     
-      setIsReply(true)
-    } else {
-      commentTextFieldRef.current.blur();
-      setIsReply(false)
-    }
-
-  };
-
-  const refreshComments = async () => {
-    setRefreshing(true);
-    
-    loadComments();
-    
-    setRefreshing(false);
-  };
 
   const handleOnChangeText = text => {
-    // setComment(...text )
     setCommentContent(text);
   };
 
-  const scrollToListBottom = () => {
-    commentsListRef.current.scrollToEnd({ animated: true });
+  const focusTextField = () => commentTextFieldRef.current.focus();
+
+  useFocusEffect(
+    useCallback(() => {
+      loadComments();
+      if (writeComment) {
+        focusTextField();
+      }
+      return;
+    }, []),
+  );
+
+  const loadComments = () => {
+    setComments(prev => ({...prev, loading: true}));
+    if (postType === postTypes.SWAP) {
+      SwapService.getSwapComment(swapId)
+        .then(({data}) => {
+          setComments(prev => ({...prev, state: data}));
+        })
+        .catch(e => console.error(e.message))
+        .finally(_ => setComments(prev => ({...prev, loading: false})));
+    } else {
+      postService
+        .getAllComments(userState?.userData?.id, postId)
+        .then(({data}) => {
+          setComments(prev => ({...prev, state: data}));
+        })
+        .catch(e => console.error(e.message))
+        .finally(_ => setComments(prev => ({...prev, loading: false})));
+    }
   };
 
-  const handleReactions = async (cid) => {
-
-    const params = ({ reaction: "null" })
-    postService.likeUnlikeComment(userState?.userData?.id, cid, params)
-      .then(res => {
-        refreshComments();
-        //setIsUserLiked(!isUserLiked)
-      })//need to get likePostIds 
-      .catch(e => console.error(e))
-
-    //refreshComments();
+  const handleCancel = () => navigation.goBack();
+  const handleAddComment = async () => {
+    if (isReply) {
+      if (postType === postTypes.SWAP) {
+        const comment = {content: commentContent};
+        await postService
+          .addSwapComment(userState?.userData?.id, swapId, comment.content)
+          .then(resp => {
+            setCommentContent('');
+            commentTextFieldRef.current.clear();
+            Keyboard.dismiss();
+          })
+          .finally(() => setIsReplied(true));
+      } else {
+        const comment = {content: commentContent};
+        if (commentContent !== '') {
+          await postService
+            .replay(userState?.userData?.id, selectedComment.id, comment)
+            .then(res => {
+              setCommentContent('');
+              commentTextFieldRef.current.clear();
+              Keyboard.dismiss();
+            })
+            .catch(e => console.error('1', e))
+            .finally(() => setIsReplied(true));
+        }
+      }
+      cancelReplyComment();
+    } else {
+      if (postType === 'swap') {
+        const comment = {content: commentContent};
+        await SwapService.createSwapcomment(
+          userState?.userData?.id,
+          swapId,
+          comment.content,
+        )
+          .then(resp => {
+            setCommentContent('');
+            commentTextFieldRef.current.clear();
+            Keyboard.dismiss();
+          })
+          .catch(console.error(e));
+      } else {
+        const comment = {content: commentContent};
+        if (commentContent !== '') {
+          await postService
+            .addComment(userState?.userData?.id, postId, comment)
+            .then(({data}) => {
+              commentTextFieldRef.current.clear();
+              Keyboard.dismiss();
+            })
+            .catch(e => console.error(e));
+        }
+      }
+    }
+    await loadComments();
   };
 
+  const cancelReplyComment = () => {
+    setIsReply(false);
+    setSelectedComment(null);
+    setIsReplied(false);
+  };
 
   return (
-    <Screen style={styles.container}>
-      {!fromDetailScreen && <Header
-        left={<HeaderCloseIcon onPress={handleCancel} />}
-        middle={<HeaderTitle>Comments</HeaderTitle>}
-      />}
-
-      <FlatList
-        data={commentsList}
-        keyExtractor={comment => comment.id.toString()}
-        ref={commentsListRef}
-        onContentSizeChange={scrollToListBottom}
-        refreshing={refreshing}
-        onRefresh={refreshComments}
-        renderItem={({ item }) => (
-          <CommentItem
-            comment={item}
-            reactionsLength={
-              item?.reactions?.length ? item?.reactions?.length : 0
-            }
-            isUserLiked={item.commentLiked}
-            onInteraction={handleReactions}
-            //handleDelete={handleDeleteComment}
-            onReply={handleReplyComment}
-            handleEdit={handleEditComment}
-            isReply={false}
-            reply={replyList}
-            postType={postType}
-            isEdit={isEdit}
-            refresh={refreshing}
+    <CommentsContext.Provider
+      value={{
+        setSelectedComment,
+        setIsReply,
+        focusTextField,
+        isReplied,
+      }}>
+      <Screen style={styles.container}>
+        {!fromDetailScreen && (
+          <Header
+            left={<HeaderCloseIcon onPress={handleCancel} />}
+            middle={<HeaderTitle>Comments</HeaderTitle>}
           />
         )}
-      />
- {!isEdit &&(
-      <View style={styles.textFieldContainer}>
-        {/* <EmojiesBar addEmoji={addEmoji}/>  */}
-        <View style={styles.textFieldContainer}>
-         <CommentTextField
-          comment={comment}
-           onForwardPress={handleAddComment}
-           onChangeText={handleOnChangeText}
-           ref={commentTextFieldRef}
-           isReply={isReply}
-         />
+        <View style={styles.commentContainer}>
+          <KeyboardAvoidingView>
+            <CommentsList
+              data={comments.state}
+              refreshing={comments.loading}
+              onRefreshing={loadComments}
+            />
+          </KeyboardAvoidingView>
         </View>
-      </View>) }
-    </Screen>
+
+        <View style={styles.textFieldContainer}>
+          {isReply && selectedComment && (
+            <View
+              style={{
+                margin: 5,
+              }}>
+              <CommentText>{selectedComment.content}</CommentText>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    color: colors.iondigoDye,
+                  }}>{`Reply to: ${selectedComment.user.firstName}`}</Text>
+                <TouchableOpacity onPress={cancelReplyComment}>
+                  <Text
+                    style={{
+                      color: colors.red,
+                      marginHorizontal: 15,
+                    }}>{`Cancel`}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+          <CommentTextField
+            onForwardPress={handleAddComment}
+            ref={commentTextFieldRef}
+            isReply={isReply}
+            onChangeText={handleOnChangeText}
+          />
+        </View>
+      </Screen>
+    </CommentsContext.Provider>
   );
 }
 
 const styles = StyleSheet.create({
   textFieldContainer: {
-    marginHorizontal: 15,
+    paddingHorizontal: 15,
     marginBottom: 25,
     marginTop: 15,
+  },
+  commentContainer: {
+    justifyContent: 'space-between',
+    flex: 1,
   },
   container: {},
   replayContainer: {
     marginTop: 15,
-    marginStart: "20%",
-    // width: "50%",
-    alignItems: "flex-start"
-  }
+    marginStart: '20%',
+    alignItems: 'flex-start',
+  },
 });

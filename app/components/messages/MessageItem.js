@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import colors from '../../config/colors';
-import AuthContext from '../../authContext';
+import AuthContext from '../../Contexts/authContext';
 import UserProfilePicture from '../UserProfilePicture';
 
 export default function MessageItem({item, profilePicture}) {

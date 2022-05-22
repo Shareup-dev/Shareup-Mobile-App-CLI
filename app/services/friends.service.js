@@ -6,9 +6,7 @@ class Friends {
   addFriends = (uid, fid) => AuthAxios.post(`/friends/${uid}/${fid}`);
   removeFriends = (uid, fid) => AuthAxios.delete(`/friends/${uid}/${fid}`);
   sendRequest = (uid, fid) => AuthAxios.post(`/${uid}/friend_request/${fid}`);
-  acceptRequest = (uid, fid) =>
-    AuthAxios.post(`/${uid}/accept_friend_request/${fid}`);
-  declineRequest = (uid, fid) =>
-    AuthAxios.post(`/${uid}/decline_friend_request/${fid}`);
+  acceptRequest = (uid, fid) => AuthAxios.post(`/${uid}/accept_friend_request/${fid}`);
+  declineRequest = (uid, fid) => AuthAxios.post(`/${uid}/decline_friend_request/${fid}`);
 }
 export default new Friends();

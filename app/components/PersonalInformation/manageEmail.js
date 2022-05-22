@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {View,TouchableOpacity, StyleSheet, Text, TextInput} from 'react-native';
-import AuthContext from '../../authContext';
+import AuthContext from '../../Contexts/authContext';
 import {HeaderWithBackArrow} from '../../components/headers';
 import Loading from '../../components/Loading';
 import colors from '../../config/colors';

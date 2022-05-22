@@ -8,7 +8,7 @@ import colors from "../config/colors";
 import routes from "../navigation/routes";
 import store from "../redux/store";
 import { swapedImagesAction } from "../redux/swapedImages";
-import authContext from '../authContext';
+import authContext from '../Contexts/authContext';
 import hangShareService from "../services/hangShare.service";
 
 const ShippingAddress = ({ navigation, route }) => {

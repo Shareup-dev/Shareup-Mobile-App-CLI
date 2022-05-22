@@ -14,7 +14,7 @@ import {Header, HeaderCloseIcon, HeaderTitle} from '../components/headers';
 import * as Yup from 'yup';
 import {Formik} from 'formik';
 import GroupService from '../services/group.service';
-import AuthContext from '../authContext';
+import AuthContext from '../Contexts/authContext';
 
 export default function CreateNewGroup({navigation}) {
   const [privacy, setPrivacy] = useState(false);

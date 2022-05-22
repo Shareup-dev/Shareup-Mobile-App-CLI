@@ -5,7 +5,7 @@ import Icon from '../components/Icon';
 import colors from '../config/colors';
 
 import routes from './routes';
-import authContext from '../authContext';
+import authContext from '../Contexts/authContext';
 
 
 export default function CustomHeaderBar({navigation}) {

@@ -8,10 +8,9 @@ import {
   Alert,
   FlatList,
 } from 'react-native';
-import AuthContext from '../authContext';
+import AuthContext from '../Contexts/authContext';
 import {HeaderWithBackArrow} from '../components/headers';
 import Icon from '../components/Icon';
-import fileStorage from '../config/fileStorage';
 import routes from '../navigation/routes';
 import groupService from '../services/group.service';
 

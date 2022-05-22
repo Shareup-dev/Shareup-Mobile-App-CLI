@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState,useCallback } from "react";
+import React, {useContext, useEffect, useState, useCallback} from 'react';
 import {
   View,
   StyleSheet,
@@ -10,232 +10,198 @@ import {
   Animated,
   Alert,
   FlatList,
-} from "react-native";
-import moment from "moment";
-import colors from "../../config/colors";
+} from 'react-native';
+import moment from 'moment';
+import colors from '../../config/colors';
 // import Separator from "../Separator";
 // import UserProfilePicture from "../UserProfilePicture";
 // import Icon from "../Icon";
 // import LinkButton from "../buttons/LinkButton";
 // import CommentText from "./CommentText";
-import authContext from "../../authContext";
+import authContext from '../../Contexts/authContext';
 // import { Button } from "react-native-paper";
 // import PostOptionDrawer from "../drawers/PostOptionsDrawer";
-import postService from "../../services/post.service";
+import postService from '../../services/post.service';
 // import { useFocusEffect } from "@react-navigation/native";
 // import OptionsDrawer from "../drawers/OptionsDrawer";
-import CommentItem from "../comments/CommentItem";
+import CommentItem from '../comments/CommentItem';
+import {useFocusEffect} from '@react-navigation/native';
 
 export default function ReplyList({
-  // fromReply,
   comment,
-  // reactionsLength,
-  // isUserLiked,
-  // onInteraction,
-  // handleDelete,
-  // handleEdit,
-  //handleLongPress,
-  // onReply,
-  // isReply,
-  // reply,
-   postType,
-  // swapId,
-  //setIsOptionsVisible,
-  //isOptionsVisible,
-  // setNumberOfComments,
-   refresh,
-  
+  postType,
+  refresh,
+  refreshComments
 }) {
-  //const isReply = false
-  //const [shoereply]
-  // const [isOptionsVisible,setIsOptionsVisible] = useState(false);
-  //const [isUserLiked, setIsUserLiked] = useState(false);
-  const [replyList,setReplyList] = useState([]);
-  // const [showReply,setshowReply] = useState(false)
-  
-  const { userState } = useContext(authContext);
-  const [isEdit,setIsEdit] = useState(false)
-  const [time, setTime] = useState(
-    moment(comment.published, "DD MMMM YYYY hh:mm:ss").fromNow()
+  const [replyList, setReplyList] = useState([]);
+
+  const {userState} = useContext(authContext);
+  const [isEdit, setIsEdit] = useState(false);
+
+
+  useFocusEffect(
+    useCallback(() => {
+      loadReply();
+    }, [refresh]),
   );
-  useEffect(() => {
-  
-    loadReply();
-    // return setActivityIndicator(false);
-    return;
-  },[refresh])
 
-  
-  const options = [ {
-    title:  'Edit',
-    icon: {
-      name : 'edit',
-      type : "Entypo",
-      size:15,
+  const options = [
+    {
+      title: 'Edit',
+      icon: {
+        name: 'edit',
+        type: 'Entypo',
+        size: 15,
+      },
+      onPress: () => {
+        //alert('Edit');
+        setIsOptionsVisible(false);
+        setIsEdit(true);
+        handleEdit(isEdit);
+      },
     },
-    onPress: () => {
-      //alert('Edit');
-      setIsOptionsVisible(false)
-      setIsEdit(true)
-      handleEdit(isEdit)
+    {
+      title: <Text>Delete</Text>,
+      icon: {
+        name: 'delete',
+        color: 'crimson',
+        size: 20,
+      },
+      onPress: () =>
+        Alert.alert('Delete', 'Are you sure you want to delete this comment?', [
+          {text: 'Yes', onPress: () => handleDeleteComment()},
+          {text: 'No'},
+        ]),
     },
-  },
-  {
-    title:<Text>Delete</Text>,
-    icon: {
-      name : 'delete',
-      color : "crimson",
-      size:20
-    },
-    onPress:()=>  Alert.alert('Delete', 'Are you sure you want to delete this comment?', [
-      {text: 'Yes', onPress: () => handleDeleteComment()},
-      {text: 'No'},
-    ])
-  },
-];
-const handleDeleteComment = () => {
-  postService.deleteReply(comment.id)
-    .then(res => {
-      refreshComments();
-      Keyboard.dismiss();
-    })
-    .catch(e => console.error(e))
+  ];
+  const handleDeleteComment = () => {
+    postService
+      .deleteReply(comment.id)
+      .then(res => {
+        refreshComments();
+        Keyboard.dismiss();
+      })
+      .catch(e => console.error(e));
 
-  // scrollToListBottom();
+    // scrollToListBottom();
+  };
 
-};
+  const handleLongPress = commendId => {
+    setIsOptionsVisible(true);
+  };
 
-  const handleLongPress = (commendId) =>{
-    setIsOptionsVisible(true)
-  }
+  const loadReply = () => {
+    postService
+      .getAllReply(userState.userData.id, comment.id)
+      .then(res => {
+        const replyArray = res.data; //.reverse();
+        setReplyList(replyArray);
+      })
+      .catch(e => console.error(e));
+  };
 
-  const loadReply = () =>{
-    postService.getAllReply(userState.userData.id,comment.id)
-    .then(res => {
-      const replyArray = res.data//.reverse();
-      
-      setReplyList(replyArray)
-    })
-    .catch(e => console.error(e))
-   
-  }
-
-  const handleReply = (commentId) =>{
-    onReply(commentId,true);
+  const handleReply = commentId => {
+    onReply(commentId, true);
     setshowReply(true);
     loadReply(commentId);
-  }
-  const hideReply = () =>{
-    setshowReply(false)
-    onReply(comment.id,false)
-  }
-  const handleEditComment = (status) => {
-    setIsEdit(status)
-  }
+  };
+  const hideReply = () => {
+    setshowReply(false);
+    onReply(comment.id, false);
+  };
+  const handleEditComment = status => {
+    setIsEdit(status);
+  };
   const refreshList = async () => {
     setRefreshing(true);
     loadReply();
     setRefreshing(false);
   };
-  const handleReactions = async (cid) => {
-
-    const params = ({ reaction: "null" })
-    postService.likeUnlikeReply(userState?.userData?.id, cid, params)
+  const handleReactions = async cid => {
+    const params = {reaction: 'null'};
+    postService
+      .likeUnlikeReply(userState?.userData?.id, cid, params)
       .then(res => {
-        
         loadReply();
         //setIsUserLiked(!isUserLiked)
-      })//need to get likePostIds 
-      .catch(e => console.error(e))
+      }) //need to get likePostIds
+      .catch(e => console.error(e));
 
-    //refreshComments();
   };
-   
+
   return (
     <View>
- {/* <View style={styles.replayContainer}> */}
-     <FlatList 
-     data={replyList}
-     keyExtractor={comment => comment.id.toString()}
-     //ref={commentsListRef}
-     //onContentSizeChange={scrollToListBottom}
-     refreshing={refresh}
-     onRefresh={refreshList}
-     renderItem={({item}) => (
-       <CommentItem
-         comment={item}
-         reactionsLength={
-           item?.reactions?.length ? item?.reactions?.length : 0
-         }
-         isUserLiked ={item.replyLiked}
-         onInteraction={handleReactions}
-         //handleDelete={handleDeleteComment}
-         //onReply={handleReplyComment}
-         handleEdit={handleEditComment}
-         isEdit={isEdit}
-         isReply={true}
-         //reply = {replyList}
-         postType={postType}
-         //fromReply={fromReply}
-         //isOptionVisible = {isOptionsVisible}
-        // setIsOptionVisible = {setIsOptionsVisible}
-       />
-       )}
-       />
-        </View>
+      <FlatList
+        data={replyList}
+        keyExtractor={comment => comment.id.toString()}
+        refreshing={refresh}
+        onRefresh={refreshList}
+        renderItem={({item}) => (
+          <CommentItem
+            comment={item}
+            reactionsLength={
+              item?.reactions?.length ? item?.reactions?.length : 0
+            }
+            isUserLiked={item.replyLiked}
+            onInteraction={handleReactions}
+            //handleDelete={handleDeleteComment}
+            //onReply={handleReplyComment}
+            handleEdit={handleEditComment}
+            isEdit={isEdit}
+            isReply={true}
+            //reply = {replyList}
+            postType={postType}
+            //fromReply={fromReply}
+            //isOptionVisible = {isOptionsVisible}
+            // setIsOptionVisible = {setIsOptionsVisible}
+          />
+        )}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container:{
-    flexDirection: "row",
-    //width: "100%",
-    paddingHorizontal: "10%",
+  container: {
+    flexDirection: 'row',
+    paddingHorizontal: '10%',
     paddingTop: 25,
     paddingBottom: 6,
-    //justifyContent: "center",
-    //alignSelf:"center",
-    marginStart:"20%",
-    alignItems:"flex-start",
-    //backgroundColor:colors.LightGray
+    marginStart: '20%',
+    alignItems: 'flex-start',
   },
   commentContainer: {
-    flexDirection: "row",
-    width: "90%",
-    paddingHorizontal: "10%",
+    flexDirection: 'row',
+    width: '90%',
+    paddingHorizontal: '10%',
     paddingTop: 25,
     paddingBottom: 6,
-    justifyContent: "center",
-    //alignSelf:"center",
-    //backgroundColor:colors.LightGray
-    
+    justifyContent: 'center',
   },
   replyContainer: {
-    flexDirection: "row",
-    width: "90%",
+    flexDirection: 'row',
+    width: '90%',
     paddingTop: 20,
     paddingBottom: 6,
-    //justifyContent: "flex-start",
-    justifyContent: "space-between",
-   // backgroundColor:colors.activeGreen
+    justifyContent: 'space-between',
   },
 
   medialContainer: {
     marginLeft: 10,
     paddingTop: 5,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
   },
   userName: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   commentDetailsContainer: {
-    width: "65%",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    width: '65%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   comment: {
     color: colors.mediumGray,
-    width: Dimensions.get("window").width / 1.7,
+    width: Dimensions.get('window').width / 1.7,
     fontSize: 13,
   },
   commentBody: {
@@ -251,21 +217,21 @@ const styles = StyleSheet.create({
   reply: {
     fontSize: 10,
     color: colors.iondigoDye,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   reactionContainer: {
     paddingTop: 5,
   },
   separator: {
     marginHorizontal: 15,
-    width:"90%"
+    width: '90%',
   },
   commentTextContainer: {
     marginVertical: 5,
   },
   readMore: {
     fontSize: 10,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: colors.iondigoDye,
   },
   deleteBox: {
@@ -275,11 +241,10 @@ const styles = StyleSheet.create({
     width: 100,
     height: '100%',
   },
-  replayContainer:{
+  replayContainer: {
     marginTop: 15,
-    marginStart:"20%",
-    width: "80%",
-    alignItems:"flex-start",
-    //backgroundColor:colors.red
-  }
+    marginStart: '20%',
+    width: '80%',
+    alignItems: 'flex-start',
+  },
 });

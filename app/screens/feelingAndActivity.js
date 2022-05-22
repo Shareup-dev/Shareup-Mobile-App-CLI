@@ -12,6 +12,7 @@ import ListOfActivities from "../components/lists/ListOfactivities";
 import { useDispatch, useSelector } from "react-redux";
 import Icon from "../components/Icon";
 import { postFeelingsActions } from "../redux/postFeelings";
+import BetterImage from "../components/betterImage/BetterImage";
 
 export default function FeelingAndActivity({ navigation }) {
   const postFeel = useSelector((state) => state.postFeel);
@@ -42,7 +43,7 @@ export default function FeelingAndActivity({ navigation }) {
       {postFeel.feeling && (
         <View style={styles.selectedState}>
           {postFeel.img ? (
-            <Image source={postFeel.img} style={styles.feelImg} />
+            <BetterImage source={postFeel.img} style={styles.feelImg} />
           ) : (
             <Icon name={postFeel.icon} color={postFeel.color} size={50} />
           )}

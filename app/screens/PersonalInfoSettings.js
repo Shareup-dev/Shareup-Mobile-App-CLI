@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {View, StyleSheet, Text, Dimensions, TextInput, TouchableOpacity} from 'react-native';
-import AuthContext from '../authContext';
+import AuthContext from '../Contexts/authContext';
 import HeaderWithBackArrow from '../components/headers/HeaderWithBackArrow';
 import routes from '../navigation/routes';
 

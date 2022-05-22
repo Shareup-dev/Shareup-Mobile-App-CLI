@@ -10,18 +10,12 @@ import {
   ScrollView
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import { SliderBox } from 'react-native-image-slider-box';
 import Tab from '../buttons/Tab'
 import colors from '../../config/colors';
 import defaultStyles from '../../config/styles';
-import authContext from '../../authContext';
-import PostService from '../../services/post.service';
+import authContext from '../../Contexts/authContext';
 import Icon from '../Icon';
 import PostOptionDrawer from '../drawers/PostOptionsDrawer';
-import fileStorage from '../../config/fileStorage';
-import ImageView from 'react-native-image-viewing';
-import PostActions from '../PostActions';
-import { color } from 'react-native-reanimated';
 import routes from '../../navigation/routes';
 import constants from '../../config/constants';
 import hangShareService from '../../services/hangShare.service';
