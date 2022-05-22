@@ -6,6 +6,7 @@ import {
   Text,
   Alert,
   Dimensions,
+  TouchableWithoutFeedback
 } from 'react-native'
 import {useSelector} from 'react-redux'
 import ImageView from 'react-native-image-viewing';
@@ -31,7 +32,7 @@ import { updatePostDataAction } from '../../redux/updatePostData';
 
 const imageSize = 160;
 const SwapCard = React.memo(
-  ({item, navigation, userId, style, reloadPosts}) => {
+  ({item, navigation, userId, style, reloadPosts,onPress}) => {
     const actionsTabSizeRatio = 0.5;
     const [isOptionsVisible, setIsOptionsVisible] = useState(false);
     const [numberOfComments, setNumberOfComments] = useState(
@@ -99,6 +100,20 @@ const SwapCard = React.memo(
           dispatch(postImagesAction.setImages(item.media?.map(image => image.mediaPath)))
           navigation.navigate(routes.ADD_POST, {
             postType: item.allPostsType,
+          });
+          setIsOptionsVisible(false);
+        },
+      },
+      {
+        title: 'Share friends',
+        icon: {
+          image: require('../../assets/post-options-icons/share-friends-icon.png'),
+        },
+        onPress: () => {
+          dispatch(updatePostDataAction.setState(item))
+          navigation.navigate(routes.ADD_POST, {
+            postType: constants.postTypes.SHARE_POST,
+            // postData,
           });
           setIsOptionsVisible(false);
         },
@@ -184,6 +199,7 @@ const SwapCard = React.memo(
     const {width} = Dimensions.get('window');
 
     return (
+      <TouchableWithoutFeedback onPress={onPress}>
       <View style={[styles.card, defaultStyles.cardBorder, style]}>
         {currentImage && (
           <ImageView
@@ -259,6 +275,7 @@ const SwapCard = React.memo(
           />
         </View>
       </View>
+      </TouchableWithoutFeedback>
     );
   },
 );
