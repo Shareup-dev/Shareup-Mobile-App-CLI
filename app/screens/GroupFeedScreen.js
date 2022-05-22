@@ -24,6 +24,9 @@ import Tab from '../components/buttons/Tab';
 import AuthContext from '../Contexts/authContext';
 import DownModal from '../components/drawers/DownModal';
 import groupScreenDetector from '../redux/groupScreenDetector';
+import { postTypeSliceAction } from '../redux/postTypeSlice';
+import { useDispatch } from 'react-redux';
+import constants from '../config/constants';
 
 const windowWidth = Dimensions.get('screen').width;
 const GroupFeedScreen = ({navigation, route}) => {
@@ -36,6 +39,7 @@ const GroupFeedScreen = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [posts,setPosts] = useState([]);
+  const dispatch = useDispatch()
  
 
   useEffect(() => {
@@ -277,6 +281,7 @@ const GroupFeedScreen = ({navigation, route}) => {
                   /> */}
                 </View>
                 {checkOwner() || isMember ? (
+                 
                   <WritePost
                     groupPost={true}
                     groupId={group.id}

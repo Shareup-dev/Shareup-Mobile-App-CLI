@@ -429,6 +429,7 @@ export default function AddPostScreen({ navigation, route }) {
     postService
       .sharePost(user.id, postData.id, formData)
       .then(res => {
+        console.log("response::",res.data);
         store.dispatch(feedPostsAction.addFeedPost(res.data));
         navigation.navigate(routes.FEED);
       })
