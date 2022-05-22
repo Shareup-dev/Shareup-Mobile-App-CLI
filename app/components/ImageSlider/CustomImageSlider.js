@@ -3,7 +3,7 @@ import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import BetterImage from '../betterImage/BetterImage';
 import ImageView from 'react-native-image-viewing';
 
-function CustomImageSlider({media, width, height}) {
+function CustomImageSlider({media = [], width, height}) {
   const [imageSlider, setImageSlider] = useState({
     state: false,
     index: 0,
@@ -55,6 +55,7 @@ function CustomImageSlider({media, width, height}) {
           </TouchableOpacity>
         ))}
       </View>
+     
     </>
   );
 }

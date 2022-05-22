@@ -12,7 +12,7 @@ const postImages = createSlice({
       return (previousState = []);
     },
     removeImage: (previousState, key) => {
-      const array = previousState.filter(item => item["uri"] !== key.payload);
+      const array = previousState.filter(item => item !== key.payload);
       return (previousState = array);
     },
     addNewImages: (previousImages, newImage) => {

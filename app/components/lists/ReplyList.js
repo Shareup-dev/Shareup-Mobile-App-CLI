@@ -59,7 +59,7 @@ export default function ReplyList({
     moment(comment.published, "DD MMMM YYYY hh:mm:ss").fromNow()
   );
   useEffect(() => {
-   console.log("This");
+  
     loadReply();
     // return setActivityIndicator(false);
     return;
@@ -113,11 +113,11 @@ const handleDeleteComment = () => {
     postService.getAllReply(userState.userData.id,comment.id)
     .then(res => {
       const replyArray = res.data//.reverse();
-      console.log(replyArray);
+      
       setReplyList(replyArray)
     })
     .catch(e => console.error(e))
-    console.log("from state",replyList);
+   
   }
 
   const handleReply = (commentId) =>{
@@ -142,7 +142,7 @@ const handleDeleteComment = () => {
     const params = ({ reaction: "null" })
     postService.likeUnlikeReply(userState?.userData?.id, cid, params)
       .then(res => {
-        console.log(res.data);
+        
         loadReply();
         //setIsUserLiked(!isUserLiked)
       })//need to get likePostIds 

@@ -28,10 +28,10 @@ export default function ImageInputList({
       >
         {imageUris.map((image) => (
 
-          <View key={image["uri"]} style={isSwap ? null : styles.imagePadding}>
+          <View key={image} style={isSwap ? null : styles.imagePadding}>
             <ImageInput
               imageUri={image}
-              onChangeImage={() => onRemoveImage(image["uri"])}
+              onChangeImage={() => onRemoveImage(image)}
             />
             {isSwap &&
               imageUris.indexOf(image) == 0 &&
@@ -45,10 +45,12 @@ export default function ImageInputList({
         ))}
 
         {isSwap && imageUris.length < 2 && (
+         
           <ImageInput
             onChangeImage={(uri) => onAddImage(uri)}
             isSwap={isSwap}
           />
+          
         )
         }
       </ScrollView>

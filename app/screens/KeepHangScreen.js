@@ -65,7 +65,11 @@ export default function KeepHangScreen({navigation, route}) {
       mediaType: 'photo',
      selectionLimit: 5,
     }).then(image => {
-      dispatch(postImagesAction.setImages(image.assets)),
+     
+      const uris = image.assets.map(item => {
+        return item.uri;
+      });
+      dispatch(postImagesAction.setImages(uris)),
           navigation.navigate(routes.ADD_POST, {
             postType: postType,
           });
@@ -78,7 +82,10 @@ export default function KeepHangScreen({navigation, route}) {
       mediaType: 'photo',
      
     }).then(image => {
-      dispatch(postImagesAction.setImages(image.assets)),
+      const uris = image.assets.map(item => {
+        return item.uri;
+      });
+      dispatch(postImagesAction.setImages(uris)),
           navigation.navigate(routes.ADD_POST, {
             postType: postType,
           });

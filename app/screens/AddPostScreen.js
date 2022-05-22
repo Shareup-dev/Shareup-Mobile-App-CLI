@@ -19,7 +19,7 @@ import {
   FlatList,
 } from 'react-native';
 import Icon from '../components/Icon';
-import {groupPostsActions} from '../redux/groupPosts';
+import { groupPostsActions } from '../redux/groupPosts';
 import EnhancedOptionsDrawer from '../components/drawers/EnhancedOptionsDrawer';
 import IconButton from '../components/buttons/IconButton';
 import Text from '../components/Text';
@@ -29,7 +29,7 @@ import AuthContext from '../UserContext';
 import PostService from '../services/post.service';
 import swapService from '../services/swap.service';
 import routes from '../navigation/routes';
-import {useImagePicker} from '../hooks';
+import { useImagePicker } from '../hooks';
 import Header from '../components/headers/Header';
 import constants from '../config/constants';
 import defaultStyles from '../config/styles';
@@ -43,26 +43,28 @@ import {
 import OptionsDrawer from '../components/drawers/OptionsDrawer';
 import store from '../redux/store';
 import ImageInputList from '../components/ImageInputList';
-import {feedPostsAction} from '../redux/feedPostsSlice';
+import { feedPostsAction } from '../redux/feedPostsSlice';
 import RadioOptionDrawer from '../components/drawers/RadioOptionDrawer';
 import OptionBox from '../components/posts/OptionBox';
-import {useDispatch, useSelector} from 'react-redux';
-import {postFeelingsActions} from '../redux/postFeelings';
+import { useDispatch, useSelector } from 'react-redux';
+import { postFeelingsActions } from '../redux/postFeelings';
 import UserProfilePicture from '../components/UserProfilePicture';
 import hangShareService from '../services/hangShare.service';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import postService from '../services/post.service';
 import common from '../config/common';
-import {postImagesAction} from '../redux/postImages';
+import { postImagesAction } from '../redux/postImages';
 import BetterImage from '../components/betterImage/BetterImage';
 import CustomImageSlider from '../components/ImageSlider/CustomImageSlider';
+import { updatePostDataAction } from '../redux/updatePostData';
+import { updatePostModeAction } from '../redux/updateMode';
 
-export default function AddPostScreen({navigation, route}) {
-  const {postType, groupId, postData, isEdit} = route.params;
+export default function AddPostScreen({ navigation, route }) {
+  const { postType, groupId } = route.params;
   const flatListRef = useRef();
-  const {loadingIndicator, setloadingIndicator} = useContext(AuthContext);
+  const { loadingIndicator, setloadingIndicator } = useContext(AuthContext);
   const postImages = useSelector(state => state.postImages);
-  const {userData: user} = useContext(authContext)?.userState;
+  const { userData: user } = useContext(authContext)?.userState;
   const [loading, setLoading] = useState(false);
   const [tagedUserData, setTagedUserData] = useState([]);
   const [placeholder, setPlaceHolder] = useState('We Share, Do you?');
@@ -70,12 +72,13 @@ export default function AddPostScreen({navigation, route}) {
   const dispatch = useDispatch();
   const postFeel = useSelector(state => state.postFeel);
 
-  const {postTypes} = constants;
+  const { postTypes } = constants;
 
   const DEFAULT_TEXT = 'We Share, Do You ?';
   const SWAP_DEFAULT_TEXT = 'Hi all \n I want to Swap ...';
   const HANG_SHARE_TEXT = 'Please anyone want this,can have it';
-
+  const isEdit = useSelector(state => state.updatePostMode)
+  const postData = useSelector(state => state.updatePostData)
   const textInputRef = useRef();
   const [file, setFile] = useState([]);
   const sharePostDrawerRef = useRef(null); // reference for the enhanced drawer.
@@ -84,35 +87,35 @@ export default function AddPostScreen({navigation, route}) {
     [
       {
         title: 'Share Feed',
-        icon: {image: require('../assets/icons/gray-feed-icon.png')},
+        icon: { image: require('../assets/icons/gray-feed-icon.png') },
         onPress: () => {
           alert('Share Feed');
         },
       },
       {
         title: 'Share time',
-        icon: {image: require('../assets/icons/gray-share-time-icon.png')},
+        icon: { image: require('../assets/icons/gray-share-time-icon.png') },
         onPress: () => {
           alert('Share time');
         },
       },
       {
         title: 'Share Friends',
-        icon: {image: require('../assets/icons/gray-share-friends-icon.png')},
+        icon: { image: require('../assets/icons/gray-share-friends-icon.png') },
         onPress: () => {
           alert('Share Friends');
         },
       },
       {
         title: 'Share Point',
-        icon: {image: require('../assets/icons/gray-share-point-icon.png')},
+        icon: { image: require('../assets/icons/gray-share-point-icon.png') },
         onPress: () => {
           alert('Share Point');
         },
       },
       {
         title: 'Share Groups',
-        icon: {image: require('../assets/icons/gray-share-groups-icon.png')},
+        icon: { image: require('../assets/icons/gray-share-groups-icon.png') },
         onPress: () => {
           alert('Share Groups');
         },
@@ -222,32 +225,28 @@ export default function AddPostScreen({navigation, route}) {
   const [postPrivacyOption, setPostPrivacyOption] = useState(privacyOptions[0]); // object to present the current privacy option
 
   useEffect(() => {
+    
     loadImages();
     if (postType === postTypes.HANG_SHARE) {
       setPlaceHolder(HANG_SHARE_TEXT);
       setIsOptionsVisible(false);
     } else if (postType === postTypes.SWAP) {
       setPlaceHolder(SWAP_DEFAULT_TEXT);
+    } else if (postType === postTypes.SHARE_POST) {
+      setPlaceHolder(DEFAULT_TEXT);
+      //setText(postData.content)
     } else {
       setPlaceHolder(DEFAULT_TEXT);
     }
   }, [postImages]);
 
   const loadImages = () => {
-    if (isEdit) {
-      if (postData.media?.length !== 0) {
-        setImages(postData.media?.map(image => image.mediaPath));
-      }
-    } else {
-      // if (postImages.length !== 0){
-      const selectedImageUris = postImages?.map(image => {
-        return image['uri'];
-      });
-      setImageUriArray(selectedImageUris);
-      setImages(postImages);
-      handleButtonActivation(text, postImages);
-    }
-    // }
+    const selectedImageUris = postImages?.map(image => {
+      return image['uri'];
+    });
+    setImageUriArray(selectedImageUris);
+    setImages(postImages);
+    handleButtonActivation(text, postImages);
   };
   const setTagedUser = userData => {
     setTagedUserData(userData);
@@ -288,47 +287,25 @@ export default function AddPostScreen({navigation, route}) {
     if (images?.length === 0 && text === undefined) setIsButtonActive(false);
     if (postType === postTypes.SHARE_POST) setIsButtonActive(true);
   };
-
-  // const handelPickImage = async () => {
-  //   ImagePicker.openPicker({
-  //     width: "100%",
-  //     height: "100%",
-  //     multiple: true,
-  //     cropping: true
-  //   }).then(image => {
-
-  //     setFile(image);
-  //     const uri = image.map(item => {
-  //       return item.sourceURL;
-  //     });
-  //     onAddImage(uri);
-  //   });
-  // try {
-  //   const result = await pickImage().then((result) =>)
-  //   const uri = result.map(item => {
-  //     return item.sourceURL;
-  //   });
-  //   if (!result.cancelled) onAddImage(uri);
-  // } catch (error) {
-  //   console.error(error);
-  // }
-  // };
-
   const onAddImage = uri => {
     if (postType === postTypes.HANG_SHARE) {
       setPlaceHolder(HANG_SHARE_TEXT);
       setIsOptionsVisible(false);
     }
     setImages(images.concat(uri));
+    dispatch(postImagesAction.addNewImages(uri))
     handleButtonActivation(text, images);
   };
 
   const onRemoveImage = uri => {
+
     const updatedImages = images.filter(images => images !== uri);
     dispatch(postImagesAction.removeImage(uri));
-
     setImages(updatedImages);
     handleButtonActivation(text, updatedImages);
+    if ((postType === postTypes.SWAP) && (updatedImages.length === 0)) {
+      navigation.navigate(routes.SWAP)
+    }
   };
 
   //******************* POST HANDLE METHODS *********************//
@@ -340,7 +317,7 @@ export default function AddPostScreen({navigation, route}) {
     } else {
       const postContent = {
         text: text,
-        images: imageUriArray,
+        images: images,
         groupId: groupId,
       };
       const formData = createPostFormData(postContent);
@@ -369,8 +346,8 @@ export default function AddPostScreen({navigation, route}) {
   //........SWAP POST................//
   const swap = () => {
     const swapContent = {
-      text: text === '' ? SWAP_DEFAULT_TEXT : text,
-      images: imageUriArray,
+      text: text === '' ? placeholder : text,
+      images: images,
     };
 
     const formData = createPostFormData(swapContent);
@@ -405,9 +382,9 @@ export default function AddPostScreen({navigation, route}) {
   //........HANG SHARE POST................//
   const hangShare = () => {
     const swapContent = {
-      text: text === '' ? HANG_SHARE_TEXT : text,
+      text: text === '' ? placeholder : text,
       category: 'gifts',
-      images: imageUriArray,
+      images: images,
     };
     const formData = createPostFormData(swapContent);
     if (isEdit) {
@@ -465,8 +442,8 @@ export default function AddPostScreen({navigation, route}) {
       setError("Can't Create empty post");
     } else {
       const postContent = {
-        text: text === '' ? DEFAULT_TEXT : text,
-        images: imageUriArray,
+        text: text === '' ? placeholder : text,
+        images: images,
         feeling: postFeel.feeling ? postFeel.feeling : null,
         groupId: groupId,
       };
@@ -541,6 +518,8 @@ export default function AddPostScreen({navigation, route}) {
     setIsButtonActive(false);
     textInputRef.current.clear();
     dispatch(postImagesAction.removeAllImages());
+    dispatch(updatePostDataAction.removeState());
+    dispatch(updatePostModeAction.removeState())
   };
 
   const handelPrivacySetting = value => {
@@ -550,7 +529,7 @@ export default function AddPostScreen({navigation, route}) {
     setIsPrivacyOptionsVisible(!isPrivacyOptionsVisible);
   };
 
-  useEffect(() => {}, [postPrivacyOption]);
+  useEffect(() => { }, [postPrivacyOption]);
 
   const renderHeader = () => {
     if (postType === postTypes.HANG_SHARE && images.length === 0)
@@ -602,13 +581,13 @@ export default function AddPostScreen({navigation, route}) {
       );
   };
 
-  const {width, height} = Dimensions.get('window');
+  const { width, height } = Dimensions.get('window');
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const onViewRef = React.useRef(({viewableItems}) => {
+  const onViewRef = React.useRef(({ viewableItems }) => {
     setActiveIndex(viewableItems[0].index);
   });
-  const viewConfigRef = React.useRef({viewAreaCoveragePercentThreshold: 50});
+  const viewConfigRef = React.useRef({ viewAreaCoveragePercentThreshold: 50 });
 
   return (
     <Screen>
@@ -618,7 +597,7 @@ export default function AddPostScreen({navigation, route}) {
           <Image
             source={
               user.profilePicture
-                ? {uri: user.profilePicturePath}
+                ? { uri: user.profilePicturePath }
                 : require('../assets/default-profile-picture.png')
             }
             style={defaultStyles.circledProfilePicture}
@@ -660,18 +639,18 @@ export default function AddPostScreen({navigation, route}) {
 
           {(postType === postTypes.HANG_SHARE ||
             postType === postTypes.SHARE_UP) && (
-            <IconButton
-              onPress={() => navigation.navigate(routes.KEEP_HANG, postType)}
-              IconComponent={
-                <Icon
-                  image={require('../assets/icons/squared-add-icon.png')}
-                  color={colors.iondigoDye}
-                  backgroundSizeRatio={0.8}
-                />
-              }
-              style={styles.plusIcon}
-            />
-          )}
+              <IconButton
+                onPress={() => navigation.navigate(routes.KEEP_HANG, postType)}
+                IconComponent={
+                  <Icon
+                    image={require('../assets/icons/squared-add-icon.png')}
+                    color={colors.iondigoDye}
+                    backgroundSizeRatio={0.8}
+                  />
+                }
+                style={styles.plusIcon}
+              />
+            )}
         </View>
 
         {/**Content */}
@@ -685,10 +664,10 @@ export default function AddPostScreen({navigation, route}) {
               ) : (
                 <Icon name={postFeel.icon} color={postFeel.color} />
               )}
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text
                   style={
-                    (styles.postFeelText, {fontWeight: '700', fontSize: 14})
+                    (styles.postFeelText, { fontWeight: '700', fontSize: 14 })
                   }>
                   {postFeel.feeling}
                 </Text>
@@ -709,6 +688,7 @@ export default function AddPostScreen({navigation, route}) {
           </TouchableOpacity>
         ) : null}
         <TextInput
+          //value={isEdit?text:placeholder}
           placeholder={isEdit ? postData.content : placeholder}
           placeholderTextColor={isEdit ? colors.dark : colors.dimGray}
           style={styles.textInput}
@@ -734,20 +714,23 @@ export default function AddPostScreen({navigation, route}) {
                 marginHorizontal: 5,
               }}>
               <UserProfilePicture
-                profilePicture={postData.userdata.profilePicturePath}
+                profilePicture={!isEdit ? postData.userdata?.profilePicturePath : postData.post.userdata.profilePicturePath}
                 size={35}
               />
               <Text
-                style={{fontSize: 15, marginHorizontal: 5, fontWeight: '600'}}>
-                {`${postData.userdata?.firstName} ${postData.userdata?.lastName}`}
+                style={{ fontSize: 15, marginHorizontal: 5, fontWeight: '600' }}>
+                {!isEdit ? `${postData.userdata?.firstName} ${postData.userdata?.lastName}` : `${postData.post.userdata?.firstName} ${postData.post.userdata?.lastName}`}
               </Text>
             </View>
-            <View style={{marginTop: 20, marginHorizontal:5,marginBottom:5}}>
-              {postData.content !== '' && (
-                <Text style={{fontSize: 14}}>{postData?.content}</Text>
+            <View style={{ marginTop: 20, marginHorizontal: 5, marginBottom: 5 }}>
+              {!isEdit && postData.content !== '' && (
+                <Text style={{ fontSize: 14 }}>{postData.content}</Text>
+              )}
+              {isEdit && postData.post.content !== '' && (
+                <Text style={{ fontSize: 14 }}>{postData.post.content}</Text>
               )}
             </View>
-            <CustomImageSlider width={width - 42}  height={200} media={postData.media} />
+            <CustomImageSlider width={width - 42} height={200} media={!isEdit ? postData?.media : postData?.post?.media} />
           </View>
         )}
         <ImageInputList
@@ -885,7 +868,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
-  textInput: {height: '15%', textAlignVertical: 'top', marginTop: 10},
+  textInput: { height: '15%', textAlignVertical: 'top', marginTop: 10 },
   image: {
     width: '100%',
     height: 250,

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -21,6 +21,7 @@ export default function ImageInput({imageUri, onChangeImage, isSwap}) {
   //   const {granted} = await ImagePicker.requestCameraPermissionsAsync();
   //   if (!granted) alert('You need to enable permission to access the library');
   // };
+  
   const onPress = () => {
     if (!imageUri) selectImage();
     else
@@ -44,6 +45,10 @@ export default function ImageInput({imageUri, onChangeImage, isSwap}) {
     }
   };
   
+  const type = imageUri?.split('.').pop();
+  
+  
+  
   return (
     <View style={styles.container}>
       {imageUri ? (
@@ -58,13 +63,13 @@ export default function ImageInput({imageUri, onChangeImage, isSwap}) {
             size={25}
             onPress={onPress}
           />
-          {imageUri["type"] === "image/jpg"
-          ?<Image source={{uri: imageUri["uri"]}} style={styles.Image} />
+          { type === "image" || "jpg"
+          ?<Image source={{uri: imageUri}} style={styles.Image} />
           :<Video
           resizeMode={'contain'}
           style={[styles.Image]}
           source={{
-            uri: imageUri["uri"],
+            uri: imageUri,
           }}
           repeat={true}
         />

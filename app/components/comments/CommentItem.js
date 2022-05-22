@@ -58,7 +58,7 @@ export default function CommentItem({
     moment(comment.published, "DD MMMM YYYY hh:mm:ss").fromNow()
   );
   useEffect(() => {
-   console.log("itsme");
+  
    // loadReply();
     // loadStories();
     // return setActivityIndicator(false);
@@ -123,7 +123,7 @@ const handleDeleteComment = () => {
   const loadReply = () =>{
     postService.getAllReply(userState.userData.id,comment.id)
     .then(res => {
-      console.log("allReply",res.data);
+      
       const replyArray = res.data//.reverse();
       setReplyList(replyArray)})
     .catch(e => console.error(e))

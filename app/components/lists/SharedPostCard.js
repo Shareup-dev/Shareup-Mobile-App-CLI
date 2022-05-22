@@ -19,11 +19,15 @@ import PostOptionDrawer from '../drawers/PostOptionsDrawer';
 import constants from '../../config/constants';
 import Share from 'react-native-share';
 import onShareHandler from '../Share';
-
+import { updatePostDataAction } from '../../redux/updatePostData';
+import { updatePostModeAction } from '../../redux/updateMode';
+import authContext from '../../UserContext';
+import { useDispatch } from 'react-redux';
 
 export default function SharedPostCard(props) {
-  const {postData, navigation, ...rest} = props;
-
+  const {postData, navigation,user, ...rest} = props;
+  const {userState} = useContext(authContext);
+  const dispatch = useDispatch()
   const [isUserLiked, setIsUserLiked] = useState(postData.liked);
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [numberOfReactions, setNumberOfReactions] = useState(0);
@@ -59,10 +63,10 @@ export default function SharedPostCard(props) {
       title: 'Edit',
       icon: {image: require('../../assets/post-options-icons/swap-icon.png')},
       onPress: () => {
+        dispatch(updatePostModeAction.setState(true))
+        dispatch(updatePostDataAction.setState(postData))
         navigation.navigate(routes.ADD_POST, {
-          postType: constants.postTypes.CREATE_POST,
-          postData,
-          isEdit: true,
+          postType: constants.postTypes.SHARE_POST,
         });
         setIsOptionsVisible(false);
       },
@@ -73,10 +77,12 @@ export default function SharedPostCard(props) {
         image: require('../../assets/post-options-icons/share-friends-icon.png'),
       },
       onPress: () => {
+        dispatch(updatePostDataAction.setState(postData.post))
         navigation.navigate(routes.ADD_POST, {
           postType: constants.postTypes.SHARE_POST,
-          postData: postData.post,
+          // postData: postData.post,
         });
+        setIsOptionsVisible(false);
       },
     },
     {
@@ -252,6 +258,7 @@ export default function SharedPostCard(props) {
           noOptions
           postData={postData.post}
           navigation={navigation}
+          user = {user}
         />
       ) : (
         <View style={{alignItems: 'center', paddingVertical: 10}}>
