@@ -24,6 +24,7 @@ import CommentsList from './CommentsList';
 import CommentsContext from '../../Contexts/commentsContext';
 import DownModal from '../drawers/DownModal';
 
+
 const {width} = Dimensions.get('window');
 
 export default function CommentCard(props) {
@@ -34,7 +35,7 @@ export default function CommentCard(props) {
     useContext(CommentsContext);
   const {comment, commentLiked, replyComment, onRefreshing} = props;
   const time = moment(comment.published, 'DD MMMM YYYY hh:mm:ss').fromNow();
-
+  
   const [openMedal, setOpenMedal] = useState(false);
   const [editable, setEditable] = useState(false);
   const [content, setContent] = useState(comment.content);

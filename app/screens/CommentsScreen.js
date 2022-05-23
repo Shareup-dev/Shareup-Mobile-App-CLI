@@ -22,11 +22,14 @@ import {CommentsList} from '../components/comments';
 import CommentsContext from '../Contexts/commentsContext';
 import colors from '../config/colors';
 import {CommentText} from '../components/comments';
+import { feedPostsAction } from '../redux/feedPostsSlice';
+import { useDispatch } from 'react-redux';
 
 export default function CommentsScreen({navigation, route}) {
   const {postTypes} = constants;
   const commentTextFieldRef = useRef();
   const {userState} = useContext(AuthContext);
+  const dispatch = useDispatch();
   const {
     postId,
     postType,
@@ -61,6 +64,7 @@ export default function CommentsScreen({navigation, route}) {
   );
 
   const loadComments = () => {
+    console.log("load comment");
     setComments(prev => ({...prev, loading: true}));
     if (postType === postTypes.SWAP) {
       SwapService.getSwapComment(swapId)
@@ -73,7 +77,10 @@ export default function CommentsScreen({navigation, route}) {
       postService
         .getAllComments(userState?.userData?.id, postId)
         .then(({data}) => {
+          
+          const newData = {"commentCount" :data.length,"key":postId}
           setComments(prev => ({...prev, state: data}));
+          dispatch(feedPostsAction.updateCommentCount(newData))
         })
         .catch(e => console.error(e.message))
         .finally(_ => setComments(prev => ({...prev, loading: false})));
@@ -83,17 +90,6 @@ export default function CommentsScreen({navigation, route}) {
   const handleCancel = () => navigation.goBack();
   const handleAddComment = async () => {
     if (isReply) {
-      if (postType === postTypes.SWAP) {
-        const comment = {content: commentContent};
-        await postService
-          .addSwapComment(userState?.userData?.id, swapId, comment.content)
-          .then(resp => {
-            setCommentContent('');
-            commentTextFieldRef.current.clear();
-            Keyboard.dismiss();
-          })
-          .finally(() => setIsReplied(true));
-      } else {
         const comment = {content: commentContent};
         if (commentContent !== '') {
           await postService
@@ -106,23 +102,8 @@ export default function CommentsScreen({navigation, route}) {
             .catch(e => console.error('1', e))
             .finally(() => setIsReplied(true));
         }
-      }
       cancelReplyComment();
     } else {
-      if (postType === 'swap') {
-        const comment = {content: commentContent};
-        await SwapService.createSwapcomment(
-          userState?.userData?.id,
-          swapId,
-          comment.content,
-        )
-          .then(resp => {
-            setCommentContent('');
-            commentTextFieldRef.current.clear();
-            Keyboard.dismiss();
-          })
-          .catch(console.error(e));
-      } else {
         const comment = {content: commentContent};
         if (commentContent !== '') {
           await postService
@@ -134,8 +115,7 @@ export default function CommentsScreen({navigation, route}) {
             .catch(e => console.error(e));
         }
       }
-    }
-    await loadComments();
+     loadComments();
   };
 
   const cancelReplyComment = () => {

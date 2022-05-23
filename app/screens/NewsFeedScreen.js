@@ -31,7 +31,6 @@ export default function NewsFeedScreen({navigation, route}) {
   const [activityIndicator, setActivityIndicator] = useState(true);
 
   useEffect(() => {
-    
     loadNews();
   }, []);
   const loadNews = () => {

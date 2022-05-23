@@ -16,7 +16,6 @@ const feedPostsSlice = createSlice({
       return (previousFeedPosts = array);
     },
     updateFeedPost: (previousFeedPosts,newFeedPost) => {
-      console.log(newFeedPost,"newFeedPost::",newFeedPost.payload);
       const array = previousFeedPosts.map(item => {
        if (item["id"] !== newFeedPost.payload["id"]){
           return item
@@ -28,7 +27,20 @@ const feedPostsSlice = createSlice({
       });
       return (previousFeedPosts = array);
     },
-    // ToDO: Add update reducer
+    updateCommentCount: (previousFeedPosts,newState) => {
+     
+      const newvalue  = previousFeedPosts.map(item => {
+        if (item['id'] === newState.payload.key)
+        {
+          
+          item["numberOfComments"] = newState.payload.commentCount,
+          console.log(item["numberOfComments"]);
+        }
+        return item;
+      });
+      console.log("newvalue",previousFeedPosts);
+      return(previousFeedPosts = newvalue)
+    },
   },
 });
 
