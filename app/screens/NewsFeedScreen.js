@@ -45,7 +45,8 @@ export default function NewsFeedScreen({navigation, route}) {
   };
 
   const renderItem = ({item}) => {
-    {
+
+
       switch (item.allPostsType) {
         case constants.postTypes.SWAP:
           return (
@@ -97,7 +98,6 @@ export default function NewsFeedScreen({navigation, route}) {
             />
           );
       }
-    }
   };
 
   const hideActivityIndicator = () => {
@@ -125,6 +125,7 @@ export default function NewsFeedScreen({navigation, route}) {
         ListHeaderComponent={ListHeader}
         keyExtractor={(post, i) => i.toString()}
         showsVerticalScrollIndicator={false}
+        extraData={posts}
         renderItem={renderItem}
         ListEmptyComponent={() => (
           <>

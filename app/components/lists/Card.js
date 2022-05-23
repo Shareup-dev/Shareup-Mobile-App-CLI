@@ -20,9 +20,9 @@ import routes from '../../navigation/routes';
 import constants from '../../config/constants';
 import CustomImageSlider from '../ImageSlider/CustomImageSlider';
 import onShareHandler from '../Share';
-import { useDispatch } from 'react-redux';
-import { feedPostsAction } from '../../redux/feedPostsSlice';
-import { postDataSliceAction } from '../../redux/postDataSlice';
+import {useDispatch} from 'react-redux';
+import {feedPostsAction} from '../../redux/feedPostsSlice';
+import {postDataSliceAction} from '../../redux/postDataSlice';
 
 export default function Card({
   user,
@@ -40,9 +40,10 @@ export default function Card({
     postData.numberOfReaction,
   );
 
-  const [numberOfComments, setNumberOfComments] = useState(
-    postData.numberOfComments,
-  );
+  const [numberOfComments, setNumberOfComments] = useState(null);
+  useEffect(() => {
+    setNumberOfComments(postData.numberOfComments);
+  }, [postData]);
 
   const [isUserLiked, setIsUserLiked] = useState(postData.liked);
   const [comment, setComments] = useState(postData.comments);
@@ -51,7 +52,7 @@ export default function Card({
   const [currentImage, setCurrentImage] = useState();
   // const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [sliderWidth, setSliderWidth] = useState();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const options = [
     {
@@ -76,11 +77,15 @@ export default function Card({
       title: userState?.userData?.id === user?.id ? 'Edit' : '',
       icon: {image: require('../../assets/post-options-icons/swap-icon.png')},
       onPress: () => {
-        dispatch(postDataSliceAction.setEditPost(true))
-        dispatch(postDataSliceAction.setPostData(postData))
-        dispatch(postDataSliceAction.setImages(postData.media?.map(image => image.mediaPath)))
+        dispatch(postDataSliceAction.setEditPost(true));
+        dispatch(postDataSliceAction.setPostData(postData));
+        dispatch(
+          postDataSliceAction.setImages(
+            postData.media?.map(image => image.mediaPath),
+          ),
+        );
         navigation.navigate(routes.ADD_POST, {
-           postType: constants.postTypes.CREATE_POST,
+          postType: constants.postTypes.CREATE_POST,
         });
         setIsOptionsVisible(false);
       },
@@ -91,10 +96,9 @@ export default function Card({
         image: require('../../assets/post-options-icons/share-friends-icon.png'),
       },
       onPress: () => {
-       
-        dispatch(postDataSliceAction.setPostData(postData))
+        dispatch(postDataSliceAction.setPostData(postData));
         navigation.navigate(routes.ADD_POST, {
-           postType: constants.postTypes.SHARE_POST,
+          postType: constants.postTypes.SHARE_POST,
           // postData,
         });
         setIsOptionsVisible(false);
@@ -232,13 +236,14 @@ export default function Card({
     ]);
 
   const deletePost = () => {
-     PostService.deletePost(postData.id).then(res => {
-       if (res.status === 200){
-            dispatch(feedPostsAction.removeFeedPost(postData.id));
-            navigation.navigate(routes.FEED);
-       }
-     })
-     .catch(error => alert(error))
+    PostService.deletePost(postData.id)
+      .then(res => {
+        if (res.status === 200) {
+          dispatch(feedPostsAction.removeFeedPost(postData.id));
+          navigation.navigate(routes.FEED);
+        }
+      })
+      .catch(error => alert(error));
     // reloadPosts();
     setIsOptionsVisible(false);
   };

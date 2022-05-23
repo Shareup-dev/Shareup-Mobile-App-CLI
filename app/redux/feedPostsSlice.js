@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {createSlice} from '@reduxjs/toolkit';
 
 const feedPostsSlice = createSlice({
-  name: "feedPosts",
+  name: 'feedPosts',
   initialState: [],
   reducers: {
     setFeedPosts: (previousState, newFeedPost) => {
@@ -12,34 +12,33 @@ const feedPostsSlice = createSlice({
       return (previousFeedPosts = allFeedPosts);
     },
     removeFeedPost: (previousFeedPosts, key) => {
-      const array = previousFeedPosts.filter(item => item["id"] !== key.payload);
+      const array = previousFeedPosts.filter(
+        item => item['id'] !== key.payload,
+      );
       return (previousFeedPosts = array);
     },
-    updateFeedPost: (previousFeedPosts,newFeedPost) => {
+    updateFeedPost: (previousFeedPosts, newFeedPost) => {
       const array = previousFeedPosts.map(item => {
-       if (item["id"] !== newFeedPost.payload["id"]){
-          return item
-       }else{
-         
-          item = newFeedPost.payload
-          return item
-       }
+        if (item['id'] !== newFeedPost.payload['id']) {
+          return item;
+        } else {
+          item = newFeedPost.payload;
+          return item;
+        }
       });
       return (previousFeedPosts = array);
     },
-    updateCommentCount: (previousFeedPosts,newState) => {
-     
-      const newvalue  = previousFeedPosts.map(item => {
-        if (item['id'] === newState.payload.key)
-        {
-          
-          item["numberOfComments"] = newState.payload.commentCount,
-          console.log(item["numberOfComments"]);
+    updateCommentCount: (previousFeedPosts, newState) => {
+      const newvalue = previousFeedPosts.map(item => {
+        if (item['id'] === newState.payload.key) {
+          return {
+            ...item,
+            numberOfComments: newState.payload.commentCount,
+          };
         }
         return item;
       });
-      console.log("newvalue",previousFeedPosts);
-      return(previousFeedPosts = newvalue)
+      return (previousFeedPosts = newvalue);
     },
   },
 });

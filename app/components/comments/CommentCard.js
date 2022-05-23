@@ -98,7 +98,6 @@ export default function CommentCard(props) {
         .deleteReply(comment.id)
         .then(res => onRefreshing())
         .catch(e => console.error(e))
-        .finally(() => setOpenMedal(false));
     } else {
       postService
         .deleteComment(comment.id)
@@ -112,6 +111,7 @@ export default function CommentCard(props) {
   };
 
   const deleteCommentHandler = () => {
+    setOpenMedal(false)
     Alert.alert('Delete Comment', 'Do you want to delete this comment?', [
       {
         text: 'Confirm',
