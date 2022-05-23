@@ -58,9 +58,12 @@ import BetterImage from '../components/betterImage/BetterImage';
 import CustomImageSlider from '../components/ImageSlider/CustomImageSlider';
 import { updatePostDataAction } from '../redux/updatePostData';
 import { updatePostModeAction } from '../redux/updateMode';
+import { groupIdSliceAction } from '../redux/groupIdSlice';
+import { postDataSliceAction } from '../redux/postDataSlice';
+
 
 export default function AddPostScreen({ navigation, route }) {
-  const { postType, groupId } = route.params;
+  const { groupId ,postType } = route.params;
   const flatListRef = useRef();
   const { loadingIndicator, setloadingIndicator } = useContext(AuthContext);
   const postImages = useSelector(state => state.postImages);
@@ -71,14 +74,16 @@ export default function AddPostScreen({ navigation, route }) {
 
   const dispatch = useDispatch();
   const postFeel = useSelector(state => state.postFeel);
-
+  
   const { postTypes } = constants;
 
   const DEFAULT_TEXT = 'We Share, Do You ?';
   const SWAP_DEFAULT_TEXT = 'Hi all \n I want to Swap ...';
   const HANG_SHARE_TEXT = 'Please anyone want this,can have it';
   const isEdit = useSelector(state => state.updatePostMode)
-  const postData = useSelector(state => state.updatePostData)
+  //const postData = useSelector(state => state.updatePostData)
+  const groupid = useSelector(state => state.groupIdSlice)
+  const postData = useSelector(state => state.postDataSlice)
   const textInputRef = useRef();
   const [file, setFile] = useState([]);
   const sharePostDrawerRef = useRef(null); // reference for the enhanced drawer.
@@ -225,7 +230,10 @@ export default function AddPostScreen({ navigation, route }) {
   const [postPrivacyOption, setPostPrivacyOption] = useState(privacyOptions[0]); // object to present the current privacy option
 
   useEffect(() => {
-    
+    if(postType === postTypes.GROUP_POST) {
+      dispatch(postDataSliceAction.setGroupId(groupId))
+    }
+    console.log(postData);
     loadImages();
     if (postType === postTypes.HANG_SHARE) {
       setPlaceHolder(HANG_SHARE_TEXT);
@@ -238,15 +246,15 @@ export default function AddPostScreen({ navigation, route }) {
     } else {
       setPlaceHolder(DEFAULT_TEXT);
     }
-  }, [postImages]);
+  }, [postData]);
 
   const loadImages = () => {
-    const selectedImageUris = postImages?.map(image => {
+    const selectedImageUris = postData['postImages']?.map(image => {
       return image['uri'];
     });
     setImageUriArray(selectedImageUris);
-    setImages(postImages);
-    handleButtonActivation(text, postImages);
+    setImages(postData['postImages']);
+    handleButtonActivation(text, postData['postImages']);
   };
   const setTagedUser = userData => {
     setTagedUserData(userData);
@@ -293,14 +301,14 @@ export default function AddPostScreen({ navigation, route }) {
       setIsOptionsVisible(false);
     }
     setImages(images.concat(uri));
-    dispatch(postImagesAction.addNewImages(uri))
+    dispatch(postDataSliceAction.addNewImages(uri))
     handleButtonActivation(text, images);
   };
 
   const onRemoveImage = uri => {
 
     const updatedImages = images.filter(images => images !== uri);
-    dispatch(postImagesAction.removeImage(uri));
+    dispatch(postDataSliceAction.removeImage(uri));
     setImages(updatedImages);
     handleButtonActivation(text, updatedImages);
     if ((postType === postTypes.SWAP) && (updatedImages.length === 0)) {
@@ -315,10 +323,11 @@ export default function AddPostScreen({ navigation, route }) {
     if (text === '' && images.length === 0) {
       setError("Can't Create empty post");
     } else {
+      console.log("groupid::",postData['groupId']);
       const postContent = {
         text: text,
         images: images,
-        groupId: groupId,
+        groupId: postData['groupId'],
       };
       const formData = createPostFormData(postContent);
       PostService.createPost(user.id, formData)
@@ -352,9 +361,9 @@ export default function AddPostScreen({ navigation, route }) {
     };
 
     const formData = createPostFormData(swapContent);
-    if (isEdit) {
+    if (postData['EditPost']) {
       swapService
-        .editSwap(postData.id, formData)
+        .editSwap(postData.postDetail.id, formData)
         .then(resp => {
           store.dispatch(feedPostsAction.updateFeedPost(resp.data));
           //store.dispatch(feedPostsAction.addFeedPost(resp.data));
@@ -389,9 +398,9 @@ export default function AddPostScreen({ navigation, route }) {
       images: images,
     };
     const formData = createPostFormData(swapContent);
-    if (isEdit) {
+    if (postData['EditPost']) {
       hangShareService
-        .editHang(user.id, postData.id, formData)
+        .editHang(user.id, postData.postDetail.id, formData)
         .then(resp => {
           store.dispatch(feedPostsAction.updateFeedPost(resp.data));
           //store.dispatch(feedPostsAction.addFeedPost(resp.data));
@@ -427,7 +436,7 @@ export default function AddPostScreen({ navigation, route }) {
     formData.append('content', text);
 
     postService
-      .sharePost(user.id, postData.id, formData)
+      .sharePost(user.id, postData.postDetail.id, formData)
       .then(res => {
         console.log("response::",res.data);
         store.dispatch(feedPostsAction.addFeedPost(res.data));
@@ -452,8 +461,8 @@ export default function AddPostScreen({ navigation, route }) {
         groupId: groupId,
       };
       const formData = createPostFormData(postContent);
-      if (isEdit) {
-        PostService.editPost(postData.id, formData)
+      if (postData['EditPost']) {
+        PostService.editPost(postData.postDetail.id, formData)
           .then(resp => {
             console.log(resp.data);
             store.dispatch(feedPostsAction.updateFeedPost(resp.data));
@@ -523,9 +532,10 @@ export default function AddPostScreen({ navigation, route }) {
     setImages([]);
     setIsButtonActive(false);
     textInputRef.current.clear();
-    dispatch(postImagesAction.removeAllImages());
-    dispatch(updatePostDataAction.removeState());
-    dispatch(updatePostModeAction.removeState())
+    dispatch(postDataSliceAction.removeAllImages());
+    dispatch(postDataSliceAction.removeEditPost());
+    dispatch(postDataSliceAction.removePostData())
+   // dispatch(groupIdSliceAction.removeState())
   };
 
   const handelPrivacySetting = value => {
@@ -695,8 +705,8 @@ export default function AddPostScreen({ navigation, route }) {
         ) : null}
         <TextInput
           //value={isEdit?text:placeholder}
-          placeholder={isEdit ? postData.content : placeholder}
-          placeholderTextColor={isEdit ? colors.dark : colors.dimGray}
+          placeholder={postData['EditPost'] ? postData.postDetail.content : placeholder}
+          placeholderTextColor={postData['EditPost'] ? colors.dark : colors.dimGray}
           style={styles.textInput}
           // numberOfLines={10}
           multiline={true}
@@ -720,23 +730,23 @@ export default function AddPostScreen({ navigation, route }) {
                 marginHorizontal: 5,
               }}>
               <UserProfilePicture
-                profilePicture={!isEdit ? postData.userdata?.profilePicturePath : postData.post.userdata.profilePicturePath}
+                profilePicture={!postData['EditPost'] ? postData.postDetail?.userdata?.profilePicturePath : postData.postDetail?.post?.userdata.profilePicturePath}
                 size={35}
               />
               <Text
                 style={{ fontSize: 15, marginHorizontal: 5, fontWeight: '600' }}>
-                {!isEdit ? `${postData.userdata?.firstName} ${postData.userdata?.lastName}` : `${postData.post.userdata?.firstName} ${postData.post.userdata?.lastName}`}
+                {!postData['EditPost'] ? `${postData.postDetail?.userdata?.firstName} ${postData.postDetail?.userdata?.lastName}` : `${postData.postDetail?.post?.userdata?.firstName} ${postData.postDetail?.post?.userdata?.lastName}`}
               </Text>
             </View>
             <View style={{ marginTop: 20, marginHorizontal: 5, marginBottom: 5 }}>
-              {!isEdit && postData.content !== '' && (
-                <Text style={{ fontSize: 14 }}>{postData.content}</Text>
+              {!postData['EditPost'] && postData.postDetail?.content !== '' && (
+                <Text style={{ fontSize: 14 }}>{postData.postDetail?.content}</Text>
               )}
-              {isEdit && postData.post.content !== '' && (
-                <Text style={{ fontSize: 14 }}>{postData.post.content}</Text>
+              {postData['EditPost'] && postData.postDetail?.post?.content !== '' && (
+                <Text style={{ fontSize: 14 }}>{postData.postDetail?.post?.content}</Text>
               )}
             </View>
-            <CustomImageSlider width={width - 42} height={200} media={!isEdit ? postData?.media : postData?.post?.media} />
+            <CustomImageSlider width={width - 42} height={200} media={!postData['EditPost'] ? postData.postDetail?.media : postData.postDetail?.post?.media} />
           </View>
         )}
         <ImageInputList

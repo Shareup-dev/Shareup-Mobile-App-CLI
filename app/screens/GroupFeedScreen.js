@@ -24,7 +24,7 @@ import Tab from '../components/buttons/Tab';
 import AuthContext from '../Contexts/authContext';
 import DownModal from '../components/drawers/DownModal';
 import groupScreenDetector from '../redux/groupScreenDetector';
-import { postTypeSliceAction } from '../redux/postTypeSlice';
+import { postTypeSliceAction } from '../redux/groupIdSlice';
 import { useDispatch } from 'react-redux';
 import constants from '../config/constants';
 
@@ -105,7 +105,7 @@ const GroupFeedScreen = ({navigation, route}) => {
   };
 
   const checkOwner = () => {
-   if (userData.id === groupData.userdata?.id) return true;
+   if (userData.id === groupData.owner?.id) return true;
    else 
    return false;
   };
@@ -281,12 +281,12 @@ const GroupFeedScreen = ({navigation, route}) => {
                   /> */}
                 </View>
                 {checkOwner() || isMember ? (
-                 
                   <WritePost
                     groupPost={true}
                     groupId={group.id}
                     navigation={navigation}
                   />
+                  
                 ) : (
                   <View
                     style={{

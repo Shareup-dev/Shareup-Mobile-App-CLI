@@ -22,6 +22,7 @@ import * as ImagePicker from 'react-native-image-picker';
 import {useDispatch, useSelector} from 'react-redux';
 import {useImagePicker} from '../hooks';
 import {postImagesAction} from '../redux/postImages';
+import { postDataSliceAction } from '../redux/postDataSlice';
 
 
 export default function KeepHangScreen({navigation, route}) {
@@ -69,9 +70,10 @@ export default function KeepHangScreen({navigation, route}) {
       const uris = image.assets.map(item => {
         return item.uri;
       });
-      dispatch(postImagesAction.setImages(uris)),
+      
+      dispatch(postDataSliceAction.setImages(uris)) ,
           navigation.navigate(routes.ADD_POST, {
-            postType: postType,
+             postType: postType,
           });
     }).catch(error => console.error(error));
   };
@@ -85,9 +87,11 @@ export default function KeepHangScreen({navigation, route}) {
       const uris = image.assets.map(item => {
         return item.uri;
       });
-      dispatch(postImagesAction.setImages(uris)),
+      
+      dispatch(postDataSliceAction.setImages(uris)),
+      
           navigation.navigate(routes.ADD_POST, {
-            postType: postType,
+             postType: postType,
           });
      return image;
     });

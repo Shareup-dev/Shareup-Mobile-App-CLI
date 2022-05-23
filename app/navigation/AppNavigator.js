@@ -103,8 +103,9 @@ export default function AppNavigator() {
                   //   });
                   }
                   else {
+                    
                     navigation.navigate(routes.ADD_POST, {
-                      postType: postTypes.CREATE_POST,
+                       postType: postTypes.CREATE_POST,
                     });
                   }
                 }}

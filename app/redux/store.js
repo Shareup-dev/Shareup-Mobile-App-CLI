@@ -20,6 +20,8 @@ import postImageReducer from "./postImages";
 import reelActiveIndexReducer from "./ReelActiveIndex";
 import updatePostMode from "./updateMode";
 import updatePostData from "./updatePostData";
+import groupIdSlice from "./groupIdSlice";
+import postDataSlice from "./postDataSlice";
 
 export default store = configureStore({
   reducer: {
@@ -42,6 +44,8 @@ export default store = configureStore({
     postFeel: postFeelings,
     recentSearch:recentSearch,
     updatePostMode:updatePostMode.reducer,
-    updatePostData:updatePostData.reducer
+    updatePostData:updatePostData.reducer,
+    groupIdSlice:groupIdSlice.reducer,
+    postDataSlice:postDataSlice.reducer,
   },
 });

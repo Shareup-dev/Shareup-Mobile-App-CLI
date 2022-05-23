@@ -27,6 +27,7 @@ import Video from 'react-native-video';
 import storyService from '../services/story.service';
 import {ProgressBar} from 'react-native-paper';
 import routes from '../navigation/routes';
+import { postDataSliceAction } from '../redux/postDataSlice';
 
 export default function ShareupCameraScreen({navigation,route}) {
   let cameraRef;
@@ -87,12 +88,17 @@ export default function ShareupCameraScreen({navigation,route}) {
         skipProcessing: true,
         quality: 0.5,
       }).then(res => { 
-           
-            const uris = res.map(item => {
+           console.log([res]);
+            const uris = [res].map(item => {
               return item.uri;
             });
-            dispatch(postImagesAction.setImages(uris)),
-            navigation.navigate(routes.ADD_POST,{postType:postType})
+            
+            dispatch(postDataSliceAction.setImages(uris))
+           
+            
+            navigation.navigate(routes.ADD_POST,{
+               postType:postType
+            })
         })
         .catch(error => { console.error(error); })
      
@@ -142,9 +148,11 @@ export default function ShareupCameraScreen({navigation,route}) {
           const uris = res.assets.map(item => {
                   return item.uri;
                 });
-            dispatch(postImagesAction.setImages(uris)),
-
-            navigation.navigate(routes.ADD_POST,{postType:postType});
+                console.log(uris);
+            dispatch(postDataSliceAction.setImages(uris))
+            navigation.navigate(routes.ADD_POST,{
+               postType:postType
+            });
         //   setStory(res.assets[0]);
         //   setScreen('view');
         

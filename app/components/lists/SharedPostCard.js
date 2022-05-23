@@ -22,6 +22,7 @@ import Share from 'react-native-share';
 import onShareHandler from '../Share';
 import { updatePostDataAction } from '../../redux/updatePostData';
 import { updatePostModeAction } from '../../redux/updateMode';
+import { postDataSliceAction } from '../../redux/postDataSlice';
 import authContext from '../../UserContext';
 import { useDispatch } from 'react-redux';
 
@@ -78,9 +79,11 @@ export default function SharedPostCard(props) {
         image: require('../../assets/post-options-icons/share-friends-icon.png'),
       },
       onPress: () => {
-        dispatch(updatePostDataAction.setState(postData.post))
+        
+        dispatch(postDataSliceAction.setPostData(postData.post))
+        
         navigation.navigate(routes.ADD_POST, {
-          postType: constants.postTypes.SHARE_POST,
+           postType: constants.postTypes.SHARE_POST,
           // postData: postData.post,
         });
         setIsOptionsVisible(false);

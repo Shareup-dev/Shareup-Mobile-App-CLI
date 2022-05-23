@@ -25,6 +25,7 @@ import { useDispatch } from 'react-redux';
 import { updatePostModeAction } from '../../redux/updateMode';
 import { updatePostDataAction } from '../../redux/updatePostData';
 import { feedPostsAction } from '../../redux/feedPostsSlice';
+import { postDataSliceAction } from '../../redux/postDataSlice';
 
 export default function Card({
   user,
@@ -78,11 +79,11 @@ export default function Card({
       title: userState?.userData?.id === user?.id ? 'Edit' : '',
       icon: {image: require('../../assets/post-options-icons/swap-icon.png')},
       onPress: () => {
-        dispatch(updatePostModeAction.setState(true))
-        dispatch(updatePostDataAction.setState(postData))
-        dispatch(postImagesAction.setImages(postData.media?.map(image => image.mediaPath)))
+        dispatch(postDataSliceAction.setEditPost(true))
+        dispatch(postDataSliceAction.setPostData(postData))
+        dispatch(postDataSliceAction.setImages(postData.media?.map(image => image.mediaPath)))
         navigation.navigate(routes.ADD_POST, {
-          postType: constants.postTypes.CREATE_POST,
+           postType: constants.postTypes.CREATE_POST,
         });
         setIsOptionsVisible(false);
       },
@@ -93,9 +94,10 @@ export default function Card({
         image: require('../../assets/post-options-icons/share-friends-icon.png'),
       },
       onPress: () => {
-        dispatch(updatePostDataAction.setState(postData))
+       
+        dispatch(postDataSliceAction.setPostData(postData))
         navigation.navigate(routes.ADD_POST, {
-          postType: constants.postTypes.SHARE_POST,
+           postType: constants.postTypes.SHARE_POST,
           // postData,
         });
         setIsOptionsVisible(false);

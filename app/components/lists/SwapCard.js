@@ -25,6 +25,7 @@ import { useDispatch } from 'react-redux';
 import { updatePostModeAction } from '../../redux/updateMode';
 import { updatePostDataAction } from '../../redux/updatePostData';
 import { feedPostsAction } from '../../redux/feedPostsSlice';
+import { postDataSliceAction } from '../../redux/postDataSlice';
 
 
 const imageSize = 160;
@@ -92,11 +93,12 @@ const SwapCard = React.memo(
         title: userState?.userData?.id === user?.id ? 'Edit' : '',
         icon: {image: require('../../assets/post-options-icons/swap-icon.png')},
         onPress: () => {
-          dispatch(updatePostModeAction.setState(true))
-          dispatch(updatePostDataAction.setState(item))
-          dispatch(postImagesAction.setImages(item.media?.map(image => image.mediaPath)))
+          
+          dispatch(postDataSliceAction.setEditPost(true))
+          dispatch(postDataSliceAction.setPostData(item))
+          dispatch(postDataSliceAction.setImages(item.media?.map(image => image.mediaPath)))
           navigation.navigate(routes.ADD_POST, {
-            postType: item.allPostsType,
+             postType: item.allPostsType,
           });
           setIsOptionsVisible(false);
         },
@@ -107,7 +109,10 @@ const SwapCard = React.memo(
           image: require('../../assets/post-options-icons/share-friends-icon.png'),
         },
         onPress: () => {
-          dispatch(updatePostDataAction.setState(item))
+         
+         
+          dispatch(postDataSliceAction.setPostData(item))
+          
           navigation.navigate(routes.ADD_POST, {
             postType: constants.postTypes.SHARE_POST,
             // postData,

@@ -9,7 +9,9 @@ import routes from "../navigation/routes";
 import constants from "../config/constants";
 import colors from "../config/colors";
 
+
 const { postTypes } = constants;
+
 
 export default function WritePost({ navigation, style, groupPost, groupId }) {
   return (
@@ -17,7 +19,8 @@ export default function WritePost({ navigation, style, groupPost, groupId }) {
       <TouchableOpacity
         onPress={() =>
           {groupPost
-          ?navigation.navigate(routes.ADD_POST, {
+          ?
+            navigation.navigate(routes.ADD_POST, {
             postType: postTypes.GROUP_POST,
             groupPost:groupPost,
             groupId:groupId,

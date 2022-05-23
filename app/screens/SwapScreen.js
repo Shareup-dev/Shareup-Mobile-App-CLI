@@ -11,6 +11,7 @@ import {launchImageLibrary,launchCamera} from 'react-native-image-picker';
 import routes from '../navigation/routes';
 import constants from '../config/constants';
 import {postImagesAction} from '../redux/postImages';
+import { postDataSliceAction } from '../redux/postDataSlice';
 import {useDispatch, useSelector} from 'react-redux';
 
 export default function SwapScreen({navigation, route}) {
@@ -35,8 +36,13 @@ export default function SwapScreen({navigation, route}) {
         const uris = assets.map(item => {
           return item.uri;
         });
-        dispatch(postImagesAction.setImages(uris)),
-        navigation.navigate(routes.ADD_POST,{postType:constants.postTypes.SWAP});
+       
+        dispatch(postDataSliceAction.setImages(uris)),
+      
+       
+        navigation.navigate(routes.ADD_POST,{
+           postType:constants.postTypes.SWAP
+        });
       }
     });
   };
@@ -60,8 +66,13 @@ export default function SwapScreen({navigation, route}) {
         const uris = assets.map(item => {
           return item.uri;
         });
-        dispatch(postImagesAction.setImages(uris)),
-        navigation.navigate(routes.ADD_POST,{postType:constants.postTypes.SWAP});
+        
+        dispatch(postDataSliceAction.setImages(uris)),
+       
+        
+        navigation.navigate(routes.ADD_POST,{
+           postType:constants.postTypes.SWAP
+        });
       }
     });
   };

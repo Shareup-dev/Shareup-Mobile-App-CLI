@@ -17,6 +17,7 @@ import store from '../redux/store';
 import {swapedImagesAction} from '../redux/swapedImages';
 import constants from '../config/constants';
 import {postImagesAction} from '../redux/postImages';
+import { postDataSliceAction } from '../redux/postDataSlice';
 import {useDispatch, useSelector} from 'react-redux';
 
 const {postTypes} = constants;
@@ -80,9 +81,12 @@ const SwapDisplay = ({navigation, route}) => {
               );
               navigation.navigate(routes.FEED, {...route.params});
             } else {
-              dispatch(postImagesAction.setImages([route.params.swapImage])),
+              
+              dispatch(postDataSliceAction.setImages([route.params.setImages]))
+              
+              
               navigation.navigate(routes.ADD_POST, {
-                postType: postTypes.SWAP
+                 postType: postTypes.SWAP
               });
             }
           }}>
