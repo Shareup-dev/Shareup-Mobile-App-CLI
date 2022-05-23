@@ -15,7 +15,6 @@ import {
 } from 'react-native';
 
 import colors from '../config/colors';
-import {postImagesAction} from '../redux/postImages';
 import {useDispatch, useSelector} from 'react-redux';
 import {RNCamera} from 'react-native-camera';
 import CameraBottomActions from '../components/CameraBottomActions';

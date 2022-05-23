@@ -16,18 +16,13 @@ import feedPostsReducer from "./feedPostsSlice";
 import messagesReducer from "./messagesSlice";
 import postFeelings from "./postFeelings";
 import recentSearch from "./recentSearch";
-import postImageReducer from "./postImages";
 import reelActiveIndexReducer from "./ReelActiveIndex";
-import updatePostMode from "./updateMode";
-import updatePostData from "./updatePostData";
-import groupIdSlice from "./groupIdSlice";
 import postDataSlice from "./postDataSlice";
 
 export default store = configureStore({
   reducer: {
     reelActiveIndex:reelActiveIndexReducer,
     like: likeReducer,
-    postImages: postImageReducer.reducer,
     comments: commentsReducer.reducer,
     loggedInUserSlice: loggedInUserSlice.reducer,
     sentRequests,
@@ -43,9 +38,6 @@ export default store = configureStore({
     messages: messagesReducer,
     postFeel: postFeelings,
     recentSearch:recentSearch,
-    updatePostMode:updatePostMode.reducer,
-    updatePostData:updatePostData.reducer,
-    groupIdSlice:groupIdSlice.reducer,
     postDataSlice:postDataSlice.reducer,
   },
 });

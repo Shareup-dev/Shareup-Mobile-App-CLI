@@ -20,8 +20,6 @@ import PostOptionDrawer from '../drawers/PostOptionsDrawer';
 import constants from '../../config/constants';
 import Share from 'react-native-share';
 import onShareHandler from '../Share';
-import { updatePostDataAction } from '../../redux/updatePostData';
-import { updatePostModeAction } from '../../redux/updateMode';
 import { postDataSliceAction } from '../../redux/postDataSlice';
 import authContext from '../../UserContext';
 import { useDispatch } from 'react-redux';

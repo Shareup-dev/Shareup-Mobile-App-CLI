@@ -13,7 +13,6 @@ import colors from '../../config/colors';
 import defaultStyles from '../../config/styles';
 import authContext from '../../Contexts/authContext';
 import PostService from '../../services/post.service';
-import { postImagesAction } from '../../redux/postImages';
 import PostOptionDrawer from '../drawers/PostOptionsDrawer';
 import ImageView from 'react-native-image-viewing';
 import PostActions from '../PostActions';
@@ -22,8 +21,6 @@ import constants from '../../config/constants';
 import CustomImageSlider from '../ImageSlider/CustomImageSlider';
 import onShareHandler from '../Share';
 import { useDispatch } from 'react-redux';
-import { updatePostModeAction } from '../../redux/updateMode';
-import { updatePostDataAction } from '../../redux/updatePostData';
 import { feedPostsAction } from '../../redux/feedPostsSlice';
 import { postDataSliceAction } from '../../redux/postDataSlice';
 

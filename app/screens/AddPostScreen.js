@@ -53,12 +53,8 @@ import hangShareService from '../services/hangShare.service';
 import { useFocusEffect } from '@react-navigation/native';
 import postService from '../services/post.service';
 import common from '../config/common';
-import { postImagesAction } from '../redux/postImages';
 import BetterImage from '../components/betterImage/BetterImage';
 import CustomImageSlider from '../components/ImageSlider/CustomImageSlider';
-import { updatePostDataAction } from '../redux/updatePostData';
-import { updatePostModeAction } from '../redux/updateMode';
-import { groupIdSliceAction } from '../redux/groupIdSlice';
 import { postDataSliceAction } from '../redux/postDataSlice';
 
 
@@ -233,7 +229,6 @@ export default function AddPostScreen({ navigation, route }) {
     if(postType === postTypes.GROUP_POST) {
       dispatch(postDataSliceAction.setGroupId(groupId))
     }
-    console.log(postData);
     loadImages();
     if (postType === postTypes.HANG_SHARE) {
       setPlaceHolder(HANG_SHARE_TEXT);
@@ -323,7 +318,7 @@ export default function AddPostScreen({ navigation, route }) {
     if (text === '' && images.length === 0) {
       setError("Can't Create empty post");
     } else {
-      console.log("groupid::",postData['groupId']);
+      
       const postContent = {
         text: text,
         images: images,
@@ -332,7 +327,7 @@ export default function AddPostScreen({ navigation, route }) {
       const formData = createPostFormData(postContent);
       PostService.createPost(user.id, formData)
         .then(resp => {
-          console.log("data::",resp.data);
+       
           let existingPosts = store.getState().groupPosts;
           // setloadingIndicator(false)
           store.dispatch(
@@ -438,7 +433,7 @@ export default function AddPostScreen({ navigation, route }) {
     postService
       .sharePost(user.id, postData.postDetail.id, formData)
       .then(res => {
-        console.log("response::",res.data);
+        
         store.dispatch(feedPostsAction.addFeedPost(res.data));
         navigation.navigate(routes.FEED);
       })
@@ -464,7 +459,7 @@ export default function AddPostScreen({ navigation, route }) {
       if (postData['EditPost']) {
         PostService.editPost(postData.postDetail.id, formData)
           .then(resp => {
-            console.log(resp.data);
+            
             store.dispatch(feedPostsAction.updateFeedPost(resp.data));
             dispatch(postFeelingsActions.setDefault());
             navigation.navigate(routes.FEED);

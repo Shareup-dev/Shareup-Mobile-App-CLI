@@ -22,8 +22,6 @@ import constants from '../../config/constants';
 import routes from '../../navigation/routes';
 import onShareHandler from '../Share';
 import { useDispatch } from 'react-redux';
-import { updatePostModeAction } from '../../redux/updateMode';
-import { updatePostDataAction } from '../../redux/updatePostData';
 import { feedPostsAction } from '../../redux/feedPostsSlice';
 import { postDataSliceAction } from '../../redux/postDataSlice';
 

@@ -21,7 +21,7 @@ import * as ImagePicker from 'react-native-image-picker';
 //import ImageCropPicker from 'react-native-image-crop-picker';
 import {useDispatch, useSelector} from 'react-redux';
 import {useImagePicker} from '../hooks';
-import {postImagesAction} from '../redux/postImages';
+
 import { postDataSliceAction } from '../redux/postDataSlice';
 
 

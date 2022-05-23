@@ -10,7 +10,6 @@ import Screen from '../components/Screen';
 import {launchImageLibrary,launchCamera} from 'react-native-image-picker';
 import routes from '../navigation/routes';
 import constants from '../config/constants';
-import {postImagesAction} from '../redux/postImages';
 import { postDataSliceAction } from '../redux/postDataSlice';
 import {useDispatch, useSelector} from 'react-redux';
 
