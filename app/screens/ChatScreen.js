@@ -1,4 +1,4 @@
-import React, {useContext, useRef, useState} from 'react';
+import React, {memo, useContext, useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -16,7 +16,7 @@ import SockJsClient from 'react-stomp';
 import settings from '../config/settings';
 import AuthContext from '../Contexts/authContext';
 
-export default function ChatScreen({navigation, route}) {
+function ChatScreen({navigation, route}) {
   const sockJsRef = useRef();
 
   const {user} = route.params;
@@ -24,15 +24,16 @@ export default function ChatScreen({navigation, route}) {
     userState: {username},
   } = useContext(AuthContext);
 
-  const [messages, setMessages] = useState('');
+  const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
 
   const onConnected = () => {
     console.log('connected');
   };
 
-  const onMessageReceived = message => {
-    console.log(message, 'received');
+  const onMessageReceived = mess => {
+    console.log('message', mess);
+    setMessages(prev => [mess,...prev]);
   };
 
   const onSendMessage = async message => {
@@ -50,125 +51,124 @@ export default function ChatScreen({navigation, route}) {
     }
   };
 
-  const MessageCard = ({right}) => {
+  const MessageCard = ({right, item}) => {
     return (
-      <>
-        <SockJsClient
-          url={settings.apiUrl + '/chat'}
-          topics={[`/user/${username}/messages`]}
-          // onConnect={onConnected}
-          // onDisconnect={console.log('Disconnected!')}
-          onMessage={msg => onMessageReceived(msg)}
-          ref={sockJsRef}
-          debug={false}
-        />
+      <View
+        style={{
+          alignSelf: right ? 'flex-end' : 'flex-start',
+        }}>
         <View
           style={{
-            alignSelf: right ? 'flex-end' : 'flex-start',
+            backgroundColor: '#fff',
+            margin: 5,
+            paddingHorizontal: 15,
+            paddingVertical: 10,
+            borderRadius: 10,
+            maxWidth: '70%',
           }}>
-          <View
-            style={{
-              backgroundColor: '#fff',
-              margin: 5,
-              paddingHorizontal: 15,
-              paddingVertical: 10,
-              borderRadius: 10,
-              maxWidth: '70%',
-            }}>
-            <Text
-              style={{
-                fontWeight: '800',
-                fontSize: 14,
-              }}>
-              Kanesha Lokeesan
-            </Text>
-            <Text
-              style={{
-                marginVertical: 3,
-                fontSize: 14,
-              }}>
-              document or a typeface without relying on meaningful content.
-            </Text>
-          </View>
           <Text
             style={{
-              textAlign: right ? 'right' : 'left',
-              marginHorizontal: 15,
-              fontSize: 12,
+              fontWeight: '800',
+              fontSize: 14,
             }}>
-            12:00
+            {item.fromWho}
+          </Text>
+          <Text
+            style={{
+              marginVertical: 3,
+              fontSize: 14,
+            }}>
+            {item.message}
           </Text>
         </View>
-      </>
+        <Text
+          style={{
+            textAlign: right ? 'right' : 'left',
+            marginHorizontal: 15,
+            fontSize: 12,
+          }}>
+          12:00
+        </Text>
+      </View>
     );
   };
   const {width} = Dimensions.get('window');
   return (
-    <View style={styles.container}>
-      <HeaderWithBackArrow
-        title={`${user.firstName} ${user.lastName}`}
-        titleStyle={{fontSize: 16}}
-        onBackButton={_ => navigation.goBack()}
-        rightComponent={
-          <View style={{flexDirection: 'row'}}>
-            <Icon name="md-videocam-outline" type="Ionicons" />
-            <Icon name="phone-call" type="Feather" />
-            <Icon name="options" type="SimpleLineIcons" />
-          </View>
-        }
+    <>
+      <SockJsClient
+        url={settings.apiUrl + '/chat'}
+        topics={[`/user/${username}/messages`]}
+        // onConnect={onConnected}
+        // onDisconnect={console.log('Disconnected!')}
+        onMessage={msg => onMessageReceived(msg)}
+        ref={sockJsRef}
+        debug={false}
       />
-      <FlatList
-        inverted
-        style={{
-          paddingHorizontal: 10,
-          flex: 1,
-          marginBottom: 90,
-        }}
-        data={[1, 20, 3, 4, 56, 7, 6, 85, 6]}
-        keyExtractor={(item, i) => i.toString()}
-        renderItem={({item}) => (
-          <MessageCard right={item > 10 ? true : false} />
-        )}
-      />
-
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: 10,
-          paddingVertical: 15,
-          justifyContent: 'space-between',
-          width: width,
-          backgroundColor: '#fff',
-        }}>
-        <TextInput
-          style={styles.message}
-          value={message}
-          onChangeText={val => setMessage(val)}
-          placeholder="message"
+      <View style={styles.container}>
+        <HeaderWithBackArrow
+          title={`${user.firstName} ${user.lastName}`}
+          titleStyle={{fontSize: 16}}
+          onBackButton={_ => navigation.goBack()}
+          rightComponent={
+            <View style={{flexDirection: 'row'}}>
+              <Icon name="md-videocam-outline" type="Ionicons" />
+              <Icon name="phone-call" type="Feather" />
+              <Icon name="options" type="SimpleLineIcons" />
+            </View>
+          }
         />
-        <TouchableOpacity
+        <FlatList
+          inverted
           style={{
-            backgroundColor: colors.iondigoDye,
-            padding: 5,
-            borderRadius: 25,
+            paddingHorizontal: 10,
+            flex: 1,
+            marginBottom: 65,
           }}
-          onPress={() => onSendMessage(message)}>
-          <Icon
-            noBackground
-            name={'send'}
-            type="FontAwesome"
-            color="#fff"
-            backgroundSizeRatio={0.7}
+          data={messages}
+          keyExtractor={(item, i) => i.toString()}
+          renderItem={({item}) => (
+            <MessageCard right={item > 10 ? true : false} item={item} />
+          )}
+        />
+
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingHorizontal: 10,
+            paddingVertical: 10,
+            justifyContent: 'space-between',
+            width: width,
+          }}>
+          <TextInput
+            style={styles.message}
+            value={message}
+            onChangeText={val => setMessage(val)}
+            placeholder="message"
           />
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: colors.iondigoDye,
+              padding: 5,
+              borderRadius: 25,
+            }}
+            onPress={() => onSendMessage(message)}>
+            <Icon
+              noBackground
+              name={'send'}
+              type="FontAwesome"
+              color="#fff"
+              backgroundSizeRatio={0.5}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </>
   );
 }
-
+export default memo(ChatScreen);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
