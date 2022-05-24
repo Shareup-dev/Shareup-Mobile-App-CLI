@@ -15,7 +15,6 @@ import colors from '../config/colors';
 import SockJsClient from 'react-stomp';
 import settings from '../config/settings';
 import AuthContext from '../Contexts/authContext';
-import {ref} from 'yup';
 
 export default function ChatScreen({navigation, route}) {
   const sockJsRef = useRef();
@@ -33,12 +32,18 @@ export default function ChatScreen({navigation, route}) {
   };
 
   const onMessageReceived = message => {
-    console.log(message);
+    console.log(message, 'received');
   };
 
-  const onSendMessage = message => {
-    if (message)
-      sockJsRef.current.sendMessage(`/user/${username}/messages`, message);
+  const onSendMessage = async message => {
+    if (message) {
+      await sockJsRef.current.sendMessage(`/app/chat`, {
+        fromWho: username,
+        toWhom: user.email,
+        message,
+      });
+      setMessage('');
+    }
   };
 
   const MessageCard = ({right}) => {
