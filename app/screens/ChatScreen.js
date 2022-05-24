@@ -37,12 +37,16 @@ export default function ChatScreen({navigation, route}) {
 
   const onSendMessage = async message => {
     if (message) {
-      await sockJsRef.current.sendMessage(`/app/chat`, {
-        fromWho: username,
-        toWhom: user.email,
-        message,
-      });
-      setMessage('');
+      await sockJsRef.current.sendMessage(
+        `/app/chat`,
+        JSON.stringify({
+          fromWho: username,
+          toWhom: user.email,
+          message: message,
+          replyMessage: 'test',
+        }),
+      );
+      // setMessage('');
     }
   };
 
