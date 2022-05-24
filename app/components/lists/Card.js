@@ -40,12 +40,8 @@ export default function Card({
     postData.numberOfReaction,
   );
 
-  const [numberOfComments, setNumberOfComments] = useState(null);
-  useEffect(() => {
-    setNumberOfComments(postData.numberOfComments);
-  }, [postData]);
 
-  const [isUserLiked, setIsUserLiked] = useState(postData.liked);
+const [isUserLiked, setIsUserLiked] = useState(postData.liked);
   const [comment, setComments] = useState(postData.comments);
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [images, setImages] = useState([]);
@@ -212,15 +208,15 @@ export default function Card({
   };
 
   // rerenders the post when interaction
-  const reloadPost = async () => {
-    PostService.getPostByPostId(postData.id)
-      .then(res => {
-        //setComments(res.data.comments)
-        setNumberOfComments(res.data.numberOfComments);
-        setNumberOfReactions(res.data.numberOfReaction);
-      })
-      .catch(e => console.error(e));
-  };
+  // const reloadPost = async () => {
+  //   PostService.getPostByPostId(postData.id)
+  //     .then(res => {
+  //       //setComments(res.data.comments)
+  //       setNumberOfComments(res.data.numberOfComments);
+  //       setNumberOfReactions(res.data.numberOfReaction);
+  //     })
+  //     .catch(e => console.error(e));
+  // };
 
   const showDeleteAlert = () =>
     Alert.alert('Delete', 'Are you sure to delete this post', [
@@ -293,7 +289,7 @@ export default function Card({
           userId={user.id}
           //userEmail={userEmail}
           numberOfReactions={`${numberOfReactions}`}
-          numberOfComments={`${numberOfComments}`}
+          numberOfComments={`${postData.numberOfComments}`}
           //profileImage={profileImage}
           isUserLiked={isUserLiked}
           isVisible={isOptionsVisible}

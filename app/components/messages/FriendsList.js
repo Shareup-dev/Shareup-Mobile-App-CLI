@@ -20,8 +20,7 @@ export default function FriendsList({navigation, friends, loading, refresh}) {
   };
 
   const directToChatRoom = async item => {
-
-    navigation.navigate(routes.CHAT_SCREEN);
+    navigation.navigate(routes.CHAT_SCREEN, {user: item});
   };
 
   return (

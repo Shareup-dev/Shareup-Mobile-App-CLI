@@ -8,47 +8,40 @@ import authContext from '../Contexts/authContext';
 import TextField from '../components/TextField';
 import Bar from '../components/tab-bar/Bar';
 import colors from '../config/colors';
-import UserService from '../services/user.service';
 import ChatsList from '../components/messages/ChatsList';
 import FriendsList from '../components/messages/FriendsList';
-
-const CHATS = 'Chats';
-const FRIENDS = 'Friends';
-// const GROUPS = 'Groups';
-// const FAVORITES = 'Favorites';
+import userService from '../services/user.service';
 
 const tabes = [
-  {name: CHATS},
-  {name: FRIENDS},
+  {name: 'Chat'},
+  {name: 'Friends'},
   // {name: GROUPS},
   // {name: FAVORITES},
 ];
 
 export default function MessagesScreen({navigation}) {
-  const {userData: user} = useContext(authContext).userState;
+  const {
+    userState: {userData: user},
+  } = useContext(authContext);
 
   const [friends, setFriends] = useState([]);
-
+  const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [currentTab, setCurrentTab] = useState(CHATS);
-
+  const [currentTab, setCurrentTab] = useState('Chat');
 
   useEffect(() => {
-    loadData();
+    getFriends();
   }, []);
 
-  const loadData = async () => {
-    setLoading(true);
-    await getFriends();
-    setLoading(false);
-  };
-
   const getFriends = async () => {
-    await UserService.getFriends(user.email).then(res => {
-      setFriends(res.data);
-    });
-  };
+    setLoading(true);
+    userService
+      .getFriends(user.email)
+      .then(({data}) => setFriends(data))
+      .catch(e => console.error(e.message))
+      .finally(_ => setLoading(false));
 
+  };
 
   const handleTabbed = name => {
     setCurrentTab(name);
@@ -83,14 +76,10 @@ export default function MessagesScreen({navigation}) {
 
       <View style={styles.separator} />
 
-      {currentTab == CHATS && (
-        <ChatsList
-          navigation={navigation}
-          chats={chats}
-          loading={loading}
-        />
+      {currentTab === "Chat" && (
+        <ChatsList navigation={navigation} chats={chats} loading={loading} />
       )}
-      {currentTab == FRIENDS && (
+      {currentTab === "Friends" && (
         <FriendsList
           navigation={navigation}
           friends={friends}
