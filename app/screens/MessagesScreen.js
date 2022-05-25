@@ -11,6 +11,7 @@ import colors from '../config/colors';
 import ChatsList from '../components/messages/ChatsList';
 import FriendsList from '../components/messages/FriendsList';
 import userService from '../services/user.service';
+import chatService from '../services/chat.service';
 
 const tabes = [
   {name: 'Chat'},
@@ -21,15 +22,30 @@ const tabes = [
 
 export default function MessagesScreen({navigation}) {
   const {
-    userState: {userData: user},
+    userState: {userData: user,username},
   } = useContext(authContext);
 
   const [friends, setFriends] = useState([]);
-  const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentTab, setCurrentTab] = useState('Chat');
+  const [chats, setChats] = useState({
+    state: [],
+    loading: false,
+  });
+
+  const fetchChats = () => {
+    setChats(prev => ({...prev, loading: true}));
+    chatService
+      .getAllConversations(username)
+      .then(({data}) => {
+        setChats(prev => ({...prev, state: data}));
+      })
+      .catch(e => console.error(e.message))
+      .finally(_ => setChats(prev => ({...prev, loading: false})));
+  };
 
   useEffect(() => {
+    fetchChats();
     getFriends();
   }, []);
 
@@ -77,7 +93,7 @@ export default function MessagesScreen({navigation}) {
       <View style={styles.separator} />
 
       {currentTab === "Chat" && (
-        <ChatsList navigation={navigation} chats={chats} loading={loading} />
+        <ChatsList navigation={navigation} chats={chats.state} loading={chats.loading} />
       )}
       {currentTab === "Friends" && (
         <FriendsList
