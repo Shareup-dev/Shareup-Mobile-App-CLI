@@ -10,9 +10,7 @@ export default function ChatListItem({
   profilePicture = "",
   lastMessage = "",
   lastMessageTime = "",
-  numberOfUnreadMessages = "",
-  lastMessageStatus = "",
-  isActive = "",
+item,
   onPress,
 }) {
   return (
@@ -37,7 +35,7 @@ export default function ChatListItem({
               defaultStyles.fontWeightMedium,
             ]}
           >
-            {title}
+            {item.user1FullName}
           </Text>
 
           <Text
@@ -47,7 +45,7 @@ export default function ChatListItem({
               defaultStyles.fontWeightMedium,
             ]}
           >
-            {lastMessage}
+            {item.user1}
           </Text>
         </View>
         {/** Right */}

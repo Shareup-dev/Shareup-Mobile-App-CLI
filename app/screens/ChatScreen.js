@@ -1,4 +1,4 @@
-import React, {memo, useContext, useRef, useState} from 'react';
+import React, {memo, useContext, useEffect, useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -15,6 +15,7 @@ import colors from '../config/colors';
 import SockJsClient from 'react-stomp';
 import settings from '../config/settings';
 import AuthContext from '../Contexts/authContext';
+import chatService from '../services/chat.service';
 
 function ChatScreen({navigation, route}) {
   const sockJsRef = useRef();
@@ -27,13 +28,25 @@ function ChatScreen({navigation, route}) {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
 
+  const getConversations = () => {
+    chatService
+      .getConversation(username, user.email)
+      .then(({data}) => setMessages(data.messages))
+      .catch(e => console.error(e.message))
+  };
+
+  useEffect(() => {
+    getConversations()
+  }, [])
+  
+
   const onConnected = () => {
     console.log('connected');
   };
 
   const onMessageReceived = mess => {
     console.log('message', mess);
-    setMessages(prev => [mess,...prev]);
+    setMessages(prev => [mess, ...prev]);
   };
 
   const onSendMessage = async message => {
@@ -47,7 +60,7 @@ function ChatScreen({navigation, route}) {
           replyMessage: 'test',
         }),
       );
-      // setMessage('');
+      setMessage('');
     }
   };
 
@@ -59,7 +72,8 @@ function ChatScreen({navigation, route}) {
         }}>
         <View
           style={{
-            backgroundColor: '#fff',
+            backgroundColor: right ? '#9FB7C4' : '#fff',
+
             margin: 5,
             paddingHorizontal: 15,
             paddingVertical: 10,
@@ -68,15 +82,10 @@ function ChatScreen({navigation, route}) {
           }}>
           <Text
             style={{
-              fontWeight: '800',
-              fontSize: 14,
-            }}>
-            {item.fromWho}
-          </Text>
-          <Text
-            style={{
               marginVertical: 3,
               fontSize: 14,
+              fontWeight: '600',
+              color: '#333',
             }}>
             {item.message}
           </Text>
@@ -104,7 +113,7 @@ function ChatScreen({navigation, route}) {
         ref={sockJsRef}
         debug={false}
       />
-      <View style={styles.container}>
+      <View style={[styles.container]}>
         <HeaderWithBackArrow
           title={`${user.firstName} ${user.lastName}`}
           titleStyle={{fontSize: 16}}
@@ -127,7 +136,10 @@ function ChatScreen({navigation, route}) {
           data={messages}
           keyExtractor={(item, i) => i.toString()}
           renderItem={({item}) => (
-            <MessageCard right={item > 10 ? true : false} item={item} />
+            <MessageCard
+              right={item.fromWho === username ? true : false}
+              item={item}
+            />
           )}
         />
 
