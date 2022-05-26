@@ -189,9 +189,10 @@ export default function ProfileTop({
 const styles = StyleSheet.create({
   container: {
     marginBottom: 20,
+   
   },
   padding: {
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
   },
   row1: {
     flexDirection: 'row',
@@ -210,6 +211,7 @@ const styles = StyleSheet.create({
   counterWrapper: {
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf:'center',
     marginHorizontal: 6,
   },
   row2: {
