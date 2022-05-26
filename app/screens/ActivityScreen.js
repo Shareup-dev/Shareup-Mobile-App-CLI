@@ -24,6 +24,7 @@ import {useSelector} from 'react-redux';
 import userService from '../services/user.service';
 import {useFocusEffect} from '@react-navigation/native';
 import FriendCard from '../components/lists/FriendCard';
+import ListItem from '../components/lists/ListItem';
 
 export default function ActivityScreen({navigation}) {
   const [users, setusers] = useState([]);
@@ -209,7 +210,7 @@ export default function ActivityScreen({navigation}) {
         data={!isSearch ? users : searchResult}
         keyExtractor={item => item.id.toString()}
         renderItem={({item}) => (
-          <FriendCard 
+          <ListItem 
             email={item.email}
             user={item}
             image={item.profilePicturePath}

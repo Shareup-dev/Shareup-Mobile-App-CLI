@@ -86,7 +86,7 @@ export default function AllFriendsScreen({navigation}) {
           ListHeaderComponent={() => <></>}
           keyExtractor={item => item.id.toString()}
           renderItem={({item}) => (
-            <FriendCard
+            <ListItem
               user={item}
               image={item.profilePicturePath}
               title={item.firstName}

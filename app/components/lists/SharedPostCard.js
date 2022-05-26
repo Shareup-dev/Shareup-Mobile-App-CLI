@@ -278,6 +278,7 @@ export default function SharedPostCard(props) {
     <View style={[styles.card, defaultStyles.cardBorder]}>
       <HeaderComponent />
       {postData.post ? (
+        
         <Card
           {...rest}
           noActionBar

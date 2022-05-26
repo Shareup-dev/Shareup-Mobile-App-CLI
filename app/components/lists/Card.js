@@ -271,11 +271,14 @@ const [isUserLiked, setIsUserLiked] = useState(postData.liked);
         {/** Post Image */}
 
         {images?.length !== 0 && (
+          
           <CustomImageSlider
-            media={postData?.media}
-            width={width - 32}
-            height={250}
-          />
+          navigation={navigation}
+          media={postData?.media}
+          width={width - 32}
+          height={250}
+        />
+          
         )}
 
         <PostActions

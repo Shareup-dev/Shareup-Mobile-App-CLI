@@ -24,6 +24,8 @@ import onShareHandler from '../Share';
 import { useDispatch } from 'react-redux';
 import { feedPostsAction } from '../../redux/feedPostsSlice';
 import { postDataSliceAction } from '../../redux/postDataSlice';
+import postService from '../../services/post.service';
+import hangShareService from '../../services/hangShare.service';
 
 
 const imageSize = 160;
@@ -41,7 +43,7 @@ const SwapCard = React.memo(
     const swapedPosts = useSelector(state => state.swapedImages);
     const dispatch = useDispatch()
     const {userState} = useContext(AuthContext);
-
+    const [isUserLiked, setIsUserLiked] = useState(item.liked);
     const getSwapedImage = swapId => {
       let foundSwap = swapedPosts.filter(swap => swap.swapPostId === swapId)[0];
       if (foundSwap) {
@@ -57,6 +59,7 @@ const SwapCard = React.memo(
 
     useEffect(() => {
       loadImages();
+      checkIfLiked();
     }, []);
 
     const {userData: user} = useContext(AuthContext)?.userState;
@@ -203,6 +206,33 @@ const SwapCard = React.memo(
 
     const {width} = Dimensions.get('window');
 
+    const checkIfLiked = () => {
+      const result = item.liked;
+      return setIsUserLiked(result);
+    };
+    const handleReactions = async () => {
+      console.log(item.allPostsType);
+      if (item.allPostsType === constants.postTypes.SWAP){
+        swapService.likePost(user.id, item.id)
+        .then(res => {
+          console.log(res.data);
+          setIsUserLiked(!isUserLiked);
+           //setNumberOfReactions(res.data.numberOfReaction);
+        }) //need to get likePostIds
+        .catch(e => console.error(e));
+      }else if (item.allPostsType === constants.postTypes.HANG_SHARE){
+        hangShareService.likePost(user.id, item.id)
+        .then(res => {
+          console.log(res.data);
+          setIsUserLiked(!isUserLiked);
+           //setNumberOfReactions(res.data.numberOfReaction);
+        }) //need to get likePostIds
+        .catch(e => console.error(e));
+      }
+     
+      //reloadPost();
+    };
+
     return (
       <TouchableWithoutFeedback onPress={onPress}>
       <View style={[styles.card, defaultStyles.cardBorder, style]}>
@@ -244,10 +274,10 @@ const SwapCard = React.memo(
           swapId={item.id}
           //firstName={item.userdata.firstName}
           //userEmail={item.userdata.email}
-          isUserLiked={false}
+          isUserLiked={isUserLiked}
           navigation={navigation}
           numberOfComments={`${item.numberOfComments}`}
-          numberOfReactions={`${0}`}
+          numberOfReactions={`${item.numberOfReactions}`}
           postId={item.id}
           postText={item.content}
           // profileImage={item.userdata.profilePicture}
@@ -260,7 +290,7 @@ const SwapCard = React.memo(
           // isVisible={isOptionsVisible}
           // setIsVisible={setIsOptionsVisible}
 
-          //onInteraction={handleReactions}
+          onInteraction={handleReactions}
         />
 
         <View style={{flexDirection: 'row'}}>

@@ -59,7 +59,7 @@ import { postDataSliceAction } from '../redux/postDataSlice';
 
 
 export default function AddPostScreen({ navigation, route }) {
-  const { groupId ,postType } = route.params;
+  const { groupId, postType } = route.params;
   const flatListRef = useRef();
   const { loadingIndicator, setloadingIndicator } = useContext(AuthContext);
   const postImages = useSelector(state => state.postImages);
@@ -70,7 +70,7 @@ export default function AddPostScreen({ navigation, route }) {
 
   const dispatch = useDispatch();
   const postFeel = useSelector(state => state.postFeel);
-  
+
   const { postTypes } = constants;
 
   const DEFAULT_TEXT = 'We Share, Do You ?';
@@ -226,9 +226,14 @@ export default function AddPostScreen({ navigation, route }) {
   const [postPrivacyOption, setPostPrivacyOption] = useState(privacyOptions[0]); // object to present the current privacy option
 
   useEffect(() => {
-    if(postType === postTypes.GROUP_POST) {
+    if (postType === postTypes.GROUP_POST) {
       dispatch(postDataSliceAction.setGroupId(groupId))
     }
+
+    if (postData.postDetail.group) {
+      dispatch(postDataSliceAction.setGroupId(postData.postDetail.group.id))
+    }
+
     loadImages();
     if (postType === postTypes.HANG_SHARE) {
       setPlaceHolder(HANG_SHARE_TEXT);
@@ -318,7 +323,6 @@ export default function AddPostScreen({ navigation, route }) {
     if (text === '' && images.length === 0) {
       setError("Can't Create empty post");
     } else {
-      
       const postContent = {
         text: text,
         images: images,
@@ -327,7 +331,7 @@ export default function AddPostScreen({ navigation, route }) {
       const formData = createPostFormData(postContent);
       PostService.createPost(user.id, formData)
         .then(resp => {
-       
+
           let existingPosts = store.getState().groupPosts;
           // setloadingIndicator(false)
           store.dispatch(
@@ -433,7 +437,7 @@ export default function AddPostScreen({ navigation, route }) {
     postService
       .sharePost(user.id, postData.postDetail.id, formData)
       .then(res => {
-        
+
         store.dispatch(feedPostsAction.addFeedPost(res.data));
         navigation.navigate(routes.FEED);
       })
@@ -453,13 +457,13 @@ export default function AddPostScreen({ navigation, route }) {
         text: text === '' ? placeholder : text,
         images: images,
         feeling: postFeel.feeling ? postFeel.feeling : null,
-        groupId: groupId,
+        groupId: postData['groupId'],
       };
       const formData = createPostFormData(postContent);
       if (postData['EditPost']) {
         PostService.editPost(postData.postDetail.id, formData)
           .then(resp => {
-            
+
             store.dispatch(feedPostsAction.updateFeedPost(resp.data));
             dispatch(postFeelingsActions.setDefault());
             navigation.navigate(routes.FEED);
@@ -467,10 +471,14 @@ export default function AddPostScreen({ navigation, route }) {
           .catch(e => {
             console.error(e);
           })
-          .finally(_ => setLoading(false));
+          .finally(_ => {
+            setLoading(false);
+            clearFields();
+          });
       } else {
         PostService.createPost(user.id, formData)
           .then(resp => {
+            console.log(resp.data);
             store.dispatch(feedPostsAction.addFeedPost(resp.data));
             dispatch(postFeelingsActions.setDefault());
             navigation.navigate(routes.FEED);
@@ -518,7 +526,7 @@ export default function AddPostScreen({ navigation, route }) {
     navigation.navigate(routes.FEED);
     dispatch(postFeelingsActions.setDefault());
   };
-  
+
 
   const clearFields = () => {
     setText('');
@@ -530,7 +538,7 @@ export default function AddPostScreen({ navigation, route }) {
     dispatch(postDataSliceAction.removeAllImages());
     dispatch(postDataSliceAction.removeEditPost());
     dispatch(postDataSliceAction.removePostData())
-   // dispatch(groupIdSliceAction.removeState())
+    dispatch(postDataSliceAction.removeGroupId())
   };
 
   const handelPrivacySetting = value => {

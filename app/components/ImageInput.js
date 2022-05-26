@@ -46,7 +46,7 @@ export default function ImageInput({imageUri, onChangeImage, isSwap}) {
   };
   
   const type = imageUri?.split('.').pop();
-  
+  console.log(type);
   
   
   return (
@@ -63,7 +63,7 @@ export default function ImageInput({imageUri, onChangeImage, isSwap}) {
             size={25}
             onPress={onPress}
           />
-          { type === "image" || "jpg"
+          { type === "image" || type === "jpg"
           ?<Image source={{uri: imageUri}} style={styles.Image} />
           :<Video
           resizeMode={'contain'}
