@@ -1,12 +1,23 @@
-import React, { useState} from 'react';
-import {FlatList} from 'react-native';
+import React, {useState} from 'react';
+import {FlatList, Text, TouchableOpacity, View} from 'react-native';
 import routes from '../../navigation/routes';
 
 import ChatListItem from './ChatListItem';
 import EmptyNotice from './EmptyNotice';
 import ListWrapper from './ListWrapper';
 
-export default function ChatsList({navigation, loading,chats}) {
+export default function ChatsList({navigation, loading, chats}) {
+  const ArchivedChatComponent = () => (
+    <TouchableOpacity
+      onPress={() => navigation.navigate(routes.ARCHIVED_CHAT)}
+      style={{
+        alignItems: 'center',
+      }}>
+      <Text style={{fontWeight: '600', fontSize: 15, marginVertical: 10}}>
+        Archived chats
+      </Text>
+    </TouchableOpacity>
+  );
 
   return (
     <ListWrapper loading={loading}>
@@ -15,6 +26,7 @@ export default function ChatsList({navigation, loading,chats}) {
         keyExtractor={item => item.id.toString()}
         refreshing={loading}
         ListEmptyComponent={<EmptyNotice navigation={navigation} />}
+        ListFooterComponent={<ArchivedChatComponent />}
         renderItem={({item}) => (
           <ChatListItem
             item={item}

@@ -69,5 +69,6 @@ export default Object.freeze({
   ACCOUNT_SETTINGS:'AccountSettingsScreen',
   SHAREUP_CAMERA:'ShareupCameraScreen',
   POST_BY_ID:'PostByID',
-  MAP_VIEW:'MapViewScreen'
+  MAP_VIEW:'MapViewScreen',
+  ARCHIVED_CHAT: "ARCHIVED_CHAT"
 });

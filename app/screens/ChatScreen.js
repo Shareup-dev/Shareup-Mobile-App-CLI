@@ -8,6 +8,8 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native';
+import Modal from 'react-native-modal';
+
 import {HeaderWithBackArrow} from '../components/headers';
 import Icon from '../components/Icon';
 import colors from '../config/colors';
@@ -16,6 +18,8 @@ import SockJsClient from 'react-stomp';
 import settings from '../config/settings';
 import AuthContext from '../Contexts/authContext';
 import chatService from '../services/chat.service';
+
+const {width, height} = Dimensions.get('window');
 
 function ChatScreen({navigation, route}) {
   const sockJsRef = useRef();
@@ -32,20 +36,18 @@ function ChatScreen({navigation, route}) {
     chatService
       .getConversation(username, user.email)
       .then(({data}) => setMessages(data.messages))
-      .catch(e => console.error(e.message))
+      .catch(e => console.error(e.message));
   };
 
   useEffect(() => {
-    getConversations()
-  }, [])
-  
+    getConversations();
+  }, []);
 
   const onConnected = () => {
     console.log('connected');
   };
 
   const onMessageReceived = mess => {
-    console.log('message', mess);
     setMessages(prev => [mess, ...prev]);
   };
 
@@ -61,6 +63,29 @@ function ChatScreen({navigation, route}) {
         }),
       );
       setMessage('');
+    }
+  };
+
+  const displayMessageTime = creationTime => {
+    let time = new Date(creationTime);
+    const today = new Date();
+
+    if (today.toLocaleDateString() === time.toLocaleDateString()) {
+      return time.toLocaleTimeString();
+    } else if (today.getFullYear() === time.getFullYear()) {
+      return `${time
+        .toDateString()
+        .split(' ')
+        .slice(1, 3)
+        .toString()
+        .replace(',', ' ')} ${time.toLocaleTimeString()}`;
+    } else {
+      return `${time
+        .toDateString()
+        .split(' ')
+        .slice(1, 4)
+        .toString()
+        .replaceAll(',', ' ')} ${time.toLocaleTimeString()}`;
     }
   };
 
@@ -96,12 +121,12 @@ function ChatScreen({navigation, route}) {
             marginHorizontal: 15,
             fontSize: 12,
           }}>
-          12:00
+          {displayMessageTime(item.creationTime)}
         </Text>
       </View>
     );
   };
-  const {width} = Dimensions.get('window');
+  const [openModal, setOpenModal] = useState(false);
   return (
     <>
       <SockJsClient
@@ -113,6 +138,7 @@ function ChatScreen({navigation, route}) {
         ref={sockJsRef}
         debug={false}
       />
+
       <View style={[styles.container]}>
         <HeaderWithBackArrow
           title={`${user.firstName} ${user.lastName}`}
@@ -122,15 +148,47 @@ function ChatScreen({navigation, route}) {
             <View style={{flexDirection: 'row'}}>
               <Icon name="md-videocam-outline" type="Ionicons" />
               <Icon name="phone-call" type="Feather" />
-              <Icon name="options" type="SimpleLineIcons" />
+              <TouchableOpacity onPress={_ => setOpenModal(prev => !prev)}>
+                <Icon name="options" type="SimpleLineIcons" />
+              </TouchableOpacity>
             </View>
           }
         />
+
+        <Modal
+          style={styles.modal}
+          isVisible={openModal}
+          swipeDirection={['right']}
+          animationIn="fadeInRight"
+          animationOut={'slideOutRight'}
+          onSwipeComplete={() => setOpenModal(false)}
+          onBackdropPress={() => setOpenModal(false)}
+          backdropOpacity={0.1}>
+          <View
+            style={{
+              backgroundColor: '#fff',
+              maxHeight: 200,
+              paddingVertical: 10,
+            }}>
+            <TouchableOpacity style={styles.menu}>
+              <Text style={styles.menuText}>View Profile</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menu}>
+              <Text style={styles.menuText}>Archived</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menu}>
+              <Text style={styles.menuText}>block</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menu}>
+              <Text style={styles.menuText}>Clear chat</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
         <FlatList
           inverted
           style={{
             paddingHorizontal: 10,
-            flex: 1,
+
             marginBottom: 65,
           }}
           data={messages}
@@ -185,7 +243,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#cacaca60',
+    zIndex: -1,
   },
+  menu: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+  menuText: {
+    fontWeight: '600',
+  },
+  modal: {
+    padding: 0,
+    margin: 0,
+    width: width / 2,
+    alignSelf: 'flex-end',
+    justifyContent: 'flex-start',
+    height: 200,
+  },
+
   forwardArrow: {
     position: 'absolute',
     flexDirection: 'row',
