@@ -1,9 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, FlatList, StyleSheet, Text} from 'react-native';
+import {View, FlatList, StyleSheet, Text, TouchableOpacity} from 'react-native';
 
 import {HeaderWithBackArrow} from '../components/headers';
+import Icon from '../components/Icon';
 import ChatListItem from '../components/messages/ChatListItem';
 import AuthContext from '../Contexts/authContext';
+import routes from '../navigation/routes';
 import chatService from '../services/chat.service';
 
 export default function ArchivedChatScreen({navigation}) {
@@ -29,6 +31,15 @@ export default function ArchivedChatScreen({navigation}) {
     fetchArchivedChat();
   }, []);
 
+  const unArchivedHandler = item => {
+    const {id} = item;
+
+    chatService
+      .unArchiveChat(username, id)
+      .then(({status}) => status === 200 && navigation.goBack())
+      .catch(e => console.error(e.message));
+  };
+
   return (
     <View style={styles.container}>
       <HeaderWithBackArrow
@@ -49,19 +60,29 @@ export default function ArchivedChatScreen({navigation}) {
           </View>
         }
         renderItem={({item}) => (
-          <ChatListItem
-            item={item}
-            navigation={navigation}
-            onPress={() => {
-              navigation.navigate(routes.CHAT_SCREEN, {
-                user: {
-                  email: item.user1,
-                  firstName: item.user1FullName,
-                  lastName: '',
-                },
-              });
-            }}
-          />
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <ChatListItem
+              item={item}
+              navigation={navigation}
+              profilePicture={item.user2ProfilePicture}
+              onPress={() => {
+                navigation.navigate(routes.CHAT_SCREEN, {
+                  user: {
+                    email: item.user2,
+                    firstName: item.user2FullName,
+                    lastName: '',
+                  },
+                });
+              }}
+            />
+            <TouchableOpacity onPress={() => unArchivedHandler(item)}>
+              <Icon type="Ionicons" name={'archive'} noBackground />
+            </TouchableOpacity>
+          </View>
         )}
       />
     </View>

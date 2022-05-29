@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
 import Screen from '../components/Screen';
@@ -12,6 +12,7 @@ import ChatsList from '../components/messages/ChatsList';
 import FriendsList from '../components/messages/FriendsList';
 import userService from '../services/user.service';
 import chatService from '../services/chat.service';
+import { useFocusEffect } from '@react-navigation/native';
 
 const tabes = [
   {name: 'Chat'},
@@ -22,7 +23,7 @@ const tabes = [
 
 export default function MessagesScreen({navigation}) {
   const {
-    userState: {userData: user,username},
+    userState: {userData: user, username},
   } = useContext(authContext);
 
   const [friends, setFriends] = useState([]);
@@ -44,8 +45,21 @@ export default function MessagesScreen({navigation}) {
       .finally(_ => setChats(prev => ({...prev, loading: false})));
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      if (currentTab === 'Chat') {
+      fetchChats();
+    }
+    }, [currentTab]),
+  );
+
+  // useEffect(() => {
+  //   if (currentTab === 'Chat') {
+  //     fetchChats();
+  //   }
+  // }, [currentTab]);
+
   useEffect(() => {
-    fetchChats();
     getFriends();
   }, []);
 
@@ -56,7 +70,6 @@ export default function MessagesScreen({navigation}) {
       .then(({data}) => setFriends(data))
       .catch(e => console.error(e.message))
       .finally(_ => setLoading(false));
-
   };
 
   const handleTabbed = name => {
@@ -92,10 +105,14 @@ export default function MessagesScreen({navigation}) {
 
       <View style={styles.separator} />
 
-      {currentTab === "Chat" && (
-        <ChatsList navigation={navigation} chats={chats.state} loading={chats.loading} />
+      {currentTab === 'Chat' && (
+        <ChatsList
+          navigation={navigation}
+          chats={chats.state}
+          loading={chats.loading}
+        />
       )}
-      {currentTab === "Friends" && (
+      {currentTab === 'Friends' && (
         <FriendsList
           navigation={navigation}
           friends={friends}

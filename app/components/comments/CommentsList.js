@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {FlatList, View} from 'react-native';
+import {FlatList, Text, View} from 'react-native';
 import {CommentCard} from '.';
 
 export default function CommentsList({
@@ -14,6 +14,8 @@ export default function CommentsList({
     commentsListRef.current.scrollToEnd({animated: true});
   };
 
+
+
   return (
     <View>
       <FlatList
@@ -26,6 +28,11 @@ export default function CommentsList({
         renderItem={({item}) => (
           <CommentCard comment={item} replyComment={replyComment} onRefreshing={onRefreshing} />
         )}
+        ListEmptyComponent={
+          <View style={{alignItems:'center',marginTop:5}} >
+            <Text>{refreshing ? `Loading...`: `No comments found`}</Text>
+          </View>
+        }
       />
     </View>
   );

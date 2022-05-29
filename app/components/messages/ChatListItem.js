@@ -35,7 +35,7 @@ item,
               defaultStyles.fontWeightMedium,
             ]}
           >
-            {item.user1FullName}
+            {item.user2FullName}
           </Text>
 
           <Text
@@ -45,7 +45,7 @@ item,
               defaultStyles.fontWeightMedium,
             ]}
           >
-            {item.user1}
+            {item.user2}
           </Text>
         </View>
         {/** Right */}

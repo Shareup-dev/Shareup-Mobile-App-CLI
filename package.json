@@ -62,7 +62,6 @@
     "react-native-use-keyboard-height": "^0.1.1",
     "react-native-vector-icons": "^9.1.0",
     "react-native-video": "^5.2.0",
-    "react-native-video-cache": "^2.7.3",
     "react-redux": "^7.2.6",
     "react-stomp": "^5.1.0",
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",

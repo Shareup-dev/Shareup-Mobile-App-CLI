@@ -78,7 +78,6 @@ export default function CommentItem({
 
   const handleDeleteComment = () => {
     if (isReply) {
-      console.log('deleted');
       postService
         .deleteReply(comment.id)
         .then(res => refreshComments())

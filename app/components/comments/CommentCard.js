@@ -24,7 +24,6 @@ import CommentsList from './CommentsList';
 import CommentsContext from '../../Contexts/commentsContext';
 import DownModal from '../drawers/DownModal';
 
-
 const {width} = Dimensions.get('window');
 
 export default function CommentCard(props) {
@@ -35,11 +34,12 @@ export default function CommentCard(props) {
     useContext(CommentsContext);
   const {comment, commentLiked, replyComment, onRefreshing} = props;
   const time = moment(comment.published, 'DD MMMM YYYY hh:mm:ss').fromNow();
-  
+
+
   const [openMedal, setOpenMedal] = useState(false);
   const [editable, setEditable] = useState(false);
   const [content, setContent] = useState(comment.content);
-  const [isLiked, setIsLiked] = useState(commentLiked);
+  const [isLiked, setIsLiked] = useState( replyComment? comment.replyLiked : comment.commentLiked);
   const [collapseReply, setCollapseReply] = useState(false);
   const [replies, setReplies] = useState({
     loading: false,
@@ -52,8 +52,24 @@ export default function CommentCard(props) {
     }
   }, [isReplied]);
 
+  
   const handleReaction = () => {
-    setIsLiked(prev => !prev);
+    const params = {reaction: 'null'};
+
+
+    if (replyComment) {
+      postService
+        .likeUnlikeReply(userData.id, comment.id, params)
+        .then(({status}) => {
+          status === 200 && setIsLiked(prev => !prev);
+        })
+        .catch(e => console.error(e));
+    } else {
+      postService
+        .likeUnlikeComment(userData.id, comment.id, params)
+        .then(({status}) => status === 200 && setIsLiked(prev => !prev))
+        .catch(e => console.error(e.message));
+    }
   };
 
   const getAllReplies = () => {
@@ -97,7 +113,7 @@ export default function CommentCard(props) {
       postService
         .deleteReply(comment.id)
         .then(res => onRefreshing())
-        .catch(e => console.error(e))
+        .catch(e => console.error(e));
     } else {
       postService
         .deleteComment(comment.id)
@@ -111,7 +127,7 @@ export default function CommentCard(props) {
   };
 
   const deleteCommentHandler = () => {
-    setOpenMedal(false)
+    setOpenMedal(false);
     Alert.alert('Delete Comment', 'Do you want to delete this comment?', [
       {
         text: 'Confirm',

@@ -30,12 +30,14 @@ export default function ChatsList({navigation, loading, chats}) {
         renderItem={({item}) => (
           <ChatListItem
             item={item}
+
+            profilePicture={item.user2ProfilePicture}
             navigation={navigation}
             onPress={() => {
               navigation.navigate(routes.CHAT_SCREEN, {
                 user: {
-                  email: item.user1,
-                  firstName: item.user1FullName,
+                  email: item.user2,
+                  firstName: item.user2FullName,
                   lastName: '',
                 },
               });

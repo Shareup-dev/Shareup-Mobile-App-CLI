@@ -18,6 +18,7 @@ import SockJsClient from 'react-stomp';
 import settings from '../config/settings';
 import AuthContext from '../Contexts/authContext';
 import chatService from '../services/chat.service';
+import routes from '../navigation/routes';
 
 const {width, height} = Dimensions.get('window');
 
@@ -31,21 +32,32 @@ function ChatScreen({navigation, route}) {
 
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
+  const [conversationId, setConversationId] = useState('');
 
   const getConversations = () => {
     chatService
       .getConversation(username, user.email)
-      .then(({data}) => setMessages(data.messages))
+      .then(({data}) => {
+        setConversationId(data.id);
+        setMessages(data.messages);
+      })
       .catch(e => console.error(e.message));
+  };
+
+  const archivedHandler = () => {
+    chatService
+      .archiveChat(username, conversationId)
+      .then(({status}) => status === 200 && navigation.goBack())
+      .catch(e => console.error(e.message));
+  };
+
+  const viewProfileHandler = () => {
+    navigation.navigate(routes.FRIEND_PROFILE, {user});
   };
 
   useEffect(() => {
     getConversations();
   }, []);
-
-  const onConnected = () => {
-    console.log('connected');
-  };
 
   const onMessageReceived = mess => {
     setMessages(prev => [mess, ...prev]);
@@ -59,6 +71,7 @@ function ChatScreen({navigation, route}) {
           fromWho: username,
           toWhom: user.email,
           message: message,
+          creationTime: new Date(),
           replyMessage: 'test',
         }),
       );
@@ -170,10 +183,10 @@ function ChatScreen({navigation, route}) {
               maxHeight: 200,
               paddingVertical: 10,
             }}>
-            <TouchableOpacity style={styles.menu}>
+            <TouchableOpacity style={styles.menu} onPress={viewProfileHandler}>
               <Text style={styles.menuText}>View Profile</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menu}>
+            <TouchableOpacity style={styles.menu} onPress={archivedHandler}>
               <Text style={styles.menuText}>Archived</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.menu}>
