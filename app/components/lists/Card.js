@@ -14,7 +14,6 @@ import defaultStyles from '../../config/styles';
 import authContext from '../../Contexts/authContext';
 import PostService from '../../services/post.service';
 import PostOptionDrawer from '../drawers/PostOptionsDrawer';
-import ImageView from 'react-native-image-viewing';
 import PostActions from '../PostActions';
 import routes from '../../navigation/routes';
 import constants from '../../config/constants';
@@ -27,7 +26,6 @@ import {postDataSliceAction} from '../../redux/postDataSlice';
 export default function Card({
   user,
   postData,
-  reloadPosts,
   onPress,
   style,
   navigation,
@@ -40,8 +38,7 @@ export default function Card({
     postData.numberOfReaction,
   );
 
-
-const [isUserLiked, setIsUserLiked] = useState(postData.liked);
+  const [isUserLiked, setIsUserLiked] = useState(postData.liked);
   const [comment, setComments] = useState(postData.comments);
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [images, setImages] = useState([]);
@@ -207,17 +204,6 @@ const [isUserLiked, setIsUserLiked] = useState(postData.liked);
     //reloadPost();
   };
 
-  // rerenders the post when interaction
-  // const reloadPost = async () => {
-  //   PostService.getPostByPostId(postData.id)
-  //     .then(res => {
-  //       //setComments(res.data.comments)
-  //       setNumberOfComments(res.data.numberOfComments);
-  //       setNumberOfReactions(res.data.numberOfReaction);
-  //     })
-  //     .catch(e => console.error(e));
-  // };
-
   const showDeleteAlert = () =>
     Alert.alert('Delete', 'Are you sure to delete this post', [
       {
@@ -269,31 +255,23 @@ const [isUserLiked, setIsUserLiked] = useState(postData.liked);
         )} */}
 
         {/** Post Image */}
-
         {images?.length !== 0 && (
-          
           <CustomImageSlider
-          navigation={navigation}
-          media={postData?.media}
-          width={width - 32}
-          height={250}
-        />
-          
+            navigation={navigation}
+            media={postData?.media}
+            postType={postType}
+            height={250}
+          />
         )}
 
+
         <PostActions
-          //comments={comment}
           postData={postData}
-          //firstName={firstName}
           navigation={navigation}
           postId={postData.id}
-          //date={formattedDate}
-          //postText={postText}
-          userId={user.id}
-          //userEmail={userEmail}
+          userId={user?.id}
           numberOfReactions={`${numberOfReactions}`}
           numberOfComments={`${postData.numberOfComments}`}
-          //profileImage={profileImage}
           isUserLiked={isUserLiked}
           isVisible={isOptionsVisible}
           setIsVisible={setIsOptionsVisible}

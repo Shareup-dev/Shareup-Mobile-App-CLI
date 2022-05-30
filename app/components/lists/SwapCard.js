@@ -212,11 +212,9 @@ const SwapCard = React.memo(
       return setIsUserLiked(result);
     };
     const handleReactions = async () => {
-      console.log(item.allPostsType);
       if (item.allPostsType === constants.postTypes.SWAP){
         swapService.likePost(user.id, item.id)
         .then(res => {
-          console.log(res.data);
           setIsUserLiked(!isUserLiked);
            //setNumberOfReactions(res.data.numberOfReaction);
         }) //need to get likePostIds
@@ -224,7 +222,6 @@ const SwapCard = React.memo(
       }else if (item.allPostsType === constants.postTypes.HANG_SHARE){
         hangShareService.likePost(user.id, item.id)
         .then(res => {
-          console.log(res.data);
           setIsUserLiked(!isUserLiked);
            //setNumberOfReactions(res.data.numberOfReaction);
         }) //need to get likePostIds

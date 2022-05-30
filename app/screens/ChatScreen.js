@@ -30,7 +30,10 @@ function ChatScreen({navigation, route}) {
     userState: {username},
   } = useContext(AuthContext);
 
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState({
+    state: [],
+    loading: false,
+  });
   const [message, setMessage] = useState('');
   const [conversationId, setConversationId] = useState('');
 
@@ -39,7 +42,10 @@ function ChatScreen({navigation, route}) {
       .getConversation(username, user.email)
       .then(({data}) => {
         setConversationId(data.id);
-        setMessages(data.messages);
+        setMessages(prev => ({
+          ...prev,
+          state: data.messages,
+        }));
       })
       .catch(e => console.error(e.message));
   };
@@ -60,7 +66,7 @@ function ChatScreen({navigation, route}) {
   }, []);
 
   const onMessageReceived = mess => {
-    setMessages(prev => [mess, ...prev]);
+    setMessages(prev => ({...prev , state: [mess,...prev.state]}))
   };
 
   const onSendMessage = async message => {
@@ -146,7 +152,6 @@ function ChatScreen({navigation, route}) {
         url={settings.apiUrl + '/chat'}
         topics={[`/user/${username}/messages`]}
         // onConnect={onConnected}
-        // onDisconnect={console.log('Disconnected!')}
         onMessage={msg => onMessageReceived(msg)}
         ref={sockJsRef}
         debug={false}
@@ -201,10 +206,11 @@ function ChatScreen({navigation, route}) {
           inverted
           style={{
             paddingHorizontal: 10,
-
             marginBottom: 65,
           }}
-          data={messages}
+          refreshing={messages.loading}          
+          data={messages.state}
+          // onEndReached={getConversations}
           keyExtractor={(item, i) => i.toString()}
           renderItem={({item}) => (
             <MessageCard

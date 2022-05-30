@@ -1,11 +1,22 @@
-import React, {memo, useRef, useState} from 'react';
-import {View, TouchableOpacity, StyleSheet} from 'react-native';
+import React, {useState} from 'react';
+import {View, TouchableOpacity, StyleSheet, Dimensions} from 'react-native';
 import BetterImage from '../betterImage/BetterImage';
 import ImageView from 'react-native-image-viewing';
-import Video from 'react-native-video';
 import VideoPlayer from '../ShareupVideoPlayer/shareupVideoPlayer';
 
-function CustomImageSlider({media = [], width, height}) {
+let {width} = Dimensions.get('window');
+
+const setWidth = postType => {
+  switch (postType) {
+    case 'share':
+      return width - 64;
+
+    default:
+      return width - 32;
+  }
+};
+
+function CustomImageSlider({media = [], height, postType}) {
   const [imageSlider, setImageSlider] = useState({
     state: false,
     index: 0,
@@ -21,14 +32,14 @@ function CustomImageSlider({media = [], width, height}) {
   const imgGridViewer = index => {
     switch (media.length) {
       case 4:
-        return width / 2;
+        return setWidth(postType) / 2;
       case 3:
         if (index + 1 === media.length) {
-          return width;
+          return setWidth(postType);
         }
-        return width / 2;
+        return setWidth(postType) / 2;
       default:
-        return width / media.length;
+        return setWidth(postType) / media.length;
     }
   };
 
@@ -48,7 +59,6 @@ function CustomImageSlider({media = [], width, height}) {
           <TouchableOpacity
             key={index}
             onPress={() => setImageSlider({state: true, index: index})}>
-
             {/* {image.mediaPath ? (
               image.mediaPath.split('.').pop() === 'mp4' ||
               image.mediaPath.split('.').pop() === 'mov' ? (
@@ -58,7 +68,6 @@ function CustomImageSlider({media = [], width, height}) {
                   tapAnywhereToPause={false}
                   toggleResizeModeOnFullscreen={false}
                   isFullScreen={false}
-                  //thumbnail={require('../../assets/images/9.jpg')}
                   disableBack={false}
                   disableVolume={false}
                   controlTimeout={5000}
@@ -78,44 +87,33 @@ function CustomImageSlider({media = [], width, height}) {
               )
             ) : null} */}
 
-            {(image.mediaPath.split('.').pop() === 'mp4') || (image.mediaPath.split('.').pop() === 'mov')
-          //   ? <Video
-          //   resizeMode={'cover'}
-          //   style={[{width: imgGridViewer(index) - 2, margin: 1, height}]}
-          //   source={{
-          //     uri: image.mediaPath,
-          //   }}
-          //   repeat={true}
-          //   playWhenInactive={false}
-          
-          // />
-         
-            
-                        ? <VideoPlayer
-                            source={{ uri: image.mediaPath }}
-                            navigator={navigator}
-                            tapAnywhereToPause={false}
-                            toggleResizeModeOnFullscreen={false}
-                            isFullScreen={false}
-                            //thumbnail={require('../../assets/images/9.jpg')}
-                            disableBack={false}
-                            disableVolume={false}
-                            
-                            controlTimeout={5000}
-                            paused={true}
-                            seekColor={'#576CEC'}
-                            style={[{width: imgGridViewer(index) - 2, margin: 1, height}]}
-                            videoStyle={{width:imgGridViewer(index) - 2,height:"100%"}}
-                            resizeMode={'cover'}
-                        />
-           
-            : <BetterImage
-              key={index}
-              style={[{width: imgGridViewer(index) - 2, margin: 1, height}]}
-              resizeMode={'cover'}
-              source={{uri: image.mediaPath}}
-            />}
-
+            {image.mediaPath &&
+            (image.mediaPath.split('.').pop() === 'mp4' ||
+              image.mediaPath.split('.').pop() === 'mov') ? (
+              <VideoPlayer
+                source={{uri: image.mediaPath}}
+                navigator={navigator}
+                tapAnywhereToPause={false}
+                toggleResizeModeOnFullscreen={false}
+                isFullScreen={false}
+                //thumbnail={require('../../assets/images/9.jpg')}
+                disableBack={false}
+                disableVolume={false}
+                controlTimeout={5000}
+                paused={true}
+                seekColor={'#576CEC'}
+                style={[{width: imgGridViewer(index) - 2, margin: 1, height}]}
+                videoStyle={{width: imgGridViewer(index) - 2, height: '100%'}}
+                resizeMode={'cover'}
+              />
+            ) : (
+              <BetterImage
+                key={index}
+                style={[{width: imgGridViewer(index) - 2, margin: 1, height}]}
+                resizeMode={'cover'}
+                source={{uri: image.mediaPath}}
+              />
+            )}
           </TouchableOpacity>
         ))}
       </View>

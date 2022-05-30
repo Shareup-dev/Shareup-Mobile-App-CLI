@@ -88,7 +88,7 @@ export default function MessagesScreen({navigation}) {
       <View style={styles.containerTop}>
         <Text style={styles.bigFontBlack}>Messages</Text>
         <TextField
-          placeholder="search Groups"
+          placeholder="Search"
           iconName="search1"
           iconType="AntDesign"
           style={styles.searchbar}

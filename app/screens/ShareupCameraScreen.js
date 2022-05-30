@@ -87,7 +87,6 @@ export default function ShareupCameraScreen({navigation,route}) {
         skipProcessing: true,
         quality: 0.5,
       }).then(res => { 
-           console.log([res]);
             const uris = [res].map(item => {
               return item.uri;
             });
@@ -147,7 +146,6 @@ export default function ShareupCameraScreen({navigation,route}) {
           const uris = res.assets.map(item => {
                   return item.uri;
                 });
-                console.log(uris);
             dispatch(postDataSliceAction.setImages(uris))
             navigation.navigate(routes.ADD_POST,{
                postType:postType

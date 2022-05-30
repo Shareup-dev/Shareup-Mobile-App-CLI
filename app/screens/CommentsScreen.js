@@ -64,7 +64,6 @@ export default function CommentsScreen({navigation, route}) {
   );
 
   const loadComments = () => {
-    console.log("load comment");
     setComments(prev => ({...prev, loading: true}));
     if (postType === postTypes.SWAP) {
       SwapService.getSwapComment(swapId)

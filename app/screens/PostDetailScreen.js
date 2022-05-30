@@ -97,7 +97,6 @@ export default function PostDetailScreen({ navigation, route }) {
   ];
   useFocusEffect(
     useCallback(() => {
-      console.log(postData.allPostsType);
       loadImages();
     }, []),
   );

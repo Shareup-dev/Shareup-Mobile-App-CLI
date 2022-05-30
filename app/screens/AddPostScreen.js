@@ -478,7 +478,6 @@ export default function AddPostScreen({ navigation, route }) {
       } else {
         PostService.createPost(user.id, formData)
           .then(resp => {
-            console.log(resp.data);
             store.dispatch(feedPostsAction.addFeedPost(resp.data));
             dispatch(postFeelingsActions.setDefault());
             navigation.navigate(routes.FEED);
@@ -749,7 +748,7 @@ export default function AddPostScreen({ navigation, route }) {
                 <Text style={{ fontSize: 14 }}>{postData.postDetail?.post?.content}</Text>
               )}
             </View>
-            <CustomImageSlider width={width - 42} height={200} media={!postData['EditPost'] ? postData.postDetail?.media : postData.postDetail?.post?.media} />
+            <CustomImageSlider width={width - 42} postType={"share"} height={200} media={!postData['EditPost'] ? postData.postDetail?.media : postData.postDetail?.post?.media} />
           </View>
         )}
         <ImageInputList

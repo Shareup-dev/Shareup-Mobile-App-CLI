@@ -18,17 +18,16 @@ import postService from '../../services/post.service';
 import Icon from '../Icon';
 import PostOptionDrawer from '../drawers/PostOptionsDrawer';
 import constants from '../../config/constants';
-import Share from 'react-native-share';
+
 import onShareHandler from '../Share';
 import { postDataSliceAction } from '../../redux/postDataSlice';
-import authContext from '../../UserContext';
+
 import { useDispatch } from 'react-redux';
 import { Switch } from 'react-native-gesture-handler';
 import SwapCard from './SwapCard';
 
 export default function SharedPostCard(props) {
-  const {postData, navigation,user, ...rest} = props;
-  const {userState} = useContext(authContext);
+  const {postData, navigation,user, ...rest} = props;  
   const dispatch = useDispatch()
   const [isUserLiked, setIsUserLiked] = useState(postData.liked);
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
@@ -196,7 +195,6 @@ export default function SharedPostCard(props) {
     //reloadPost();
   };
   const renderCard = (item) => {
-    console.log(item);
     switch (item.post.allPostsType) {
       case constants.postTypes.SWAP:
         return (

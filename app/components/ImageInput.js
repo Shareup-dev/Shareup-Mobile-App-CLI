@@ -46,7 +46,6 @@ export default function ImageInput({imageUri, onChangeImage, isSwap}) {
   };
   
   const type = imageUri?.split('.').pop();
-  console.log(type);
   
   
   return (

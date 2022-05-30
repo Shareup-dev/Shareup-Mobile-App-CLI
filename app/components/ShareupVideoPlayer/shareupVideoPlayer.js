@@ -747,7 +747,6 @@ export default class VideoPlayer extends Component{
      * pan responders.
      */
     UNSAFE_componentWillMount() {
-        console.log(this.state.currentTime,"*",this.state.duration,"*",this.state.seekerPosition);
         this.initSeekPanResponder();
         this.initVolumePanResponder();
     }

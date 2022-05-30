@@ -41,7 +41,6 @@ const PostActions = ({
     moment(postData.published, 'DD MMMM YYYY hh:mm:ss').fromNow(),
     // null
   );
-
   return (
     <View style={styles.content}>
       <View style={styles.userInfo}>
@@ -58,7 +57,7 @@ const PostActions = ({
           }>
           <Image
             source={{
-              uri: postData.userdata.profilePicturePath,
+              uri: postData?.userdata?.profilePicturePath,
             }}
             style={styles.profilePicture}
           />

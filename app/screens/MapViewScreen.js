@@ -43,10 +43,8 @@ export default function MapViewScreen ({navigation,route}) {
         setRegion(region);
       }
     const confirmLocation = () => {
-      console.log(postData);
-        dispatch(locationActions.setlocation(region))
-        console.log(region)
-        navigation.navigate(routes.SHIPPING_ADDRESS,postData)
+        location = region
+        navigation.navigate(routes.SHIPPING_ADDRESS)
     }
       
       
