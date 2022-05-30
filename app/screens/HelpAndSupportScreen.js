@@ -20,7 +20,7 @@ export default function SettingPrivacy({ navigation }) {
           type:"Ionicons",
         },
         onPress: () => {
-          alert("savedPost")
+          //alert("savedPost")
          },
       },
       {
@@ -30,7 +30,7 @@ export default function SettingPrivacy({ navigation }) {
           type:"Entypo",
         },
         onPress: () => {
-          alert("savedPost")
+          //alert("savedPost")
          },
       },
       {
@@ -40,7 +40,7 @@ export default function SettingPrivacy({ navigation }) {
           type:"MaterialIcons",
         },
         onPress: () => {
-          alert("savedPost")
+          //alert("savedPost")
          },
       },
       {
@@ -50,7 +50,7 @@ export default function SettingPrivacy({ navigation }) {
           type:"FontAwesome5",
         },
         onPress: () => {
-          alert("savedPost")
+          //alert("savedPost")
          },
       },
     

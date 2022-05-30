@@ -30,7 +30,8 @@ import hangShareService from '../../services/hangShare.service';
 
 const imageSize = 160;
 const SwapCard = React.memo(
-  ({item, navigation, userId, style,reloadPosts,onPress}) => {
+  ({item, navigation, userId, style,reloadPosts,onPress,noActionBar,
+    noOptions,}) => {
     const actionsTabSizeRatio = 0.5;
     const [isOptionsVisible, setIsOptionsVisible] = useState(false);
     const [numberOfComments, setNumberOfComments] = useState(
@@ -291,6 +292,8 @@ const SwapCard = React.memo(
           // setIsVisible={setIsOptionsVisible}
 
           onInteraction={handleReactions}
+          noActionBar={noActionBar}
+          noOptions={noOptions}
         />
 
         <View style={{flexDirection: 'row'}}>

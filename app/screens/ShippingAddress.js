@@ -10,19 +10,23 @@ import store from "../redux/store";
 import { swapedImagesAction } from "../redux/swapedImages";
 import authContext from '../Contexts/authContext';
 import hangShareService from "../services/hangShare.service";
+import { useSelector } from "react-redux";
 
 const ShippingAddress = ({ navigation, route }) => {
+  const location = useSelector(state => state.locationSlice);
   const [region,setRegion] = useState({})
   const postData = route.params;
   const { userState } = useContext(authContext);
   const [showMessageScreen,setShowMessageScreen] = useState(true);
   const acceptHang = () => {
     const data = {
-      latitude: 12.6788,
-      longitude: -12.7866,
-      phone_number:"1234567890"
+      latitude: location.latitude,
+      longitude: location.longitude,
+      phone_number:1234567890
+    
     };
-    hangShareService.acceptHang(userState.userData.id,postData.id,data)
+    console.log("region::",postData)
+    hangShareService.acceptHang(postData.id,userState.userData.id,data)
     .then((res)=> res.data)
     .catch((e)=>{console.error(e);})
   }
@@ -46,7 +50,7 @@ const ShippingAddress = ({ navigation, route }) => {
         <View style={styles.imageContainer}>
           <Image source={require("../assets/icons/googleMapsIcon.png")} />
         </View>
-        <Pressable onPress={()=>{navigation.navigate(routes.MAP_VIEW,{location:setRegion()})}}>
+        <Pressable onPress={()=>{navigation.navigate(routes.MAP_VIEW,postData)}}>
         <Text style={styles.subTitle}>
           select Location on Map 
         </Text>

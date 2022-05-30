@@ -18,6 +18,7 @@ import postFeelings from "./postFeelings";
 import recentSearch from "./recentSearch";
 import reelActiveIndexReducer from "./ReelActiveIndex";
 import postDataSlice from "./postDataSlice";
+import locationSlice from "./locationSlice";
 
 export default store = configureStore({
   reducer: {
@@ -39,5 +40,6 @@ export default store = configureStore({
     postFeel: postFeelings,
     recentSearch:recentSearch,
     postDataSlice:postDataSlice.reducer,
+    locationSlice:locationSlice.reducer,
   },
 });

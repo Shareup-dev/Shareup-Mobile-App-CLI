@@ -10,8 +10,8 @@ class HangShareService {
         AuthAxios.get(`hangshare/Gifts`)
     getallMealsForHang = () =>
         AuthAxios.get(`hangshare/Meals`)
-    acceptHang = (hsid, uid, data) =>
-        AuthAxios.put(`hangshare/accept/${hsid}/${uid}`, data)
+    // acceptHang = (hsid, uid, data) =>
+    //     AuthAxios.put(`hangshare/accept/${hsid}/${uid}`, data)
     editHang = (uid, hsid, data) =>
         AuthAxios.put(`hangshare/${uid}/edit/${hsid}`, data)
     deleteHang = (uid, hsid) =>
@@ -19,6 +19,7 @@ class HangShareService {
     getHangShareByID = (id) => AuthAxios.get(`hangshare/${id}`)
     likePost = (uid, pid, emoji) =>
         AuthAxios.put(`hangshare/${uid}/like-unlike/${pid}`, { emoji: emoji });
-
+    acceptHang = (hsid, uid, data) =>
+        AuthAxios({url:`hangshare/accept/${hsid}/${uid}`,method:'put',params:data})
 }
 export default new HangShareService();

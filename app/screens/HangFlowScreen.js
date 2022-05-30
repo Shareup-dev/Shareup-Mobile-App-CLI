@@ -1,9 +1,9 @@
 import React, { useContext, useState, useCallback } from 'react';
-import { StyleSheet, Text, TouchableWithoutFeedback, FlatList, ScrollView,View} from 'react-native';
+import { StyleSheet, Text, TouchableWithoutFeedback, FlatList, ScrollView, View } from 'react-native';
 import TextField from '../components/TextField';
 import Screen from '../components/Screen';
-import { Header, HeaderTitle} from '../components/headers';
-import {HeaderWithBackArrow} from '../components/headers'
+import { Header, HeaderTitle } from '../components/headers';
+import { HeaderWithBackArrow } from '../components/headers'
 import colors from '../config/colors';
 import Icon from '../components/Icon';
 import routes from '../navigation/routes';
@@ -12,16 +12,28 @@ import authContext from '../Contexts/authContext';
 import HangFeedCard from '../components/lists/HangFeedCard';
 import IconButton from '../components/buttons/IconButton';
 import hangShareService from '../services/hangShare.service';
+import SwapCard from '../components/lists/SwapCard';
+import constants from '../config/constants';
 
 
 export default function HangFlowScreen({ navigation, route }) {
-
+    const postType = route.params;
     const { userState } = useContext(authContext);
     const [savedData, setSavedData] = useState([])
 
     useFocusEffect(
         useCallback(() => {
-            getAllHang(userState.userData.email);
+            switch (postType) {
+                case constants.postTypes.HANG_SHARE:
+                    getAllHang(userState.userData.email);
+                    break;
+                case constants.postTypes.SWAP:
+                   // getAllHang(userState.userData.email);
+                    break;
+                default:
+                    break;
+            }
+
         }, []),
     );
     const getAllHang = (userEmail) => {
@@ -31,12 +43,11 @@ export default function HangFlowScreen({ navigation, route }) {
     }
     const renderItem = ({ item }) => {
         return (
-            <HangFeedCard //style={styles.listItem}
-                user={item.userdata}
-                postData={item}
+            <SwapCard
                 navigation={navigation}
-                reloadPosts={getAllHang}
-                postType={item.allPostsType}
+                route={route}
+                item={item}
+                userId={item.userdata.id}
                 onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item }) }}
             />
         );
@@ -46,36 +57,36 @@ export default function HangFlowScreen({ navigation, route }) {
         //setActivityIndicator(false);
     };
     return (
-        <ScrollView style={{backgroundColor:colors.white}}>
+        <ScrollView style={{ backgroundColor: colors.white }}>
             <HeaderWithBackArrow
                 onBackButton={() => navigation.goBack()}
-                rightComponent={
-                    <IconButton
-                        onPress={() => navigation.navigate(routes.KEEP_HANG)}
-                        IconComponent={
-                          <Icon
-                            image={require('../assets/icons/squared-add-icon.png')}
-                            color={colors.iondigoDye}
-                            backgroundSizeRatio={0.8}
-                          />
-                        }
-                        style={styles.plusIcon}
-                    />
-                }
+            // rightComponent={
+            //     <IconButton
+            //         onPress={() => navigation.navigate(routes.KEEP_HANG,{postType:constants.postTypes.HANG_SHARE})}
+            //         IconComponent={
+            //           <Icon
+            //             image={require('../assets/icons/squared-add-icon.png')}
+            //             color={colors.iondigoDye}
+            //             backgroundSizeRatio={0.8}
+            //           />
+            //         }
+            //         style={styles.plusIcon}
+            //     />
+            // }
             />
-             <View style={styles.searchContainer}>
-                        <TextField
-                            placeholder="Search"
-                            iconName="search1"
-                            iconType="AntDesign"
-                            style={styles.searchbar}
-                        //   ref={searchTextFieldRef}
-                        //   onChangeText={text => {
-                        //     onSearch(text);
-                        //     store.dispatch(recentSearchActions.setList(text))
-                        //   }}
-                        />
-                    </View>
+            <View style={styles.searchContainer}>
+                <TextField
+                    placeholder="Search"
+                    iconName="search1"
+                    iconType="AntDesign"
+                    style={styles.searchbar}
+                //   ref={searchTextFieldRef}
+                //   onChangeText={text => {
+                //     onSearch(text);
+                //     store.dispatch(recentSearchActions.setList(text))
+                //   }}
+                />
+            </View>
 
             <FlatList
                 initialNumToRender={10}
@@ -113,13 +124,13 @@ const styles = StyleSheet.create({
     },
     searchContainer: {
         paddingHorizontal: 5,
-        marginLeft:10,
-        marginRight:10,
+        marginLeft: 10,
+        marginRight: 10,
     },
     searchbar: {
         marginBottom: 10,
-        
+
     },
-    
+
 
 });

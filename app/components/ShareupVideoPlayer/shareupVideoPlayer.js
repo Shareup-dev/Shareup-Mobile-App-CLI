@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component,useEffect } from 'react';
 import Video from 'react-native-video';
 import {
     TouchableWithoutFeedback,
@@ -18,7 +18,7 @@ import {
 import Icon from '../../components/Icon'
 
 const screen = Dimensions.get('window');
-export default class VideoPlayer extends Component {
+export default class VideoPlayer extends Component{
     static defaultProps = {
         toggleResizeModeOnFullscreen: true,
         controlAnimationTiming: 500,
@@ -38,7 +38,7 @@ export default class VideoPlayer extends Component {
 
     constructor(props) {
         super(props);
-
+        
         /**
          * All of our values that are updated by the
          * methods and listeners in this class
@@ -46,7 +46,7 @@ export default class VideoPlayer extends Component {
         this.state = {
             // Video
             resizeMode: this.props.resizeMode,
-            paused: false,
+            paused: true,
             muted: this.props.muted,
             volume: this.props.volume,
             rate: this.props.rate,
@@ -101,8 +101,8 @@ export default class VideoPlayer extends Component {
             onProgress: this._onProgress.bind(this),
             onSeek: this._onSeek.bind(this),
             onLoad: this._onLoad.bind(this),
-            onPause: this.props.onPause,
-            onPlay: this.props.onPlay,
+            onPause: this.props.onPause ,
+            onPlay: this.props.onPlay ,
         };
 
         /**
@@ -153,6 +153,10 @@ export default class VideoPlayer extends Component {
                 rotate: new Animated.Value(0),
                 MAX_VALUE: 360,
             },
+            middleControl:{
+                marginBottom: new Animated.Value(0),
+                opacity: new Animated.Value(initialValue),
+            }
         };
 
         /**
@@ -164,12 +168,12 @@ export default class VideoPlayer extends Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-
-        this.setState({
-            paused: nextProps.paused,
-        });
-    }
+    // UNSAFE_componentWillReceiveProps(nextProps) {
+        
+    //     this.setState({
+    //         paused: nextProps.paused,
+    //     });
+    // }
 
     /**
       | -------------------------------------------------------
@@ -219,6 +223,8 @@ export default class VideoPlayer extends Component {
             this.props.onLoad(...arguments);
         }
     }
+  
+
 
     /**
      * For onprogress we fire listeners that
@@ -382,6 +388,17 @@ export default class VideoPlayer extends Component {
                 duration: this.props.controlAnimationTiming,
                 useNativeDriver: false,
             }),
+            Animated.timing(this.animations.middleControl.opacity, {
+                toValue: 0,
+                duration: this.props.controlAnimationTiming,
+                useNativeDriver: false,
+            }),
+            Animated.timing(this.animations.middleControl.marginBottom, {
+                toValue: -100,
+                duration: this.props.controlAnimationTiming,
+                useNativeDriver: false,
+            }),
+            
         ]).start();
     }
 
@@ -408,6 +425,16 @@ export default class VideoPlayer extends Component {
                 duration: this.props.controlAnimationTiming,
             }),
             Animated.timing(this.animations.bottomControl.marginBottom, {
+                toValue: 0,
+                useNativeDriver: false,
+                duration: this.props.controlAnimationTiming,
+            }),
+            Animated.timing(this.animations.middleControl.opacity, {
+                toValue: 1,
+                useNativeDriver: false,
+                duration: this.props.controlAnimationTiming,
+            }),
+            Animated.timing(this.animations.middleControl.marginBottom, {
                 toValue: 0,
                 useNativeDriver: false,
                 duration: this.props.controlAnimationTiming,
@@ -720,6 +747,7 @@ export default class VideoPlayer extends Component {
      * pan responders.
      */
     UNSAFE_componentWillMount() {
+        console.log(this.state.currentTime,"*",this.state.duration,"*",this.state.seekerPosition);
         this.initSeekPanResponder();
         this.initVolumePanResponder();
     }
@@ -757,7 +785,7 @@ export default class VideoPlayer extends Component {
 
         this.setState(state);
     }
-
+    
     /**
      * When the component is about to unmount kill the
      * timeout less it fire in the prev/next scene
@@ -770,7 +798,7 @@ export default class VideoPlayer extends Component {
     /**
      * Get our seekbar responder going
      */
-    initSeekPanResponder() {
+     initSeekPanResponder() {
         this.player.seekPanResponder = PanResponder.create({
             // Ask to be the responder.
             onStartShouldSetPanResponder: (evt, gestureState) => true,
@@ -1030,9 +1058,9 @@ export default class VideoPlayer extends Component {
         const seekbarControl = this.props.disableSeekbar
             ? this.renderNullControl()
             : this.renderSeekbar();
-        // const playPauseControl = this.props.disablePlayPause
-        //     ? this.renderNullControl()
-        //     : this.renderPlayPause();
+        const playPauseControl = this.props.disablePlayPause
+            ? this.renderNullControl()
+            : this.renderPlayPause();
 
         return (
             <Animated.View
@@ -1051,7 +1079,7 @@ export default class VideoPlayer extends Component {
                     {seekbarControl}
                     <SafeAreaView
                         style={[VideoPlayerstyles.controls.row, VideoPlayerstyles.controls.bottomControlGroup]}>
-                        {/* {playPauseControl} */}
+                        {playPauseControl}
                         {this.renderTitle()}
                         {timerControl}
                     </SafeAreaView>
@@ -1079,8 +1107,8 @@ export default class VideoPlayer extends Component {
                 style={[
                     VideoPlayerstyles.controls.middle,
                     {
-                        // opacity: this.animations.bottomControl.opacity,
-                        // marginBottom: this.animations.bottomControl.marginBottom,
+                        opacity: this.animations.middleControl.opacity,
+                        marginBottom: this.animations.middleControl.marginBottom,
                     },
                 ]}>
                 {/* <ImageBackground */}
@@ -1155,6 +1183,22 @@ export default class VideoPlayer extends Component {
             VideoPlayerstyles.controls.playPause,
         );
     }
+    renderPlay() {
+        let name =
+            this.state.paused === true
+                ? "play-circle-outline"
+                : "pause-circle-outline"
+        return this.renderControl(
+            <Icon name={name}
+                type="MaterialIcons"
+                size={45}
+                noBackground={true}
+                color={'#fff'}
+                backgroundSizeRatio={1} />,
+            this.methods.togglePlayPause,
+            VideoPlayerstyles.controls.centerPlay,
+        );
+    }
 
     /**
      * Render our title...if supplied.
@@ -1186,26 +1230,9 @@ export default class VideoPlayer extends Component {
         );
     }
     /**
-     * Show backward control.
+     * Show play/Pause control.
      */
-    renderPlay() {
-        let name =
-            this.state.paused === true
-                ? "play-circle-outline"
-                : "pause-circle-outline"
-        return this.renderControl(
-            // <Image source={source} />,
-            <Icon name={name}
-                type="MaterialIcons"
-                //style={styles.optionsIcon}
-                size={45}
-                noBackground={true}
-                color={'#fff'}
-                backgroundSizeRatio={1} />,
-            this.methods.togglePlayPause,
-            VideoPlayerstyles.controls.playPause,
-        );
-    }
+    
 
     /**
      * Show loading icon
@@ -1267,7 +1294,7 @@ export default class VideoPlayer extends Component {
         this.setState({ player: false, paused: false });
         typeof this.events.onPlay === 'function' && this.events.onPlay();
     }
-
+    
     /**
      * Provide all of our options and render the whole component.
      */
@@ -1278,7 +1305,7 @@ export default class VideoPlayer extends Component {
             // style={[VideoPlayerstyles.player.container, this.styles.containerStyle]}
             >
                 {
-                    this.state.player ? (
+                    (this.state.player) || (this.state.paused) || (this.state.currentTime === this.state.duration) ? (
                         <View //resizeMode='cover' source={require('../../assets/images/9.jpg')}//{{ uri: this.state.thumbnail }} 
                             style={this.state.style}>
                             <Video
@@ -1287,7 +1314,7 @@ export default class VideoPlayer extends Component {
                                 resizeMode={this.state.resizeMode}
                                 volume={this.state.volume}
                                 removeClippedSubviews={false}
-                                paused={true}
+                                paused={this.state.paused}
                                 muted={this.state.muted}
                                 rate={this.state.rate}
                                 onLoadStart={this.events.onLoadStart}
@@ -1502,6 +1529,9 @@ const VideoPlayerstyles = {
         },
         playPause: {
             position: 'relative',
+            width: 80,
+        },
+        centerPlay:{
             width: 80,
             zIndex: 1,
             position: 'absolute',

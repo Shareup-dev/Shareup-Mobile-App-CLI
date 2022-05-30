@@ -7,9 +7,21 @@ import AppButton from "../components/buttons/Tab";
 import colors from "../config/colors";
 import Geolocation from '@react-native-community/geolocation';
 import routes from "../navigation/routes";
+import { locationActions } from "../redux/locationSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { State } from "react-native-gesture-handler";
 
 
-export default function MapViewScreen ({navigation,location}) { 
+export default function MapViewScreen ({navigation,route}) { 
+  const postData = route.params;
+  const[region,setRegion] = useState({region: {
+        latitude: 0,
+        longitude: 0,
+        latitudeDelta: 0,
+        longitudeDelta: 0,
+      }
+      })
+  const dispatch = useDispatch();
     useEffect(() => {
         Geolocation.getCurrentPosition((pos) => {
           const crd = pos.coords;
@@ -25,21 +37,16 @@ export default function MapViewScreen ({navigation,location}) {
       }, []);
     
  
-    const[region,setRegion] = useState({region: {
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      }
-      })
+    
 
     const onRegionChange=(region) =>{
         setRegion(region);
       }
     const confirmLocation = () => {
-        location = region
+      console.log(postData);
+        dispatch(locationActions.setlocation(region))
         console.log(region)
-        navigation.navigate(routes.SHIPPING_ADDRESS)
+        navigation.navigate(routes.SHIPPING_ADDRESS,postData)
     }
       
       

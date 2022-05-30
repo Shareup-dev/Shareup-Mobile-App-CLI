@@ -47,7 +47,7 @@ export default function AccountSettingsScreen({ navigation }) {
                         type: "Ionicons",
                     },
                     onPress: () => {
-                        alert("savedPost")
+                        //alert("savedPost")
                     },
                 }]
         }, {
@@ -61,7 +61,7 @@ export default function AccountSettingsScreen({ navigation }) {
                         type: "MaterialCommunityIcons",
                     },
                     onPress: () => {
-                        alert("savedPost")
+                        //alert("savedPost")
                     },
                 },
                 {
@@ -71,7 +71,7 @@ export default function AccountSettingsScreen({ navigation }) {
                         type: "Entypo",
                     },
                     onPress: () => {
-                        alert("savedPost")
+                        //alert("savedPost")
                     },
                 },
                 {
@@ -81,7 +81,7 @@ export default function AccountSettingsScreen({ navigation }) {
                         type: "MaterialIcons",
                     },
                     onPress: () => {
-                        alert("savedPost")
+                        //alert("savedPost")
                     },
                 }],
         }];

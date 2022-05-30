@@ -40,7 +40,7 @@ export default function KeepHangScreen({navigation, route}) {
       title: 'Hang Flow',
       image: '',
       onPress: () => {
-        navigation.navigate(routes.HANG_FLOW_SCREEN);
+        navigation.navigate(routes.HANG_FLOW_SCREEN,postType);
       },
     },
     {

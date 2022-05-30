@@ -45,8 +45,6 @@ export default function NewsFeedScreen({navigation, route}) {
   };
 
   const renderItem = ({item}) => {
-
-
       switch (item.allPostsType) {
         case constants.postTypes.SWAP:
           return (

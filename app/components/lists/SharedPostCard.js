@@ -23,6 +23,8 @@ import onShareHandler from '../Share';
 import { postDataSliceAction } from '../../redux/postDataSlice';
 import authContext from '../../UserContext';
 import { useDispatch } from 'react-redux';
+import { Switch } from 'react-native-gesture-handler';
+import SwapCard from './SwapCard';
 
 export default function SharedPostCard(props) {
   const {postData, navigation,user, ...rest} = props;
@@ -193,9 +195,67 @@ export default function SharedPostCard(props) {
       .catch(e => console.error(e));
     //reloadPost();
   };
+  const renderCard = (item) => {
+    console.log(item);
+    switch (item.post.allPostsType) {
+      case constants.postTypes.SWAP:
+        return (
+          <SwapCard
+          noActionBar
+          noOptions
+            navigation={navigation}
+            // route={route}
+            item={item.post}
+            userId={item.post.userdata.id}
+            onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item.post }) }}
+          />
+        );
+      // case "share":
+      //   return (
+      //     <SharedPostCard
+      //     user={item.userdata}
+      //     postData={item}
+      //     navigation={navigation}
+      //     reloadPosts={loadNews}
+      //     postType={item.allPostsType}
+      //     />
+      //   );
+      case constants.postTypes.HANG_SHARE:
+        return (
+          <SwapCard
+          noActionBar
+          noOptions
+            navigation={navigation}
+            // route={route}
+            item={item.post}
+            userId={item.post.userdata.id}
+            onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item.post }) }}
+          />
+          // <HangFeedCard //style={styles.listItem}
+          //   user={item.userdata}
+          //   postData={item}
+          //   navigation={navigation}
+          //   reloadPosts={loadNews}
+          //   postType={item.allPostsType}
+          //   onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item }) }}
+          // />
+        );
+      default:
+        return (
+          <Card
+          {...rest}
+          noActionBar
+          noOptions
+          postData={postData.post}
+          navigation={navigation}
+          user = {user}
+        />
+        );
+    }
+};
   const FooterComponent = () => {
     return (
-      <View style={{paddingHorizontal: 15}}>
+      <View style={{paddingHorizontal: 15,paddingTop:15}}>
         <View style={styles.actionsBar}>
           <View style={styles.likes}>
             {isUserLiked ? (
@@ -277,16 +337,12 @@ export default function SharedPostCard(props) {
   return (
     <View style={[styles.card, defaultStyles.cardBorder]}>
       <HeaderComponent />
+      
       {postData.post ? (
+        <View>
+        {renderCard(postData)}
+        </View>
         
-        <Card
-          {...rest}
-          noActionBar
-          noOptions
-          postData={postData.post}
-          navigation={navigation}
-          user = {user}
-        />
       ) : (
         <View style={{alignItems: 'center', paddingVertical: 10}}>
           <Text>Post unavailable</Text>
