@@ -243,16 +243,7 @@ export default function Card({
       <View
         style={[styles.card, defaultStyles.cardBorder, style]}
         onLayout={onLayout}>
-        {/* {currentImage && (
-          <ImageView
-            visible={imageViewerVisible}
-            images={[{uri: currentImage}]}
-            imageIndex={0}
-            onRequestClose={() => {
-              setImageViewerVisible(false);
-            }}
-          />
-        )} */}
+
 
         {/** Post Image */}
         {images?.length !== 0 && (

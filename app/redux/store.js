@@ -1,10 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import likeReducer from "./like";
 import sentRequests from "./sentRequests";
-import loggedInUserSlice from "./loggedInUser";
-import commentsReducer from "./comments";
-import registrationSlice from "./accountRegistration";
 import groupPostsReducer from "./groupPosts";
 import userGroupsReducer from "./userGroups";
 import swapedImages from "./swapedImages";
@@ -19,15 +15,13 @@ import recentSearch from "./recentSearch";
 import reelActiveIndexReducer from "./ReelActiveIndex";
 import postDataSlice from "./postDataSlice";
 import locationSlice from "./locationSlice";
+import usersProfileSlice from "./usersPostsSlice";
 
 export default store = configureStore({
   reducer: {
+    usersPost: usersProfileSlice,
     reelActiveIndex:reelActiveIndexReducer,
-    like: likeReducer,
-    comments: commentsReducer.reducer,
-    loggedInUserSlice: loggedInUserSlice.reducer,
     sentRequests,
-    registationSlice: registrationSlice.reducer,
     groupPosts: groupPostsReducer,
     userGroups: userGroupsReducer,
     swapedImages: swapedImages.reducer,

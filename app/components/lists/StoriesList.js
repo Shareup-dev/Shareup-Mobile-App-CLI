@@ -1,6 +1,6 @@
 import {useFocusEffect} from '@react-navigation/native';
-import React, {useCallback, useContext,  useState} from 'react';
-import {FlatList,View, StyleSheet} from 'react-native';
+import React, {useCallback, useContext, useState} from 'react';
+import {FlatList, View, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import AuthContext from '../../Contexts/authContext';
 import colors from '../../config/colors';
@@ -8,6 +8,7 @@ import {storiesAction} from '../../redux/stories';
 import storiesService from '../../services/story.service';
 import CreateStoryCard from './CreateStoryCard';
 import StoryCard from './StoryCard';
+import EmptyStoryCard from '../EmptyCards/EmptyStoryCard';
 
 export default function StoriesList({navigation, style}) {
   const {
@@ -91,49 +92,6 @@ export default function StoriesList({navigation, style}) {
     }, []),
   );
 
-  const EmptyCard = () => {
-    return (
-      <>
-        <View
-          style={{
-            width: 100,
-            height: 150,
-            borderWidth: 1.5,
-            borderColor: colors.lighterGray,
-            borderRadius: 15,
-            marginLeft: 2,
-            overflow: 'hidden',
-            backgroundColor: '#eeeeee',
-          }}
-        />
-        <View
-          style={{
-            width: 100,
-            height: 150,
-            borderWidth: 1.5,
-            borderColor: colors.lighterGray,
-            borderRadius: 15,
-            marginLeft: 2,
-            overflow: 'hidden',
-            backgroundColor: '#eeeeee',
-          }}
-        />
-        <View
-          style={{
-            width: 100,
-            height: 150,
-            borderWidth: 1.5,
-            borderColor: colors.lighterGray,
-            borderRadius: 15,
-            marginLeft: 2,
-            overflow: 'hidden',
-            backgroundColor: '#eeeeee',
-          }}
-        />
-      </>
-    );
-  };
-
   return (
     <View style={[styles.container, style]}>
       <CreateStoryCard navigation={navigation} />
@@ -142,7 +100,9 @@ export default function StoriesList({navigation, style}) {
         horizontal
         showsHorizontalScrollIndicator={false}
         style={styles.list}
-        ListEmptyComponent={() => <EmptyCard />}
+        ListEmptyComponent={() => (
+            <EmptyStoryCard />
+        )}
         keyExtractor={(item, i) => i.toString()}
         renderItem={({item}) => {
           return <StoryCard data={item} navigation={navigation} />;

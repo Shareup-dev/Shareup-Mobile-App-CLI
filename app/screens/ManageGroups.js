@@ -46,6 +46,7 @@ export default function ManageGroups({navigation}) {
     return (
       <View
         style={{
+          marginHorizontal:15,
           paddingHorizontal: 10,
           paddingVertical: 10,
           backgroundColor: '#fff',
@@ -67,7 +68,7 @@ export default function ManageGroups({navigation}) {
             <Image
               source={
                 item.groupImagePath
-                  ? {uri:item.groupImagePath}
+                  ? {uri: item.groupImagePath}
                   : require('../assets/images/group-texture.png')
               }
               style={styles.img}
@@ -112,31 +113,32 @@ export default function ManageGroups({navigation}) {
   };
 
   return (
-    <View style={{flex:1}} >
+    <View style={{flex: 1}}>
       <HeaderWithBackArrow
         title={'Your Groups'}
         onBackButton={() => {
           navigation.goBack();
         }}
       />
-      <View style={[styles.container,{paddingTop:15}]} >
-
-      {!groups.length ? (
-        <Text style={{textAlign: 'center', fontSize: 12}}>
-          You don't have any groups to manage
-        </Text>
-      ) : (
-        <React.Fragment>
-          <Text style={[{marginVertical: 5}, styles.title]}>
-            Groups you manage
+      <View style={[styles.container, {paddingTop: 15}]}>
+        {!groups.length ? (
+          <Text style={{textAlign: 'center', fontSize: 12}}>
+            You don't have any groups to manage
           </Text>
-          <FlatList
-            data={groups}
-            keyExtractor={(item, i) => i.toString()}
-            renderItem={({item}) => <ManageGroupCard item={item} />}
-          />
-        </React.Fragment>
-      )}
+        ) : (
+          <React.Fragment>
+            <FlatList
+              ListHeaderComponent={
+                <Text style={[{marginVertical: 5,textAlign: 'center'}, styles.title]}>
+                  Groups you manage
+                </Text>
+              }
+              data={groups}
+              keyExtractor={(item, i) => i.toString()}
+              renderItem={({item}) => <ManageGroupCard item={item} />}
+            />
+          </React.Fragment>
+        )}
       </View>
     </View>
   );
@@ -145,7 +147,6 @@ export default function ManageGroups({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal:10
   },
   img: {
     backgroundColor: '#33333360',

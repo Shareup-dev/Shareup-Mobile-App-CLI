@@ -26,6 +26,7 @@ import {
 import SwapCard from '../components/lists/SwapCard';
 import postService from '../services/post.service';
 import profileService from '../services/profile.service';
+import EmptyPostCard from '../components/EmptyCards/EmptyPostCard';
 
 const POSTS = 'posts';
 const IMAGE_VIDEOS = 'images&videos';
@@ -38,13 +39,12 @@ const tabs = [
 ];
 
 export default function UserProfileScreen({navigation, route}) {
-  const [currentTab, setCurrentTab] = useState(POSTS);
-
+  
   const {
-    userState: {userData},
+    userState: {userData:user},
   } = useContext(authContext);
 
-  const [user, setUser] = useState(userData);
+  const [currentTab, setCurrentTab] = useState(POSTS);
 
   const [posts, setPosts] = useState([]);
   const [media, setMedia] = useState([]);
@@ -101,12 +101,11 @@ export default function UserProfileScreen({navigation, route}) {
   const {width} = Dimensions.get('window');
   const ImagesAndVideosItem = ({item, index}) => (
     <TouchableOpacity
-
       onPress={_ => setImageSlider({state: true, index: index})}>
       <Image
         source={{uri: item.mediaPath}}
         style={{
-          width: (width -22 ) / 3,
+          width: (width - 22) / 3,
           borderRadius: 3,
           height: 150,
           margin: 2,
@@ -135,7 +134,7 @@ export default function UserProfileScreen({navigation, route}) {
 
       <ImageView
         visible={imageSlider.state}
-        images={media.map((media) => ({uri: media.mediaPath}))}
+        images={media.map(media => ({uri: media.mediaPath}))}
         keyExtractor={(item, index) => index.toString()}
         imageIndex={imageSlider.index}
         onRequestClose={() => {
@@ -158,14 +157,7 @@ export default function UserProfileScreen({navigation, route}) {
               <Text
                 style={styles.listEmptyText}>{`Start adding your posts!`}</Text>
             ) : (
-              <>
-                <ActivityIndicator size={30} />
-                <Text
-                  style={[
-                    styles.listEmptyText,
-                    {marginVertical: 5},
-                  ]}>{`Loading..`}</Text>
-              </>
+              <EmptyPostCard />
             )
           }
           ListFooterComponent={() => <View style={styles.listFooter}></View>}
@@ -173,20 +165,19 @@ export default function UserProfileScreen({navigation, route}) {
       )}
 
       {currentTab == IMAGE_VIDEOS && (
-        <View style={{marginHorizontal:5,marginBottom: 50}} > 
-          
-        <FlatList
-          data={media}
-          numColumns={3}
-          showsVerticalScrollIndicator={false}
-          renderItem={({item, index}) => (
-            <ImagesAndVideosItem item={item} index={index} />
+        <View style={{marginHorizontal: 5, marginBottom: 50}}>
+          <FlatList
+            data={media}
+            numColumns={3}
+            showsVerticalScrollIndicator={false}
+            renderItem={({item, index}) => (
+              <ImagesAndVideosItem item={item} index={index} />
             )}
             keyExtractor={(item, index) => index.toString()}
             ListHeaderComponent={ListHeader}
             ListEmptyComponent={ImagesAndVideosEmpty}
-            />
-            </View>
+          />
+        </View>
       )}
 
       {currentTab == TAGS && (

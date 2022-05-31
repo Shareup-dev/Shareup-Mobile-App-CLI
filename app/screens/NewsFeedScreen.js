@@ -16,12 +16,12 @@ import SwapCard from '../components/lists/SwapCard';
 
 import TrendingComponent from '../components/trending/TrendingComponent';
 import postService from '../services/post.service';
-import {useFocusEffect} from '@react-navigation/native';
 import constants from '../config/constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {feedPostsAction} from '../redux/feedPostsSlice';
 import SharedPostCard from '../components/lists/SharedPostCard';
 import routes from '../navigation/routes';
+import EmptyPostCard from '../components/EmptyCards/EmptyPostCard';
 
 export default function NewsFeedScreen({navigation, route}) {
   const posts = useSelector(state => state.feedPosts);
@@ -45,57 +45,56 @@ export default function NewsFeedScreen({navigation, route}) {
   };
 
   const renderItem = ({item}) => {
-      switch (item.allPostsType) {
-        case constants.postTypes.SWAP:
-          return (
-            <SwapCard
-              navigation={navigation}
-              route={route}
-              item={item}
-              userId={item.userdata.id}
-              onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item }) }}
-            />
-          );
-        case "share":
-          return (
-            <SharedPostCard
+    switch (item.allPostsType) {
+      case constants.postTypes.SWAP:
+        return (
+          <SwapCard
+            navigation={navigation}
+            route={route}
+            item={item}
+            userId={item.userdata.id}
+            onPress={() => {
+              navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
+            }}
+          />
+        );
+      case 'share':
+        return (
+          <SharedPostCard
             user={item.userdata}
             postData={item}
             navigation={navigation}
             reloadPosts={loadNews}
             postType={item.allPostsType}
-            />
-          );
-        case constants.postTypes.HANG_SHARE:
-          return (
-            <SwapCard
-              navigation={navigation}
-              route={route}
-              item={item}
-              userId={item.userdata.id}
-              onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item }) }}
-            />
-            // <HangFeedCard //style={styles.listItem}
-            //   user={item.userdata}
-            //   postData={item}
-            //   navigation={navigation}
-            //   reloadPosts={loadNews}
-            //   postType={item.allPostsType}
-            //   onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item }) }}
-            // />
-          );
-        default:
-          return (
-            <Card
-              user={item.userdata}
-              postData={item}
-              navigation={navigation}
-              reloadPosts={loadNews}
-              postType={item.allPostsType}
-              onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item }) }}
-            />
-          );
-      }
+          />
+        );
+      case constants.postTypes.HANG_SHARE:
+        return (
+          <SwapCard
+            navigation={navigation}
+            route={route}
+            item={item}
+            userId={item.userdata.id}
+            onPress={() => {
+              navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
+            }}
+          />
+        );
+
+      default:
+        return (
+          <Card
+            user={item.userdata}
+            postData={item}
+            navigation={navigation}
+            reloadPosts={loadNews}
+            postType={item.allPostsType}
+            onPress={() => {
+              navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
+            }}
+          />
+        );
+    }
   };
 
   const hideActivityIndicator = () => {
@@ -128,9 +127,7 @@ export default function NewsFeedScreen({navigation, route}) {
         ListEmptyComponent={() => (
           <>
             {activityIndicator ? (
-              <ActivityIndicatorComponent
-                style={{alignSelf: 'center', marginVertical: 50}}
-              />
+              <EmptyPostCard />
             ) : (
               <Text style={{alignSelf: 'center', marginVertical: 50}}>
                 No posts Available

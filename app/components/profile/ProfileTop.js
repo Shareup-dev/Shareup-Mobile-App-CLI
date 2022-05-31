@@ -47,6 +47,7 @@ export default function ProfileTop({
       .then(({status}) => status === 200 && setUserStatus(prev => ({...prev,state:"Unfriend"})))
       .catch(e => console.error(e.message));
   };
+
   const ActionButton = () => {
     switch (userStatus.state) {
       case 'Unfriend':
@@ -173,9 +174,9 @@ export default function ProfileTop({
           )}
         </View>
       </View>
-      {user.id === userData.id && (
+      {/* {user.id === userData.id && (
         <StoriesList navigation={navigation} style={styles.storiesList} />
-      )}
+      )} */}
 
       <IconBar tabs={tabs} currentTab={currentTab} onTab={onIconBarTab} />
 

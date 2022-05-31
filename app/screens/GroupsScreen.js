@@ -22,6 +22,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import constants from '../config/constants';
 import Card from '../components/lists/Card';
 import JoinGroupList from '../components/lists/JoinGroupList';
+import EmptyPostCard from '../components/EmptyCards/EmptyPostCard';
 
 export default function GroupsScreen({navigation}) {
   const {userData} = useContext(authContext).userState;
@@ -258,11 +259,9 @@ export default function GroupsScreen({navigation}) {
             ListEmptyComponent={() => (
               <>
                 {feed.loading ? (
-                  <ActivityIndicatorComponent
-                    style={{alignSelf: 'center', marginVertical: 50}}
-                  />
+                <EmptyPostCard />
                 ) : (
-                  <Text style={{alignSelf: 'center', marginVertical: 50}}>
+                  <Text style={{alignSelf: 'center',fontSize:14, color:'#33333380'}}>
                     No posts Available
                   </Text>
                 )}

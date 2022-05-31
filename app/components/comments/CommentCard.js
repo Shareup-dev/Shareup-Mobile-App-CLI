@@ -1,4 +1,4 @@
-import React, {Children, useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -35,11 +35,12 @@ export default function CommentCard(props) {
   const {comment, commentLiked, replyComment, onRefreshing} = props;
   const time = moment(comment.published, 'DD MMMM YYYY hh:mm:ss').fromNow();
 
-
   const [openMedal, setOpenMedal] = useState(false);
   const [editable, setEditable] = useState(false);
   const [content, setContent] = useState(comment.content);
-  const [isLiked, setIsLiked] = useState( replyComment? comment.replyLiked : comment.commentLiked);
+  const [isLiked, setIsLiked] = useState(
+    replyComment ? comment.replyLiked : comment.commentLiked,
+  );
   const [collapseReply, setCollapseReply] = useState(false);
   const [replies, setReplies] = useState({
     loading: false,
@@ -52,10 +53,8 @@ export default function CommentCard(props) {
     }
   }, [isReplied]);
 
-  
   const handleReaction = () => {
     const params = {reaction: 'null'};
-
 
     if (replyComment) {
       postService
@@ -280,19 +279,13 @@ export default function CommentCard(props) {
       </View>
       {comment.numberOfReplies > 0 && (
         <View style={{marginLeft: 25}}>
-          {collapseReply ? (
-            <LinkButton
-              title="-Hide reply"
-              style={[styles.reply]}
-              onPress={handleCollapseReply}
-            />
-          ) : (
-            <LinkButton
-              title="-Show reply"
-              style={[styles.reply, {marginBottom: 10}]}
-              onPress={handleCollapseReply}
-            />
-          )}
+
+          <LinkButton
+            onBlur={handleCollapseReply}
+            title={collapseReply ? `-Hide reply` : `-Show reply`}
+            style={[styles.reply, {marginBottom: 10}]}
+            onPress={handleCollapseReply}
+          />
         </View>
       )}
       {collapseReply ? (

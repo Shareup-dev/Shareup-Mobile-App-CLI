@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   TouchableWithoutFeedback,
@@ -33,9 +33,9 @@ const PostActions = ({
 }) => {
   const fromReply = false;
   const actionsTabSizeRatio = 0.5;
-  const { postTypes } = constants;
+  const {postTypes} = constants;
   const {
-    userState: { userData },
+    userState: {userData},
   } = useContext(AuthContext);
   const [date, setDate] = useState(
     moment(postData.published, 'DD MMMM YYYY hh:mm:ss').fromNow(),
@@ -45,57 +45,67 @@ const PostActions = ({
     <View style={styles.content}>
       <View style={styles.userInfo}>
         <View>
-        <TouchableOpacity
-          onPress={() =>
-            postData.userdata?.id === userData.id
-              ? navigation.navigate(routes.USER_PROFILE, {
-                user: postData.userdata,
-              })
-              : navigation.navigate(routes.FRIEND_PROFILE, {
-                user: postData.userdata,
-              })
-          }>
-          <Image
-            source={{
-              uri: postData?.userdata?.profilePicturePath,
-            }}
-            style={styles.profilePicture}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-        onPress={_ => navigation.navigate(routes.GROUP_FEED, postData.group)}
-        >
-        <Image
-                source={{
-                  uri: postData.group?.groupImagePath,
-                }}
-                style={{
-                  borderRadius: 15,
-                  width: 30,
-                  height: 30,
-                  zIndex:1,
-                  position:'absolute',
-                  marginBottom:10,
-                  marginLeft:1, 
-                  top: -19, 
-                  left: 25,
-
-                }}
-              /></TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              postData.userdata?.id === userData.id
+                ? navigation.navigate(routes.USER_PROFILE, {
+                    user: postData.userdata,
+                  })
+                : navigation.navigate(routes.FRIEND_PROFILE, {
+                    user: postData.userdata,
+                  })
+            }>
+            <Image
+              source={{
+                uri: postData?.userdata?.profilePicturePath,
+              }}
+              style={styles.profilePicture}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={_ =>
+              navigation.navigate(routes.GROUP_FEED, postData.group)
+            }>
+            <Image
+              source={{
+                uri: postData.group?.groupImagePath,
+              }}
+              style={{
+                borderRadius: 15,
+                width: 30,
+                height: 30,
+                zIndex: 1,
+                position: 'absolute',
+                marginBottom: 10,
+                marginLeft: 1,
+                top: -19,
+                left: 25,
+              }}
+            />
+          </TouchableOpacity>
         </View>
         <View style={styles.userNameContainer}>
           <TouchableOpacity>
             <Text style={styles.userName}>{postData.userdata.firstName}</Text>
           </TouchableOpacity>
           <Text style={styles.postDate}>{date}</Text>
-          {postData.group ?
-            <View style={{ flexDirection: "row", alignItems: 'center', justifyContent: 'flex-start' }}>
+          {postData.group ? (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+              }}>
               <TouchableOpacity
-        onPress={_ => navigation.navigate(routes.GROUP_FEED, postData.group)}
-        >
-              <Text style={styles.group}>{postData.group?.name}</Text>
+                onPress={_ =>
+                  navigation.navigate(routes.GROUP_FEED, postData.group)
+                }>
+                <Text style={styles.group}>{postData.group?.name}</Text>
               </TouchableOpacity>
-            </View> : <></>}
+            </View>
+          ) : (
+            <></>
+          )}
         </View>
 
         <View style={styles.actionsContainer}>
@@ -223,7 +233,6 @@ const styles = StyleSheet.create({
   postDate: {
     fontSize: 12,
     color: colors.dimGray,
-
   },
   separator: {
     marginVertical: 10,

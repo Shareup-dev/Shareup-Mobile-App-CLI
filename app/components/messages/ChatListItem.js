@@ -62,8 +62,10 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     marginHorizontal: 20,
-    marginVertical: 10,
+    paddingVertical: 10,
     alignItems: "center",
+    // borderBottomWidth: 1,
+    // borderBottomColor:'#cacaca60'
   },
   middle: {
     flexDirection: "column",

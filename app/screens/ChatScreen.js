@@ -20,6 +20,8 @@ import AuthContext from '../Contexts/authContext';
 import chatService from '../services/chat.service';
 import routes from '../navigation/routes';
 
+import  PushNotification from 'react-native-push-notification';
+
 const {width, height} = Dimensions.get('window');
 
 function ChatScreen({navigation, route}) {
@@ -56,6 +58,15 @@ function ChatScreen({navigation, route}) {
       .then(({status}) => status === 200 && navigation.goBack())
       .catch(e => console.error(e.message));
   };
+
+  const clearChatHandler = () =>{
+    PushNotification.localNotification({
+      channelId:'shareup-id',
+      title:"Test Notification",
+      message:"works...",
+
+    })
+  }
 
   const viewProfileHandler = () => {
     navigation.navigate(routes.FRIEND_PROFILE, {user});
@@ -181,7 +192,8 @@ function ChatScreen({navigation, route}) {
           animationOut={'slideOutRight'}
           onSwipeComplete={() => setOpenModal(false)}
           onBackdropPress={() => setOpenModal(false)}
-          backdropOpacity={0.1}>
+          backdropOpacity={0.1}
+          >
           <View
             style={{
               backgroundColor: '#fff',
@@ -197,7 +209,7 @@ function ChatScreen({navigation, route}) {
             <TouchableOpacity style={styles.menu}>
               <Text style={styles.menuText}>block</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menu}>
+            <TouchableOpacity style={styles.menu} onPress={clearChatHandler} >
               <Text style={styles.menuText}>Clear chat</Text>
             </TouchableOpacity>
           </View>
@@ -277,7 +289,6 @@ const styles = StyleSheet.create({
     width: width / 2,
     alignSelf: 'flex-end',
     justifyContent: 'flex-start',
-    height: 200,
   },
 
   forwardArrow: {
