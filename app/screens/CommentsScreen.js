@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
+  Platform,
 } from 'react-native';
 
 import {Header, HeaderCloseIcon, HeaderTitle} from '../components/headers';
@@ -139,13 +140,11 @@ export default function CommentsScreen({navigation, route}) {
           />
         )}
         <View style={styles.commentContainer}>
-          <KeyboardAvoidingView>
             <CommentsList
               data={comments.state}
               refreshing={comments.loading}
               onRefreshing={loadComments}
             />
-          </KeyboardAvoidingView>
         </View>
 
         <View style={styles.textFieldContainer}>
@@ -181,6 +180,7 @@ export default function CommentsScreen({navigation, route}) {
             onChangeText={handleOnChangeText}
           />
         </View>
+        
       </Screen>
     </CommentsContext.Provider>
   );
@@ -189,7 +189,7 @@ export default function CommentsScreen({navigation, route}) {
 const styles = StyleSheet.create({
   textFieldContainer: {
     paddingHorizontal: 15,
-    marginBottom: 25,
+    marginBottom: 15,
     marginTop: 15,
   },
   commentContainer: {

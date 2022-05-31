@@ -9,7 +9,7 @@ import AuthContext from '../Contexts/authContext';
 import {AuthNavigator} from '../navigation';
 import userService from '../services/user.service';
 import HomeNavigator from '../navigation/HomeNavigator';
-import  PushNotification  from 'react-native-push-notification';
+// import  PushNotification  from 'react-native-push-notification';
 
 export default function ShareupAuthentication() {
   const initState = {
@@ -137,10 +137,10 @@ export default function ShareupAuthentication() {
   // notification channels
 
   const createChannels =() =>{
-    PushNotification.createChannel({
-      channelId:"shareup-id",
-      channelName:'shareup'
-    })
+    // PushNotification.createChannel({
+    //   channelId:"shareup-id",
+    //   channelName:'shareup'
+    // })
   }
 
   // initial check if token exist

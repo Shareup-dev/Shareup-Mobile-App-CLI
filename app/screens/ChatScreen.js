@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Dimensions,
   FlatList,
+  Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 import Modal from 'react-native-modal';
 
@@ -19,8 +21,11 @@ import settings from '../config/settings';
 import AuthContext from '../Contexts/authContext';
 import chatService from '../services/chat.service';
 import routes from '../navigation/routes';
+import Screen from '../components/Screen';
+import { Keyboard } from 'react-native';
 
-import  PushNotification from 'react-native-push-notification';
+
+// import  PushNotification from 'react-native-push-notification';
 
 const {width, height} = Dimensions.get('window');
 
@@ -60,12 +65,12 @@ function ChatScreen({navigation, route}) {
   };
 
   const clearChatHandler = () =>{
-    PushNotification.localNotification({
-      channelId:'shareup-id',
-      title:"Test Notification",
-      message:"works...",
+    // PushNotification.localNotification({
+    //   channelId:'shareup-id',
+    //   title:"Test Notification",
+    //   message:"works...",
 
-    })
+    // })
   }
 
   const viewProfileHandler = () => {
@@ -158,7 +163,7 @@ function ChatScreen({navigation, route}) {
   };
   const [openModal, setOpenModal] = useState(false);
   return (
-    <>
+    <Screen>
       <SockJsClient
         url={settings.apiUrl + '/chat'}
         topics={[`/user/${username}/messages`]}
@@ -235,7 +240,7 @@ function ChatScreen({navigation, route}) {
         <View
           style={{
             position: 'absolute',
-            bottom: 0,
+            bottom: Platform.OS === "ios"? Keyboard.emit ? 45 :0  : 0,
             flexDirection: 'row',
             alignItems: 'center',
             paddingHorizontal: 10,
@@ -266,7 +271,7 @@ function ChatScreen({navigation, route}) {
           </TouchableOpacity>
         </View>
       </View>
-    </>
+    </Screen>
   );
 }
 export default memo(ChatScreen);
@@ -286,6 +291,7 @@ const styles = StyleSheet.create({
   modal: {
     padding: 0,
     margin: 0,
+    paddingTop: Platform.OS==="ios"? 45:0,
     width: width / 2,
     alignSelf: 'flex-end',
     justifyContent: 'flex-start',

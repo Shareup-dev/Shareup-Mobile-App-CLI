@@ -29,7 +29,7 @@ export default function CommentsList({
           <CommentCard comment={item} replyComment={replyComment} onRefreshing={onRefreshing} />
         )}
         ListEmptyComponent={
-          <View style={{alignItems:'center',marginTop:5}} >
+          <View style={{alignItems:'center',marginTop:5,minHeight:200}} >
             <Text>{refreshing ? `Loading...`: `No comments found`}</Text>
           </View>
         }

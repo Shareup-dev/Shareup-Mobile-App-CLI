@@ -7,8 +7,10 @@ export default function Screen({children, style}) {
   return (
    
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : null}
-      style={[styles.view, style]}>
+      behavior={Platform.OS === 'ios' ? 'padding' : "height"}
+      style={[styles.view, style]}
+      keyboardVerticalOffset={45}
+      >
       {children}
     </KeyboardAvoidingView>
    
