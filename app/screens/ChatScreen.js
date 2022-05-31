@@ -167,7 +167,6 @@ function ChatScreen({navigation, route}) {
       <SockJsClient
         url={settings.apiUrl + '/chat'}
         topics={[`/user/${username}/messages`]}
-        // onConnect={onConnected}
         onMessage={msg => onMessageReceived(msg)}
         ref={sockJsRef}
         debug={false}

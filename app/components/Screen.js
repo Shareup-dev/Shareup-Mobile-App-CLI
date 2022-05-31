@@ -1,19 +1,21 @@
 import React from 'react';
-import {StyleSheet, KeyboardAvoidingView, Platform,SafeAreaView} from 'react-native';
+import {
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+} from 'react-native';
 import colors from '../config/colors';
-
 
 export default function Screen({children, style}) {
   return (
-   
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : "height"}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={[styles.view, style]}
-      keyboardVerticalOffset={45}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 45 : 25}
       >
       {children}
     </KeyboardAvoidingView>
-   
   );
 }
 

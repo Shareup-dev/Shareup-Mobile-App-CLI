@@ -2,6 +2,7 @@ import React, { useContext, useMemo } from "react";
 import { View, StyleSheet, Text, Image,ScrollView, TouchableOpacity } from "react-native";
 import { useDispatch } from "react-redux";
 import { postFeelingsActions } from "../../redux/postFeelings";
+import BetterImage from "../betterImage/BetterImage";
 import { data as Feelings } from "../Data/activitiesAndFeelings";
 
 export default function ListOfFeelings(props) {
@@ -17,7 +18,7 @@ export default function ListOfFeelings(props) {
         }}
       >
         <View style={styles.card}>
-          <Image source={img} style={styles.img} />
+          <BetterImage noBackground  source={img} style={styles.img} />
           <Text style={styles.cardText}>{name}</Text>
         </View>
       </TouchableOpacity>

@@ -16,7 +16,7 @@ import Zocial from 'react-native-vector-icons/Zocial';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function Icon({
-  image,
+  image = null,
   name,
   size = 40,
   backgroundColor = '#fff',

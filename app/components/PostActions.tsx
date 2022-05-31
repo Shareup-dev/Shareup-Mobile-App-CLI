@@ -8,18 +8,19 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import colors from '../config/colors';
-import Text from '../components/Text';
-import Tab from '../components/buttons/Tab';
-import Icon from '../components/Icon';
+import Text from './Text';
+import Tab from './buttons/Tab';
+import Icon from './Icon';
 import routes from '../navigation/routes';
 import constants from '../config/constants';
 import AuthContext from '../Contexts/authContext';
+import Title from '../Materials/Text/Title';
+import Texts from '../Materials/Text/Texts';
 
 const PostActions = ({
   postId,
   postData,
   userId,
-  comments,
   navigation,
   isUserLiked,
   numberOfReactions,
@@ -86,9 +87,9 @@ const PostActions = ({
         </View>
         <View style={styles.userNameContainer}>
           <TouchableOpacity>
-            <Text style={styles.userName}>{postData.userdata.firstName}</Text>
+            <Title>{postData.userdata.firstName}</Title>
           </TouchableOpacity>
-          <Text style={styles.postDate}>{date}</Text>
+          <Texts light>{date}</Texts>
           {postData.group ? (
             <View
               style={{
@@ -142,33 +143,23 @@ const PostActions = ({
       </View>
       {!noActionBar && (
         <View style={styles.actionsBar}>
-          <View style={styles.likes}>
-            {isUserLiked ? (
-              <TouchableWithoutFeedback onPress={onInteraction}>
-                <Icon
-                  name="star"
-                  type="FontAwesome"
-                  size={17}
-                  color="#FFC107"
-                  backgroundSizeRatio={1}
-                  style={styles.star}
-                />
-              </TouchableWithoutFeedback>
-            ) : (
-              <TouchableWithoutFeedback onPress={onInteraction}>
-                <Icon
-                  name="star-o"
-                  type="FontAwesome"
-                  size={17}
-                  color="#FFC107"
-                  backgroundSizeRatio={1}
-                  style={styles.star}
-                />
-              </TouchableWithoutFeedback>
-            )}
-
-            <Text style={styles.actionsText}>{numberOfReactions}</Text>
-          </View>
+          <TouchableOpacity onPress={onInteraction}>
+            <View style={styles.likes}>
+              <Icon
+                name={isUserLiked ? `star` : `star-o`}
+                type="FontAwesome"
+                size={18}
+                color="#FFC107"
+                backgroundSizeRatio={1}
+                style={styles.star}
+              />
+              <Texts>{`${
+                numberOfReactions > 1
+                  ? `${numberOfReactions} Stars`
+                  : `${numberOfReactions} Star`
+              }`}</Texts>
+            </View>
+          </TouchableOpacity>
 
           <View style={styles.commentsShares}>
             <TouchableWithoutFeedback
@@ -182,18 +173,16 @@ const PostActions = ({
                   fromReply,
                 })
               }>
-              <Text style={[styles.actionsText, styles.comments]}>
-                {numberOfComments} Comments
-              </Text>
+              <Texts>{`${numberOfComments} Comments  ${0} Shares`}</Texts>
             </TouchableWithoutFeedback>
-
-            <Text style={styles.actionsText}>0 Shares</Text>
           </View>
         </View>
       )}
 
       {postData.content !== '' && (
-        <Text style={styles.postText}>{postData.content}</Text>
+        <Texts size={13} style={{marginTop: 10}} color={'#000'}>
+          {postData.content}
+        </Texts>
       )}
       {!noOptions && (
         <TouchableOpacity
@@ -254,8 +243,7 @@ const styles = StyleSheet.create({
   },
   actionsContainer: {
     flexDirection: 'row',
-    width: '42%',
-    justifyContent: 'flex-end',
+    alignItems: 'flex-start',
   },
   actionTab: {
     paddingHorizontal: 5,
@@ -266,7 +254,8 @@ const styles = StyleSheet.create({
   actionsBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 4,
+    alignItems: 'center',
+    marginTop: 5,
   },
   commentsShares: {
     flexDirection: 'row',

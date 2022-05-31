@@ -7,7 +7,6 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
-  ActivityIndicator,
 } from 'react-native';
 
 import HeaderWithBackArrow from '../components/headers/HeaderWithBackArrow';
@@ -27,6 +26,8 @@ import SwapCard from '../components/lists/SwapCard';
 import postService from '../services/post.service';
 import profileService from '../services/profile.service';
 import EmptyPostCard from '../components/EmptyCards/EmptyPostCard';
+import {useDispatch, useSelector} from 'react-redux';
+import {usersPostActions} from '../redux/usersPostsSlice';
 
 const POSTS = 'posts';
 const IMAGE_VIDEOS = 'images&videos';
@@ -39,14 +40,13 @@ const tabs = [
 ];
 
 export default function UserProfileScreen({navigation, route}) {
-  
+  const dispatch = useDispatch();
+  const posts = useSelector(state => state.usersPost);
   const {
-    userState: {userData:user},
+    userState: {userData: user},
   } = useContext(authContext);
 
   const [currentTab, setCurrentTab] = useState(POSTS);
-
-  const [posts, setPosts] = useState([]);
   const [media, setMedia] = useState([]);
   const [loading, setLoading] = useState(0);
   const [imageSlider, setImageSlider] = useState({
@@ -67,7 +67,7 @@ export default function UserProfileScreen({navigation, route}) {
       profileService.getAllMedia(user.id),
     ])
       .then(res => {
-        setPosts(res[0].data);
+        dispatch(usersPostActions.getPosts(res[0].data));
         setMedia(res[1].data);
       })
       .catch(e => console.error(e.message))
@@ -87,7 +87,7 @@ export default function UserProfileScreen({navigation, route}) {
     />
   );
 
-  const PostsItem = ({item}) =>
+  const postsItem = ({item}) =>
     item.hasOwnProperty('swaped') ? (
       /**
        * The Swap Should from backend as instance of post
@@ -146,9 +146,7 @@ export default function UserProfileScreen({navigation, route}) {
         <FlatList
           data={posts}
           ve={true}
-          renderItem={({item}) => {
-            return <PostsItem item={item} />;
-          }}
+          renderItem={postsItem}
           keyExtractor={(post, index) => index.toString()}
           ListHeaderComponent={ListHeader}
           showsVerticalScrollIndicator={false}

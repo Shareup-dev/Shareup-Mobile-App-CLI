@@ -23,7 +23,7 @@ import {useDispatch} from 'react-redux';
 import {feedPostsAction} from '../../redux/feedPostsSlice';
 import {postDataSliceAction} from '../../redux/postDataSlice';
 
-export default function Card({
+ function Card({
   user,
   postData,
   onPress,
@@ -287,6 +287,7 @@ export default function Card({
     </TouchableWithoutFeedback>
   );
 }
+export default React.memo(Card);
 
 const borderRadius = 10;
 const styles = StyleSheet.create({

@@ -12,7 +12,7 @@ export default function AppButton({
   width,
   height = 40 * sizeRatio,
   style,
-  iconName,
+  iconName= "",
   user,
   iconType,
   iconImage,
