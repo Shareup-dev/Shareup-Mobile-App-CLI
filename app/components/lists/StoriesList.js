@@ -100,9 +100,7 @@ export default function StoriesList({navigation, style}) {
         horizontal
         showsHorizontalScrollIndicator={false}
         style={styles.list}
-        ListEmptyComponent={() => (
-            <EmptyStoryCard />
-        )}
+        ListEmptyComponent={() => <EmptyStoryCard />}
         keyExtractor={(item, i) => i.toString()}
         renderItem={({item}) => {
           return <StoryCard data={item} navigation={navigation} />;

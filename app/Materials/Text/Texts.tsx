@@ -5,6 +5,7 @@ import {
   TextStyle,
   StyleSheet,
   TouchableOpacity,
+  View,
 } from 'react-native';
 
 type Props = {
@@ -15,6 +16,7 @@ type Props = {
   light?: Boolean;
   truncate?: Boolean;
   lines?: number;
+  opacity?: number;
 };
 
 const Texts: React.FC<Props> = ({
@@ -25,6 +27,7 @@ const Texts: React.FC<Props> = ({
   color = '#333',
   truncate = false,
   lines = 2,
+  opacity = 1,
   ...rest
 }) => {
   const [isTruncatedText, setIsTruncatedText] = useState(false);
@@ -45,12 +48,13 @@ const Texts: React.FC<Props> = ({
     text: {
       fontSize: size,
       color: light ? '#33333399' : color,
+      opacity: opacity,
     },
   });
 
   if (truncate) {
     return (
-      <>
+      <View>
         <Text
           ellipsizeMode="tail"
           onTextLayout={checkNumOfLines}
@@ -59,16 +63,16 @@ const Texts: React.FC<Props> = ({
           style={[style, styles.text]}>
           {children}
         </Text>
-        {isTruncatedText && (
+        {isTruncatedText && children !== '' && (
           <TouchableOpacity
             style={{marginVertical: 5}}
             onPress={toggleBtnHandler}>
-            <Text style={{fontSize: 12}}>
+            <Text style={{fontSize: 12, color: color}}>
               {textCollapse ? `Show Less..` : `Show more..`}
             </Text>
           </TouchableOpacity>
         )}
-      </>
+      </View>
     );
   } else {
     return (
@@ -79,4 +83,4 @@ const Texts: React.FC<Props> = ({
   }
 };
 
-export default React.memo(Texts);
+export default Texts;

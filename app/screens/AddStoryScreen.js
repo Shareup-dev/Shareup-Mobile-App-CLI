@@ -13,6 +13,7 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Text,
+  Platform,
 } from 'react-native';
 
 import colors from '../config/colors';
@@ -26,14 +27,13 @@ import AuthContext from '../Contexts/authContext';
 import Video from 'react-native-video';
 import storyService from '../services/story.service';
 import {ProgressBar} from 'react-native-paper';
-import { useDispatch } from 'react-redux';
-import { storiesAction } from '../redux/stories';
+import {storiesAction} from '../redux/stories';
+import Screen from '../components/Screen';
+
+const {width, height} = Dimensions.get('window');
 
 export default function AddStoryScreen({navigation}) {
-
-  const dispatch = useDispatch();
   let cameraRef;
-  let playerRef = useRef();
 
   const windowWidth = Dimensions.get('screen').width;
 
@@ -41,7 +41,7 @@ export default function AddStoryScreen({navigation}) {
 
   const [isUploading, setIsUploading] = useState(false);
   const [screen, setScreen] = useState('capture');
-  const [mode, setMode] = useState('photo');
+  const [mode, setMode] = useState('image');
   const [cameraType, setCameraType] = useState('back');
   const [capturing, setCapturing] = useState(false);
   const [story, setStory] = useState({});
@@ -85,7 +85,7 @@ export default function AddStoryScreen({navigation}) {
   };
 
   async function onCapture() {
-    if (mode === 'photo') {
+    if (mode === 'image') {
       let photo = await cameraRef.takePictureAsync({
         skipProcessing: true,
         quality: 0.5,
@@ -149,18 +149,19 @@ export default function AddStoryScreen({navigation}) {
 
     const uniId = new Date().valueOf();
     storyData.append('caption', caption);
+    storyData.append('story_type', mode);
     storyData.append('stryfiles', {
       name:
-        mode === 'photo'
+        mode === 'image'
           ? `story-image-${uniId}.jpg`
           : `story-video-${uniId}.mp4`,
-      type: mode === 'photo' ? 'image/jpg' : 'video/mp4',
+      type: mode === 'image' ? 'image/jpg' : 'video/mp4',
       uri: story.uri,
     });
 
     storyService
       .addStory(userData.id, storyData)
-      .then(({data}) => storiesAction.addNewStory(data) )
+      .then(({data}) => storiesAction.addNewStory(data))
       .catch(e => console.error(e.message))
       .finally(_ => {
         setIsUploading(false);
@@ -168,10 +169,8 @@ export default function AddStoryScreen({navigation}) {
       });
   };
 
-  const {width, height} = Dimensions.get('window');
-
   return (
-    <View style={styles.container}>
+    <Screen style={styles.container}>
       <StatusBar backgroundColor="#000" barStyle="light-content" />
       {screen === 'capture' ? (
         <RNCamera
@@ -208,64 +207,62 @@ export default function AddStoryScreen({navigation}) {
           />
         </RNCamera>
       ) : (
-        <KeyboardAvoidingView behavior={'height'} style={styles.storyImgViewer}>
-          <TouchableOpacity activeOpacity={1} onPress={Keyboard.dismiss}>
-            <>
-              <CameraHeader
-                title="Story"
-                onClosePress={() => setScreen('capture')}
+        <TouchableOpacity activeOpacity={1} onPress={_ => Keyboard.dismiss()}>
+          <View>
+            <CameraHeader
+              title="Story"
+              onClosePress={() => setScreen('capture')}
+            />
+          </View>
+          <View style={styles.forwardArrow}>
+            <View style={styles.caption}>
+              <TextInput
+                placeholder="Caption"
+                value={caption}
+                onChangeText={e => setCaption(e)}
+                multiline
               />
-              <View style={styles.forwardArrow}>
-                <View style={styles.caption}>
-                  <TextInput
-                    placeholder="Caption"
-                    value={caption}
-                    onChangeText={e => setCaption(e)}
-                    multiline
-                  />
-                </View>
-                <TouchableOpacity
-                  activeOpacity={0.6}
-                  disabled={isUploading}
-                  onPress={addStoryHandler}>
-                  <Icon
-                    type={'AntDesign'}
-                    color={'#333'}
-                    name={'arrowright'}
-                    size={50}
-                    style={{
-                      marginLeft: 5,
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
+            </View>
+            <TouchableOpacity
+              activeOpacity={0.6}
+              disabled={isUploading}
+              onPress={addStoryHandler}>
+              <Icon
+                type={'AntDesign'}
+                color={'#333'}
+                name={'arrowright'}
+                size={50}
+                style={{
+                  marginLeft: 5,
+                }}
+              />
+            </TouchableOpacity>
+          </View>
 
-              {mode === 'photo' ? (
-                <Image
-                  source={story}
-                  resizeMode={'contain'}
-                  style={styles.backgroundMedia}
-                />
-              ) : (
-                <Video
-                  resizeMode={'contain'}
-                  style={[styles.backgroundMedia]}
-                  source={{
-                    uri: story.uri,
-                  }}
-                  repeat
-                />
-              )}
-            </>
-          </TouchableOpacity>
-        </KeyboardAvoidingView>
+          {mode === 'image' ? (
+            <Image
+              source={story}
+              resizeMode={'contain'}
+              style={styles.backgroundMedia}
+            />
+          ) : (
+            <Video
+              resizeMode={'contain'}
+              style={[styles.backgroundMedia]}
+              source={{
+                uri: story.uri,
+              }}
+              repeat
+            />
+          )}
+        </TouchableOpacity>
       )}
       <ProgressBar
         indeterminate={isUploading}
         visible={isUploading}
         color={colors.iondigoDye}
       />
-    </View>
+    </Screen>
   );
 }
 const styles = StyleSheet.create({
@@ -273,7 +270,7 @@ const styles = StyleSheet.create({
     zIndex: -10,
     width: '100%',
     height: '100%',
-    backgroundColor:'#333'
+    backgroundColor: '#333',
   },
   caption: {
     paddingHorizontal: 15,
@@ -298,16 +295,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   forwardArrow: {
-    marginBottom: '8%',
     position: 'absolute',
+    bottom: Platform.OS === 'ios' ? 45 : 0,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    width: '100%',
-    bottom: 20,
-    zIndex: 10,
-    paddingRight: 15,
-    paddingLeft: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    justifyContent: 'space-between',
+    width: width,
   },
   title: {
     fontSize: 32,

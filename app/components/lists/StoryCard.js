@@ -5,7 +5,6 @@ import colors from '../../config/colors';
 import routes from '../../navigation/routes';
 import BetterImage from '../betterImage/BetterImage';
 
-
 export default function StoryCard({style, navigation, data}) {
   const addStoryHandler = () => {
     navigation.navigate(routes.STORY_VIEW_SCREEN, {data});
@@ -16,8 +15,8 @@ export default function StoryCard({style, navigation, data}) {
     <TouchableOpacity onPress={addStoryHandler} activeOpacity={0.8}>
       <View style={[styles.container, style]}>
         <BetterImage
-          source={{uri: stories_List[0]?.storiesImagePath}}
-          style={{height: '100%', width: '100%',backgroundColor:'#34343460'}}
+          source={{uri: stories_List[0]?.storiesMediaPath}}
+          style={{height: '100%', width: '100%', backgroundColor: '#34343460'}}
         />
         <Text style={styles.userName}>{firstName}</Text>
       </View>

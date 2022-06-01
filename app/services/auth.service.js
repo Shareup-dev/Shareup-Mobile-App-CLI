@@ -1,62 +1,59 @@
-import axios from 'axios';
-import settings from '../config/settings';
-
-const url = settings.apiUrl + '/api/v1';
+import {UnAuthAxios} from './authAxios';
 
 class AuthService {
   login = (username, password) =>
-    axios({
+    UnAuthAxios({
       method: 'POST',
-      url: `${url}/users/authenticate`,
+      url: 'users/authenticate',
       data: {username, password},
     });
 
   signup = user =>
-    axios({
+    UnAuthAxios({
       method: 'POST',
-      url: `${url}/register`,
+      url: 'register',
       data: user,
     });
 
   verifyUser = username =>
-    axios({
+    UnAuthAxios({
       method: 'GET',
-      url: `${url}/users/email/${username}`,
+      url: `users/email/${username}`,
     });
 
   passwordResetOTP = username =>
-    axios({
+    UnAuthAxios({
       method: 'PUT',
-      url: `${url}/send_otp/${username}`,
+      url: `send_otp/${username}`,
     });
 
   verifyPasswordResetOTP = (username, otp) =>
-    axios({
+    UnAuthAxios({
       method: 'GET',
-      url: `${url}/verify_otp_reset_password/${username}`,
+      url: `verify_otp_reset_password/${username}`,
       params: {
         otp,
       },
     });
 
   verifyEmailOTP = username =>
-    axios({
+    UnAuthAxios({
       method: 'PUT',
-      url: `${url}/send_otp_verify_email/${username}`,
+      url: `send_otp_verify_email/${username}`,
     });
   verifyEmailConfirmOTP = (username, otp) =>
-    axios({
+    UnAuthAxios({
       method: 'GET',
-      url: `${url}/verify_otp_email_verify/${username}`,
+      url: `verify_otp_email_verify/${username}`,
       params: {
         otp,
       },
     });
 
   resetPassword = (username, newPassword) =>
-    axios({
+    UnAuthAxios({
       method: 'PUT',
-      url: `${url}/reset_password/${username}`,
+      url: `reset_password/${username}`,
       params: {
         password: newPassword,
       },
