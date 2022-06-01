@@ -28,12 +28,12 @@ export default function SwapActionContainer({item,onPress}) {
           Swap
         </Text> */}
       <Tab
-        title={item.allPostsType === constants.postTypes.SWAP ? "Swap" : "Accept"}
+        title={item.allPostsType === constants.postTypes.SWAP ? "Swap" : "Hang"}
         color={colors.iondigoDye}
         fontColor={colors.white}
         width={80}
         style={styles.swapTab}
-        onPress={onPress}
+        // onPress={onPress}
       />
     </View>
   );

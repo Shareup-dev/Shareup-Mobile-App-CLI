@@ -5,6 +5,7 @@ const initialState = {
     groupId: null,
     postDetail: [],
     EditPost: false,
+    tagedList:[],
   };
 
 const postDataSlice = createSlice({
@@ -54,7 +55,20 @@ const postDataSlice = createSlice({
       previousState.EditPost = false
       return (previousState);
     },
+   //.................TAGED_LIST....................
+   setTagList: (previousState, newState) => {
+    previousState.tagedList = [...previousState.tagedList, ...newState.payload];
+      return (previousState);
+    },
+  clearTagList: previousState => {
+    previousState.tagedList = []
+    return (previousState);
   },
+  removeFromTagList: (previousState,key) => {
+    previousState.tagedList = previousState.tagedList.filter(item => item !== key.payload);
+    return (previousState);
+  },
+},
 });
 export default postDataSlice;
 export const postDataSliceAction = postDataSlice.actions;

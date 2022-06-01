@@ -14,6 +14,7 @@ import IconButton from '../components/buttons/IconButton';
 import hangShareService from '../services/hangShare.service';
 import SwapCard from '../components/lists/SwapCard';
 import constants from '../config/constants';
+import swapService from '../services/swap.service';
 
 
 export default function HangFlowScreen({ navigation, route }) {
@@ -28,7 +29,7 @@ export default function HangFlowScreen({ navigation, route }) {
                     getAllHang(userState.userData.email);
                     break;
                 case constants.postTypes.SWAP:
-                   // getAllHang(userState.userData.email);
+                    getAllSwap(userState.userData.email);
                     break;
                 default:
                     break;
@@ -38,6 +39,11 @@ export default function HangFlowScreen({ navigation, route }) {
     );
     const getAllHang = (userEmail) => {
         hangShareService.getAllHangData().then((res) => {
+            setSavedData(res.data)
+        })
+    }
+    const getAllSwap = (userEmail) => {
+        swapService.getAllSwap().then((res) => {
             setSavedData(res.data)
         })
     }
@@ -60,6 +66,7 @@ export default function HangFlowScreen({ navigation, route }) {
         <ScrollView style={{ backgroundColor: colors.white }}>
             <HeaderWithBackArrow
                 onBackButton={() => navigation.goBack()}
+                leftComponent={<HeaderTitle> {postType === constants.postTypes.HANG_SHARE ?"All In Hangs" :"Swaps"}</HeaderTitle>}
             // rightComponent={
             //     <IconButton
             //         onPress={() => navigation.navigate(routes.KEEP_HANG,{postType:constants.postTypes.HANG_SHARE})}
