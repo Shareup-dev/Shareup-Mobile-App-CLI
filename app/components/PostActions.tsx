@@ -258,7 +258,7 @@ const styles = StyleSheet.create(
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 5,
+    marginTop: 15,
   },
   commentsShares: {
     flexDirection: 'row',

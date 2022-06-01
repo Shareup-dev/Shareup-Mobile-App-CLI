@@ -287,12 +287,12 @@ export default function SharedPostCard(props) {
             <TouchableWithoutFeedback
               onPress={() =>
                 navigation.navigate(routes.COMMENTS, {
-                  postId,
-                  userId,
+                  postId:postData.id,
+                  userId:userData.id,
                   //comments,
-                  postType,
-                  swapId,
-                  fromReply,
+                  postType:postData.allPostsType,
+                  // swapId,
+                  fromReply:false,
                 })
               }>
               <Text style={[styles.actionsText, styles.comments]}>

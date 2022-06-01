@@ -16,7 +16,7 @@ import colors from '../config/colors';
 import defaultStyles from '../config/GlobalStyles';
 import DrawerButtons from './DrawerButtons';
 import LinkButton from '../components/buttons/LinkButton';
-
+import constants from '../config/constants';
 import routes from './routes';
 import {useNavigation} from '@react-navigation/native';
 
@@ -39,7 +39,7 @@ export default function Drawer({isVisible, setIsVisible}) {
       title: 'Swap Point',
       icon: require('../assets/icons/swap-point-icon.png'),
       onPress: () => {
-        navigation.navigate(routes.SWAP)
+        navigation.navigate(routes.HANG_FLOW_SCREEN,constants.postTypes.SWAP)
         setIsVisible(false)
        },
     },

@@ -68,12 +68,9 @@ export default function AddPostScreen({ navigation, route }) {
   const [loading, setLoading] = useState(false);
   const [tagedUserData, setTagedUserData] = useState([]);
   const [placeholder, setPlaceHolder] = useState('We Share, Do you?');
-
   const dispatch = useDispatch();
   const postFeel = useSelector(state => state.postFeel);
-
   const { postTypes } = constants;
-
   const DEFAULT_TEXT = 'We Share, Do You ?';
   const SWAP_DEFAULT_TEXT = 'Hi all \n I want to Swap ...';
   const HANG_SHARE_TEXT = 'Please anyone want this,can have it';
@@ -82,9 +79,23 @@ export default function AddPostScreen({ navigation, route }) {
   const groupid = useSelector(state => state.groupIdSlice)
   const postData = useSelector(state => state.postDataSlice)
   const textInputRef = useRef();
-  const [file, setFile] = useState([]);
+  const [tagedPeople, setTagedPeople] = useState([postData.tagedList]);
   const sharePostDrawerRef = useRef(null); // reference for the enhanced drawer.
   const createPostDrawerRef = useRef(null); // reference for the enhanced drawer.
+  const privacyOptions = useMemo(() => common.privacyOptions, []);
+
+  const [error, setError] = useState('');
+  const [text, setText] = useState('');
+  //const { file, pickImage, clearFile } = useImagePicker();
+  const [imageUriArray, setImageUriArray] = useState([]);
+  const [displayImage, setDisplayImage] = useState(false);
+  const [isButtonActive, setIsButtonActive] = useState(false);
+  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
+  const [isPrivacyOptionsVisible, setIsPrivacyOptionsVisible] = useState(false);
+  const [images, setImages] = useState([]);
+  const [progress, setProgress] = useState(0);
+  const [postPrivacyOption, setPostPrivacyOption] = useState(privacyOptions[0]); // object to present the current privacy option
+
   const shareUpOptions = useMemo(() => {
     [
       {
@@ -212,19 +223,6 @@ export default function AddPostScreen({ navigation, route }) {
       },
     },
   ];
-  const privacyOptions = useMemo(() => common.privacyOptions, []);
-
-  const [error, setError] = useState('');
-  const [text, setText] = useState('');
-  //const { file, pickImage, clearFile } = useImagePicker();
-  const [imageUriArray, setImageUriArray] = useState([]);
-  const [displayImage, setDisplayImage] = useState(false);
-  const [isButtonActive, setIsButtonActive] = useState(false);
-  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
-  const [isPrivacyOptionsVisible, setIsPrivacyOptionsVisible] = useState(false);
-  const [images, setImages] = useState([]);
-  const [progress, setProgress] = useState(0);
-  const [postPrivacyOption, setPostPrivacyOption] = useState(privacyOptions[0]); // object to present the current privacy option
 
   useEffect(() => {
     if (postType === postTypes.GROUP_POST) {
@@ -328,6 +326,7 @@ export default function AddPostScreen({ navigation, route }) {
         text: text,
         images: images,
         groupId: postData['groupId'],
+        tagedList: postData.tagedList
       };
       const formData = createPostFormData(postContent);
       PostService.createPost(user.id, formData)
@@ -358,6 +357,7 @@ export default function AddPostScreen({ navigation, route }) {
     const swapContent = {
       text: text === '' ? placeholder : text,
       images: images,
+      tagedList: postData.tagedList
     };
 
     const formData = createPostFormData(swapContent);
@@ -396,6 +396,7 @@ export default function AddPostScreen({ navigation, route }) {
       text: text === '' ? placeholder : text,
       category: 'gifts',
       images: images,
+      tagedList: postData.tagedList,
     };
     const formData = createPostFormData(swapContent);
     if (postData['EditPost']) {
@@ -459,6 +460,7 @@ export default function AddPostScreen({ navigation, route }) {
         images: images,
         feeling: postFeel.feeling ? postFeel.feeling : null,
         groupId: postData['groupId'],
+        tagedList: postData.tagedList
       };
       const formData = createPostFormData(postContent);
       if (postData['EditPost']) {
@@ -530,7 +532,7 @@ export default function AddPostScreen({ navigation, route }) {
 
   const clearFields = () => {
     setText('');
-    setFile([]);
+    // setFile([]);
     setDisplayImage(false);
     setImages([]);
     setIsButtonActive(false);
@@ -703,6 +705,23 @@ export default function AddPostScreen({ navigation, route }) {
             </View>
           </TouchableOpacity>
         ) : null}
+        {postData.tagedList.length !== 0 && (
+          <View>
+          <Text>--</Text>
+          <FlatList
+          horizontal
+          data={postData.tagedList}
+          keyExtractor={item => item}
+          renderItem={({item}) => (
+            <Text>{item}</Text>
+            
+          )}
+        />
+        </View>
+          
+        )}
+        
+
         <TextInput
           //value={isEdit?text:placeholder}
           placeholder={postData['EditPost'] ? postData.postDetail.content : placeholder}
