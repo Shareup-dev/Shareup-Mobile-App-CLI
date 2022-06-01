@@ -32,7 +32,7 @@ import routes from '../navigation/routes';
 import { useImagePicker } from '../hooks';
 import Header from '../components/headers/Header';
 import constants from '../config/constants';
-import defaultStyles from '../config/styles';
+import defaultStyles from '../config/GlobalStyles';
 import colors from '../config/colors';
 import {
   HeaderCloseIcon,
@@ -56,6 +56,7 @@ import common from '../config/common';
 import BetterImage from '../components/betterImage/BetterImage';
 import CustomImageSlider from '../components/ImageSlider/CustomImageSlider';
 import { postDataSliceAction } from '../redux/postDataSlice';
+import Title from '../Materials/Text/Title';
 
 
 export default function AddPostScreen({ navigation, route }) {
@@ -621,11 +622,10 @@ export default function AddPostScreen({ navigation, route }) {
             style={defaultStyles.circledProfilePicture}
           />
           <View style={styles.column}>
-            <Text style={styles.userName}>
+            <Title  style={styles.userName}>
               {user.firstName} {user.lastName}
-            </Text>
+            </Title>
             <View style={styles.row}>
-              {/**Friends */}
               <OptionBox
                 currentOption={postPrivacyOption}
                 onPress={() => {
@@ -633,8 +633,6 @@ export default function AddPostScreen({ navigation, route }) {
                 }}
               />
 
-              {/* {postType === postTypes.CREATE_POST ||
-                (postTypes.GROUP_POST && ( */}
               <View style={[styles.headerTab, styles.row]}>
                 <Icon
                   type="MaterialCommunityIcons"

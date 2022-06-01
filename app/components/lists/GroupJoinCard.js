@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import Tab from '../buttons/Tab';
 import colors from '../../config/colors';
-import defaultStyle from '../../config/styles';
+import defaultStyle from '../../config/GlobalStyles';
 import routes from '../../navigation/routes';
 import GroupService from '../../services/group.service';
 import AuthContext from '../../Contexts/authContext';

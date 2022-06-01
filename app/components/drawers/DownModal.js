@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import Modal from "react-native-modal";
 
-import defaultStyle from "../../config/styles";
+import defaultStyle from "../../config/GlobalStyles";
 import colors from "../../config/colors";
 
 export default function DownModal({ isVisible, setIsVisible, children }) {

@@ -13,7 +13,7 @@ import ImageView from 'react-native-image-viewing';
 import colors from '../../config/colors';
 import PostOptionDrawer from '../drawers/PostOptionsDrawer';
 import PostActions from '../PostActions';
-import defaultStyles from '../../config/styles';
+import defaultStyles from '../../config/GlobalStyles';
 import SwapActionContainer from '../posts/SwapActionContainer';
 import AuthContext from '../../Contexts/authContext';
 import swapService from '../../services/swap.service';

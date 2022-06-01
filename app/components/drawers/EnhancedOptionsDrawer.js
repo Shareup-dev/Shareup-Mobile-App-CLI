@@ -3,7 +3,7 @@ import {View, StyleSheet, Dimensions, Text} from 'react-native';
 
 import BottomSheet from 'reanimated-bottom-sheet';
 import DrawerList from './DrawerList';
-import defaultStyle from '../../config/styles';
+import defaultStyle from '../../config/GlobalStyles';
 import colors from '../../config/colors';
 
 const height = Dimensions.get('window').height;

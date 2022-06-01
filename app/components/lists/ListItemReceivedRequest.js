@@ -11,7 +11,7 @@ TouchableOpacity
 import colors from '../../config/colors';
 import Tab from '../buttons/Tab';
 import Icon from '../Icon';
-import defaultStyles from '../../config/styles';
+import defaultStyles from '../../config/GlobalStyles';
 
 export default function ListItemReceivedRequest({
   email,

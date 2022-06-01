@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text,FlatList } from "react-native";
 import DownModal from "./DownModal";
 import { HeaderButton } from "../headers";
-import defaultStyles from "../../config/styles";
+import defaultStyles from "../../config/GlobalStyles";
 import colors from "../../config/colors";
 import Separator from "../Separator";
 import { RadioButton } from "react-native-paper";

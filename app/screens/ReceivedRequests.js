@@ -14,7 +14,7 @@ import Icon from '../components/Icon';
 import UserService from '../services/user.service';
 import routes from '../navigation/routes';
 import authContext from '../Contexts/authContext';
-import defaultStyles from '../config/styles';
+import defaultStyles from '../config/GlobalStyles';
 //import FriendService from '../services/FriendService';
 import ListHeader from '../components/lists/ListHeader';
 import colors from '../config/colors';

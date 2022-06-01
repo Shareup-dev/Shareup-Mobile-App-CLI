@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import {Form, FormField, SubmitButton} from '../components/forms';
 import routes from '../navigation/routes';
 
-import defaultStyles from '../config/styles';
+import defaultStyles from '../config/GlobalStyles';
 import RegistrationContainer from '../components/forms/RegistrationContainer';
 import colors from '../config/colors';
 import authService from '../services/auth.service';

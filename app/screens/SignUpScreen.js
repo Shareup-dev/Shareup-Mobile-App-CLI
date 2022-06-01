@@ -6,7 +6,7 @@ import {Form, FormField, SubmitButton} from '../components/forms';
 import Separator from '../components/Separator';
 import routes from '../navigation/routes';
 
-import defaultStyles from '../config/styles';
+import defaultStyles from '../config/GlobalStyles';
 import RegistrationContainer from '../components/forms/RegistrationContainer';
 import LinkButton from '../components/buttons/LinkButton';
 import authService from '../services/auth.service';

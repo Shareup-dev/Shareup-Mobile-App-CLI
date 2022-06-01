@@ -9,7 +9,7 @@ import {
 
 import Screen from '../components/Screen';
 import ListItem from '../components/lists/ListItem';
-import defaultStyles from '../config/styles';
+import defaultStyles from '../config/GlobalStyles';
 import ListHeader from '../components/lists/ListHeader';
 import colors from '../config/colors';
 import routes from '../navigation/routes';

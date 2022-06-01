@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import AuthContext from '../../Contexts/authContext';
 import colors from '../../config/colors';
-import defaultStyles from '../../config/styles';
+import defaultStyles from '../../config/GlobalStyles';
 import routes from '../../navigation/routes';
 import Card from './Card';
 import moment from 'moment';

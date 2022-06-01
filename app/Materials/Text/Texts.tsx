@@ -1,5 +1,11 @@
-import React from 'react';
-import {ColorValue, Text, TextStyle} from 'react-native';
+import React, {useState} from 'react';
+import {
+  ColorValue,
+  Text,
+  TextStyle,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 
 type Props = {
   children: String;
@@ -7,6 +13,8 @@ type Props = {
   size?: number;
   color?: ColorValue;
   light?: Boolean;
+  truncate?: Boolean;
+  lines?: number;
 };
 
 const Texts: React.FC<Props> = ({
@@ -15,15 +23,60 @@ const Texts: React.FC<Props> = ({
   size = 12,
   light = false,
   color = '#333',
+  truncate = false,
+  lines = 2,
   ...rest
 }) => {
-  return (
-    <Text
-      {...rest}
-      style={[style, {fontSize: size, color: light ? '#33333399' : color}]}>
-      {children}
-    </Text>
-  );
+  const [isTruncatedText, setIsTruncatedText] = useState(false);
+  const [textCollapse, setTextCollapse] = useState(false);
+  const [numberOfLines, setNumberOfLines] = useState(lines);
+
+  const checkNumOfLines = event => {
+    const {lines} = event.nativeEvent;
+    setIsTruncatedText(lines?.length > numberOfLines);
+  };
+
+  const toggleBtnHandler = () => {
+    setTextCollapse(prev => !prev);
+    setNumberOfLines(prev => (prev ? null : lines));
+  };
+
+  const styles = StyleSheet.create({
+    text: {
+      fontSize: size,
+      color: light ? '#33333399' : color,
+    },
+  });
+
+  if (truncate) {
+    return (
+      <>
+        <Text
+          ellipsizeMode="tail"
+          onTextLayout={checkNumOfLines}
+          numberOfLines={numberOfLines}
+          {...rest}
+          style={[style, styles.text]}>
+          {children}
+        </Text>
+        {isTruncatedText && (
+          <TouchableOpacity
+            style={{marginVertical: 5}}
+            onPress={toggleBtnHandler}>
+            <Text style={{fontSize: 12}}>
+              {textCollapse ? `Show Less..` : `Show more..`}
+            </Text>
+          </TouchableOpacity>
+        )}
+      </>
+    );
+  } else {
+    return (
+      <Text {...rest} style={[style, styles.text]}>
+        {children}
+      </Text>
+    );
+  }
 };
 
 export default React.memo(Texts);

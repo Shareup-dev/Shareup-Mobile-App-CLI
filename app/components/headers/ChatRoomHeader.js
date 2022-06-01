@@ -5,7 +5,7 @@ import UserProfilePicture from "../UserProfilePicture";
 import HeaderWithBackArrow from "./HeaderWithBackArrow";
 
 import Icon from "../Icon";
-import defaultStyles from "../../config/styles";
+import defaultStyles from "../../config/GlobalStyles";
 import colors from "../../config/colors";
 
 export default function ChatRoomHeader({ profilePicture, title, navigation }) {

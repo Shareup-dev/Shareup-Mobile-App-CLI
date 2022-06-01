@@ -12,7 +12,7 @@ import TextField from '../components/TextField';
 import Tab from '../components/buttons/Tab';
 import Separator from '../components/Separator';
 import ListItem from '../components/lists/ListItem';
-import defaultStyles from '../config/styles';
+import defaultStyles from '../config/GlobalStyles';
 import RecentSearchList from '../components/lists/recentSearchList';
 import colors from '../config/colors';
 import {HeaderWithBackArrow} from '../components/headers';

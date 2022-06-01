@@ -15,7 +15,7 @@ import HeaderWithBackArrow from '../components/headers/HeaderWithBackArrow';
 import TabBar from '../components/tab-bar/Bar';
 
 import colors from '../config/colors';
-import defaultStyle from '../config/styles';
+import defaultStyle from '../config/GlobalStyles';
 import store from '../redux/store';
 import reelScreenDetector from '../redux/reelScreenDetector';
 import routes from '../navigation/routes';

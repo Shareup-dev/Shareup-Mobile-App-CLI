@@ -16,6 +16,7 @@ import constants from '../config/constants';
 import AuthContext from '../Contexts/authContext';
 import Title from '../Materials/Text/Title';
 import Texts from '../Materials/Text/Texts';
+import GlobalStyles from '../config/GlobalStyles';
 
 const PostActions = ({
   postId,
@@ -44,69 +45,71 @@ const PostActions = ({
   );
   return (
     <View style={styles.content}>
-      <View style={styles.userInfo}>
-        <View>
-          <TouchableOpacity
-            onPress={() =>
-              postData.userdata?.id === userData.id
-                ? navigation.navigate(routes.USER_PROFILE, {
-                    user: postData.userdata,
-                  })
-                : navigation.navigate(routes.FRIEND_PROFILE, {
-                    user: postData.userdata,
-                  })
-            }>
-            <Image
-              source={{
-                uri: postData?.userdata?.profilePicturePath,
-              }}
-              style={styles.profilePicture}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={_ =>
-              navigation.navigate(routes.GROUP_FEED, postData.group)
-            }>
-            <Image
-              source={{
-                uri: postData.group?.groupImagePath,
-              }}
-              style={{
-                borderRadius: 15,
-                width: 30,
-                height: 30,
-                zIndex: 1,
-                position: 'absolute',
-                marginBottom: 10,
-                marginLeft: 1,
-                top: -19,
-                left: 25,
-              }}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.userNameContainer}>
-          <TouchableOpacity>
-            <Title>{postData.userdata.firstName}</Title>
-          </TouchableOpacity>
-          <Texts light>{date}</Texts>
-          {postData.group ? (
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-              }}>
-              <TouchableOpacity
-                onPress={_ =>
-                  navigation.navigate(routes.GROUP_FEED, postData.group)
-                }>
-                <Text style={styles.group}>{postData.group?.name}</Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <></>
-          )}
+      <View style={styles.row}>
+        <View style={styles.userInfo}>
+          <View>
+            <TouchableOpacity
+              onPress={() =>
+                postData.userdata?.id === userData.id
+                  ? navigation.navigate(routes.USER_PROFILE, {
+                      user: postData.userdata,
+                    })
+                  : navigation.navigate(routes.FRIEND_PROFILE, {
+                      user: postData.userdata,
+                    })
+              }>
+              <Image
+                source={{
+                  uri: postData?.userdata?.profilePicturePath,
+                }}
+                style={styles.profilePicture}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={_ =>
+                navigation.navigate(routes.GROUP_FEED, postData.group)
+              }>
+              <Image
+                source={{
+                  uri: postData.group?.groupImagePath,
+                }}
+                style={{
+                  borderRadius: 15,
+                  width: 30,
+                  height: 30,
+                  zIndex: 1,
+                  position: 'absolute',
+                  marginBottom: 10,
+                  marginLeft: 1,
+                  top: -19,
+                  left: 25,
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+          <View>
+            <TouchableOpacity>
+              <Title>{postData.userdata.firstName}</Title>
+            </TouchableOpacity>
+            <Texts light>{date}</Texts>
+            {postData.group ? (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
+                }}>
+                <TouchableOpacity
+                  onPress={_ =>
+                    navigation.navigate(routes.GROUP_FEED, postData.group)
+                  }>
+                  <Texts  light style={{fontWeight:'700'}} >{postData.group?.name}</Texts>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <></>
+            )}
+          </View>
         </View>
 
         <View style={styles.actionsContainer}>
@@ -180,7 +183,7 @@ const PostActions = ({
       )}
 
       {postData.content !== '' && (
-        <Texts size={13} style={{marginTop: 10}} color={'#000'}>
+        <Texts truncate style={{marginTop: 10}} color={'#333'}>
           {postData.content}
         </Texts>
       )}
@@ -205,6 +208,11 @@ const PostActions = ({
 
 const borderRadius = 10;
 const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems:'center'
+  },
   profilePicture: {
     borderRadius: 15,
     marginRight: 10,
@@ -212,7 +220,6 @@ const styles = StyleSheet.create({
     height: 50,
   },
   userInfo: {
-    display: 'flex',
     flexDirection: 'row',
   },
   content: {
@@ -238,18 +245,14 @@ const styles = StyleSheet.create({
     fontSize: 13,
     //marginTop:10,
   },
-  userNameContainer: {
-    width: '40%',
-  },
+
   actionsContainer: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
   },
   actionTab: {
     paddingHorizontal: 5,
     marginHorizontal: 5,
     borderRadius: 10,
-    marginTop: 10,
   },
   actionsBar: {
     flexDirection: 'row',

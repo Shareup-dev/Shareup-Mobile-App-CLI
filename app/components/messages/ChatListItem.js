@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet, Text,TouchableHighlight } from "react-native";
 
 import UserProfilePicture from "../UserProfilePicture";
-import defaultStyles from "../../config/styles";
+import defaultStyles from "../../config/GlobalStyles";
 import colors from "../../config/colors";
 
 export default function ChatListItem({

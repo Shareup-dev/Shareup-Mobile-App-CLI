@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet, Image, Text, Dimensions } from "react-native";
 
 import colors from "../../config/colors";
-import defaultStyle from "../../config/styles";
+import defaultStyle from "../../config/GlobalStyles";
 import Icon from "../Icon";
 
 const width = Dimensions.get("window").width / 2 - 15;

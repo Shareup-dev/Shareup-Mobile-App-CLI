@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, TextInput, Text} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import defaultStyles from '../config/styles.js';
+import defaultStyles from '../config/GlobalStyles.js';
 import colors from '../config/colors.js';
 
 export default function AppTextInput({

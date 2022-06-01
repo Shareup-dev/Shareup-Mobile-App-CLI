@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, TouchableWithoutFeedback } from "react-native";
 
 import colors from "../../config/colors";
 import Icon from "../Icon";
-import defaultStyles from "../../config/styles";
+import defaultStyles from "../../config/GlobalStyles";
 
 export default function HangCard({ title, image, onPress }) {
   return (

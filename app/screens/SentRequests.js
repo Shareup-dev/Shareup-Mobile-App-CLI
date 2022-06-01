@@ -18,7 +18,7 @@ import UserService from '../services/user.service';
 import store from '../redux/store';
 import {sentRequestsActions} from '../redux/sentRequests';
 import colors from '../config/colors';
-import defaultStyles from '../config/styles';
+import defaultStyles from '../config/GlobalStyles';
 import ActivityScreen from './ActivityScreen';
 import routes from '../navigation/routes';
 import FriendCard from '../components/lists/FriendCard';

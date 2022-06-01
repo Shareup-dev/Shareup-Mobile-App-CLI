@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 
 import Text from "../Text";
-import defaultStyles from "../../config/styles";
+import defaultStyles from "../../config/GlobalStyles";
 import colors from "../../config/colors";
 
 export default function ListHeader({ title, subtitle, align = 'center', containerStyle }) {

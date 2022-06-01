@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {MaterialCommunityIcons} from 'react-native-vector-icons';
 
-import defaultStyles from '../config/styles';
+import defaultStyles from '../config/GlobalStyles';
 import Text from './Text';
 import Screen from './Screen';
 import PickerItem from './PickerItem';

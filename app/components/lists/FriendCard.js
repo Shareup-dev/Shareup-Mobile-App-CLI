@@ -10,7 +10,7 @@ import {
 import colors from '../../config/colors';
 import Tab from '../buttons/Tab';
 import Icon from '../Icon';
-import defaultStyles from '../../config/styles';
+import defaultStyles from '../../config/GlobalStyles';
 import BetterImage from '../betterImage/BetterImage';
 
 export default function FriendCard({

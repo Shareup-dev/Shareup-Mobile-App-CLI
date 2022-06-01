@@ -4,7 +4,7 @@ import { View, StyleSheet, Text } from "react-native";
 import colors from "../../config/colors";
 import DownModal from "./DownModal";
 import DrawerList from "./DrawerList";
-import defaultStyle from "../../config/styles";
+import defaultStyle from "../../config/GlobalStyles";
 
 export default function OptionsDrawer({
   options,

@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native'
 import colors from '../config/colors'
-import defaultStyles from "../config/styles";
+import defaultStyles from "../config/GlobalStyles";
 import Tab from "../components/buttons/Tab";
 
 const FriendList = ({

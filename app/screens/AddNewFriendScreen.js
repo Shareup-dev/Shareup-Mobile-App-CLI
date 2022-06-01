@@ -6,7 +6,7 @@ import Screen from '../components/Screen';
 import {Header, HeaderTitle} from '../components/headers';
 import Icon from '../components/Icon';
 import ListItem from '../components/lists/ListItem';
-import defaultStyles from '../config/styles';
+import defaultStyles from '../config/GlobalStyles';
 import UserService from '../services/user.service';
 import authContext from '../Contexts/authContext';
 import FriendService from '../services/friends.service';

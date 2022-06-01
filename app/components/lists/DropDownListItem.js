@@ -10,7 +10,7 @@ import {
 import colors from "../../config/colors";
 import AppText from "../Text";
 import Icon from "../Icon";
-import defaultStyle from "../../config/styles";
+import defaultStyle from "../../config/GlobalStyles";
 import IconButton from "../buttons/IconButton";
 import ListItemEnhanced from "./ListItemEnhanced";
 

@@ -20,7 +20,7 @@ import routes from '../navigation/routes';
 
 import useIsReachable from '../hooks/useIsReachable';
 import settings from '../config/settings';
-import defaultStyles from '../config/styles';
+import defaultStyles from '../config/GlobalStyles';
 import LoginContainer from '../components/forms/LoginContainer';
 import Loading from '../components/Loading';
 import authService from '../services/auth.service';

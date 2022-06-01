@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 
-import defaultStyles from '../config/styles';
+import defaultStyles from '../config/GlobalStyles';
 import LinkButton from './buttons/LinkButton';
 
 export default function Section({title, children, onAdd , btnTitle = "Add"}) {

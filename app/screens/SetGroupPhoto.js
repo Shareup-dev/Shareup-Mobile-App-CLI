@@ -15,7 +15,7 @@ import Icon from '../components/Icon';
 import AppButton from '../components/buttons/Button';
 import useImagePicker from '../hooks/useImagePicker';
 import routes from '../navigation/routes';
-import defautlStyles from '../config/styles';
+import defautlStyles from '../config/GlobalStyles';
 import colors from '../config/colors';
 import {Header, HeaderTitle} from '../components/headers';
 import Toast from 'react-native-toast-message';

@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet, Text, TouchableWithoutFeedback } from "react-native";
 import Icon from "../components/Icon";
 import colors from "../config/colors";
-import defaultStyles from "../config/styles";
+import defaultStyles from "../config/GlobalStyles";
 
 export default function DrawerButtons({ iconImage, title,onPress }) {
   return (

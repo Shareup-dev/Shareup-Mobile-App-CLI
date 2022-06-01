@@ -13,7 +13,7 @@ import Modal from 'react-native-modal';
 import authContext from '../Contexts/authContext';
 import Icon from '../components/Icon';
 import colors from '../config/colors';
-import defaultStyles from '../config/styles';
+import defaultStyles from '../config/GlobalStyles';
 import DrawerButtons from './DrawerButtons';
 import LinkButton from '../components/buttons/LinkButton';
 

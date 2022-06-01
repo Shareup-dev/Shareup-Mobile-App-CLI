@@ -3,7 +3,7 @@ import { StyleSheet, View, FlatList, Image, SafeAreaView, SectionList } from "re
 import Screen from "../components/Screen";
 import { Text } from "react-native-paper";
 import ListItem from "../components/lists/ListItem";
-import defaultStyles from "../config/styles";
+import defaultStyles from "../config/GlobalStyles";
 import Icon from "../components/Icon";
 import { Header, HeaderTitle, HeaderCloseIcon } from "../components/headers";
 import colors from "../config/colors";

@@ -2,7 +2,7 @@ import React, {useContext, useState} from 'react';
 import {FlatList, TouchableOpacity} from 'react-native';
 
 import routes from '../../navigation/routes';
-import defaultStyles from '../../config/styles';
+import defaultStyles from '../../config/GlobalStyles';
 import ListItem from '../lists/ListItem';
 import EmptyNotice from './EmptyNotice';
 import ListWrapper from './ListWrapper';

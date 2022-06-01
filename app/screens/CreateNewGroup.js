@@ -6,7 +6,7 @@ import AppButton from '../components/buttons/Button';
 import Icon from '../components/Icon';
 import AppTextInput from '../components/TextInput';
 import colors from '../config/colors';
-import defaultStyles from '../config/styles';
+import defaultStyles from '../config/GlobalStyles';
 import routes from '../navigation/routes';
 import ChoosePrivacyDrawer from '../components/drawers/ChoosePrivacyDrawer';
 import {Header, HeaderCloseIcon, HeaderTitle} from '../components/headers';

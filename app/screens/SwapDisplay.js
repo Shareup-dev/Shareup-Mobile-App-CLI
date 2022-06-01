@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Icon from '../components/Icon';
 import colors from '../config/colors';
-import defaultStyles from '../config/styles';
+import defaultStyles from '../config/GlobalStyles';
 import {StackActions} from '@react-navigation/native';
 import routes from '../navigation/routes';
 import store from '../redux/store';

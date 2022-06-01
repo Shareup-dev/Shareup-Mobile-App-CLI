@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View, FlatList, Image } from "react-native";
 import Screen from "../components/Screen";
 import ListItem from "../components/lists/ListItem";
-import defaultStyles from "../config/styles";
+import defaultStyles from "../config/GlobalStyles";
 import Icon from "../components/Icon";
 import { Header, HeaderTitle, HeaderCloseIcon } from "../components/headers";
 import colors from "../config/colors";

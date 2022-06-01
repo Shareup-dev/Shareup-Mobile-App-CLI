@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 
 import colors from "../../config/colors";
-import defaultStyles from "../../config/styles";
+import defaultStyles from "../../config/GlobalStyles";
 import Tab from "../buttons/Tab";
 import constants from "../../config/constants";
 

@@ -12,7 +12,7 @@ import {
 import { useFocusEffect } from '@react-navigation/native';
 import Tab from '../buttons/Tab'
 import colors from '../../config/colors';
-import defaultStyles from '../../config/styles';
+import defaultStyles from '../../config/GlobalStyles';
 import authContext from '../../Contexts/authContext';
 import Icon from '../Icon';
 import PostOptionDrawer from '../drawers/PostOptionsDrawer';

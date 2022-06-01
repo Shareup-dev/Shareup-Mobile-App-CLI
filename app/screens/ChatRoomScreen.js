@@ -14,7 +14,7 @@ import {ChatRoomHeader} from '../components/headers';
 import MessageTextField from '../components/messages/MessageTextField';
 import Tab from '../components/buttons/Tab';
 import colors from '../config/colors';
-import defaultStyles from '../config/styles';
+import defaultStyles from '../config/GlobalStyles';
 import MessageItem from '../components/messages/MessageItem';
 import store from '../redux/store';
 import {messagesAction} from '../redux/messagesSlice';

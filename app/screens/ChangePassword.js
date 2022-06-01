@@ -2,7 +2,7 @@ import React from 'react';
 import {Form, FormField, SubmitButton} from '../components/forms';
 import {StyleSheet, View, Text} from 'react-native';
 import Screen from '../components/Screen';
-import defaultStyles from '../config/styles';
+import defaultStyles from '../config/GlobalStyles';
 import {Header, HeaderTitle, HeaderCloseIcon} from '../components/headers';
 import * as Yup from 'yup';
 import colors from '../config/colors';

@@ -12,7 +12,7 @@ import {
 import {Header, HeaderTitle} from '../components/headers';
 import authContext from '../Contexts/authContext';
 import UserService from '../services/user.service';
-import defaultStyles from '../config/styles';
+import defaultStyles from '../config/GlobalStyles';
 //import FriendService from '../services/FriendService';
 import ListItem from '../components/lists/ListItem';
 import Icon from '../components/Icon';

@@ -5,7 +5,7 @@ import { RadioButton } from "react-native-paper";
 
 import colors from "../../config/colors";
 import ErrorMessage from "./ErrorMessage";
-import defaultStyles from "../../config/styles";
+import defaultStyles from "../../config/GlobalStyles";
 
 export default function FormRadio({ name, style }) {
   const { values, handleChange, errors } = useFormikContext();

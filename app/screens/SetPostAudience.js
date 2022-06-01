@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import defaultStyles from '../config/styles'
+import defaultStyles from '../config/GlobalStyles'
 const SetPostAudience = () => {
     return (
         <View>

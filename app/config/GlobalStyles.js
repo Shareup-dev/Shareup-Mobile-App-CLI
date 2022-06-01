@@ -2,6 +2,11 @@ import {Platform} from 'react-native';
 import colors from './colors';
 
 export default {
+  row:{
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'space-between'
+  },
   colors,
   text: {
     color: colors.dark,
