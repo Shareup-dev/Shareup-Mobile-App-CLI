@@ -16,7 +16,6 @@ import constants from '../config/constants';
 import AuthContext from '../Contexts/authContext';
 import Title from '../Materials/Text/Title';
 import Texts from '../Materials/Text/Texts';
-import GlobalStyles from '../config/GlobalStyles';
 
 const PostActions = ({
   postId,
@@ -103,7 +102,7 @@ const PostActions = ({
                   onPress={_ =>
                     navigation.navigate(routes.GROUP_FEED, postData.group)
                   }>
-                  <Texts  light style={{fontWeight:'700'}} >{postData.group?.name}</Texts>
+                  <Texts  light style={styles.bold} >{postData.group?.name}</Texts>
                 </TouchableOpacity>
               </View>
             ) : (
@@ -156,7 +155,7 @@ const PostActions = ({
                 backgroundSizeRatio={1}
                 style={styles.star}
               />
-              <Texts>{`${
+              <Texts style={styles.bold} >{`${
                 numberOfReactions > 1
                   ? `${numberOfReactions} Stars`
                   : `${numberOfReactions} Star`
@@ -176,7 +175,7 @@ const PostActions = ({
                   fromReply,
                 })
               }>
-              <Texts>{`${numberOfComments} Comments  ${0} Shares`}</Texts>
+              <Texts style={styles.bold} >{`${numberOfComments} Comments  ${0} Shares`}</Texts>
             </TouchableWithoutFeedback>
           </View>
         </View>
@@ -207,7 +206,8 @@ const PostActions = ({
 };
 
 const borderRadius = 10;
-const styles = StyleSheet.create({
+const styles = StyleSheet.create(
+  {bold:{fontWeight:'700'},
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
