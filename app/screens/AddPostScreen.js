@@ -57,6 +57,7 @@ import BetterImage from '../components/betterImage/BetterImage';
 import CustomImageSlider from '../components/ImageSlider/CustomImageSlider';
 import { postDataSliceAction } from '../redux/postDataSlice';
 import Title from '../Materials/Text/Title';
+import { Texts } from '../Materials/Text';
 
 
 export default function AddPostScreen({ navigation, route }) {
@@ -72,8 +73,8 @@ export default function AddPostScreen({ navigation, route }) {
   const postFeel = useSelector(state => state.postFeel);
   const { postTypes } = constants;
   const DEFAULT_TEXT = 'We Share, Do You ?';
-  const SWAP_DEFAULT_TEXT = 'Hi all \n I want to Swap ...';
-  const HANG_SHARE_TEXT = 'Please anyone want this,can have it';
+  const SWAP_DEFAULT_TEXT = 'We Share, Do You ?';//'Hi all \n I want to Swap ...';
+  const HANG_SHARE_TEXT = 'We Share, Do You ?';//'Please anyone want this,can have it';
   const isEdit = useSelector(state => state.updatePostMode)
   //const postData = useSelector(state => state.updatePostData)
   const groupid = useSelector(state => state.groupIdSlice)
@@ -614,49 +615,55 @@ export default function AddPostScreen({ navigation, route }) {
     <Screen>
       {renderHeader()}
       <View style={[styles.topContainer]}>
-        <View style={styles.row}>
-          <Image
-            source={
-              user.profilePicture
-                ? { uri: user.profilePicturePath }
-                : require('../assets/default-profile-picture.png')
-            }
-            style={defaultStyles.circledProfilePicture}
-          />
-          <View style={styles.column}>
-            <Title  style={styles.userName}>
-              {user.firstName} {user.lastName}
-            </Title>
-            <View style={styles.row}>
-              <OptionBox
-                currentOption={postPrivacyOption}
-                onPress={() => {
-                  setIsPrivacyOptionsVisible(!isPrivacyOptionsVisible);
-                }}
-              />
+        
+          <View style={styles.row}>
+            <Image
+              source={
+                user.profilePicture
+                  ? { uri: user.profilePicturePath }
+                  : require('../assets/default-profile-picture.png')
+              }
+              style={defaultStyles.circledProfilePicture}
+            />
+            <View style={styles.column}>
+              <Title style={styles.userName}>
+                {user.firstName} {user.lastName}
+              </Title>
+              <View style={styles.row}>
+                <OptionBox
+                  currentOption={postPrivacyOption}
+                  onPress={() => {
+                    setIsPrivacyOptionsVisible(!isPrivacyOptionsVisible);
+                  }}
+                />
 
-              <View style={[styles.headerTab, styles.row]}>
-                <Icon
-                  type="MaterialCommunityIcons"
-                  name="plus"
-                  size={15}
-                  color={colors.dimGray}
-                />
-                <Text style={styles.headerTabText}>Albums</Text>
-                <Icon
-                  type="MaterialIcons"
-                  name="keyboard-arrow-down"
-                  size={15}
-                  color={colors.dimGray}
-                />
+                <View style={[styles.headerTab, styles.row]}>
+                  <Icon
+                    type="Feather"
+                    name="plus"
+                    size={12}
+                    color={colors.dimGray}
+                    backgroundSizeRatio={1}
+                    style={{ marginLeft: 5 }}
+                  />
+                  <Texts style={styles.headerTabText}>Albums</Texts>
+                  <Icon
+                    type='Entypo'
+                    name="chevron-small-down"
+                    size={15}
+                    color={colors.dimGray}
+                    backgroundSizeRatio={1}
+                    style={{ marginRight: 2 }}
+                  />
+                </View>
+                {/* ))} */}
+                {/*** // Todo: Create swap category! */}
               </View>
-              {/* ))} */}
-              {/*** // Todo: Create swap category! */}
             </View>
-          </View>
-
+          
           {(postType === postTypes.HANG_SHARE ||
             postType === postTypes.SHARE_UP) && (
+
               <IconButton
                 onPress={() => navigation.navigate(routes.KEEP_HANG, postType)}
                 IconComponent={
@@ -668,172 +675,174 @@ export default function AddPostScreen({ navigation, route }) {
                 }
                 style={styles.plusIcon}
               />
+
             )}
-        </View>
-
-        {/**Content */}
-        {postFeel.feeling ? (
-          <TouchableOpacity
-            activeOpacity={0.5}
-            onPress={() => navigation.navigate(routes.FEELING_ACTIVITY)}>
-            <View style={styles.feelingContainer}>
-              {postFeel.img ? (
-                <Image source={postFeel.img} style={styles.feelImg} />
-              ) : (
-                <Icon name={postFeel.icon} color={postFeel.color} />
-              )}
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text
-                  style={
-                    (styles.postFeelText, { fontWeight: '700', fontSize: 14 })
-                  }>
-                  {postFeel.feeling}
-                </Text>
-                {postFeel.type === 'activity' && (
-                  <>
-                    <Text>{' - '}</Text>
-                    <TextInput
-                      placeholder={
-                        (postFeel.feeling !== 'Travelling to'
-                          ? `What do you `
-                          : `Where do you `) + postFeel.feeling
-                      }
-                    />
-                  </>
-                )}
-              </View>
-            </View>
-          </TouchableOpacity>
-        ) : null}
-        {postData.tagedList.length !== 0 && (
-          <View>
-          <Text>--</Text>
-          <FlatList
-          horizontal
-          data={postData.tagedList}
-          keyExtractor={item => item}
-          renderItem={({item}) => (
-            <Text>{item}</Text>
-            
-          )}
-        />
-        </View>
           
-        )}
-        
+        </View>
+          {/**Content */}
+          {postFeel.feeling ? (
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => navigation.navigate(routes.FEELING_ACTIVITY)}>
+              <View style={styles.feelingContainer}>
+                {postFeel.img ? (
+                  <Image source={postFeel.img} style={styles.feelImg} />
+                ) : (
+                  <Icon name={postFeel.icon} color={postFeel.color} />
+                )}
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text
+                    style={
+                      (styles.postFeelText, { fontWeight: '700', fontSize: 14 })
+                    }>
+                    {postFeel.feeling}
+                  </Text>
+                  {postFeel.type === 'activity' && (
+                    <>
+                      <Text>{' - '}</Text>
+                      <TextInput
+                        placeholder={
+                          (postFeel.feeling !== 'Travelling to'
+                            ? `What do you `
+                            : `Where do you `) + postFeel.feeling
+                        }
+                      />
+                    </>
+                  )}
+                </View>
+              </View>
+            </TouchableOpacity>
+          ) : null}
+          {postData.tagedList.length !== 0 && (
+            <View>
+              <Text>--</Text>
+              <FlatList
+                horizontal
+                data={postData.tagedList}
+                keyExtractor={item => item}
+                renderItem={({ item }) => (
+                  <Text>{item}</Text>
 
-        <TextInput
-          //value={isEdit?text:placeholder}
-          placeholder={postData['EditPost'] ? postData.postDetail.content : placeholder}
-          placeholderTextColor={postData['EditPost'] ? colors.dark : colors.dimGray}
-          style={styles.textInput}
-          // numberOfLines={10}
-          multiline={true}
-          onChangeText={handleOnChangeText}
-          ref={textInputRef}
-          onTouchEnd={handleCreatePostDrawerPosition}
-        />
+                )}
+              />
+            </View>
 
-        {postType === postTypes.SHARE_POST && (
-          <View
-            style={{
-              borderColor: '#cacaca60',
-              borderWidth: 1,
-              paddingTop: 10,
-              borderRadius: 10,
-            }}>
+          )}
+  
+
+          <TextInput
+            //value={isEdit?text:placeholder}
+            placeholder={postData['EditPost'] ? postData.postDetail.content : placeholder}
+            placeholderTextColor={postData['EditPost'] ? colors.dark : colors.dimGray}
+            style={styles.textInput}
+
+            // numberOfLines={10}
+            multiline={true}
+            onChangeText={handleOnChangeText}
+            ref={textInputRef}
+            onTouchEnd={handleCreatePostDrawerPosition}
+          />
+
+          {postType === postTypes.SHARE_POST && (
             <View
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginHorizontal: 5,
+                borderColor: '#cacaca60',
+                borderWidth: 1,
+                paddingTop: 10,
+                borderRadius: 10,
               }}>
-              <UserProfilePicture
-                profilePicture={!postData['EditPost'] ? postData.postDetail?.userdata?.profilePicturePath : postData.postDetail?.post?.userdata.profilePicturePath}
-                size={35}
-              />
-              <Text
-                style={{ fontSize: 15, marginHorizontal: 5, fontWeight: '600' }}>
-                {!postData['EditPost'] ? `${postData.postDetail?.userdata?.firstName} ${postData.postDetail?.userdata?.lastName}` : `${postData.postDetail?.post?.userdata?.firstName} ${postData.postDetail?.post?.userdata?.lastName}`}
-              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginHorizontal: 5,
+                }}>
+                <UserProfilePicture
+                  profilePicture={!postData['EditPost'] ? postData.postDetail?.userdata?.profilePicturePath : postData.postDetail?.post?.userdata.profilePicturePath}
+                  size={35}
+                />
+                <Text
+                  style={{ fontSize: 15, marginHorizontal: 5, fontWeight: '600' }}>
+                  {!postData['EditPost'] ? `${postData.postDetail?.userdata?.firstName} ${postData.postDetail?.userdata?.lastName}` : `${postData.postDetail?.post?.userdata?.firstName} ${postData.postDetail?.post?.userdata?.lastName}`}
+                </Text>
+              </View>
+              <View style={{ marginTop: 20, marginHorizontal: 5, marginBottom: 5 }}>
+                {!postData['EditPost'] && postData.postDetail?.content !== '' && (
+                  <Text style={{ fontSize: 14 }}>{postData.postDetail?.content}</Text>
+                )}
+                {postData['EditPost'] && postData.postDetail?.post?.content !== '' && (
+                  <Text style={{ fontSize: 14 }}>{postData.postDetail?.post?.content}</Text>
+                )}
+              </View>
+              <CustomImageSlider width={width - 42} postType={"share"} height={200} media={!postData['EditPost'] ? postData.postDetail?.media : postData.postDetail?.post?.media} />
             </View>
-            <View style={{ marginTop: 20, marginHorizontal: 5, marginBottom: 5 }}>
-              {!postData['EditPost'] && postData.postDetail?.content !== '' && (
-                <Text style={{ fontSize: 14 }}>{postData.postDetail?.content}</Text>
-              )}
-              {postData['EditPost'] && postData.postDetail?.post?.content !== '' && (
-                <Text style={{ fontSize: 14 }}>{postData.postDetail?.post?.content}</Text>
-              )}
-            </View>
-            <CustomImageSlider width={width - 42} postType={"share"} height={200} media={!postData['EditPost'] ? postData.postDetail?.media : postData.postDetail?.post?.media} />
-          </View>
-        )}
-        <ImageInputList
-          imageUris={images}
-          onAddImage={onAddImage}
-          isSwap={postType === postTypes.SWAP ? true : false}
-          onRemoveImage={onRemoveImage}
-        />
-        {loading ? (
-          <ActivityIndicator
-            style={styles.topContainer}
-            animating={true}
-            size="large"
-            color={colors.iondigoDye}
+          )}
+          <ImageInputList
+            imageUris={images}
+            onAddImage={onAddImage}
+            isSwap={postType === postTypes.SWAP ? true : false}
+            onRemoveImage={onRemoveImage}
           />
-        ) : (
-          <ActivityIndicator
-            style={styles.activity}
-            animating={false}
-            size="large"
-            color={colors.iondigoDye}
+          {loading ? (
+            <ActivityIndicator
+              style={styles.topContainer}
+              animating={true}
+              size="large"
+              color={colors.iondigoDye}
+            />
+          ) : (
+            <ActivityIndicator
+              style={styles.activity}
+              animating={false}
+              size="large"
+              color={colors.iondigoDye}
+            />
+          )}
+        </View>
+        {postType === postTypes.CREATE_POST && (
+          <EnhancedOptionsDrawer
+            options={createPostoptions}
+            forwardedRef={createPostDrawerRef}
           />
         )}
-      </View>
-      {postType === postTypes.CREATE_POST && (
-        <EnhancedOptionsDrawer
-          options={createPostoptions}
-          forwardedRef={createPostDrawerRef}
-        />
-      )}
-      {postType === postTypes.GROUP_POST && (
-        <EnhancedOptionsDrawer
-          options={createPostoptions}
-          forwardedRef={createPostDrawerRef}
-        />
-      )}
-      {postType === postTypes.SHARE_UP && (
-        <OptionsDrawer
-          options={shareUpOptions}
-          isVisible={isOptionsVisible}
-          setIsVisible={setIsOptionsVisible}
-        />
-      )}
-      {postType === postTypes.HANG_SHARE && (
-        <OptionsDrawer
-          title="What's in Hang ?"
-          options={[createPostoptions[0]]}
-          isVisible={isOptionsVisible}
-          setIsVisible={setIsOptionsVisible}
-        />
-      )}
-      {postType === postTypes.SHARE_POST && (
-        <EnhancedOptionsDrawer
-          snap={[125, 100, 100, 100]}
-          options={sharePostOptions}
-          forwardedRef={sharePostDrawerRef}
-        />
-      )}
+        {postType === postTypes.GROUP_POST && (
+          <EnhancedOptionsDrawer
+            options={createPostoptions}
+            forwardedRef={createPostDrawerRef}
+          />
+        )}
+        {postType === postTypes.SHARE_UP && (
+          <OptionsDrawer
+            options={shareUpOptions}
+            isVisible={isOptionsVisible}
+            setIsVisible={setIsOptionsVisible}
+          />
+        )}
+        {postType === postTypes.HANG_SHARE && (
+          <OptionsDrawer
+            title="What's in Hang ?"
+            options={[createPostoptions[0]]}
+            isVisible={isOptionsVisible}
+            setIsVisible={setIsOptionsVisible}
+          />
+        )}
+        {postType === postTypes.SHARE_POST && (
+          <EnhancedOptionsDrawer
+            snap={[125, 100, 100, 100]}
+            options={sharePostOptions}
+            forwardedRef={sharePostDrawerRef}
+          />
+        )}
 
-      <RadioOptionDrawer
-        isVisible={isPrivacyOptionsVisible}
-        setIsVisible={setIsPrivacyOptionsVisible}
-        options={privacyOptions}
-        title="Who can see your posts?"
-        subTitle="Your post will appear in news feed, on your profile and in search results"
-        initialValue={privacyOptions[0].value}
-        onSubmit={handelPrivacySetting}
-      />
+        <RadioOptionDrawer
+          isVisible={isPrivacyOptionsVisible}
+          setIsVisible={setIsPrivacyOptionsVisible}
+          options={privacyOptions}
+          title="Who can see your posts?"
+          subTitle="Your post will appear in news feed, on your profile and in search results"
+          initialValue={privacyOptions[0].value}
+          onSubmit={handelPrivacySetting}
+        />
     </Screen>
   );
 }
@@ -933,4 +942,9 @@ const styles = StyleSheet.create({
   activity: {
     flex: 1,
   },
+  plusIcon: {
+    marginRight: 1,
+    
+    marginTop: 10,
+  }
 });

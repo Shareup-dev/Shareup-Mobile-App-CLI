@@ -44,7 +44,8 @@ const SwapCard = React.memo(
     const swapedPosts = useSelector(state => state.swapedImages);
     const dispatch = useDispatch()
     const {userState} = useContext(AuthContext);
-    const [isUserLiked, setIsUserLiked] = useState(item.liked);
+    const [isUserLiked, setIsUserLiked] = useState(item.likedType === 'false'?
+    false:true);
     const getSwapedImage = swapId => {
       let foundSwap = swapedPosts.filter(swap => swap.swapPostId === swapId)[0];
       if (foundSwap) {
@@ -208,27 +209,19 @@ const SwapCard = React.memo(
     const {width} = Dimensions.get('window');
 
     const checkIfLiked = () => {
-      const result = item.liked;
-      return setIsUserLiked(result);
+      if (postData.likedType === 'false'){
+        return setIsUserLiked(false);
+       }else{
+        return setIsUserLiked(true);
+       }
     };
     const handleReactions = async () => {
-      if (item.allPostsType === constants.postTypes.SWAP){
-        swapService.likePost(user.id, item.id)
+        postService.likePost(user.id, item.id,"star")
         .then(res => {
           setIsUserLiked(!isUserLiked);
            //setNumberOfReactions(res.data.numberOfReaction);
         }) //need to get likePostIds
         .catch(e => console.error(e));
-      }else if (item.allPostsType === constants.postTypes.HANG_SHARE){
-        hangShareService.likePost(user.id, item.id)
-        .then(res => {
-          setIsUserLiked(!isUserLiked);
-           //setNumberOfReactions(res.data.numberOfReaction);
-        }) //need to get likePostIds
-        .catch(e => console.error(e));
-      }
-     
-      //reloadPost();
     };
 
     return (

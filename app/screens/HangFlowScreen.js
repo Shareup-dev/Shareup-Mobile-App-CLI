@@ -9,7 +9,6 @@ import Icon from '../components/Icon';
 import routes from '../navigation/routes';
 import { useFocusEffect } from '@react-navigation/native';
 import authContext from '../Contexts/authContext';
-import HangFeedCard from '../components/lists/HangFeedCard';
 import IconButton from '../components/buttons/IconButton';
 import hangShareService from '../services/hangShare.service';
 import SwapCard from '../components/lists/SwapCard';

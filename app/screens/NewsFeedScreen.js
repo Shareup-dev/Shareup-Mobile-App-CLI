@@ -54,7 +54,7 @@ export default function NewsFeedScreen({navigation, route}) {
             item={item}
             userId={item.userdata.id}
             onPress={() => {
-              navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
+              // navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
             }}
           />
         );
@@ -76,7 +76,7 @@ export default function NewsFeedScreen({navigation, route}) {
             item={item}
             userId={item.userdata.id}
             onPress={() => {
-              navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
+              // navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
             }}
           />
         );

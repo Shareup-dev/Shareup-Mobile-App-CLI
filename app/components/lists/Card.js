@@ -38,7 +38,8 @@ import {postDataSliceAction} from '../../redux/postDataSlice';
     postData.numberOfReaction,
   );
 
-  const [isUserLiked, setIsUserLiked] = useState(postData.liked);
+  const [isUserLiked, setIsUserLiked] = useState(postData.likedType === 'false'?
+    false:true);
   const [comment, setComments] = useState(postData.comments);
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [images, setImages] = useState([]);
@@ -190,13 +191,19 @@ import {postDataSliceAction} from '../../redux/postDataSlice';
     }
   };
   const checkIfLiked = () => {
-    const result = postData.liked;
-    return setIsUserLiked(result);
+     if (postData.likedType === 'false'){
+      return setIsUserLiked(false);
+     }else{
+      return setIsUserLiked(true);
+     }
+   
   };
 
   const handleReactions = async () => {
-    PostService.likePost(user.id, postData.id)
+
+    PostService.likePost(user.id, postData.id,"star")
       .then(res => {
+        console.log(res.data);
         setIsUserLiked(!isUserLiked);
         setNumberOfReactions(res.data.numberOfReaction);
       }) //need to get likePostIds
