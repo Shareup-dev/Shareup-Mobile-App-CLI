@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, TouchableWithoutFeedback, Text} from 'react-native';
 import colors from '../../config/colors';
+import { Header, Texts } from '../../Materials/Text';
 
 import Icon from '../Icon';
 
@@ -23,7 +24,7 @@ export default function HeaderWithBackArrow({
         />
       </TouchableWithoutFeedback>
       {leftComponent}
-      {title && <Text style={[styles.title, titleStyle]}>{title}</Text>}
+      {title && <Header style={[styles.title, titleStyle]}>{title}</Header>}
       {component}
       {rightComponent && (
         <View style={styles.rightComponent}>{rightComponent}</View>
@@ -37,8 +38,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
-    paddingVertical: 10,
-    paddingHorizontal: 13,
+    //paddingVertical: 10,
+    paddingHorizontal: 0,
     height: 60,
     backgroundColor: '#FFF',
     zIndex:100

@@ -32,7 +32,7 @@ export default function WritePost({navigation, style, groupPost, groupId}) {
           <UserProfilePicture size={45} navigation={navigation} />
           <LinkButton
             title="We share, Do you? "
-            fontSize={12}
+            fontSize={15}
             style={styles.shareButton}
           />
         </View>

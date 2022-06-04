@@ -199,7 +199,7 @@ export default function ActivityScreen({navigation}) {
           !isSearch
             ? () => (
                 <ListHeader
-                  title="There no activity yet !"
+                  title="No activity yet !"
                   subtitle="Add new friends to know more about them"
                 />
               )

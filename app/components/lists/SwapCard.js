@@ -184,8 +184,8 @@ const SwapCard = React.memo(
       ]);
 
     const deletePost = async () => {
-      swapService
-        .deleteSwap(item.id)
+      postService
+        .deletePost(item.id)
         .then(res => {
           if (res.status === 200){
             dispatch(feedPostsAction.removeFeedPost(postData.id));
@@ -209,7 +209,7 @@ const SwapCard = React.memo(
     const {width} = Dimensions.get('window');
 
     const checkIfLiked = () => {
-      if (postData.likedType === 'false'){
+      if (item.likedType === 'false'){
         return setIsUserLiked(false);
        }else{
         return setIsUserLiked(true);
@@ -268,7 +268,7 @@ const SwapCard = React.memo(
           isUserLiked={isUserLiked}
           navigation={navigation}
           numberOfComments={`${item.numberOfComments}`}
-          numberOfReactions={`${item.numberOfReactions}`}
+          numberOfReactions={`${item.numberOfReaction}`}
           postId={item.id}
           postText={item.content}
           // profileImage={item.userdata.profilePicture}
