@@ -16,6 +16,9 @@ import {
   Alert,
   Animated,
   FlatList,
+  TextInput,
+  Platform,
+  ScrollView,
 } from 'react-native';
 
 import Video from 'react-native-video';
@@ -27,8 +30,11 @@ import AuthContext from '../Contexts/authContext';
 import UserProfilePicture from '../components/UserProfilePicture';
 import moment from 'moment';
 import {Texts, Title} from '../Materials/Text';
+import {data as Feelings} from '../components/Data/activitiesAndFeelings';
+import BetterImage from '../components/betterImage/BetterImage';
+import Screen from '../components/Screen';
 
-const windowWidth = Dimensions.get('screen').width;
+const {width: windowWidth, height: windowHeight} = Dimensions.get('screen');
 
 function StoryViewScreen({navigation, route}) {
   const {
@@ -52,6 +58,7 @@ function StoryViewScreen({navigation, route}) {
   const [modelOpen, setModelOpen] = useState(false);
   const [paused, setPaused] = useState(false);
   const [Loaded, setLoaded] = useState(false);
+  const [replying, setReplying] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
 
   //  ----------------------- TIMER REDUCER ----------------------------//
@@ -202,19 +209,15 @@ function StoryViewScreen({navigation, route}) {
     }
   }, [Loaded]);
 
+  const checkLoginUser = () => (userData.id === userID ? true : false);
+
   const DropDownMenu = () => {
     return (
       <View style={styles.menuContainer}>
         <View style={styles.alignCenter}>
           <View style={styles.modalSwapBtn} />
         </View>
-        {/* <TouchableOpacity style={styles.menu}>
-          <View>
-            <Text style={styles.menuText}>Edit</Text>
-            <Text>Edit the Caption</Text>
-          </View>
-          <Icon size={45} name={'edit'} type="Entypo" />
-        </TouchableOpacity> */}
+
         <TouchableOpacity style={styles.menu} onPress={handleDelete}>
           <View>
             <Text style={styles.menuText}>Delete</Text>
@@ -222,16 +225,6 @@ function StoryViewScreen({navigation, route}) {
           </View>
           <Icon size={45} name={'delete'} color="crimson" />
         </TouchableOpacity>
-        {/* <TouchableOpacity style={styles.menu}>
-          <View>
-            <Text style={styles.menuText}>Hide this story</Text>
-            <Text
-              style={{
-                maxWidth: windowWidth / 2,
-              }}>{`Posted by @${route.params?.userName}`}</Text>
-          </View>
-          <Icon size={45} name={'eye-with-line'} type="Entypo" />
-        </TouchableOpacity> */}
       </View>
     );
   };
@@ -240,9 +233,7 @@ function StoryViewScreen({navigation, route}) {
     return (
       <TouchableOpacity
         activeOpacity={1}
-        style={[styles.viewerCard, styles.row]}
-        // onPress={_ => navigation.navigate(routes.FRIEND_PROFILE, {user: item})}
-      >
+        style={[styles.viewerCard, styles.row]}>
         <UserProfilePicture profilePicture={item.profilePicture} size={45} />
         <Title>{`${item.firstName} ${item.lastName}`}</Title>
       </TouchableOpacity>
@@ -275,7 +266,7 @@ function StoryViewScreen({navigation, route}) {
             </View>
           ))}
         </View>
-        <View style={styles.container}>
+        <View style={styles.headerActions}>
           <View style={styles.profileContainer}>
             <View style={styles.profileImg}>
               <UserProfilePicture
@@ -344,7 +335,7 @@ function StoryViewScreen({navigation, route}) {
   }, []);
 
   return (
-    <>
+    <Screen>
       <TouchableOpacity
         activeOpacity={1}
         onPressIn={() => {
@@ -354,14 +345,14 @@ function StoryViewScreen({navigation, route}) {
         onPressOut={() => {
           setPaused(false);
           startProgress();
-        }}>
-        <StorySlides />
+        }}
+        style={styles.mediaContainer}>
         {data[activeIndex]?.video ? (
           <Video
             ref={ref => (this.player = ref)}
             paused={paused}
             onLoad={_ => setLoaded(true)}
-            resizeMode={'cover'}
+            resizeMode={'contain'}
             style={styles.media}
             source={{
               uri: data[activeIndex].storiesVideoPath,
@@ -372,54 +363,14 @@ function StoryViewScreen({navigation, route}) {
             style={styles.media}
             resizeMode={'contain'}
             onLoadEnd={_ => setLoaded(true)}
-            source={{uri: data[activeIndex].storiesMediaPath}}
+            source={{uri: data[activeIndex].storiesImagePath}}
           />
         )}
-        <View style={styles.content}>
-          <View style={styles.row}>
-            <Texts
-              color={'#fff'}
-              truncate
-              style={[styles.textShadow, styles.caption]}>
-              {data[activeIndex].caption}
-            </Texts>
-            {userData.id === userID && (
-              <TouchableOpacity
-                style={styles.row}
-                onPress={_ => {
-                  setPaused(true);
-                  pauseProgress();
-                  setModelOpen(true);
-                }}>
-                <>
-                  <Icon
-                    name="eye-outline"
-                    type="Ionicons"
-                    size={45}
-                    color={'#fff'}
-                    backgroundSizeRatio={0.4}
-                    noBackground
-                  />
-                  <Texts style={styles.textShadow} color="#fff">
-                    {`${data[activeIndex].views} Views`}
-                  </Texts>
-                </>
-              </TouchableOpacity>
-            )}
-          </View>
-        </View>
       </TouchableOpacity>
       <DownModal isVisible={modelOpen} setIsVisible={handleCloseModel}>
         <View style={[styles.menuContainer, styles.customDownModel]}>
           <View style={styles.alignCenter}>
-            <View
-              style={{
-                backgroundColor: '#cacaca',
-                width: 80,
-                height: 6,
-                borderRadius: 6,
-              }}
-            />
+            <View style={styles.modalSwapBtn} />
           </View>
           <View style={[styles.menu]}>
             <Title>Viewed by</Title>
@@ -443,22 +394,124 @@ function StoryViewScreen({navigation, route}) {
           </View>
         </View>
       </DownModal>
-    </>
+      <View style={styles.container}>
+        <View>
+          <StorySlides />
+        </View>
+        <View style={styles.content}>
+          <View style={[styles.contentGrid]}>
+            <Texts
+              color={'#fff'}
+              truncate
+              style={[styles.textShadow, styles.caption]}>
+              {data[activeIndex].caption}
+            </Texts>
+            {checkLoginUser() && (
+              <TouchableOpacity
+                style={styles.row}
+                onPress={_ => {
+                  setPaused(true);
+                  pauseProgress();
+                  setModelOpen(true);
+                }}>
+                <>
+                  <Icon
+                    name="eye-outline"
+                    type="Ionicons"
+                    size={45}
+                    color={'#fff'}
+                    backgroundSizeRatio={0.4}
+                    noBackground
+                  />
+                  <Texts style={styles.textShadow} color="#fff">
+                    {`${data[activeIndex].views} Views`}
+                  </Texts>
+                </>
+              </TouchableOpacity>
+            )}
+          </View>
+          {!checkLoginUser() && (
+            <View style={styles.row}>
+              <View style={styles.captionInput}>
+                <View style={styles.row}>
+                  <TextInput
+                    onFocus={() => {
+                      setPaused(true);
+                      pauseProgress();
+                      setReplying(true);
+                    }}
+                    onBlur={() => {
+                      setPaused(true);
+                      startProgress();
+                      setReplying(true);
+                    }}
+                    placeholder="Replay"
+                    style={{width: '80%'}}
+                    multiline
+                  />
+                  <Icon
+                    noBackground
+                    name={'send'}
+                    type="FontAwesome"
+                    color={colors.iondigoDye}
+                  />
+                </View>
+              </View>
+              <ScrollView
+                style={styles.forwardArrow}
+                horizontal
+                showsHorizontalScrollIndicator={false}>
+                {Feelings.map(
+                  (feeling, index) =>
+                    feeling.type === 'Feeling' && (
+                      <BetterImage
+                        noBackground
+                        source={feeling.img}
+                        style={styles.imgSize}
+                      />
+                    ),
+                )}
+              </ScrollView>
+            </View>
+          )}
+        </View>
+      </View>
+    </Screen>
   );
 }
 
 export default StoryViewScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'space-between',
+    height: windowHeight,
+    paddingBottom: 10,
+    flex: 1,
+  },
+  imgSize: {width: 50, height: 50},
   caption: {
-    maxWidth: '70%',
+    maxWidth: '80%',
+    minWidth: '60%',
+  },
+  captionInput: {
+    paddingHorizontal: 15,
+    marginHorizontal: 10,
+    backgroundColor: colors.white,
+    borderRadius: 30,
+    justifyContent: 'center',
+    fontSize: 18,
+    maxHeight: 100,
+    height: '100%',
+    width: '60%',
+  },
+
+  forwardArrow: {
+    bottom: Platform.OS === 'ios' ? 25 : 0,
   },
   content: {
     zIndex: 100,
-    position: 'absolute',
-    bottom: 30,
-    width: '100%',
-    paddingHorizontal: 20,
+    width: windowWidth,
   },
   animBarActive: {
     backgroundColor: '#00000099',
@@ -468,6 +521,14 @@ const styles = StyleSheet.create({
   animBar: {
     borderRadius: 6,
     backgroundColor: '#CACACA',
+  },
+  contentGrid: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    marginBottom: 10,
+    width: windowWidth,
   },
   ph1: {
     paddingHorizontal: 1,
@@ -489,6 +550,7 @@ const styles = StyleSheet.create({
     height: 6,
     borderRadius: 6,
   },
+
   customDownModel: {
     paddingBottom: 60,
     height: 300,
@@ -507,6 +569,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   menuContainer: {},
   menu: {
@@ -515,8 +578,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottomColor: '#cacaca',
-    borderBottomWidth: 1,
+    // borderBottomColor: '#cacaca',
+    // borderBottomWidth: 1,
     marginBottom: 5,
   },
   backgroundVideo: {
@@ -544,7 +607,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     backgroundColor: colors.grayX11Gray,
   },
-  container: {
+  headerActions: {
     marginHorizontal: 8,
     marginVertical: 15,
     flexDirection: 'row',
@@ -568,9 +631,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   media: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#000',
+    height: windowHeight,
+    width: windowWidth,
+    position: 'absolute',
+    backgroundColor: '#333',
   },
   date: {
     maxWidth: windowWidth / 2,

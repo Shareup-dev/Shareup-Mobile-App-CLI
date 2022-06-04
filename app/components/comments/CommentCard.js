@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -56,13 +56,15 @@ export default function CommentCard(props) {
   const handleReaction = () => {
     const params = {reaction: 'null'};
 
+    setIsLiked(prev => !prev);
     if (replyComment) {
       postService
         .likeUnlikeReply(userData.id, comment.id, params)
-        .then(({status}) => {
-          status === 200 && setIsLiked(prev => !prev);
-        })
-        .catch(e => console.error(e));
+        .then(({status}) => status === 200)
+        .catch(e => {
+          setIsLiked(prev => !prev);
+          console.error(e);
+        });
     } else {
       postService
         .likeUnlikeComment(userData.id, comment.id, params)
@@ -279,7 +281,6 @@ export default function CommentCard(props) {
       </View>
       {comment.numberOfReplies > 0 && (
         <View style={{marginLeft: 25}}>
-
           <LinkButton
             onBlur={handleCollapseReply}
             title={collapseReply ? `-Hide reply` : `-Show reply`}

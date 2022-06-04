@@ -1,24 +1,29 @@
-import React, { useContext, useMemo } from "react";
-import { View, StyleSheet, Text, Image,ScrollView, TouchableOpacity } from "react-native";
-import { useDispatch } from "react-redux";
-import { postFeelingsActions } from "../../redux/postFeelings";
-import BetterImage from "../betterImage/BetterImage";
-import { data as Feelings } from "../Data/activitiesAndFeelings";
+import React from 'react';
+import {
+  View,
+  StyleSheet,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {postFeelingsActions} from '../../redux/postFeelings';
+import BetterImage from '../betterImage/BetterImage';
+import {data as Feelings} from '../Data/activitiesAndFeelings';
 
 export default function ListOfFeelings(props) {
   const dispatch = useDispatch();
 
-  const FeelingCard = ({ name, img, type }) => {
+  const FeelingCard = ({name, img, type}) => {
     return (
       <TouchableOpacity
         activeOpacity={0.6}
         onPress={() => {
-          dispatch(postFeelingsActions.setFeel({ feeling: name, img, type }));
+          dispatch(postFeelingsActions.setFeel({feeling: name, img, type}));
           props.navigation.goBack();
-        }}
-      >
+        }}>
         <View style={styles.card}>
-          <BetterImage noBackground  source={img} style={styles.img} />
+          <BetterImage noBackground source={img} style={styles.img} />
           <Text style={styles.cardText}>{name}</Text>
         </View>
       </TouchableOpacity>
@@ -30,9 +35,9 @@ export default function ListOfFeelings(props) {
       <ScrollView showsVerticalScrollIndicator={false}>
         {Feelings.map(
           (feeling, index) =>
-            feeling.type === "Feeling" && (
+            feeling.type === 'Feeling' && (
               <FeelingCard key={index} name={feeling.name} img={feeling.img} />
-            )
+            ),
         )}
       </ScrollView>
     </View>
@@ -46,7 +51,7 @@ const styles = StyleSheet.create({
   cardText: {
     marginLeft: 15,
   },
-  card: { flexDirection: "row", alignItems: "center" },
+  card: {flexDirection: 'row', alignItems: 'center'},
   img: {
     width: 50,
     height: 50,

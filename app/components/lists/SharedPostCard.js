@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Image,
   TouchableWithoutFeedback,
-  Alert
+  Alert,
 } from 'react-native';
 import AuthContext from '../../Contexts/authContext';
 import colors from '../../config/colors';
@@ -20,15 +20,16 @@ import PostOptionDrawer from '../drawers/PostOptionsDrawer';
 import constants from '../../config/constants';
 
 import onShareHandler from '../Share';
-import { postDataSliceAction } from '../../redux/postDataSlice';
+import {postDataSliceAction} from '../../redux/postDataSlice';
 
-import { useDispatch } from 'react-redux';
-import { Switch } from 'react-native-gesture-handler';
+import {useDispatch} from 'react-redux';
+import {Switch} from 'react-native-gesture-handler';
 import SwapCard from './SwapCard';
+import {Texts, Title} from '../../Materials/Text';
 
 export default function SharedPostCard(props) {
-  const {postData, navigation,user, ...rest} = props;  
-  const dispatch = useDispatch()
+  const {postData, navigation, user, ...rest} = props;
+  const dispatch = useDispatch();
   const [isUserLiked, setIsUserLiked] = useState(postData.liked);
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [numberOfReactions, setNumberOfReactions] = useState(0);
@@ -40,7 +41,7 @@ export default function SharedPostCard(props) {
     moment(postData.published, 'DD MMMM YYYY hh:mm:ss').fromNow(),
     // null
   );
- 
+
   const options = [
     {
       title: 'Save post',
@@ -61,7 +62,7 @@ export default function SharedPostCard(props) {
       },
     },
     {
-      title: userData?.id !== postData.userdata?.id ? '':'Edit',
+      title: userData?.id !== postData.userdata?.id ? '' : 'Edit',
       icon: {image: require('../../assets/post-options-icons/swap-icon.png')},
       onPress: () => {
         // dispatch(updatePostModeAction.setState(true))
@@ -78,11 +79,10 @@ export default function SharedPostCard(props) {
         image: require('../../assets/post-options-icons/share-friends-icon.png'),
       },
       onPress: () => {
-        
-        dispatch(postDataSliceAction.setPostData(postData.post))
-        
+        dispatch(postDataSliceAction.setPostData(postData.post));
+
         navigation.navigate(routes.ADD_POST, {
-           postType: constants.postTypes.SHARE_POST,
+          postType: constants.postTypes.SHARE_POST,
           // postData: postData.post,
         });
         setIsOptionsVisible(false);
@@ -128,29 +128,29 @@ export default function SharedPostCard(props) {
   ];
 
   const showDeleteAlert = () =>
-      Alert.alert('Delete', 'Are you sure to delete this post', [
-        {
-          text: 'Yes',
-          onPress: ()=> {},
-          style: 'cancel',
-        },
-        {
-          text: 'No',
-          style: 'cancel',
-        },
-      ]);
+    Alert.alert('Delete', 'Are you sure to delete this post', [
+      {
+        text: 'Yes',
+        onPress: () => {},
+        style: 'cancel',
+      },
+      {
+        text: 'No',
+        style: 'cancel',
+      },
+    ]);
 
-    const deletePost = async () => {
-      swapService
-        .deleteSwap(item.id)
-        .then(res => {
-          if (res.status === 200){
-            dispatch(feedPostsAction.removeFeedPost(postData.id));
-            navigation.navigate(routes.FEED);
-          }
-        })
-        .catch(e => alert(e));
-      }
+  const deletePost = async () => {
+    swapService
+      .deleteSwap(item.id)
+      .then(res => {
+        if (res.status === 200) {
+          dispatch(feedPostsAction.removeFeedPost(postData.id));
+          navigation.navigate(routes.FEED);
+        }
+      })
+      .catch(e => alert(e));
+  };
   const HeaderComponent = () => {
     return (
       <View style={{paddingTop: 10, paddingHorizontal: 15}}>
@@ -175,10 +175,12 @@ export default function SharedPostCard(props) {
 
           <View style={styles.userNameContainer}>
             <TouchableOpacity>
-              <Text style={styles.userName}>{postData.userdata.firstName}</Text>
+              <Title style={styles.userName}>
+                {postData.userdata.firstName}
+              </Title>
             </TouchableOpacity>
 
-            <Text style={styles.postDate}>{date}</Text>
+            <Texts light>{date}</Texts>
           </View>
         </View>
       </View>
@@ -194,18 +196,18 @@ export default function SharedPostCard(props) {
       .catch(e => console.error(e));
     //reloadPost();
   };
-  const renderCard = (item) => {
+  const renderCard = item => {
     switch (item.post.allPostsType) {
       case constants.postTypes.SWAP:
         return (
           <SwapCard
-          noActionBar
-          noOptions
+            noActionBar
+            noOptions
             navigation={navigation}
             // route={route}
             item={item.post}
             userId={item.post.userdata.id}
-            onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item.post }) }}
+            // onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item.post }) }}
           />
         );
       // case "share":
@@ -221,13 +223,17 @@ export default function SharedPostCard(props) {
       case constants.postTypes.HANG_SHARE:
         return (
           <SwapCard
-          noActionBar
-          noOptions
+            noActionBar
+            noOptions
             navigation={navigation}
             // route={route}
             item={item.post}
             userId={item.post.userdata.id}
-            onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item.post }) }}
+            // onPress={() => {
+            //   navigation.navigate(routes.POST_DETAILS_SCREEN, {
+            //     postData: item.post,
+            //   });
+            // }}
           />
           // <HangFeedCard //style={styles.listItem}
           //   user={item.userdata}
@@ -241,19 +247,19 @@ export default function SharedPostCard(props) {
       default:
         return (
           <Card
-          {...rest}
-          noActionBar
-          noOptions
-          postData={postData.post}
-          navigation={navigation}
-          user = {user}
-        />
+            {...rest}
+            noActionBar
+            noOptions
+            postData={postData.post}
+            navigation={navigation}
+            user={user}
+          />
         );
     }
-};
+  };
   const FooterComponent = () => {
     return (
-      <View style={{paddingHorizontal: 15,paddingTop:15}}>
+      <View style={{paddingHorizontal: 15, paddingTop: 15}}>
         <View style={styles.actionsBar}>
           <View style={styles.likes}>
             {isUserLiked ? (
@@ -280,32 +286,36 @@ export default function SharedPostCard(props) {
               </TouchableWithoutFeedback>
             )}
 
-            <Text style={styles.actionsText}>{numberOfReactions}</Text>
+            <Texts style={styles.bold}>{`${
+              numberOfReactions > 1
+                ? `${numberOfReactions} Stars`
+                : `${numberOfReactions} Star`
+            }`}</Texts>
           </View>
 
           <View style={styles.commentsShares}>
             <TouchableWithoutFeedback
               onPress={() =>
                 navigation.navigate(routes.COMMENTS, {
-                  postId:postData.id,
-                  userId:userData.id,
+                  postId: postData.id,
+                  userId: userData.id,
                   //comments,
-                  postType:postData.allPostsType,
+                  postType: postData.allPostsType,
                   // swapId,
-                  fromReply:false,
+                  fromReply: false,
                 })
               }>
-              <Text style={[styles.actionsText, styles.comments]}>
-                {postData.numberOfComments} Comments
-              </Text>
+              <Texts style={styles.bold}>{`${
+                postData.numberOfComments
+              } Comments  ${0} Shares`}</Texts>
             </TouchableWithoutFeedback>
-
-            <Text style={styles.actionsText}>0 Shares</Text>
           </View>
         </View>
 
         {postData.content !== '' && (
-          <Text style={styles.postText}>{postData.content}</Text>
+          <Texts truncate style={{marginTop: 10}} color={'#333'}>
+            {postData.content}
+          </Texts>
         )}
         <TouchableOpacity
           style={styles.menuButton}
@@ -335,12 +345,9 @@ export default function SharedPostCard(props) {
   return (
     <View style={[styles.card, defaultStyles.cardBorder]}>
       <HeaderComponent />
-      
+
       {postData.post ? (
-        <View>
-        {renderCard(postData)}
-        </View>
-        
+        <View>{renderCard(postData)}</View>
       ) : (
         <View style={{alignItems: 'center', paddingVertical: 10}}>
           <Text>Post unavailable</Text>
@@ -363,6 +370,9 @@ const styles = StyleSheet.create({
   actionsText: {
     fontSize: 12,
     fontWeight: '600',
+  },
+  bold: {
+    fontWeight: '700',
   },
   star: {
     marginRight: 5,

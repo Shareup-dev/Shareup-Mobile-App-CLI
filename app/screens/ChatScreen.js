@@ -22,8 +22,6 @@ import AuthContext from '../Contexts/authContext';
 import chatService from '../services/chat.service';
 import routes from '../navigation/routes';
 import Screen from '../components/Screen';
-import { Keyboard } from 'react-native';
-
 
 // import  PushNotification from 'react-native-push-notification';
 
@@ -64,14 +62,13 @@ function ChatScreen({navigation, route}) {
       .catch(e => console.error(e.message));
   };
 
-  const clearChatHandler = () =>{
+  const clearChatHandler = () => {
     // PushNotification.localNotification({
     //   channelId:'shareup-id',
     //   title:"Test Notification",
     //   message:"works...",
-
     // })
-  }
+  };
 
   const viewProfileHandler = () => {
     navigation.navigate(routes.FRIEND_PROFILE, {user});
@@ -82,7 +79,7 @@ function ChatScreen({navigation, route}) {
   }, []);
 
   const onMessageReceived = mess => {
-    setMessages(prev => ({...prev , state: [mess,...prev.state]}))
+    setMessages(prev => ({...prev, state: [mess, ...prev.state]}));
   };
 
   const onSendMessage = async message => {
@@ -196,8 +193,7 @@ function ChatScreen({navigation, route}) {
           animationOut={'slideOutRight'}
           onSwipeComplete={() => setOpenModal(false)}
           onBackdropPress={() => setOpenModal(false)}
-          backdropOpacity={0.1}
-          >
+          backdropOpacity={0.1}>
           <View
             style={{
               backgroundColor: '#fff',
@@ -213,7 +209,7 @@ function ChatScreen({navigation, route}) {
             <TouchableOpacity style={styles.menu}>
               <Text style={styles.menuText}>block</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menu} onPress={clearChatHandler} >
+            <TouchableOpacity style={styles.menu} onPress={clearChatHandler}>
               <Text style={styles.menuText}>Clear chat</Text>
             </TouchableOpacity>
           </View>
@@ -224,7 +220,7 @@ function ChatScreen({navigation, route}) {
             paddingHorizontal: 10,
             marginBottom: 65,
           }}
-          refreshing={messages.loading}          
+          refreshing={messages.loading}
           data={messages.state}
           // onEndReached={getConversations}
           keyExtractor={(item, i) => i.toString()}
@@ -239,7 +235,7 @@ function ChatScreen({navigation, route}) {
         <View
           style={{
             position: 'absolute',
-            bottom: Platform.OS === "ios"? 45 : 0,
+            bottom: Platform.OS === 'ios' ? 45 : 0,
             flexDirection: 'row',
             alignItems: 'center',
             paddingHorizontal: 10,
@@ -290,7 +286,7 @@ const styles = StyleSheet.create({
   modal: {
     padding: 0,
     margin: 0,
-    paddingTop: Platform.OS==="ios"? 45:0,
+    paddingTop: Platform.OS === 'ios' ? 45 : 0,
     width: width / 2,
     alignSelf: 'flex-end',
     justifyContent: 'flex-start',

@@ -53,9 +53,9 @@ export default function NewsFeedScreen({navigation, route}) {
             route={route}
             item={item}
             userId={item.userdata.id}
-            onPress={() => {
-              navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
-            }}
+            // onPress={() => {
+            //   navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
+            // }}
           />
         );
       case 'share':
@@ -75,9 +75,9 @@ export default function NewsFeedScreen({navigation, route}) {
             route={route}
             item={item}
             userId={item.userdata.id}
-            onPress={() => {
-              navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
-            }}
+            // onPress={() => {
+            //   navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
+            // }}
           />
         );
 
@@ -89,9 +89,9 @@ export default function NewsFeedScreen({navigation, route}) {
             navigation={navigation}
             reloadPosts={loadNews}
             postType={item.allPostsType}
-            onPress={() => {
-              navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
-            }}
+            // onPress={() => {
+            //   navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
+            // }}
           />
         );
     }
@@ -123,6 +123,8 @@ export default function NewsFeedScreen({navigation, route}) {
         keyExtractor={(post, i) => i.toString()}
         showsVerticalScrollIndicator={false}
         extraData={posts}
+        onRefresh={() => loadNews()}
+        refreshing={activityIndicator}
         renderItem={renderItem}
         ListEmptyComponent={() => (
           <>

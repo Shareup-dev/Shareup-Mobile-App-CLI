@@ -67,7 +67,7 @@ export default function CameraBottomActions({
       width: '100%',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems:'baseline',
+      alignItems: 'baseline',
       position: 'absolute',
       bottom: 0,
       zIndex: 1,
@@ -138,7 +138,6 @@ export default function CameraBottomActions({
       <View style={styles.Header}>
         <Text style={styles.HeaderText}>{title}</Text>
         <View style={styles.iconContainer}>
-         
           <TouchableOpacity onPress={_ => navigation.goBack()}>
             <Icon
               noBackground
@@ -156,47 +155,47 @@ export default function CameraBottomActions({
           {/* <View style={styles.recordingIcon} /> */}
           {/* <Text style={styles.recordingText}>{` Recording..`}</Text> */}
         </View>
-      ) : !onlyVideo && (
-
-        <View style={styles.modeContainer}>
-          <TouchableOpacity
-            style={styles.bottomBtn}
-            onPress={() => setMode('photo')}>
-            <Icon
-              style={styles.icon}
-              name={'camera'}
-              noBackground
-              color={mode === 'photo' ? 'crimson' : '#fff'}
-              type="Entypo"></Icon>
-            <Text
-              style={[
-                styles.modeText,
-                {color: mode === 'photo' ? 'crimson' : '#fff'},
-              ]}>
-              Photo
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setMode('video')}
-            style={styles.bottomBtn}>
-            <Icon
-              style={styles.icon}
-              name={'video-camera'}
-              noBackground
-              color={mode === 'video' ? 'crimson' : '#fff'}
-              type="Entypo"
-            />
-            <Text
-              style={[
-                styles.modeText,
-                {color: mode === 'video' ? 'crimson' : '#fff'},
-              ]}>
-              Video
-            </Text>
-          </TouchableOpacity>
-        </View>
+      ) : (
+        !onlyVideo && (
+          <View style={styles.modeContainer}>
+            <TouchableOpacity
+              style={styles.bottomBtn}
+              onPress={() => setMode('image')}>
+              <Icon
+                style={styles.icon}
+                name={'camera'}
+                noBackground
+                color={mode === 'image' ? 'crimson' : '#fff'}
+                type="Entypo"></Icon>
+              <Text
+                style={[
+                  styles.modeText,
+                  {color: mode === 'image' ? 'crimson' : '#fff'},
+                ]}>
+                Photo
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setMode('video')}
+              style={styles.bottomBtn}>
+              <Icon
+                style={styles.icon}
+                name={'video-camera'}
+                noBackground
+                color={mode === 'video' ? 'crimson' : '#fff'}
+                type="Entypo"
+              />
+              <Text
+                style={[
+                  styles.modeText,
+                  {color: mode === 'video' ? 'crimson' : '#fff'},
+                ]}>
+                Video
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )
       )}
-
     </>
   );
 }

@@ -1,38 +1,33 @@
-import React from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import React from 'react';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 
-import LinkButton from "./buttons/LinkButton";
-import UserProfilePicture from "./UserProfilePicture";
-import Tab from "./buttons/Tab";
+import LinkButton from './buttons/LinkButton';
+import UserProfilePicture from './UserProfilePicture';
+import Tab from './buttons/Tab';
 
-import routes from "../navigation/routes";
-import constants from "../config/constants";
-import colors from "../config/colors";
+import routes from '../navigation/routes';
+import constants from '../config/constants';
+import colors from '../config/colors';
 
+const {postTypes} = constants;
 
-const { postTypes } = constants;
-
-
-export default function WritePost({ navigation, style, groupPost, groupId }) {
+export default function WritePost({navigation, style, groupPost, groupId}) {
   return (
     <View style={[styles.container, style]}>
       <TouchableOpacity
-        onPress={() =>
-          {groupPost
-          ?
-            navigation.navigate(routes.ADD_POST, {
-            postType: postTypes.GROUP_POST,
-            groupPost:groupPost,
-            groupId:groupId,
-          })
-          :navigation.navigate(routes.ADD_POST, {
-            postType: postTypes.CREATE_POST,
-            groupPost,
-            groupId,
-          })
-        }
-        }
-      >
+        onPress={() => {
+          groupPost
+            ? navigation.navigate(routes.ADD_POST, {
+                postType: postTypes.GROUP_POST,
+                groupPost: groupPost,
+                groupId: groupId,
+              })
+            : navigation.navigate(routes.ADD_POST, {
+                postType: postTypes.CREATE_POST,
+                groupPost,
+                groupId,
+              });
+        }}>
         <View style={styles.writePostContainer}>
           <UserProfilePicture size={45} navigation={navigation} />
           <LinkButton
@@ -47,7 +42,7 @@ export default function WritePost({ navigation, style, groupPost, groupId }) {
         <Tab
           title="Hang Share"
           color={colors.white}
-          iconImage={require("../assets/icons/hangshare-icon.png")}
+          iconImage={require('../assets/icons/hangshare-icon.png')}
           iconSize={20}
           width="30%"
           titleStyle={styles.tabsTitle}
@@ -62,7 +57,7 @@ export default function WritePost({ navigation, style, groupPost, groupId }) {
         <Tab
           title="Share Up"
           color={colors.white}
-          iconImage={require("../assets/icons/share-2-icon.png")}
+          iconImage={require('../assets/icons/share-2-icon.png')}
           iconSize={20}
           width="30%"
           titleStyle={styles.tabsTitle}
@@ -78,7 +73,7 @@ export default function WritePost({ navigation, style, groupPost, groupId }) {
           title="Swap"
           color={colors.white}
           width="30%"
-          iconImage={require("../assets/icons/swap-icon.png")}
+          iconImage={require('../assets/icons/swap-icon.png')}
           iconSize={15}
           titleStyle={styles.tabsTitle}
           sizeRatio={0.95}
@@ -96,11 +91,11 @@ const styles = StyleSheet.create({
   writePostContainer: {
     padding: 10,
     paddingHorizontal: 15,
-    flexDirection: "row",
+    flexDirection: 'row',
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: colors.LightGray,
-    alignItems: "center",
+    alignItems: 'center',
     backgroundColor: colors.white,
     marginBottom: 1,
   },
@@ -109,9 +104,9 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   writePostTabsWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderBottomWidth: 1.5,
     borderColor: colors.LightGray,
     backgroundColor: colors.white,
@@ -122,6 +117,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.LightGray,
   },
   tabsTitle: {
-    fontWeight: "500",
+    fontWeight: '500',
   },
 });

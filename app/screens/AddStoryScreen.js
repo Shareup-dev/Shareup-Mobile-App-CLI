@@ -130,7 +130,7 @@ export default function AddStoryScreen({navigation}) {
         }
       })
       .catch(e => {
-        console.error('Error reading an image', error.message);
+        console.error('Error reading an image', e.message);
       });
 
     // if (result.didCancel === true) {

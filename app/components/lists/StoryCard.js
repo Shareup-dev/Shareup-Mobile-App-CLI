@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 
 import colors from '../../config/colors';
 import routes from '../../navigation/routes';
@@ -15,7 +15,7 @@ export default function StoryCard({style, navigation, data}) {
     <TouchableOpacity onPress={addStoryHandler} activeOpacity={0.8}>
       <View style={[styles.container, style]}>
         <BetterImage
-          source={{uri: stories_List[0]?.storiesMediaPath}}
+          source={{uri: stories_List[0]?.storiesImagePath}}
           style={{height: '100%', width: '100%', backgroundColor: '#34343460'}}
         />
         <Text style={styles.userName}>{firstName}</Text>

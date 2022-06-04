@@ -1,30 +1,30 @@
-import React, {  useMemo } from "react";
-import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
+import React, {useMemo} from 'react';
+import {View, StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
 
-import Screen from "../components/Screen";
-import colors from "../config/colors";
-import { HeaderWithBackArrow } from "../components/headers";
+import Screen from '../components/Screen';
+import colors from '../config/colors';
+import {HeaderWithBackArrow} from '../components/headers';
 
-import Separator from "../components/Separator";
-import TabNavigation from "../navigation/TabNavigation";
-import ListOfFeelings from "../components/lists/ListOfFeelings";
-import ListOfActivities from "../components/lists/ListOfactivities";
-import { useDispatch, useSelector } from "react-redux";
-import Icon from "../components/Icon";
-import { postFeelingsActions } from "../redux/postFeelings";
-import BetterImage from "../components/betterImage/BetterImage";
+import Separator from '../components/Separator';
+import TabNavigation from '../navigation/TabNavigation';
+import ListOfFeelings from '../components/lists/ListOfFeelings';
+import ListOfActivities from '../components/lists/ListOfactivities';
+import {useDispatch, useSelector} from 'react-redux';
+import Icon from '../components/Icon';
+import {postFeelingsActions} from '../redux/postFeelings';
+import BetterImage from '../components/betterImage/BetterImage';
 
-export default function FeelingAndActivity({ navigation }) {
-  const postFeel = useSelector((state) => state.postFeel);
+export default function FeelingAndActivity({navigation}) {
+  const postFeel = useSelector(state => state.postFeel);
   const dispatch = useDispatch();
 
   const tabMenus = useMemo(() => [
     {
-      name: "Feelings",
+      name: 'Feelings',
       component: <ListOfFeelings navigation={navigation} />,
     },
     {
-      name: "Activities",
+      name: 'Activities',
       component: <ListOfActivities navigation={navigation} />,
     },
   ]);
@@ -47,16 +47,14 @@ export default function FeelingAndActivity({ navigation }) {
           ) : (
             <Icon name={postFeel.icon} color={postFeel.color} size={50} />
           )}
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text
-              style={(styles.postFeelText, { fontWeight: "700", fontSize: 14 })}
-            >
+              style={(styles.postFeelText, {fontWeight: '700', fontSize: 14})}>
               {postFeel.feeling}
             </Text>
             <TouchableOpacity
               activeOpacity={0.6}
-              onPress={() => dispatch(postFeelingsActions.setDefault())}
-            >
+              onPress={() => dispatch(postFeelingsActions.setDefault())}>
               <Icon
                 name="close"
                 color={colors.dimGray}
@@ -90,13 +88,13 @@ const styles = StyleSheet.create({
   card: {
     marginHorizontal: 10,
     marginVertical: 5,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   usersInfo: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   img: {
     height: 40,
@@ -107,23 +105,23 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   title: {
-    fontWeight: "700",
+    fontWeight: '700',
     fontSize: 16,
   },
   searchbar: {
-    width: "100%",
+    width: '100%',
   },
 
   separator: {
     backgroundColor: colors.LightGray,
-    width: "100%",
+    width: '100%',
     height: 10,
     marginTop: 15,
   },
   selectedState: {
     height: 50,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

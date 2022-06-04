@@ -3,28 +3,26 @@ import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 
 import {FontAwesome5} from 'react-native-vector-icons';
 //import MaterialIcons from 'react-native-vector-icons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; 
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import colors from '../../config/colors';
 import Icon from '../Icon';
 
 export default function OptionBox({currentOption, onPress}) {
-
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       {currentOption.icon && (
         <Icon
           image={currentOption.icon}
-          type='FontAwesome5'
+          type="FontAwesome5"
           backgroundSizeRatio={1}
           size={15}
           color={colors.dimGray}
         />
       )}
 
-   
       <Text style={styles.text}>{currentOption.value}</Text>
       <Icon
-      type='MaterialIcons'
+        type="MaterialIcons"
         name="keyboard-arrow-down"
         size={15}
         color={colors.dimGray}
@@ -40,7 +38,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: colors.dimGray,
-    margin: 5,
     borderRadius: 5,
     padding: 2,
   },
