@@ -624,19 +624,25 @@ export default function AddPostScreen({navigation, route}) {
 
               <View style={[styles.headerTab, styles.row]}>
                 <Icon
-                  type="MaterialCommunityIcons"
+                  type="Feather"
                   name="plus"
-                  size={15}
+                  size={12}
                   color={colors.dimGray}
+                  backgroundSizeRatio={1}
+                  style={{marginLeft: 5}}
                 />
-                <Text style={styles.headerTabText}>Albums</Text>
+                <Texts style={styles.headerTabText}>Albums</Texts>
                 <Icon
-                  type="MaterialIcons"
-                  name="keyboard-arrow-down"
+                  type="Entypo"
+                  name="chevron-small-down"
                   size={15}
                   color={colors.dimGray}
+                  backgroundSizeRatio={1}
+                  style={{marginRight: 2}}
                 />
               </View>
+              {/* ))} */}
+              {/*** // Todo: Create swap category! */}
             </View>
           </View>
 
@@ -717,14 +723,24 @@ export default function AddPostScreen({navigation, route}) {
           onTouchEnd={handleCreatePostDrawerPosition}
         />
 
+        <TextInput
+          //value={isEdit?text:placeholder}
+          placeholder={
+            postData['EditPost'] ? postData.postDetail.content : placeholder
+          }
+          placeholderTextColor={
+            postData['EditPost'] ? colors.dark : colors.dimGray
+          }
+          style={styles.textInput}
+          // numberOfLines={10}
+          multiline={true}
+          onChangeText={handleOnChangeText}
+          ref={textInputRef}
+          onTouchEnd={handleCreatePostDrawerPosition}
+        />
+
         {postType === postTypes.SHARE_POST && (
-          <View
-            style={{
-              borderColor: '#cacaca60',
-              borderWidth: 1,
-              paddingTop: 10,
-              borderRadius: 10,
-            }}>
+          <View>
             <View
               style={{
                 flexDirection: 'row',
@@ -774,6 +790,7 @@ export default function AddPostScreen({navigation, route}) {
           isSwap={postType === postTypes.SWAP ? true : false}
           onRemoveImage={onRemoveImage}
         />
+
         {loading ? (
           <ActivityIndicator
             style={styles.topContainer}
@@ -936,5 +953,10 @@ const styles = StyleSheet.create({
   },
   activity: {
     flex: 1,
+  },
+  plusIcon: {
+    marginRight: 1,
+
+    marginTop: 10,
   },
 });

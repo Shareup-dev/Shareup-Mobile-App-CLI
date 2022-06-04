@@ -23,14 +23,15 @@ import onShareHandler from '../Share';
 import {postDataSliceAction} from '../../redux/postDataSlice';
 
 import {useDispatch} from 'react-redux';
-import {Switch} from 'react-native-gesture-handler';
+
 import SwapCard from './SwapCard';
 import {Texts, Title} from '../../Materials/Text';
 
 export default function SharedPostCard(props) {
   const {postData, navigation, user, ...rest} = props;
   const dispatch = useDispatch();
-  const [isUserLiked, setIsUserLiked] = useState(postData.liked);
+  const [isUserLiked, setIsUserLiked] = useState(postData.likedType);
+
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [numberOfReactions, setNumberOfReactions] = useState(0);
   const {
@@ -188,7 +189,7 @@ export default function SharedPostCard(props) {
   };
   const handleReactions = async () => {
     postService
-      .likePost(userData.id, postData.id)
+      .likePost(userData.id, postData.id, 'star')
       .then(res => {
         setIsUserLiked(!isUserLiked);
         setNumberOfReactions(res.data.numberOfReaction);
