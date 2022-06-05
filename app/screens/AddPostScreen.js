@@ -25,11 +25,9 @@ import IconButton from '../components/buttons/IconButton';
 import Text from '../components/Text';
 import Screen from '../components/Screen';
 import authContext from '../Contexts/authContext';
-import AuthContext from '../UserContext';
 import PostService from '../services/post.service';
 import swapService from '../services/swap.service';
 import routes from '../navigation/routes';
-import {useImagePicker} from '../hooks';
 import Header from '../components/headers/Header';
 import constants from '../config/constants';
 import defaultStyles from '../config/GlobalStyles';
@@ -57,14 +55,13 @@ import BetterImage from '../components/betterImage/BetterImage';
 import CustomImageSlider from '../components/ImageSlider/CustomImageSlider';
 import {postDataSliceAction} from '../redux/postDataSlice';
 import {Texts, Title} from '../Materials/Text';
+import {ProgressBar} from 'react-native-paper';
 
 export default function AddPostScreen({navigation, route}) {
   const {groupId, postType} = route.params;
-  const flatListRef = useRef();
-  const {loadingIndicator, setloadingIndicator} = useContext(AuthContext);
-  const postImages = useSelector(state => state.postImages);
   const {userData: user} = useContext(authContext)?.userState;
   const [loading, setLoading] = useState(false);
+
   const [tagedUserData, setTagedUserData] = useState([]);
   const [placeholder, setPlaceHolder] = useState('We Share, Do you?');
   const dispatch = useDispatch();
@@ -85,14 +82,13 @@ export default function AddPostScreen({navigation, route}) {
 
   const [error, setError] = useState('');
   const [text, setText] = useState('');
-  //const { file, pickImage, clearFile } = useImagePicker();
+
   const [imageUriArray, setImageUriArray] = useState([]);
   const [displayImage, setDisplayImage] = useState(false);
   const [isButtonActive, setIsButtonActive] = useState(false);
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [isPrivacyOptionsVisible, setIsPrivacyOptionsVisible] = useState(false);
   const [images, setImages] = useState([]);
-  const [progress, setProgress] = useState(0);
   const [postPrivacyOption, setPostPrivacyOption] = useState(privacyOptions[0]); // object to present the current privacy option
 
   const shareUpOptions = useMemo(() => {
@@ -330,7 +326,6 @@ export default function AddPostScreen({navigation, route}) {
       PostService.createPost(user.id, formData)
         .then(resp => {
           let existingPosts = store.getState().groupPosts;
-          // setloadingIndicator(false)
           store.dispatch(
             groupPostsActions.setPosts([resp.data, ...existingPosts]),
           );
@@ -487,7 +482,6 @@ export default function AddPostScreen({navigation, route}) {
             setLoading(false);
             clearFields();
           });
-        //setProgress(prog)
       }
     }
   };
@@ -607,6 +601,11 @@ export default function AddPostScreen({navigation, route}) {
   return (
     <Screen>
       {renderHeader()}
+      <ProgressBar
+        indeterminate={loading}
+        style={{height: 1.5}}
+        color={colors.iondigoDye}
+      />
       <View style={[styles.topContainer]}>
         <View style={styles.row}>
           <UserProfilePicture style={styles.userProfile} />
@@ -723,22 +722,6 @@ export default function AddPostScreen({navigation, route}) {
           onTouchEnd={handleCreatePostDrawerPosition}
         />
 
-        <TextInput
-          //value={isEdit?text:placeholder}
-          placeholder={
-            postData['EditPost'] ? postData.postDetail.content : placeholder
-          }
-          placeholderTextColor={
-            postData['EditPost'] ? colors.dark : colors.dimGray
-          }
-          style={styles.textInput}
-          // numberOfLines={10}
-          multiline={true}
-          onChangeText={handleOnChangeText}
-          ref={textInputRef}
-          onTouchEnd={handleCreatePostDrawerPosition}
-        />
-
         {postType === postTypes.SHARE_POST && (
           <View>
             <View
@@ -791,7 +774,7 @@ export default function AddPostScreen({navigation, route}) {
           onRemoveImage={onRemoveImage}
         />
 
-        {loading ? (
+        {/* {loading ? (
           <ActivityIndicator
             style={styles.topContainer}
             animating={true}
@@ -805,7 +788,7 @@ export default function AddPostScreen({navigation, route}) {
             size="large"
             color={colors.iondigoDye}
           />
-        )}
+        )} */}
       </View>
       {postType === postTypes.CREATE_POST && (
         <EnhancedOptionsDrawer

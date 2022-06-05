@@ -355,7 +355,7 @@ function StoryViewScreen({navigation, route}) {
             resizeMode={'contain'}
             style={styles.media}
             source={{
-              uri: data[activeIndex].storiesVideoPath,
+              uri: data[activeIndex].storiesMediaPath,
             }}
           />
         ) : (
@@ -363,7 +363,7 @@ function StoryViewScreen({navigation, route}) {
             style={styles.media}
             resizeMode={'contain'}
             onLoadEnd={_ => setLoaded(true)}
-            source={{uri: data[activeIndex].storiesImagePath}}
+            source={{uri: data[activeIndex].storiesMediaPath}}
           />
         )}
       </TouchableOpacity>

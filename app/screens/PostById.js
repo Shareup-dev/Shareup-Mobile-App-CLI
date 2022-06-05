@@ -19,8 +19,6 @@ export default function PostById({navigation, route}) {
     loading: false,
   });
 
-  
-
   const postTypeService = () => {
     switch (params.postType) {
       case 'swap':
@@ -115,7 +113,6 @@ export default function PostById({navigation, route}) {
       }
     }
   };
-
   const {width, height} = Dimensions.get('window');
 
   return (

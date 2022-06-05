@@ -15,7 +15,7 @@ export default function StoryCard({style, navigation, data}) {
     <TouchableOpacity onPress={addStoryHandler} activeOpacity={0.8}>
       <View style={[styles.container, style]}>
         <BetterImage
-          source={{uri: stories_List[0]?.storiesImagePath}}
+          source={{uri: stories_List[0]?.storiesMediaPath}}
           style={{height: '100%', width: '100%', backgroundColor: '#34343460'}}
         />
         <Text style={styles.userName}>{firstName}</Text>

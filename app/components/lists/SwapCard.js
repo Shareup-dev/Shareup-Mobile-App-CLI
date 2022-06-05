@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react'
+import React, {useEffect, useState, useContext} from 'react';
 import {
   View,
   StyleSheet,
@@ -6,9 +6,9 @@ import {
   Text,
   Alert,
   Dimensions,
-  TouchableWithoutFeedback
-} from 'react-native'
-import {useSelector} from 'react-redux'
+  TouchableWithoutFeedback,
+} from 'react-native';
+import {useSelector} from 'react-redux';
 import ImageView from 'react-native-image-viewing';
 import colors from '../../config/colors';
 import PostOptionDrawer from '../drawers/PostOptionsDrawer';
@@ -21,211 +21,213 @@ import CustomImageSlider from '../ImageSlider/CustomImageSlider';
 import constants from '../../config/constants';
 import routes from '../../navigation/routes';
 import onShareHandler from '../Share';
-import { useDispatch } from 'react-redux';
-import { feedPostsAction } from '../../redux/feedPostsSlice';
-import { postDataSliceAction } from '../../redux/postDataSlice';
+import {useDispatch} from 'react-redux';
+import {feedPostsAction} from '../../redux/feedPostsSlice';
+import {postDataSliceAction} from '../../redux/postDataSlice';
 import postService from '../../services/post.service';
-import hangShareService from '../../services/hangShare.service';
 
+const SwapCard = ({
+  item,
+  navigation,
+  userId,
+  style,
+  reloadPosts,
+  onPress,
+  noActionBar,
+  noOptions,
+}) => {
+  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
 
-const imageSize = 160;
-const SwapCard = React.memo(
-  ({item, navigation, userId, style,reloadPosts,onPress,noActionBar,
-    noOptions,}) => {
-    const actionsTabSizeRatio = 0.5;
-    const [isOptionsVisible, setIsOptionsVisible] = useState(false);
-    const [numberOfComments, setNumberOfComments] = useState(
-      item.numberOfComments,
-    );
-    const [sliderWidth, setSliderWidth] = useState();
-    const [currentImage, setCurrentImage] = useState();
-    const [images, setImages] = useState([]);
-    const [imageViewerVisible, setImageViewerVisible] = useState(false);
-    const swapedPosts = useSelector(state => state.swapedImages);
-    const dispatch = useDispatch()
-    const {userState} = useContext(AuthContext);
-    const [isUserLiked, setIsUserLiked] = useState(item.likedType === 'false'?
-    false:true);
-    const getSwapedImage = swapId => {
-      let foundSwap = swapedPosts.filter(swap => swap.swapPostId === swapId)[0];
-      if (foundSwap) {
-        return {imagePath: foundSwap.swapImage, found: true};
-      } else {
-        let image = {
-          imagePath: '../assets/icons/swap-square-dashed.png',
-          found: false,
-        };
-        return image;
-      }
-    };
+  const [sliderWidth, setSliderWidth] = useState();
+  const [currentImage, setCurrentImage] = useState();
+  const [images, setImages] = useState([]);
+  const [imageViewerVisible, setImageViewerVisible] = useState(false);
+  const swapedPosts = useSelector(state => state.swapedImages);
+  const dispatch = useDispatch();
+  const {userState} = useContext(AuthContext);
+  const [isUserLiked, setIsUserLiked] = useState(
+    item.likedType === 'false' ? false : true,
+  );
+  const getSwapedImage = swapId => {
+    let foundSwap = swapedPosts.filter(swap => swap.swapPostId === swapId)[0];
+    if (foundSwap) {
+      return {imagePath: foundSwap.swapImage, found: true};
+    } else {
+      let image = {
+        imagePath: '../assets/icons/swap-square-dashed.png',
+        found: false,
+      };
+      return image;
+    }
+  };
 
-    useEffect(() => {
-      loadImages();
-      checkIfLiked();
-    }, []);
+  useEffect(() => {
+    loadImages();
+    checkIfLiked();
+  }, []);
 
-    const {userData: user} = useContext(AuthContext)?.userState;
-    const loadImages = () => {
-      if (item.media.length !== 0) {
-        setImages(item.media.map(image => image.mediaPath));
-      }
-    };
+  const {userData: user} = useContext(AuthContext)?.userState;
+  const loadImages = () => {
+    if (item.media.length !== 0) {
+      setImages(item.media.map(image => image.mediaPath));
+    }
+  };
 
-   
-
-    const options = [
-      {
-        title: 'Save post',
-        icon: {
-          image: require('../../assets/post-options-icons/save-post-icon.png'),
-        },
-        onPress: () => {
-          alert('Save post');
-        },
+  const options = [
+    {
+      title: 'Save post',
+      icon: {
+        image: require('../../assets/post-options-icons/save-post-icon.png'),
       },
-      {
-        title: 'Hide my profile',
-        icon: {
-          image: require('../../assets/post-options-icons/hide-profile-icon.png'),
-        },
-        onPress: () => {
-          alert('Save post');
-        },
+      onPress: () => {
+        alert('Save post');
       },
-      {
-        title: userState?.userData?.id === user?.id ? 'Edit' : '',
-        icon: {image: require('../../assets/post-options-icons/swap-icon.png')},
-        onPress: () => {
-          
-          dispatch(postDataSliceAction.setEditPost(true))
-          dispatch(postDataSliceAction.setPostData(item))
-          dispatch(postDataSliceAction.setImages(item.media?.map(image => image.mediaPath)))
-          navigation.navigate(routes.ADD_POST, {
-             postType: item.allPostsType,
-          });
-          setIsOptionsVisible(false);
-        },
+    },
+    {
+      title: 'Hide my profile',
+      icon: {
+        image: require('../../assets/post-options-icons/hide-profile-icon.png'),
       },
-      {
-        title: 'Share friends',
-        icon: {
-          image: require('../../assets/post-options-icons/share-friends-icon.png'),
-        },
-        onPress: () => {
-         
-         
-          dispatch(postDataSliceAction.setPostData(item))
-          
-          navigation.navigate(routes.ADD_POST, {
-            postType: constants.postTypes.SHARE_POST,
-            // postData,
-          });
-          setIsOptionsVisible(false);
-        },
+      onPress: () => {
+        alert('Save post');
       },
-      {
-        title: 'Share Via',
-        icon: {
-          image: require('../../assets/post-options-icons/share-friends-icon.png'),
-        },
-        onPress: () => {
-          onShareHandler(item);
-        },
-      },
-      // {
-      //   title: 'Unfollow',
-      //   icon: {
-      //     image: require('../../assets/post-options-icons/unfollow-icon.png'),
-      //   },
-      //   onPress: () => {
-      //     alert('Unfollow');
-      //   },
-      // },
-      // {
-      //   title: 'Report',
-      //   icon: {
-      //     image: require('../../assets/post-options-icons/report-icon.png'),
-      //   },
-      //   onPress: () => {
-      //     alert('Report');
-      //   },
-      // },
-      {
-        title:
-          userState?.userData?.id !== user?.id ? (
-            <Text style={{color: colors.dark}}>Report</Text>
-          ) : (
-            <Text style={{color: colors.red}}>Delete</Text>
+    },
+    {
+      title: userState?.userData?.id === user?.id ? 'Edit' : '',
+      icon: {image: require('../../assets/post-options-icons/swap-icon.png')},
+      onPress: () => {
+        dispatch(postDataSliceAction.setEditPost(true));
+        dispatch(postDataSliceAction.setPostData(item));
+        dispatch(
+          postDataSliceAction.setImages(
+            item.media?.map(image => image.mediaPath),
           ),
-        icon: {
-          image:
-            userState?.userData?.id !== user?.id
-              ? require('../../assets/post-options-icons/report-icon.png')
-              : require('../../assets/post-options-icons/delete-red-icon.png'),
-        },
-        onPress: () => {
-          userState?.userData?.id !== user?.id
-            ? alert('Report')
-            : showDeleteAlert();
-        },
+        );
+        navigation.navigate(routes.ADD_POST, {
+          postType: item.allPostsType,
+        });
+        setIsOptionsVisible(false);
       },
-    ];
-    const showDeleteAlert = () =>
-      Alert.alert('Delete', 'Are you sure to delete this post', [
-        {
-          text: 'Yes',
-          onPress: deletePost,
-          style: 'cancel',
-        },
-        {
-          text: 'No',
-          style: 'cancel',
-        },
-      ]);
+    },
+    {
+      title: 'Share friends',
+      icon: {
+        image: require('../../assets/post-options-icons/share-friends-icon.png'),
+      },
+      onPress: () => {
+        dispatch(postDataSliceAction.setPostData(item));
 
-    const deletePost = async () => {
-      swapService
-        .deleteSwap(item.id)
-        .then(res => {
-          if (res.status === 200){
-            dispatch(feedPostsAction.removeFeedPost(postData.id));
-            navigation.navigate(routes.FEED);
-          }
-        })
-        .catch(e => alert(e));
+        navigation.navigate(routes.ADD_POST, {
+          postType: constants.postTypes.SHARE_POST,
+          // postData,
+        });
+        setIsOptionsVisible(false);
+      },
+    },
+    {
+      title: 'Share Via',
+      icon: {
+        image: require('../../assets/post-options-icons/share-friends-icon.png'),
+      },
+      onPress: () => {
+        onShareHandler(item);
+      },
+    },
+    // {
+    //   title: 'Unfollow',
+    //   icon: {
+    //     image: require('../../assets/post-options-icons/unfollow-icon.png'),
+    //   },
+    //   onPress: () => {
+    //     alert('Unfollow');
+    //   },
+    // },
+    // {
+    //   title: 'Report',
+    //   icon: {
+    //     image: require('../../assets/post-options-icons/report-icon.png'),
+    //   },
+    //   onPress: () => {
+    //     alert('Report');
+    //   },
+    // },
+    {
+      title:
+        userState?.userData?.id !== user?.id ? (
+          <Text style={{color: colors.dark}}>Report</Text>
+        ) : (
+          <Text style={{color: colors.red}}>Delete</Text>
+        ),
+      icon: {
+        image:
+          userState?.userData?.id !== user?.id
+            ? require('../../assets/post-options-icons/report-icon.png')
+            : require('../../assets/post-options-icons/delete-red-icon.png'),
+      },
+      onPress: () => {
+        userState?.userData?.id !== user?.id
+          ? alert('Report')
+          : showDeleteAlert();
+      },
+    },
+  ];
+  const showDeleteAlert = () =>
+    Alert.alert('Delete', 'Are you sure to delete this post', [
+      {
+        text: 'Yes',
+        onPress: deletePost,
+        style: 'cancel',
+      },
+      {
+        text: 'No',
+        style: 'cancel',
+      },
+    ]);
 
-      reloadPosts();
-    };
-    const onLayout = e => {
-      setSliderWidth(e.nativeEvent.layout.width);
-    };
-    const acceptHang = () => {
-      navigation.navigate(routes.SHIPPING_ADDRESS, item);
-    };
-    const acceptSwap = () => {
-      navigation.navigate(routes.CHECKOUT, {postType: item.allPostsType});
-    };
+  const deletePost = async () => {
+    swapService
+      .deleteSwap(item.id)
+      .then(res => {
+        if (res.status === 200) {
+          // dispatch(feedPostsAction.removeFeedPost(postData.id));
+          navigation.navigate(routes.FEED);
+        }
+      })
+      .catch(e => alert(e));
 
-    const {width} = Dimensions.get('window');
+    reloadPosts();
+  };
+  const onLayout = e => {
+    setSliderWidth(e.nativeEvent.layout.width);
+  };
+  const acceptHang = () => {
+    navigation.navigate(routes.SHIPPING_ADDRESS, item);
+  };
+  const acceptSwap = () => {
+    navigation.navigate(routes.CHECKOUT, {postType: item.allPostsType});
+  };
 
-    const checkIfLiked = () => {
-      if (postData.likedType === 'false'){
-        return setIsUserLiked(false);
-       }else{
-        return setIsUserLiked(true);
-       }
-    };
-    const handleReactions = async () => {
-        postService.likePost(user.id, item.id,"star")
-        .then(res => {
-          setIsUserLiked(!isUserLiked);
-           //setNumberOfReactions(res.data.numberOfReaction);
-        }) //need to get likePostIds
-        .catch(e => console.error(e));
-    };
+  const {width} = Dimensions.get('window');
 
-    return (
-      <TouchableWithoutFeedback onPress={onPress}>
+  const checkIfLiked = () => {
+    // if (postData.likedType === 'false') {
+    //   return setIsUserLiked(false);
+    // } else {
+    //   return setIsUserLiked(true);
+    // }
+  };
+  const handleReactions = async () => {
+    postService
+      .likePost(user.id, item.id, 'star')
+      .then(res => {
+        setIsUserLiked(!isUserLiked);
+        //setNumberOfReactions(res.data.numberOfReaction);
+      }) //need to get likePostIds
+      .catch(e => console.error(e));
+  };
+
+  return (
+    <TouchableWithoutFeedback onPress={onPress}>
       <View style={[styles.card, defaultStyles.cardBorder, style]}>
         {currentImage && (
           <ImageView
@@ -263,24 +265,16 @@ const SwapCard = React.memo(
         <PostActions
           comments={item.comments}
           swapId={item.id}
-          //firstName={item.userdata.firstName}
-          //userEmail={item.userdata.email}
           isUserLiked={isUserLiked}
           navigation={navigation}
           numberOfComments={`${item.numberOfComments}`}
           numberOfReactions={`${item.numberOfReactions}`}
           postId={item.id}
           postText={item.content}
-          // profileImage={item.userdata.profilePicture}
           userId={userId}
           setIsOptionsVisible={setIsOptionsVisible}
           postType={item.allPostsType}
           postData={item}
-          //profileImage={profileImage}
-
-          // isVisible={isOptionsVisible}
-          // setIsVisible={setIsOptionsVisible}
-
           onInteraction={handleReactions}
           noActionBar={noActionBar}
           noOptions={noOptions}
@@ -303,23 +297,24 @@ const SwapCard = React.memo(
           />
         </View>
       </View>
-      </TouchableWithoutFeedback>
-    );
-  },
-);
+    </TouchableWithoutFeedback>
+  );
+};
 
 const borderRadius = 10;
-export default SwapCard;
+
+export default React.memo(SwapCard);
+
 const styles = StyleSheet.create({
   swapImage: {
     margin: 10,
-    borderRadius: 10,
+    borderRadius: borderRadius,
     marginTop: 15,
   },
   swapButton: {
     backgroundColor: colors.iondigoDye,
     alignSelf: 'center',
-    borderRadius: 10,
+    borderRadius: borderRadius,
     marginVertical: 10,
   },
   card: {

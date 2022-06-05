@@ -209,11 +209,17 @@ export default function AddStoryScreen({navigation}) {
       ) : (
         <TouchableOpacity activeOpacity={1} onPress={_ => Keyboard.dismiss()}>
           <View>
+            <ProgressBar
+              indeterminate={isUploading}
+              color={colors.iondigoDye}
+              style={{height: 1.5}}
+            />
             <CameraHeader
               title="Story"
               onClosePress={() => setScreen('capture')}
             />
           </View>
+
           <View style={styles.forwardArrow}>
             <View style={styles.caption}>
               <TextInput
@@ -257,11 +263,6 @@ export default function AddStoryScreen({navigation}) {
           )}
         </TouchableOpacity>
       )}
-      <ProgressBar
-        indeterminate={isUploading}
-        visible={isUploading}
-        color={colors.iondigoDye}
-      />
     </Screen>
   );
 }

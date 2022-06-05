@@ -68,8 +68,11 @@ export default function CommentCard(props) {
     } else {
       postService
         .likeUnlikeComment(userData.id, comment.id, params)
-        .then(({status}) => status === 200 && setIsLiked(prev => !prev))
-        .catch(e => console.error(e.message));
+        .then(({status}) => status === 200)
+        .catch(e => {
+          console.error(e.message);
+          setIsLiked(prev => !prev);
+        });
     }
   };
 

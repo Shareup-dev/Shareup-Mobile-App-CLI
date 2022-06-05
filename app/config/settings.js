@@ -5,8 +5,8 @@
 
 const settings = {
   dev: {
-   // apiUrl: 'http://192.168.100.239:8080', //Logeeshan
-      apiUrl: 'http://192.168.100.238:8080', //This Mac
+    apiUrl: 'http://192.168.100.239:8080', //Logeeshan
+    // apiUrl: 'http://192.168.100.238:8080', //This ac
     //apiUrl: 'http://192.168.100.244:8080', //Basma
     //apiUrl: 'http://192.168.100.88:8080', //Rouf
   },
@@ -16,10 +16,13 @@ const settings = {
   prod: {
     apiUrl: 'http://44.195.204.128',
   },
+  secureProd: {
+    apiUrl: 'https://api.shareup.qa',
+  },
 };
 
 const getCurrentSettings = () => {
-  return settings.dev;
+  return settings.secureProd;
 };
 
 export default getCurrentSettings();
