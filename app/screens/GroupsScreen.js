@@ -323,8 +323,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   searchbar: {
-    width: '85%',
-    marginLeft: 5,
+    width: '82%',
+    margin: 5,
   },
   searchText: {
     width: '75%',
@@ -337,10 +337,10 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   tab: {
-    width: '31%',
+   // width: '31%',
     height: 30,
-    marginHorizontal: 2.5,
-    marginTop: 5,
+    alignContent:'space-between',
+    margin: 10,
   },
   tabTitle: {
     fontSize: 12,

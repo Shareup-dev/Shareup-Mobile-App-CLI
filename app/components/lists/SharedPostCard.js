@@ -132,7 +132,7 @@ export default function SharedPostCard(props) {
     Alert.alert('Delete', 'Are you sure to delete this post', [
       {
         text: 'Yes',
-        onPress: () => {},
+        onPress: () => {deletePost},
         style: 'cancel',
       },
       {
@@ -140,18 +140,18 @@ export default function SharedPostCard(props) {
         style: 'cancel',
       },
     ]);
+    const deletePost = async () => {
+      postService
+        .deletePost(item.id)
+        .then(res => {
+          if (res.status === 200){
+            dispatch(feedPostsAction.removeFeedPost(postData.id));
+            navigation.navigate(routes.FEED);
+          }
+        })
+        .catch(e => alert(e));
+      }
 
-  const deletePost = async () => {
-    swapService
-      .deleteSwap(item.id)
-      .then(res => {
-        if (res.status === 200) {
-          dispatch(feedPostsAction.removeFeedPost(postData.id));
-          navigation.navigate(routes.FEED);
-        }
-      })
-      .catch(e => alert(e));
-  };
   const HeaderComponent = () => {
     return (
       <View style={{paddingTop: 10, paddingHorizontal: 15}}>

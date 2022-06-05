@@ -22,6 +22,12 @@ class PostService {
   sharePost = (uid, pid, data) => AuthAxios.post(`share/${uid}/${pid}`, data);
   getSharedPostById = id => AuthAxios.get(`share/${id}`);
 
+  /*********************** COMMON FOR ALL POST ************************/
+
+  likePost = (uid, pid, emoji) =>
+    AuthAxios.put(`${uid}/like-unlike/${pid}`, {emoji: emoji});
+  deletePost = postId => AuthAxios.delete(`allpost/${postId}`);
+
   /******************** COMMENT *******************/
   addComment = (userid, postid, comment) =>
     AuthAxios.post(`comment/${userid}/${postid}`, comment);
