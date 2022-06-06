@@ -23,7 +23,7 @@ import {useDispatch} from 'react-redux';
 import {feedPostsAction} from '../../redux/feedPostsSlice';
 import {postDataSliceAction} from '../../redux/postDataSlice';
 
- function Card({
+function Card({
   user,
   postData,
   onPress,
@@ -38,16 +38,14 @@ import {postDataSliceAction} from '../../redux/postDataSlice';
     postData.numberOfReaction,
   );
 
-  const [isUserLiked, setIsUserLiked] = useState(postData.likedType === 'false'?
-    false:true);
-  const [comment, setComments] = useState(postData.comments);
+  const [isUserLiked, setIsUserLiked] = useState(
+    postData.likedType === 'false' ? false : true,
+  );
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [images, setImages] = useState([]);
-  const [currentImage, setCurrentImage] = useState();
-  // const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [sliderWidth, setSliderWidth] = useState();
-  const dispatch = useDispatch();
 
+  const dispatch = useDispatch();
   const options = [
     {
       title: 'Save post',
@@ -191,19 +189,16 @@ import {postDataSliceAction} from '../../redux/postDataSlice';
     }
   };
   const checkIfLiked = () => {
-     if (postData.likedType === 'false'){
+    if (postData.likedType === 'false') {
       return setIsUserLiked(false);
-     }else{
+    } else {
       return setIsUserLiked(true);
-     }
-   
+    }
   };
 
   const handleReactions = async () => {
-
-    PostService.likePost(user.id, postData.id,"star")
+    PostService.likePost(user.id, postData.id, 'star')
       .then(res => {
-        console.log(res.data);
         setIsUserLiked(!isUserLiked);
         setNumberOfReactions(res.data.numberOfReaction);
       }) //need to get likePostIds
@@ -250,8 +245,6 @@ import {postDataSliceAction} from '../../redux/postDataSlice';
       <View
         style={[styles.card, defaultStyles.cardBorder, style]}
         onLayout={onLayout}>
-
-
         {/** Post Image */}
         {images?.length !== 0 && (
           <CustomImageSlider
@@ -261,7 +254,6 @@ import {postDataSliceAction} from '../../redux/postDataSlice';
             height={250}
           />
         )}
-
 
         <PostActions
           postData={postData}

@@ -19,7 +19,6 @@ export default function ManageGroups({navigation}) {
 
   const deleteGroup = gid => {
     Alert.alert('Delete group?', 'Are you sure to this group?', [
-      {text: 'Cancel', style: 'cancel', onPress: () => {}},
       {
         text: 'Delete',
         style: 'destructive',
@@ -29,6 +28,7 @@ export default function ManageGroups({navigation}) {
             .then(_ => setGroups(prev => prev.filter(item => item.id !== gid)))
             .catch(e => console.error(e.message)),
       },
+      {text: 'Cancel', style: 'cancel', onPress: () => {}},
     ]);
   };
   const [groups, setGroups] = useState([]);
@@ -46,7 +46,7 @@ export default function ManageGroups({navigation}) {
     return (
       <View
         style={{
-          marginHorizontal:15,
+          marginHorizontal: 15,
           paddingHorizontal: 10,
           paddingVertical: 10,
           backgroundColor: '#fff',
@@ -129,7 +129,11 @@ export default function ManageGroups({navigation}) {
           <React.Fragment>
             <FlatList
               ListHeaderComponent={
-                <Text style={[{marginVertical: 5,textAlign: 'center'}, styles.title]}>
+                <Text
+                  style={[
+                    {marginVertical: 5, textAlign: 'center'},
+                    styles.title,
+                  ]}>
                   Groups you manage
                 </Text>
               }

@@ -11,7 +11,7 @@ import {
   Alert,
   Keyboard,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
 } from 'react-native';
 
 import colors from '../config/colors';
@@ -26,9 +26,9 @@ import Video from 'react-native-video';
 import storyService from '../services/story.service';
 import {ProgressBar} from 'react-native-paper';
 import routes from '../navigation/routes';
-import { postDataSliceAction } from '../redux/postDataSlice';
+import {postDataSliceAction} from '../redux/postDataSlice';
 
-export default function ShareupCameraScreen({navigation,route}) {
+export default function ShareupCameraScreen({navigation, route}) {
   let cameraRef;
   let playerRef = useRef();
   const postType = route.params;
@@ -45,7 +45,7 @@ export default function ShareupCameraScreen({navigation,route}) {
   const scale = useRef(new Animated.Value(0)).current;
 
   const [duration, setDuration] = useState(10000);
-  const [caption, setCaption] = useState("");
+  const [caption, setCaption] = useState('');
 
   // const options = {
   //   onUploadProgress: e => {
@@ -83,24 +83,26 @@ export default function ShareupCameraScreen({navigation,route}) {
 
   async function onCapture() {
     if (mode === 'photo') {
-      let photo = await cameraRef.takePictureAsync({
-        skipProcessing: true,
-        quality: 0.5,
-      }).then(res => { 
-            const uris = [res].map(item => {
-              return item.uri;
-            });
-            
-            dispatch(postDataSliceAction.setImages(uris))
-           
-            
-            navigation.navigate(routes.ADD_POST,{
-               postType:postType
-            })
+      let photo = await cameraRef
+        .takePictureAsync({
+          skipProcessing: true,
+          quality: 0.5,
         })
-        .catch(error => { console.error(error); })
-     
-    } 
+        .then(res => {
+          const uris = [res].map(item => {
+            return item.uri;
+          });
+
+          dispatch(postDataSliceAction.setImages(uris));
+
+          navigation.navigate(routes.ADD_POST, {
+            postType: postType,
+          });
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
     // else if (mode === 'video') {
     //   if (capturing) {
     //     return StopRecording();
@@ -117,8 +119,8 @@ export default function ShareupCameraScreen({navigation,route}) {
     //     mute: false,
     //     codec: Platform.OS == 'ios' ? RNCamera.Constants.VideoCodec.H264 : undefined,
     // })
-    //     .then(data => { console.log(data); })
-    //     .catch(error => { console.log(error); })
+    //     .then(data => {  })
+    //     .catch(error => { console.error(error); })
 
     //   //setStory(video);
     // }
@@ -130,11 +132,10 @@ export default function ShareupCameraScreen({navigation,route}) {
       //quality: 0.5,
       mediaType: mode,
       durationLimit: 1,
-     // maxHeight: 500,
+      // maxHeight: 500,
       //maxWidth: 320,
       videoQuality: 'medium',
-      selectionLimit:5
-    
+      selectionLimit: 5,
     })
       .then(res => {
         if (res.didCancel) return;
@@ -144,15 +145,14 @@ export default function ShareupCameraScreen({navigation,route}) {
           });
         } else {
           const uris = res.assets.map(item => {
-                  return item.uri;
-                });
-            dispatch(postDataSliceAction.setImages(uris))
-            navigation.navigate(routes.ADD_POST,{
-               postType:postType
-            });
-        //   setStory(res.assets[0]);
-        //   setScreen('view');
-        
+            return item.uri;
+          });
+          dispatch(postDataSliceAction.setImages(uris));
+          navigation.navigate(routes.ADD_POST, {
+            postType: postType,
+          });
+          //   setStory(res.assets[0]);
+          //   setScreen('view');
         }
       })
       .catch(e => {
@@ -192,46 +192,44 @@ export default function ShareupCameraScreen({navigation,route}) {
         setIsUploading(false);
         navigation.goBack();
       });
-
   };
-
 
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#0000" barStyle="light-content" />
-        <RNCamera
-          style={[styles.camera]}
-          ratio={'16:9'}
-          captureAudio={true}
-          ref={ref => {
-            cameraRef = ref;
-          }}
-          type={cameraType}>
-          <CameraBottomActions
+      <RNCamera
+        style={[styles.camera]}
+        ratio={'16:9'}
+        captureAudio={true}
+        ref={ref => {
+          cameraRef = ref;
+        }}
+        type={cameraType}>
+        <CameraBottomActions
           title={'Post'}
-            onPickFile={imagePickHandler}
-            onCapture={onCapture}
-            onRevertCamera={handelRevertCamera}
-            mode={mode}
-            capturing={capturing}
-            setMode={setMode}
-            navigation={navigation}
-          />
-          <Animated.View
-            style={{
-              backgroundColor: 'crimson',
-              position: 'absolute',
-              bottom: 0,
-              transform: [
-                {
-                  scaleX: scale,
-                },
-              ],
-              width: 2.1,
-              height: 6,
-            }}
-          />
-        </RNCamera>
+          onPickFile={imagePickHandler}
+          onCapture={onCapture}
+          onRevertCamera={handelRevertCamera}
+          mode={mode}
+          capturing={capturing}
+          setMode={setMode}
+          navigation={navigation}
+        />
+        <Animated.View
+          style={{
+            backgroundColor: 'crimson',
+            position: 'absolute',
+            bottom: 0,
+            transform: [
+              {
+                scaleX: scale,
+              },
+            ],
+            width: 2.1,
+            height: 6,
+          }}
+        />
+      </RNCamera>
       {/* <ProgressBar indeterminate={isUploading} visible={isUploading} color={colors.iondigoDye}  /> */}
     </View>
   );
@@ -241,10 +239,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     backgroundColor: colors.white,
     borderRadius: 30,
-    justifyContent:'center',
+    justifyContent: 'center',
     fontSize: 18,
     maxHeight: 100,
-    height:'100%',
+    height: '100%',
     width: '85%',
   },
   backgroundVideo: {
@@ -263,11 +261,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   forwardArrow: {
-    marginBottom:'8%',    
+    marginBottom: '8%',
     position: 'absolute',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems:'center',
+    alignItems: 'center',
     width: '100%',
     bottom: 20,
     paddingRight: 15,

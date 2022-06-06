@@ -30,7 +30,7 @@ import AuthContext from '../Contexts/authContext';
 import UserProfilePicture from '../components/UserProfilePicture';
 import moment from 'moment';
 import {Texts, Title} from '../Materials/Text';
-import {data as Feelings} from '../components/Data/activitiesAndFeelings';
+import {feelings} from '../components/Data/activitiesAndFeelings';
 import BetterImage from '../components/betterImage/BetterImage';
 import Screen from '../components/Screen';
 
@@ -431,49 +431,55 @@ function StoryViewScreen({navigation, route}) {
             )}
           </View>
           {!checkLoginUser() && (
-            <View style={styles.row}>
-              <View style={styles.captionInput}>
-                <View style={styles.row}>
-                  <TextInput
-                    onFocus={() => {
-                      setPaused(true);
-                      pauseProgress();
-                      setReplying(true);
-                    }}
-                    onBlur={() => {
-                      setPaused(true);
-                      startProgress();
-                      setReplying(true);
-                    }}
-                    placeholder="Replay"
-                    style={{width: '80%'}}
-                    multiline
-                  />
-                  <Icon
-                    noBackground
-                    name={'send'}
-                    type="FontAwesome"
-                    color={colors.iondigoDye}
-                  />
-                </View>
+            <ScrollView
+              style={styles.forwardArrow}
+              horizontal
+              showsHorizontalScrollIndicator={false}>
+              <View
+                style={[
+                  styles.row,
+                  {
+                    backgroundColor: '#fff',
+                    borderRadius: 40,
+                    marginLeft: 10,
+                    paddingHorizontal: 15,
+                  },
+                ]}>
+                <TextInput
+                  onFocus={() => {
+                    setPaused(true);
+                    pauseProgress();
+                    setReplying(true);
+                  }}
+                  onBlur={() => {
+                    setPaused(true);
+                    startProgress();
+                    setReplying(true);
+                  }}
+                  placeholder="Replay"
+                  multiline
+                  style={{
+                    width: 200,
+                  }}
+                />
+                <Icon
+                  noBackground
+                  name={'send'}
+                  type="FontAwesome"
+                  color={colors.iondigoDye}
+                />
               </View>
-              <ScrollView
-                style={[styles.forwardArrow],{}}
-                horizontal
-                showsHorizontalScrollIndicator={false}>
 
-                {Feelings.map(
-                  (feeling, index) =>
-                  feeling.type === 'Feeling' && (
-                    <BetterImage
+              {feelings.map((feeling, index) => (
+                <View>
+                  <BetterImage
                     noBackground
                     source={feeling.img}
                     style={styles.imgSize}
-                    />
-                    ),
-                    )}
-              </ScrollView>
-            </View>
+                  />
+                </View>
+              ))}
+            </ScrollView>
           )}
         </View>
       </View>

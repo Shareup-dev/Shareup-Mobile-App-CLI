@@ -8,6 +8,7 @@ import Tab from './buttons/Tab';
 import routes from '../navigation/routes';
 import constants from '../config/constants';
 import colors from '../config/colors';
+import {Texts, Title} from '../Materials/Text';
 
 const {postTypes} = constants;
 
@@ -30,11 +31,14 @@ export default function WritePost({navigation, style, groupPost, groupId}) {
         }}>
         <View style={styles.writePostContainer}>
           <UserProfilePicture size={45} navigation={navigation} />
-          <LinkButton
+          {/* <LinkButton
             title="We share, Do you? "
             fontSize={15}
             style={styles.shareButton}
-          />
+          /> */}
+          <Texts size={12.5} style={{marginLeft: 8}} opacity={0.8}>
+            We share, Do you?
+          </Texts>
         </View>
       </TouchableOpacity>
 

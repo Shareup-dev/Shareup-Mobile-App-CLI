@@ -9,7 +9,7 @@ import {
 import {useDispatch} from 'react-redux';
 import {postFeelingsActions} from '../../redux/postFeelings';
 import BetterImage from '../betterImage/BetterImage';
-import {data as Feelings} from '../Data/activitiesAndFeelings';
+import {feelings} from '../Data/activitiesAndFeelings';
 
 export default function ListOfFeelings(props) {
   const dispatch = useDispatch();
@@ -33,12 +33,9 @@ export default function ListOfFeelings(props) {
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {Feelings.map(
-          (feeling, index) =>
-            feeling.type === 'Feeling' && (
-              <FeelingCard key={index} name={feeling.name} img={feeling.img} />
-            ),
-        )}
+        {feelings.map((feeling, index) => (
+          <FeelingCard key={index} name={feeling.name} img={feeling.img} />
+        ))}
       </ScrollView>
     </View>
   );

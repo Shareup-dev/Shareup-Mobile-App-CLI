@@ -1,22 +1,13 @@
-import React, {
-  useContext,
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
-  Component,
-  useCallback,
-} from 'react';
+import React, {useContext, useState, useRef, useEffect, useMemo} from 'react';
 import {
   StyleSheet,
   View,
-  Image,
   TextInput,
   TouchableOpacity,
   Platform,
-  ActivityIndicator,
   Dimensions,
   FlatList,
+  Keyboard,
 } from 'react-native';
 import Icon from '../components/Icon';
 import {groupPostsActions} from '../redux/groupPosts';
@@ -30,7 +21,6 @@ import swapService from '../services/swap.service';
 import routes from '../navigation/routes';
 import Header from '../components/headers/Header';
 import constants from '../config/constants';
-import defaultStyles from '../config/GlobalStyles';
 import colors from '../config/colors';
 import {
   HeaderCloseIcon,
@@ -48,7 +38,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {postFeelingsActions} from '../redux/postFeelings';
 import UserProfilePicture from '../components/UserProfilePicture';
 import hangShareService from '../services/hangShare.service';
-import {useFocusEffect} from '@react-navigation/native';
 import postService from '../services/post.service';
 import common from '../config/common';
 import BetterImage from '../components/betterImage/BetterImage';
@@ -358,7 +347,7 @@ export default function AddPostScreen({navigation, route}) {
         .editSwap(postData.postDetail.id, formData)
         .then(resp => {
           store.dispatch(feedPostsAction.updateFeedPost(resp.data));
-          //store.dispatch(feedPostsAction.addFeedPost(resp.data));
+          store.dispatch(feedPostsAction.addFeedPost(resp.data));
           navigation.navigate(routes.FEED);
         })
         .catch(e => {
@@ -396,7 +385,7 @@ export default function AddPostScreen({navigation, route}) {
         .editHang(user.id, postData.postDetail.id, formData)
         .then(resp => {
           store.dispatch(feedPostsAction.updateFeedPost(resp.data));
-          //store.dispatch(feedPostsAction.addFeedPost(resp.data));
+          store.dispatch(feedPostsAction.addFeedPost(resp.data));
           navigation.navigate(routes.FEED);
         })
         .catch(e => {
@@ -593,11 +582,6 @@ export default function AddPostScreen({navigation, route}) {
   const {width, height} = Dimensions.get('window');
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const onViewRef = React.useRef(({viewableItems}) => {
-    setActiveIndex(viewableItems[0].index);
-  });
-  const viewConfigRef = React.useRef({viewAreaCoveragePercentThreshold: 50});
-
   return (
     <Screen>
       {renderHeader()}
@@ -723,7 +707,13 @@ export default function AddPostScreen({navigation, route}) {
         />
 
         {postType === postTypes.SHARE_POST && (
-          <View>
+          <View
+            style={{
+              borderWidth: 1,
+              borderColor: '#cacaca90',
+              borderRadius: 5,
+              paddingTop: 10,
+            }}>
             <View
               style={{
                 flexDirection: 'row',
