@@ -24,13 +24,13 @@ import Tab from '../components/buttons/Tab';
 import AuthContext from '../Contexts/authContext';
 import DownModal from '../components/drawers/DownModal';
 import groupScreenDetector from '../redux/groupScreenDetector';
-import { postTypeSliceAction } from '../redux/groupIdSlice';
-import { useDispatch } from 'react-redux';
+import {postTypeSliceAction} from '../redux/groupIdSlice';
+import {useDispatch} from 'react-redux';
 import constants from '../config/constants';
 
 const windowWidth = Dimensions.get('screen').width;
 const GroupFeedScreen = ({navigation, route}) => {
- // const posts = useSelector(state => state.groupPosts);
+  // const posts = useSelector(state => state.groupPosts);
   const {userData} = useContext(AuthContext).userState;
   const {params: groupData} = route;
   const [group, setGroup] = useState(groupData);
@@ -38,9 +38,8 @@ const GroupFeedScreen = ({navigation, route}) => {
   const [requested, setRequested] = useState(false);
   const [loading, setLoading] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [posts,setPosts] = useState([]);
-  const dispatch = useDispatch()
- 
+  const [posts, setPosts] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getGroupInfo = async () => {
@@ -49,13 +48,13 @@ const GroupFeedScreen = ({navigation, route}) => {
         GroupService.getGroupById(groupData.id),
         GroupService.checkIsMember(groupData.id, userData.id),
         GroupService.getGroupPost(groupData.id),
-        GroupService.didRequested(userData.id,groupData.id)
+        GroupService.didRequested(userData.id, groupData.id),
       ])
         .then(res => {
           setGroup(res[0].data);
           setIsMember(res[1].data);
           setPosts(res[2].data);
-          setRequested(res[3].data)
+          setRequested(res[3].data);
         })
         .catch(e => console.error(e))
         .finally(_ => setLoading(false));
@@ -91,12 +90,12 @@ const GroupFeedScreen = ({navigation, route}) => {
 
   const handleJoinGroup = () => {
     GroupService.joinRequest(userData.id, groupData.id)
-      .then(({status}) => status===200 && setRequested(true))
+      .then(({status}) => status === 200 && setRequested(true))
       .catch(e => e);
   };
   const handleExitGroup = () => {
     GroupService.leavegroup(userData.id, groupData.id)
-      .then(({status}) => status===200 && setIsMember(false))
+      .then(({status}) => status === 200 && setIsMember(false))
       .catch(e => e);
   };
 
@@ -105,9 +104,8 @@ const GroupFeedScreen = ({navigation, route}) => {
   };
 
   const checkOwner = () => {
-   if (userData.id === groupData.owner?.id) return true;
-   else 
-   return false;
+    if (userData.id === groupData?.owner?.id) return true;
+    else return false;
   };
   const DropDownMenu = () => {
     return (
@@ -286,7 +284,6 @@ const GroupFeedScreen = ({navigation, route}) => {
                     groupId={group.id}
                     navigation={navigation}
                   />
-                  
                 ) : (
                   <View
                     style={{
