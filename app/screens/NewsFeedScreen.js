@@ -20,8 +20,8 @@ import constants from '../config/constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {feedPostsAction} from '../redux/feedPostsSlice';
 import SharedPostCard from '../components/lists/SharedPostCard';
-import routes from '../navigation/routes';
 import EmptyPostCard from '../components/EmptyCards/EmptyPostCard';
+import {useFocusEffect} from '@react-navigation/native';
 
 export default function NewsFeedScreen({navigation, route}) {
   const posts = useSelector(state => state.feedPosts);
@@ -30,9 +30,16 @@ export default function NewsFeedScreen({navigation, route}) {
   const {userState} = useContext(authContext);
   const [activityIndicator, setActivityIndicator] = useState(true);
 
-  useEffect(() => {
-    loadNews();
-  }, []);
+  // useEffect(() => {
+  //   loadNews();
+  // }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadNews();
+    }, []),
+  );
+
   const loadNews = () => {
     setActivityIndicator(true);
     postService

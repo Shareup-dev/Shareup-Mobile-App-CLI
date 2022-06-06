@@ -30,7 +30,7 @@ import AuthContext from '../Contexts/authContext';
 import UserProfilePicture from '../components/UserProfilePicture';
 import moment from 'moment';
 import {Texts, Title} from '../Materials/Text';
-import {data as Feelings} from '../components/Data/activitiesAndFeelings';
+import {feelings} from '../components/Data/activitiesAndFeelings';
 import BetterImage from '../components/betterImage/BetterImage';
 import Screen from '../components/Screen';
 
@@ -461,16 +461,13 @@ function StoryViewScreen({navigation, route}) {
                 style={styles.forwardArrow}
                 horizontal
                 showsHorizontalScrollIndicator={false}>
-                {Feelings.map(
-                  (feeling, index) =>
-                    feeling.type === 'Feeling' && (
-                      <BetterImage
-                        noBackground
-                        source={feeling.img}
-                        style={styles.imgSize}
-                      />
-                    ),
-                )}
+                {feelings.map((feeling, index) => (
+                  <BetterImage
+                    noBackground
+                    source={feeling.img}
+                    style={styles.imgSize}
+                  />
+                ))}
               </ScrollView>
             </View>
           )}

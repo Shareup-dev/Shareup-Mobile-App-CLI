@@ -1,19 +1,26 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import {
   View,
   TouchableWithoutFeedback,
   Image,
   TouchableOpacity,
   StyleSheet,
+  Dimensions,
+  Button,
 } from 'react-native';
 import moment from 'moment';
 import colors from '../config/colors';
 import Tab from './buttons/Tab';
 import Icon from './Icon';
 import routes from '../navigation/routes';
-import constants from '../config/constants';
+import {feelings} from '../components/Data/activitiesAndFeelings';
+
 import AuthContext from '../Contexts/authContext';
 import {Title, Texts} from '../Materials/Text';
+import ReactNativeModal from 'react-native-modal';
+import BetterImage from './betterImage/BetterImage';
+import LinkButton from './buttons/LinkButton';
+import Reaction from './Reactions/Reaction';
 
 const PostActions = ({
   postId,
@@ -32,7 +39,9 @@ const PostActions = ({
 }) => {
   const fromReply = false;
   const actionsTabSizeRatio = 0.5;
-  const {postTypes} = constants;
+
+  const ref = useRef();
+
   const {
     userState: {userData},
   } = useContext(AuthContext);
@@ -40,6 +49,51 @@ const PostActions = ({
     moment(postData.published, 'DD MMMM YYYY hh:mm:ss').fromNow(),
     // null
   );
+
+  const [openModal, setOpenModal] = useState(false);
+
+  const closeReactionOnBlur = e => {
+    setOpenModal(false);
+  };
+
+  const {width, height} = Dimensions.get('window');
+  const ReactionModal = React.memo(() => {
+    if (openModal)
+      return (
+        <View>
+          <TouchableOpacity
+            ref={ref}
+            style={{
+              position: 'absolute',
+              width: width,
+              height: height,
+            }}
+            onPressIn={closeReactionOnBlur}
+          />
+          <View style={styles.reactionContainer}>
+            <View style={styles.row}>
+              {feelings.map((feeling, index) => (
+                <TouchableOpacity>
+                  <BetterImage
+                    noBackground
+                    source={feeling.img}
+                    style={styles.imgSize}
+                  />
+                </TouchableOpacity>
+              ))}
+            </View>
+            <LinkButton
+              title={'Cancel'}
+              fontSize={13}
+              onPress={closeReactionOnBlur}
+              style={{color: '#333', marginTop: 5, fontWeight: '700'}}
+            />
+          </View>
+        </View>
+      );
+    return null;
+  });
+
   return (
     <View style={styles.content}>
       <View style={styles.row}>
@@ -86,7 +140,7 @@ const PostActions = ({
           </View>
           <View>
             <TouchableOpacity>
-              <Title>{postData.userdata.firstName}</Title>
+              <Title>{postData?.userdata?.firstName}</Title>
             </TouchableOpacity>
             <Texts light>{date}</Texts>
             {postData.group ? (
@@ -143,9 +197,14 @@ const PostActions = ({
           />
         </View>
       </View>
+      <ReactionModal />
+
       {!noActionBar && (
         <View style={styles.actionsBar}>
-          <TouchableOpacity onPress={onInteraction}>
+          <TouchableOpacity
+            onLongPress={() => setOpenModal(true)}
+            // onPressOut={() => setOpenModal(false)}
+            onPress={onInteraction}>
             <View style={styles.likes}>
               <Icon
                 name={isUserLiked ? `star` : `star-o`}
@@ -210,6 +269,15 @@ const PostActions = ({
 
 const borderRadius = 10;
 const styles = StyleSheet.create({
+  reactionContainer: {
+    alignItems: 'center',
+    borderRadius: 5,
+    paddingVertical: 10,
+  },
+  imgSize: {
+    width: 50,
+    height: 50,
+  },
   bold: {fontWeight: '700'},
   row: {
     flexDirection: 'row',

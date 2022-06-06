@@ -9,7 +9,6 @@ import {name as appName} from './app.json';
 
 // PushNotification.configure({
 //   onNotification: function (notification) {
-//     console.log('NOTIFICATION:', notification);
 //     // notification.finish(PushNotificationIOS.FetchResult.NoData);
 //   },
 //   requestPermissions: Platform.OS ==="ios",

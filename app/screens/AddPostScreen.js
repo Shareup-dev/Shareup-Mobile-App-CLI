@@ -1,20 +1,10 @@
-import React, {
-  useContext,
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
-  Component,
-  useCallback,
-} from 'react';
+import React, {useContext, useState, useRef, useEffect, useMemo} from 'react';
 import {
   StyleSheet,
   View,
-  Image,
   TextInput,
   TouchableOpacity,
   Platform,
-  ActivityIndicator,
   Dimensions,
   FlatList,
 } from 'react-native';
@@ -30,7 +20,6 @@ import swapService from '../services/swap.service';
 import routes from '../navigation/routes';
 import Header from '../components/headers/Header';
 import constants from '../config/constants';
-import defaultStyles from '../config/GlobalStyles';
 import colors from '../config/colors';
 import {
   HeaderCloseIcon,
@@ -48,7 +37,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {postFeelingsActions} from '../redux/postFeelings';
 import UserProfilePicture from '../components/UserProfilePicture';
 import hangShareService from '../services/hangShare.service';
-import {useFocusEffect} from '@react-navigation/native';
 import postService from '../services/post.service';
 import common from '../config/common';
 import BetterImage from '../components/betterImage/BetterImage';
@@ -326,10 +314,10 @@ export default function AddPostScreen({navigation, route}) {
       PostService.createPost(user.id, formData)
         .then(resp => {
           let existingPosts = store.getState().groupPosts;
-          store.dispatch(
-            groupPostsActions.setPosts([resp.data, ...existingPosts]),
-          );
-          store.dispatch(feedPostsAction.addFeedPost(resp.data));
+          // store.dispatch(
+          //   groupPostsActions.setPosts([resp.data, ...existingPosts]),
+          // );
+          // store.dispatch(feedPostsAction.addFeedPost(resp.data));
           // const popAction = StackActions.pop(1);
           navigation.navigate(routes.GROUP_FEED, resp.data.group);
           // navigation.dispatch(popAction);
@@ -357,7 +345,7 @@ export default function AddPostScreen({navigation, route}) {
       swapService
         .editSwap(postData.postDetail.id, formData)
         .then(resp => {
-          store.dispatch(feedPostsAction.updateFeedPost(resp.data));
+          // store.dispatch(feedPostsAction.updateFeedPost(resp.data));
           //store.dispatch(feedPostsAction.addFeedPost(resp.data));
           navigation.navigate(routes.FEED);
         })
@@ -369,7 +357,7 @@ export default function AddPostScreen({navigation, route}) {
       swapService
         .createSwap(user.id, formData)
         .then(resp => {
-          store.dispatch(feedPostsAction.addFeedPost(resp.data));
+          // store.dispatch(feedPostsAction.addFeedPost(resp.data));
           navigation.navigate(routes.FEED);
         })
         .catch(e => {
@@ -395,7 +383,7 @@ export default function AddPostScreen({navigation, route}) {
       hangShareService
         .editHang(user.id, postData.postDetail.id, formData)
         .then(resp => {
-          store.dispatch(feedPostsAction.updateFeedPost(resp.data));
+          // store.dispatch(feedPostsAction.updateFeedPost(resp.data));
           //store.dispatch(feedPostsAction.addFeedPost(resp.data));
           navigation.navigate(routes.FEED);
         })
@@ -407,7 +395,7 @@ export default function AddPostScreen({navigation, route}) {
       hangShareService
         .createHang(user.id, formData)
         .then(resp => {
-          store.dispatch(feedPostsAction.addFeedPost(resp.data));
+          // store.dispatch(feedPostsAction.addFeedPost(resp.data));
           navigation.navigate(routes.FEED);
         })
         .catch(e => {
@@ -431,7 +419,7 @@ export default function AddPostScreen({navigation, route}) {
     postService
       .sharePost(user.id, postData.postDetail.id, formData)
       .then(res => {
-        store.dispatch(feedPostsAction.addFeedPost(res.data));
+        // store.dispatch(feedPostsAction.addFeedPost(res.data));
         navigation.navigate(routes.FEED);
       })
       .catch(e => console.error(e.message))
@@ -457,7 +445,7 @@ export default function AddPostScreen({navigation, route}) {
       if (postData['EditPost']) {
         PostService.editPost(postData.postDetail.id, formData)
           .then(resp => {
-            store.dispatch(feedPostsAction.updateFeedPost(resp.data));
+            // store.dispatch(feedPostsAction.updateFeedPost(resp.data));
             dispatch(postFeelingsActions.setDefault());
             navigation.navigate(routes.FEED);
           })
@@ -471,7 +459,7 @@ export default function AddPostScreen({navigation, route}) {
       } else {
         PostService.createPost(user.id, formData)
           .then(resp => {
-            store.dispatch(feedPostsAction.addFeedPost(resp.data));
+            // store.dispatch(feedPostsAction.addFeedPost(resp.data));
             dispatch(postFeelingsActions.setDefault());
             navigation.navigate(routes.FEED);
           })
@@ -592,11 +580,6 @@ export default function AddPostScreen({navigation, route}) {
 
   const {width, height} = Dimensions.get('window');
   const [activeIndex, setActiveIndex] = useState(0);
-
-  const onViewRef = React.useRef(({viewableItems}) => {
-    setActiveIndex(viewableItems[0].index);
-  });
-  const viewConfigRef = React.useRef({viewAreaCoveragePercentThreshold: 50});
 
   return (
     <Screen>
