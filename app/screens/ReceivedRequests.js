@@ -6,10 +6,11 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   ListViewBase,
+  TouchableOpacity
 } from 'react-native';
 
 import Screen from '../components/Screen';
-import {Header, HeaderTitle} from '../components/headers';
+import {Header, HeaderTitle,HeaderWithBackArrow} from '../components/headers';
 import Icon from '../components/Icon';
 import UserService from '../services/user.service';
 import routes from '../navigation/routes';
@@ -19,12 +20,16 @@ import defaultStyles from '../config/GlobalStyles';
 import ListHeader from '../components/lists/ListHeader';
 import colors from '../config/colors';
 import FriendCard from '../components/lists/FriendCard';
+import { Texts } from '../Materials/Text';
+import { postRefreshAction } from '../redux/postRefreshSlice';
+import { useDispatch } from 'react-redux';
 
 export default function ReceivedRequests({navigation}) {
   const {userData: user} = useContext(authContext).userState;
   const [requests, setRequests] = useState([]);
   const [acceptedFrom, setAcceptedFrom] = useState([]);
   const [rejectedFrom, setRejectedFrom] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     let mounted = true
@@ -42,7 +47,8 @@ export default function ReceivedRequests({navigation}) {
   const acceptFriendRequest = friend => {
  
     UserService.acceptFriendRequest(user.id, friend.id).then(resp => {
-     
+
+     dispatch(postRefreshAction.setPostRefresh(true))
     });
 
     setAcceptedFrom(previousState => {
@@ -83,9 +89,9 @@ export default function ReceivedRequests({navigation}) {
     if (requests.length === 0) {
       return (
         <View style={styles.container}>
-          <Text style={styles.emptyText}>
-            You dont't have any received requests
-          </Text>
+          <Texts style={styles.emptyText} size={15}>
+            You dont't have any received requests  !!
+          </Texts>
         </View>
       );
     } else {
@@ -143,6 +149,7 @@ export default function ReceivedRequests({navigation}) {
 
   return (
     <Screen>
+      
       <Header
         backgroundColor={colors.white}
         left={
@@ -155,7 +162,7 @@ export default function ReceivedRequests({navigation}) {
             />
           </TouchableWithoutFeedback>
         }
-        middle={<HeaderTitle>Pending Requests</HeaderTitle>}
+        middle={<HeaderTitle>Received Requests</HeaderTitle>}
       />
       {renderRequestsList()}
     </Screen>

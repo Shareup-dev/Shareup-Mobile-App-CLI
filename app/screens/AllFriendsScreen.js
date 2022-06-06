@@ -20,11 +20,15 @@ import Screen from '../components/Screen';
 import colors from '../../app/config/colors';
 import routes from '../navigation/routes';
 import FriendCard from '../components/lists/FriendCard';
+import { Texts } from '../Materials/Text';
+import { postRefreshAction } from '../redux/postRefreshSlice';
+import { useDispatch } from 'react-redux';
 
 export default function AllFriendsScreen({navigation}) {
   const [friends, setFriends] = useState([]);
   const [removed, setremoved] = useState([]);
   const {userData: loggedInUser} = useContext(authContext).userState;
+  const dispatch = useDispatch();
 
   useEffect(() => {
     UserService.getFriends(loggedInUser.email).then(resp => {
@@ -46,6 +50,7 @@ export default function AllFriendsScreen({navigation}) {
             // })
             UserService.deleteFriend(loggedInUser.id, friend.id).then(
               removeResp => {
+                dispatch(postRefreshAction.setPostRefresh(true))
                 setFriends(previousFriends => {
                   return previousFriends.filter(
                     dost => dost.email !== friend.email,
@@ -67,14 +72,14 @@ export default function AllFriendsScreen({navigation}) {
     if (friends.length === 0) {
       return (
         <View style={styles.noFriendsContainer}>
-          <Text style={styles.noFriendsText}>No Friends Found</Text>
+          <Texts style={styles.noFriendsText} size={15}>No Friends Found</Texts>
           <TouchableOpacity
             style={styles.addFriendsButton}
             color={colors.LightGray}
             onPress={() => {
               navigation.navigate(routes.Add_NEW_FRIEND);
             }}>
-            <Text>Add Friends</Text>
+            <Texts size={15}>Add Friends</Texts>
           </TouchableOpacity>
         </View>
       );

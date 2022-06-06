@@ -118,6 +118,7 @@ export default function KeepHangScreen({navigation, route}) {
           <FlatList
             data={hangList}
             horizontal
+            showsHorizontalScrollIndicator={false}
             keyExtractor={item => item.id.toString()}
             renderItem={({item}) => (
               <HangCard

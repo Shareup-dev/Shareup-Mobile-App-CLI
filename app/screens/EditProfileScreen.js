@@ -23,6 +23,8 @@ import LoadingComponent from '../components/Loading';
 import Icon from '../components/Icon';
 import {launchImageLibrary} from 'react-native-image-picker';
 import routes from '../navigation/routes';
+import { postRefreshAction } from '../redux/postRefreshSlice';
+import { useDispatch } from 'react-redux';
 
 export default function EditProfileScreen({navigation}) {
   const {
@@ -35,6 +37,7 @@ export default function EditProfileScreen({navigation}) {
   const [hobbies, setHobbies] = useState([]);
   const [hobbie, setHobbie] = useState('');
   const [profileImage, setProfileImage] = useState(null);
+  const dispatch = useDispatch();
 
   const initValues = JSON.parse(
     JSON.stringify(userData).replace(/:null/gi, ':""'),
@@ -76,6 +79,7 @@ export default function EditProfileScreen({navigation}) {
     userService
       .editProfile(username, {...values, interests: hobbies?.toString()})
       .then(({status, data}) => {
+        dispatch(postRefreshAction.setPostRefresh(true))
         if (status === 200) {
           authActions.updateUserInfo(data);
           setLoading(false);

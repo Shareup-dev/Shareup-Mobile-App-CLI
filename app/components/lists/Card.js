@@ -150,15 +150,15 @@ import {postDataSliceAction} from '../../redux/postDataSlice';
     // 01 May 2022 09:24:23
     // var d = new Date(postData.lastEdited); /* midnight in China on April 13th */
     // d.toLocaleString('en-US', { timeZone: 'America/New_York' });
-    const arrDate = postData.lastEdited.split(' ');
-    const monthShort = arrDate[1].slice(0, 3);
+    // const arrDate = postData?.lastEdited.split(' ');
+    // const monthShort = arrDate[1].slice(0, 3);
 
-    setFormattedDate({
-      day: arrDate[0],
-      month: monthShort,
-      year: arrDate[2],
-      time: arrDate[3],
-    });
+    // setFormattedDate({
+    //   day: arrDate[0],
+    //   month: monthShort,
+    //   year: arrDate[2],
+    //   time: arrDate[3],
+    // });
   };
   const formateNumber = number => {
     if (number > 1000) {

@@ -22,17 +22,24 @@ import {feedPostsAction} from '../redux/feedPostsSlice';
 import SharedPostCard from '../components/lists/SharedPostCard';
 import routes from '../navigation/routes';
 import EmptyPostCard from '../components/EmptyCards/EmptyPostCard';
+import { postRefreshAction } from '../redux/postRefreshSlice';
+import { State } from 'react-native-gesture-handler';
 
 export default function NewsFeedScreen({navigation, route}) {
   const posts = useSelector(state => state.feedPosts);
   const dispatch = useDispatch();
-
+  const refresh = useSelector(state => state.postRefresh)
   const {userState} = useContext(authContext);
   const [activityIndicator, setActivityIndicator] = useState(true);
-
+  
+  
   useEffect(() => {
+    console.log(refresh);
     loadNews();
-  }, []);
+    dispatch(postRefreshAction.clearPostRefresh())
+  }, [refresh]);
+
+
   const loadNews = () => {
     setActivityIndicator(true);
     postService

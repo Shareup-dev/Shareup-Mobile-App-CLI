@@ -22,6 +22,7 @@ import defaultStyles from '../config/GlobalStyles';
 import ActivityScreen from './ActivityScreen';
 import routes from '../navigation/routes';
 import FriendCard from '../components/lists/FriendCard';
+import { Texts } from '../Materials/Text';
 
 export default function SentRequests({navigation}) {
   //const {user: loggedInUser} = useContext(authContext);
@@ -64,9 +65,9 @@ export default function SentRequests({navigation}) {
     if (sentto.length === 0) {
       return (
         <View style={styles.container}>
-          <Text style={styles.emptyText}>
-            You dont't have any sent requests
-          </Text>
+          <Texts style={styles.emptyText} size={15}>
+            You dont't have any sent requests  !!
+          </Texts>
         </View>
       );
     } else {
@@ -133,7 +134,7 @@ export default function SentRequests({navigation}) {
             />
           </TouchableWithoutFeedback>
         }
-        middle={<HeaderTitle>Pending Requests</HeaderTitle>}
+        middle={<HeaderTitle>Send Requests</HeaderTitle>}
       />
       {renderSentRequestsList()}
     </Screen>

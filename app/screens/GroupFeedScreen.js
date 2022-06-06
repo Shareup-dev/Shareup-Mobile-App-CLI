@@ -27,6 +27,7 @@ import groupScreenDetector from '../redux/groupScreenDetector';
 import { postTypeSliceAction } from '../redux/groupIdSlice';
 import { useDispatch } from 'react-redux';
 import constants from '../config/constants';
+import { Texts } from '../Materials/Text';
 
 const windowWidth = Dimensions.get('screen').width;
 const GroupFeedScreen = ({navigation, route}) => {
@@ -105,7 +106,7 @@ const GroupFeedScreen = ({navigation, route}) => {
   };
 
   const checkOwner = () => {
-   if (userData.id === groupData.owner?.id) return true;
+   if (userData.id === groupData?.owner.id) return true;
    else 
    return false;
   };
@@ -193,24 +194,27 @@ const GroupFeedScreen = ({navigation, route}) => {
                 }
               />
               <View style={styles.detailContainer}>
-                <View style={{marginHorizontal: 20}}>
-                  <Text style={styles.title}>{group.name}</Text>
-                  <Text style={styles.subTitle}>{group.description}</Text>
+                <View style={{marginHorizontal: 10}}>
+                  <Texts size={25} style={styles.title}>{group.name}</Texts>
+                  <Texts size={15} style={styles.subTitle}>{group.description}</Texts>
                   <View
                     style={{
+                      
                       flexDirection: 'row',
                       alignItems: 'center',
                       justifyContent: 'space-between',
                     }}>
                     <View
                       style={{
+                        
                         flexDirection: 'row',
                         alignItems: 'center',
+                        
                       }}>
                       <Icon name={group.privacySetting ? 'lock' : 'earth'} />
-                      <Text style={styles.subTitle}>
+                      <Texts size={12} style={styles.subTitle}>
                         {group.privacySetting ? 'Private' : 'Public'} Group
-                      </Text>
+                      </Texts>
                     </View>
                     <TouchableOpacity
                       activeOpacity={0.6}
@@ -218,9 +222,9 @@ const GroupFeedScreen = ({navigation, route}) => {
                       onPress={() => {
                         navigation.navigate(routes.LIST_OF_MEMBERS, groupData);
                       }}>
-                      <Text style={{fontWeight: '600', fontSize: 15}}>
+                      <Texts size={14} style={{fontWeight: '600', fontSize: 15}}>
                         Members
-                      </Text>
+                      </Texts>
                     </TouchableOpacity>
                   </View>
 

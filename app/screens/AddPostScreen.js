@@ -68,8 +68,8 @@ export default function AddPostScreen({navigation, route}) {
   const postFeel = useSelector(state => state.postFeel);
   const {postTypes} = constants;
   const DEFAULT_TEXT = 'We Share, Do You ?';
-  const SWAP_DEFAULT_TEXT = 'Hi all \n I want to Swap ...';
-  const HANG_SHARE_TEXT = 'Please anyone want this,can have it';
+  const SWAP_DEFAULT_TEXT = 'We Share, Do You ?';
+  const HANG_SHARE_TEXT = 'We Share, Do You ?';
   const isEdit = useSelector(state => state.updatePostMode);
   //const postData = useSelector(state => state.updatePostData)
   const groupid = useSelector(state => state.groupIdSlice);

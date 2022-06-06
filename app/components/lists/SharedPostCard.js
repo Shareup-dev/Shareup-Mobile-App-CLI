@@ -132,7 +132,7 @@ export default function SharedPostCard(props) {
     Alert.alert('Delete', 'Are you sure to delete this post', [
       {
         text: 'Yes',
-        onPress: () => {deletePost},
+        onPress: deletePost,
         style: 'cancel',
       },
       {
@@ -141,6 +141,7 @@ export default function SharedPostCard(props) {
       },
     ]);
     const deletePost = async () => {
+      console.log("here");
       postService
         .deletePost(item.id)
         .then(res => {

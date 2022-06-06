@@ -19,13 +19,17 @@ import LinkButton from '../components/buttons/LinkButton';
 import constants from '../config/constants';
 import routes from './routes';
 import {useNavigation} from '@react-navigation/native';
+import UserProfilePicture from '../components/UserProfilePicture';
+import { Texts } from '../Materials/Text';
+import { useDispatch } from 'react-redux';
 
 
 
 export default function Drawer({isVisible, setIsVisible}) {
   const {userState, authActions} = useContext(authContext);
-
+  const dispatch = useDispatch();
   const navigation = useNavigation();
+  
   const listItems = [
     {
       title: 'Share Feed',
@@ -103,7 +107,7 @@ export default function Drawer({isVisible, setIsVisible}) {
       title: 'Saved Posts',
       icon: require('../assets/post-options-icons/save-post-icon.png'),
       onPress: () => {
-        navigation.navigate(routes.SAVED_POST_SCREEN)
+        navigation.navigate(routes.SAVED_POST_SCREEN,{category:constants.postTypes.CREATE_POST})
         setIsVisible(false)
        },
     },
@@ -119,7 +123,8 @@ export default function Drawer({isVisible, setIsVisible}) {
       title: 'Saved Swaps',
       icon: require('../assets/icons/saved-swap-colored-icon.png'),
       onPress: () => {
-        navigation.navigate(routes.POST_BY_ID)
+        navigation.navigate(routes.SAVED_POST_SCREEN,{category:constants.postTypes.SWAP})
+        setIsVisible(false)
        },
     },
   ];
@@ -134,11 +139,12 @@ export default function Drawer({isVisible, setIsVisible}) {
       animationOut="slideOutRight">
       <View style={styles.container}>
         <View style={styles.header}>
-          <Icon
+        <UserProfilePicture size={40} />
+          {/* <Icon
             backgroundSizeRatio={1}
             image={require('../assets/tab-navigation-icons/user-icon.png')}
-          />
-          <Text style={styles.userName}>{userState?.userData?.firstName}</Text>
+          /> */}
+          <Texts style={styles.userName} size={25} color={colors.iondigoDye}>{userState?.userData?.firstName}</Texts>
         </View>
         <View style={styles.separator} />
 
@@ -200,6 +206,7 @@ export default function Drawer({isVisible, setIsVisible}) {
             <LogoutButton
               onPress={() => {
                 authActions.logout();
+               
               }}
             />
           </View>
@@ -213,7 +220,7 @@ function LogoutButton({onPress}) {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={styles.logoutButton}>
-        <Text>Logout</Text>
+        <Texts size={15} style={{fontWeight:'600'}}>Logout</Texts>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -224,7 +231,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignSelf: 'flex-end',
     overflow: 'hidden',
-    padding: 10,
+    padding: 15,
     backgroundColor: colors.white,
     height: PixelRatio.get() < 3 ? '100%' : '90%',
   },
@@ -232,21 +239,22 @@ const styles = StyleSheet.create({
     fontSize: 23,
     color: colors.iondigoDye,
     fontWeight: '500',
+    paddingHorizontal:15,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    paddingHorizontal: 10,
+    // paddingHorizontal: 10,
   },
   separator: {
     height: 2,
     backgroundColor: colors.LightGray,
-    marginTop: 6,
+    marginTop: 10,
   },
   innerContainer: {
     backgroundColor: colors.lighterGray,
     flex: 1,
-    marginTop: 30,
+    marginTop: 15,
     borderRadius: 20,
     justifyContent: 'space-between',
   },

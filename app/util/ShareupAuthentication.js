@@ -108,6 +108,7 @@ export default function ShareupAuthentication() {
       logout: async () => {
         await EncryptedStorage.removeItem('auth_session');
         removeAxiosToken();
+        window.location.reload()
         dispatch({type: actions.CLEAR_STATE});
       },
       // signup

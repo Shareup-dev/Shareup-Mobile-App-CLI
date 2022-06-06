@@ -86,7 +86,7 @@ const PostActions = ({
           </View>
           <View>
             <TouchableOpacity>
-              <Title>{postData.userdata.firstName}</Title>
+              <Title>{postData.userdata?.firstName}</Title>
             </TouchableOpacity>
             <Texts light>{date}</Texts>
             {postData.group ? (

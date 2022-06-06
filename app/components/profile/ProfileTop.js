@@ -10,6 +10,7 @@ import Posts from './Posts';
 import StoriesList from '../lists/StoriesList';
 import AuthContext from '../../Contexts/authContext';
 import FriendService from '../../services/friends.service';
+import { Texts } from '../../Materials/Text';
 
 const profilePictureSize = 70;
 
@@ -133,33 +134,34 @@ export default function ProfileTop({
             /> */}
           </View>
           <View style={styles.counterWrapper}>
-            <Text>
+            <Texts size={15} color={colors.dark} style={{fontWeight:"500"}}>
               {user.numberOfPosts ? user.numberOfPosts : numberOfPosts}
-            </Text>
-            <Text>Posts</Text>
+            </Texts>
+            <Texts size={15} color={colors.dark} style={{fontWeight:"500"}}>Posts</Texts>
           </View>
           <View style={styles.counterWrapper}>
-            <Text>{user.numberOfFriends}</Text>
-            <Text>Friends </Text>
+            <Texts size={15} color={colors.dark} style={{fontWeight:"500"}}>{user.numberOfFriends}</Texts>
+            <Texts size={15} color={colors.dark} style={{fontWeight:"500"}}>Friends </Texts>
           </View>
           <View style={styles.counterWrapper}>
-            <Text>{user.numberOfFollowers}</Text>
-            <Text>Followers </Text>
+            <Texts size={15} color={colors.dark} style={{fontWeight:"500"}}>{user.numberOfFollowers}</Texts>
+            <Texts size={15} color={colors.dark} style={{fontWeight:"500"}}>Followers </Texts>
           </View>
           <View style={styles.counterWrapper}>
-            <Text>{user.numberOfFollowing}</Text>
-            <Text>Following</Text>
+            <Texts size={15} color={colors.dark} style={{fontWeight:"500"}}>{user.numberOfFollowing}</Texts>
+            <Texts size={15} color={colors.dark} style={{fontWeight:"500"}}>Following</Texts>
           </View>
         </View>
 
         {/** Row 2 */}
         <View style={styles.row2}>
-          <Text
+          <Texts size={20} color={colors.dark} 
             style={
               styles.username
-            }>{`${user.firstName} ${user.lastName}`}</Text>
+            }>{`${user.firstName} ${user.lastName}`}</Texts>
 
-          <Text>{user.aboutme}</Text>
+          <Texts size={13} color={colors.dimGray} 
+            >{user.aboutme}</Texts>
 
           {user.id === userData.id ? (
             <Tab
@@ -189,11 +191,11 @@ export default function ProfileTop({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 20,
-   
+    marginBottom: 10,
   },
   padding: {
-    paddingHorizontal: 15,
+    paddingHorizontal: 20,
+    paddingVertical:10,
   },
   row1: {
     flexDirection: 'row',
@@ -202,7 +204,7 @@ const styles = StyleSheet.create({
   profilePicture: {
     width: profilePictureSize,
     height: profilePictureSize,
-    marginRight: 20,
+    marginRight: 10,
   },
   addProfilePictureIcon: {
     position: 'absolute',
@@ -213,14 +215,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf:'center',
-    marginHorizontal: 6,
+    marginHorizontal: 5,
   },
   row2: {
-    marginTop: 30,
+    marginTop: 15,
   },
   username: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
+    marginBottom:5,
   },
   editProfileButton: {
     marginTop: 20,

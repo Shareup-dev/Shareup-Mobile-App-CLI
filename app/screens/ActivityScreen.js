@@ -246,15 +246,17 @@ export default function ActivityScreen({navigation}) {
 
 const styles = StyleSheet.create({
   searchContainer: {
-    paddingHorizontal: 30,
+    // paddingTop:5,
+    paddingHorizontal: 10,
+    
   },
   tabs: {
-    marginVertical: 5,
+    marginVertical: 15,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   searchbar: {
-    marginBottom: 10,
+    //margin: 10,
   },
   tab: {
     marginRight: 10,
@@ -263,7 +265,7 @@ const styles = StyleSheet.create({
   },
   separator: {
     backgroundColor: colors.LightGray,
-    marginTop: 20,
+    // marginTop: 10,
   },
   groupsList: {paddingTop: 20},
 

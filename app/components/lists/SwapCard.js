@@ -25,6 +25,7 @@ import {useDispatch} from 'react-redux';
 import {feedPostsAction} from '../../redux/feedPostsSlice';
 import {postDataSliceAction} from '../../redux/postDataSlice';
 import postService from '../../services/post.service';
+import {postRefreshSlice} from '../../redux/postRefreshSlice'
 
 const SwapCard = ({
   item,
@@ -62,6 +63,7 @@ const SwapCard = ({
   };
 
   useEffect(() => {
+    console.log(userState?.userData?.id , user?.id);
     loadImages();
     checkIfLiked();
   }, []);
@@ -93,7 +95,7 @@ const SwapCard = ({
       },
     },
     {
-      title: userState?.userData?.id === user?.id ? 'Edit' : '',
+      title: userState?.userData?.id === userId ? 'Edit' : '',
       icon: {image: require('../../assets/post-options-icons/swap-icon.png')},
       onPress: () => {
         dispatch(postDataSliceAction.setEditPost(true));
@@ -115,8 +117,8 @@ const SwapCard = ({
         image: require('../../assets/post-options-icons/share-friends-icon.png'),
       },
       onPress: () => {
-        dispatch(postDataSliceAction.setPostData(item));
-
+        //dispatch(postDataSliceAction.setPostData(item));
+        dispatch(postRefreshSlice.setPostRefresh(true))
         navigation.navigate(routes.ADD_POST, {
           postType: constants.postTypes.SHARE_POST,
           // postData,
@@ -153,19 +155,19 @@ const SwapCard = ({
     // },
     {
       title:
-        userState?.userData?.id !== user?.id ? (
+        userState?.userData?.id !== userId? (
           <Text style={{color: colors.dark}}>Report</Text>
         ) : (
           <Text style={{color: colors.red}}>Delete</Text>
         ),
       icon: {
         image:
-          userState?.userData?.id !== user?.id
+          userState?.userData?.id !== userId
             ? require('../../assets/post-options-icons/report-icon.png')
             : require('../../assets/post-options-icons/delete-red-icon.png'),
       },
       onPress: () => {
-        userState?.userData?.id !== user?.id
+        userState?.userData?.id !== userId
           ? alert('Report')
           : showDeleteAlert();
       },
@@ -185,17 +187,18 @@ const SwapCard = ({
     ]);
 
   const deletePost = async () => {
-    swapService
-      .deleteSwap(item.id)
+    postService
+      .deletePost(item.id)
       .then(res => {
         if (res.status === 200) {
-          // dispatch(feedPostsAction.removeFeedPost(postData.id));
+          alert(res.data)
+          dispatch(feedPostsAction.removeFeedPost(item.id));
           navigation.navigate(routes.FEED);
         }
       })
       .catch(e => alert(e));
 
-    reloadPosts();
+   
   };
   const onLayout = e => {
     setSliderWidth(e.nativeEvent.layout.width);

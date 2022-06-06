@@ -12,6 +12,7 @@ import Screen from '../components/Screen';
 import {Header, HeaderTitle} from '../components/headers';
 import {HeaderWithBackArrow} from '../components/headers';
 import colors from '../config/colors';
+import Tab from '../components/buttons/Tab';
 import Icon from '../components/Icon';
 import routes from '../navigation/routes';
 import {useFocusEffect} from '@react-navigation/native';
@@ -21,6 +22,7 @@ import hangShareService from '../services/hangShare.service';
 import SwapCard from '../components/lists/SwapCard';
 import constants from '../config/constants';
 import swapService from '../services/swap.service';
+import { Texts } from '../Materials/Text';
 
 export default function HangFlowScreen({navigation, route}) {
   const postType = route.params;
@@ -51,6 +53,9 @@ export default function HangFlowScreen({navigation, route}) {
       setSavedData(res.data);
     });
   };
+
+  
+  
   const renderItem = ({item}) => {
     return (
       <SwapCard
@@ -70,7 +75,7 @@ export default function HangFlowScreen({navigation, route}) {
     <ScrollView style={{backgroundColor: colors.white}}>
       <HeaderWithBackArrow
         onBackButton={() => navigation.goBack()}
-        leftComponent={
+        title={
           <HeaderTitle>
             {' '}
             {postType === constants.postTypes.HANG_SHARE
@@ -104,7 +109,7 @@ export default function HangFlowScreen({navigation, route}) {
           //     store.dispatch(recentSearchActions.setList(text))
           //   }}
         />
-      </View>
+      </View> 
 
       <FlatList
         initialNumToRender={10}
@@ -115,9 +120,9 @@ export default function HangFlowScreen({navigation, route}) {
         renderItem={renderItem}
         onEndReached={hideActivityIndicator}
         ListEmptyComponent={() => (
-          <Text style={{alignSelf: 'center', marginVertical: 50}}>
+          <Texts style={{alignSelf: 'center', marginVertical: 50}} size={15}>
             No posts Available
-          </Text>
+          </Texts>
         )}
       />
     </ScrollView>
@@ -148,5 +153,15 @@ const styles = StyleSheet.create({
   },
   searchbar: {
     marginBottom: 10,
+  },
+  tab: {
+    marginRight: 10,
+    width: '30%',
+    height: 30,
+  },
+  tabs: {
+    marginVertical: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });

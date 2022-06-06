@@ -458,19 +458,20 @@ function StoryViewScreen({navigation, route}) {
                 </View>
               </View>
               <ScrollView
-                style={styles.forwardArrow}
+                style={[styles.forwardArrow],{}}
                 horizontal
                 showsHorizontalScrollIndicator={false}>
+
                 {Feelings.map(
                   (feeling, index) =>
-                    feeling.type === 'Feeling' && (
-                      <BetterImage
-                        noBackground
-                        source={feeling.img}
-                        style={styles.imgSize}
-                      />
+                  feeling.type === 'Feeling' && (
+                    <BetterImage
+                    noBackground
+                    source={feeling.img}
+                    style={styles.imgSize}
+                    />
                     ),
-                )}
+                    )}
               </ScrollView>
             </View>
           )}
