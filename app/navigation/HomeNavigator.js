@@ -31,7 +31,6 @@ import PostById from '../screens/PostById';
 import MapViewScreen from '../screens/MapViewScreen';
 import ArchivedChatScreen from '../screens/ArchivedChatScreen';
 
-
 const Stack = createNativeStackNavigator();
 const headerHeight = useHeaderHeight;
 export default function HomeNavigator(props) {
@@ -48,7 +47,10 @@ export default function HomeNavigator(props) {
         component={StoryViewScreen}
       />
       <Stack.Screen name={routes.ADDS_STORY} component={AddStoryScreen} />
-      <Stack.Screen name={routes.ARCHIVED_CHAT} component={ArchivedChatScreen} />
+      <Stack.Screen
+        name={routes.ARCHIVED_CHAT}
+        component={ArchivedChatScreen}
+      />
       <Stack.Screen
         name={routes.ADD_COMMENT_REEL}
         component={AddCommentsOnReels}
@@ -95,9 +97,7 @@ export default function HomeNavigator(props) {
         name={routes.ACCOUNT_SETTINGS}
         component={AccountSettingsScreen}
       />
-      <Stack.Screen
-        name={routes.MAP_VIEW}
-        component={MapViewScreen}/>
+      <Stack.Screen name={routes.MAP_VIEW} component={MapViewScreen} />
     </Stack.Navigator>
   );
 }

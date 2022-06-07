@@ -1,7 +1,7 @@
 import AuthAxios from './authAxios';
 import ChatAxios from './chatAxios';
 
-const setTokenForAxios = token => {
+const setAxiosToken = token => {
   if (token) {
     AuthAxios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     ChatAxios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -10,9 +10,5 @@ const setTokenForAxios = token => {
     ChatAxios.defaults.headers.common['Authorization'] = null;
   }
 };
-const removeAxiosToken = () => {
-  AuthAxios.defaults.headers.common['Authorization'] = null;
-  ChatAxios.defaults.headers.common['Authorization'] = null;
-};
 
-export {setTokenForAxios, removeAxiosToken};
+export {setAxiosToken};

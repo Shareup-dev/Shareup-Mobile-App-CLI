@@ -13,13 +13,10 @@ import colors from '../config/colors';
 import Tab from './buttons/Tab';
 import Icon from './Icon';
 import routes from '../navigation/routes';
-import {feelings} from '../components/Data/activitiesAndFeelings';
 
 import AuthContext from '../Contexts/authContext';
 import {Title, Texts} from '../Materials/Text';
-import ReactNativeModal from 'react-native-modal';
-import BetterImage from './betterImage/BetterImage';
-import LinkButton from './buttons/LinkButton';
+
 import Reaction from './Reactions/Reaction';
 
 const PostActions = ({
@@ -42,6 +39,8 @@ const PostActions = ({
 
   const ref = useRef();
 
+  console.log('postdata', postData);
+
   const {
     userState: {userData},
   } = useContext(AuthContext);
@@ -57,42 +56,6 @@ const PostActions = ({
   };
 
   const {width, height} = Dimensions.get('window');
-  const ReactionModal = React.memo(() => {
-    if (openModal)
-      return (
-        <View>
-          <TouchableOpacity
-            ref={ref}
-            style={{
-              position: 'absolute',
-              width: width,
-              height: height,
-            }}
-            onPressIn={closeReactionOnBlur}
-          />
-          <View style={styles.reactionContainer}>
-            <View style={styles.row}>
-              {feelings.map((feeling, index) => (
-                <TouchableOpacity>
-                  <BetterImage
-                    noBackground
-                    source={feeling.img}
-                    style={styles.imgSize}
-                  />
-                </TouchableOpacity>
-              ))}
-            </View>
-            <LinkButton
-              title={'Cancel'}
-              fontSize={13}
-              onPress={closeReactionOnBlur}
-              style={{color: '#333', marginTop: 5, fontWeight: '700'}}
-            />
-          </View>
-        </View>
-      );
-    return null;
-  });
 
   return (
     <View style={styles.content}>
@@ -166,7 +129,7 @@ const PostActions = ({
         </View>
 
         <View style={styles.actionsContainer}>
-          <Tab
+          {/* <Tab
             title={numberOfReactions}
             iconName="star"
             iconType="FontAwesome5"
@@ -194,11 +157,10 @@ const PostActions = ({
             color={colors.mediumGray}
             fontColor={colors.white}
             iconSize={10}
-          />
+          /> */}
         </View>
       </View>
-      <ReactionModal />
-
+      <Reaction visible={openModal} setVisible={setOpenModal} />
       {!noActionBar && (
         <View style={styles.actionsBar}>
           <TouchableOpacity
@@ -269,11 +231,6 @@ const PostActions = ({
 
 const borderRadius = 10;
 const styles = StyleSheet.create({
-  reactionContainer: {
-    alignItems: 'center',
-    borderRadius: 5,
-    paddingVertical: 10,
-  },
   imgSize: {
     width: 50,
     height: 50,
