@@ -1,4 +1,10 @@
-import React, {useContext, useState, useCallback, useEffect} from 'react';
+import React, {
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+} from 'react';
 import {
   StyleSheet,
   FlatList,
@@ -21,6 +27,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {feedPostsAction} from '../redux/feedPostsSlice';
 import SharedPostCard from '../components/lists/SharedPostCard';
 import EmptyPostCard from '../components/EmptyCards/EmptyPostCard';
+import {useFocusEffect} from '@react-navigation/native';
 
 export default function NewsFeedScreen({navigation, route}) {
   const posts = useSelector(state => state.feedPosts);
@@ -29,9 +36,17 @@ export default function NewsFeedScreen({navigation, route}) {
   const {userState} = useContext(authContext);
   const [activityIndicator, setActivityIndicator] = useState(true);
 
+  const ref = useRef();
+
   useEffect(() => {
     loadNews();
   }, []);
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     ref.current.scrollToOffset({animated: true, offset: 0});
+  //   }, []),
+  // );
 
   const loadNews = () => {
     setActivityIndicator(true);
@@ -118,6 +133,7 @@ export default function NewsFeedScreen({navigation, route}) {
   return (
     <Screen style={styles.container} statusPadding={false}>
       <FlatList
+        ref={ref}
         data={posts}
         ListHeaderComponent={ListHeader}
         keyExtractor={(post, i) => i.toString()}

@@ -2,7 +2,7 @@ import React, {useEffect, useReducer, useMemo} from 'react';
 import {View, StyleSheet, Dimensions, ActivityIndicator} from 'react-native';
 import colors from '../config/colors';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import {removeAxiosToken, setTokenForAxios} from '../services/authHeader';
+import {setAxiosToken} from '../services/authHeader';
 import store from '../redux/store';
 import {Provider} from 'react-redux';
 import AuthContext from '../Contexts/authContext';
@@ -70,7 +70,6 @@ export default function ShareupAuthentication() {
         }),
       )
       .catch(e => {
-
         dispatch({
           type: actions.CLEAR_STATE,
         });
@@ -85,7 +84,7 @@ export default function ShareupAuthentication() {
         const session = await EncryptedStorage.getItem('auth_session');
         if (session) {
           const {username, userToken} = JSON.parse(session);
-          setTokenForAxios(userToken);
+          setAxiosToken(userToken);
           await gettingUserInfo(username, userToken);
         } else {
           dispatch({type: actions.CLEAR_STATE});
@@ -100,14 +99,14 @@ export default function ShareupAuthentication() {
             username,
           }),
         );
-        setTokenForAxios(userToken);
+        setAxiosToken(userToken);
         // getting user information
         await gettingUserInfo(username, userToken);
       },
       // logout
       logout: async () => {
         await EncryptedStorage.removeItem('auth_session');
-        removeAxiosToken();
+        setAxiosToken(null);
         dispatch({type: actions.CLEAR_STATE});
       },
       // signup
@@ -119,16 +118,16 @@ export default function ShareupAuthentication() {
             username,
           }),
         );
-        setTokenForAxios(userToken);
+        setAxiosToken(userToken);
         // getting user information
         await gettingUserInfo(username, userToken);
       },
       // updating user information
-      updateUserInfo: async (userData) => {
-         await dispatch({
-            type: actions.UPDATE_USER,
-            userData,
-          })
+      updateUserInfo: async userData => {
+        await dispatch({
+          type: actions.UPDATE_USER,
+          userData,
+        });
       },
     }),
     [],
@@ -136,12 +135,12 @@ export default function ShareupAuthentication() {
 
   // notification channels
 
-  const createChannels =() =>{
+  const createChannels = () => {
     // PushNotification.createChannel({
     //   channelId:"shareup-id",
     //   channelName:'shareup'
     // })
-  }
+  };
 
   // initial check if token exist
   useEffect(() => {
@@ -161,7 +160,6 @@ export default function ShareupAuthentication() {
     );
   } else {
     return (
-      
       <AuthContext.Provider value={{authActions, userState}}>
         <Provider store={store}>
           {userState.userToken ? <HomeNavigator /> : <AuthNavigator />}
