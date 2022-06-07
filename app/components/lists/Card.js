@@ -44,6 +44,9 @@ function Card({
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [images, setImages] = useState([]);
   const [sliderWidth, setSliderWidth] = useState();
+  const [reactionType, setReactionType] = useState(
+    postData.likedType === 'false' ? 'star' : postData.likedType,
+  );
 
   const dispatch = useDispatch();
   const options = [
@@ -148,9 +151,7 @@ function Card({
     // 01 May 2022 09:24:23
     // var d = new Date(postData.lastEdited); /* midnight in China on April 13th */
     // d.toLocaleString('en-US', { timeZone: 'America/New_York' });
-    const arrDate = postData
-      ? postData?.lastEdited.toString().split(' ')
-      : null;
+    const arrDate = postData?.lastEdited?.split(' ');
     const monthShort = arrDate[1].slice(0, 3);
 
     setFormattedDate({
@@ -198,14 +199,18 @@ function Card({
     }
   };
 
-  const handleReactions = async () => {
-    PostService.likePost(user.id, postData.id, 'star')
+  const handleReactions = emoji => {
+    setReactionType(isUserLiked ? 'star' : emoji);
+    setIsUserLiked(prev => !prev);
+    PostService.likePost(user.id, postData.id, emoji)
       .then(res => {
-        setIsUserLiked(!isUserLiked);
         setNumberOfReactions(res.data.numberOfReaction);
       }) //need to get likePostIds
-      .catch(e => console.error(e));
-    //reloadPost();
+      .catch(e => {
+        console.error(e);
+        setIsUserLiked(prev => !prev);
+        setReactionType(postData.likedType);
+      });
   };
 
   const showDeleteAlert = () =>
@@ -272,6 +277,8 @@ function Card({
           postType={postType}
           noActionBar={noActionBar}
           noOptions={noOptions}
+          reactionType={reactionType}
+          setReactionType={setReactionType}
         />
 
         {!noOptions && (
