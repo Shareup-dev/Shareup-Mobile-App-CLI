@@ -2,7 +2,6 @@ import React from 'react';
 import {View, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
 import reactions from '../../Constants/reactions';
 import {Texts} from '../../Materials/Text';
-import BetterImage from '../betterImage/BetterImage';
 import LinkButton from '../buttons/LinkButton';
 
 const ReactionModal = ({visible, setVisible, onInteraction}) => {

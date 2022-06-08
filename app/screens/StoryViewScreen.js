@@ -441,7 +441,7 @@ function StoryViewScreen({navigation, route}) {
                   {
                     backgroundColor: '#fff',
                     borderRadius: 40,
-                    marginLeft: 10,
+                    marginHorizontal: 10,
                     paddingHorizontal: 15,
                   },
                 ]}>
@@ -477,7 +477,9 @@ function StoryViewScreen({navigation, route}) {
                     source={feeling.img}
                     style={styles.imgSize}
                   /> */}
-                  <Texts style={styles.emojiContainer}>{feeling.emoji}</Texts>
+                  <Texts style={styles.emojiContainer} size={35}>
+                    {feeling.emoji}
+                  </Texts>
                 </View>
               ))}
             </ScrollView>
@@ -492,8 +494,7 @@ export default StoryViewScreen;
 
 const styles = StyleSheet.create({
   emojiContainer: {
-    width: 50,
-    height: 50,
+    marginHorizontal: 2,
   },
   container: {
     justifyContent: 'space-between',

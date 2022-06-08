@@ -132,7 +132,9 @@ export default function SharedPostCard(props) {
     Alert.alert('Delete', 'Are you sure to delete this post', [
       {
         text: 'Yes',
-        onPress: () => {deletePost},
+        onPress: () => {
+          deletePost;
+        },
         style: 'cancel',
       },
       {
@@ -140,17 +142,17 @@ export default function SharedPostCard(props) {
         style: 'cancel',
       },
     ]);
-    const deletePost = async () => {
-      postService
-        .deletePost(item.id)
-        .then(res => {
-          if (res.status === 200){
-            dispatch(feedPostsAction.removeFeedPost(postData.id));
-            navigation.navigate(routes.FEED);
-          }
-        })
-        .catch(e => alert(e));
-      }
+  const deletePost = async () => {
+    postService
+      .deletePost(item.id)
+      .then(res => {
+        if (res.status === 200) {
+          dispatch(feedPostsAction.removeFeedPost(postData.id));
+          navigation.navigate(routes.FEED);
+        }
+      })
+      .catch(e => alert(e));
+  };
 
   const HeaderComponent = () => {
     return (
@@ -211,16 +213,7 @@ export default function SharedPostCard(props) {
             // onPress={() => { navigation.navigate(routes.POST_DETAILS_SCREEN, { postData: item.post }) }}
           />
         );
-      // case "share":
-      //   return (
-      //     <SharedPostCard
-      //     user={item.userdata}
-      //     postData={item}
-      //     navigation={navigation}
-      //     reloadPosts={loadNews}
-      //     postType={item.allPostsType}
-      //     />
-      //   );
+
       case constants.postTypes.HANG_SHARE:
         return (
           <SwapCard

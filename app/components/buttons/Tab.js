@@ -61,22 +61,13 @@ export default function AppButton({
           backgroundColor: color,
           width,
           height,
-          // paddingHorizontal: 20 * sizeRatio,
           paddingHorizontal: 10,
         },
         style,
         {opacity: disabled ? 0.6 : 1},
       ]} //wrap the button inside a container to modify the width: ;
       onPress={user ? () => onPress(user) : onPress}
-      disabled={disabled}
-      // onPress={() => {
-      //   if (user) {
-      //     onPress(user);
-      //   } else {
-      //     onPress();
-      //   }
-      // }}
-    >
+      disabled={disabled}>
       {(iconName || iconImage) && renderIcon()}
       {title && (
         <Text

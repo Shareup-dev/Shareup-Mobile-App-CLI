@@ -161,56 +161,57 @@ const PostActions = ({
             )}
           </View>
         </View>
+        {!noActionBar && (
+          <View style={styles.actionsContainer}>
+            <Tab
+              textFontSize={17}
+              iconName={!isUserLiked && 'star'}
+              iconType="FontAwesome5"
+              title={
+                isUserLiked
+                  ? `${findEmoji(reactionType)} ${numberOfReactions}`
+                  : ` ${numberOfReactions}`
+              }
+              sizeRatio={actionsTabSizeRatio}
+              style={[
+                styles.actionTab,
+                isUserLiked && {backgroundColor: colors.iondigoDye},
+              ]}
+              color={colors.mediumGray}
+              fontColor={colors.white}
+              onLongPress={() =>
+                !isUserLiked
+                  ? setOpenModal(true)
+                  : increaseReactionCount(reactionType)
+              }
+              onPress={() => {
+                increaseReactionCount(reactionType);
+              }}
+            />
 
-        <View style={styles.actionsContainer}>
-          <Tab
-            textFontSize={17}
-            iconName={!isUserLiked && 'star'}
-            iconType="FontAwesome5"
-            title={
-              isUserLiked
-                ? `${findEmoji(reactionType)} ${numberOfReactions}`
-                : ` ${numberOfReactions}`
-            }
-            sizeRatio={actionsTabSizeRatio}
-            style={[
-              styles.actionTab,
-              isUserLiked && {backgroundColor: colors.iondigoDye},
-            ]}
-            color={colors.mediumGray}
-            fontColor={colors.white}
-            onLongPress={() =>
-              !isUserLiked
-                ? setOpenModal(true)
-                : increaseReactionCount(reactionType)
-            }
-            onPress={() => {
-              increaseReactionCount(reactionType);
-            }}
-          />
+            <Tab
+              title={numberOfComments}
+              onPress={navigateToComments}
+              iconName="comment"
+              iconType="Octicons"
+              sizeRatio={actionsTabSizeRatio}
+              style={styles.actionTab}
+              color={colors.mediumGray}
+              fontColor={colors.white}
+            />
 
-          <Tab
-            title={numberOfComments}
-            onPress={navigateToComments}
-            iconName="comment"
-            iconType="Octicons"
-            sizeRatio={actionsTabSizeRatio}
-            style={styles.actionTab}
-            color={colors.mediumGray}
-            fontColor={colors.white}
-          />
-
-          <Tab
-            title={'0'}
-            iconImage={require('../assets/icons/share-icon.png')}
-            sizeRatio={actionsTabSizeRatio}
-            style={styles.actionTab}
-            color={colors.mediumGray}
-            onPress={navigateToShare}
-            fontColor={colors.white}
-            iconSize={10}
-          />
-        </View>
+            <Tab
+              title={'0'}
+              iconImage={require('../assets/icons/share-icon.png')}
+              sizeRatio={actionsTabSizeRatio}
+              style={styles.actionTab}
+              color={colors.mediumGray}
+              onPress={navigateToShare}
+              fontColor={colors.white}
+              iconSize={10}
+            />
+          </View>
+        )}
       </View>
       <Reaction
         visible={openModal}
