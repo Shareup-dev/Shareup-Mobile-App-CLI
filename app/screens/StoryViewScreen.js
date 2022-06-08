@@ -30,7 +30,7 @@ import AuthContext from '../Contexts/authContext';
 import UserProfilePicture from '../components/UserProfilePicture';
 import moment from 'moment';
 import {Texts, Title} from '../Materials/Text';
-import {feelings} from '../components/Data/activitiesAndFeelings';
+import feelings from '../Constants/reactions';
 import BetterImage from '../components/betterImage/BetterImage';
 import Screen from '../components/Screen';
 
@@ -471,12 +471,13 @@ function StoryViewScreen({navigation, route}) {
               </View>
 
               {feelings.map((feeling, index) => (
-                <View>
-                  <BetterImage
+                <View key={index}>
+                  {/* <BetterImage
                     noBackground
                     source={feeling.img}
                     style={styles.imgSize}
-                  />
+                  /> */}
+                  <Texts style={styles.emojiContainer}>{feeling.emoji}</Texts>
                 </View>
               ))}
             </ScrollView>
@@ -490,6 +491,10 @@ function StoryViewScreen({navigation, route}) {
 export default StoryViewScreen;
 
 const styles = StyleSheet.create({
+  emojiContainer: {
+    width: 50,
+    height: 50,
+  },
   container: {
     justifyContent: 'space-between',
     height: windowHeight,

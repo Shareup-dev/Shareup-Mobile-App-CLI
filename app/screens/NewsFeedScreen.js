@@ -68,56 +68,59 @@ export default function NewsFeedScreen({navigation, route}) {
   };
 
   const renderItem = ({item}) => {
-    switch (item.allPostsType) {
-      case constants.postTypes.SWAP:
-        return (
-          <SwapCard
-            navigation={navigation}
-            route={route}
-            item={item}
-            userId={item.userdata.id}
-            // onPress={() => {
-            //   navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
-            // }}
-          />
-        );
-      case 'share':
-        return (
-          <SharedPostCard
-            user={item.userdata}
-            postData={item}
-            navigation={navigation}
-            reloadPosts={loadNews}
-            postType={item.allPostsType}
-          />
-        );
-      case constants.postTypes.HANG_SHARE:
-        return (
-          <SwapCard
-            navigation={navigation}
-            route={route}
-            item={item}
-            userId={item.userdata.id}
-            // onPress={() => {
-            //   navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
-            // }}
-          />
-        );
+    if (activityIndicator) {
+      return <EmptyPostCard />;
+    } else
+      switch (item.allPostsType) {
+        case constants.postTypes.SWAP:
+          return (
+            <SwapCard
+              navigation={navigation}
+              route={route}
+              item={item}
+              userId={item.userdata.id}
+              // onPress={() => {
+              //   navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
+              // }}
+            />
+          );
+        case 'share':
+          return (
+            <SharedPostCard
+              user={item.userdata}
+              postData={item}
+              navigation={navigation}
+              reloadPosts={loadNews}
+              postType={item.allPostsType}
+            />
+          );
+        case constants.postTypes.HANG_SHARE:
+          return (
+            <SwapCard
+              navigation={navigation}
+              route={route}
+              item={item}
+              userId={item.userdata.id}
+              // onPress={() => {
+              //   navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
+              // }}
+            />
+          );
 
-      default:
-        return (
-          <Card
-            user={item.userdata}
-            postData={item}
-            navigation={navigation}
-            reloadPosts={loadNews}
-            postType={item.allPostsType}
-            // onPress={() => {
-            //   navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
-            // }}
-          />
-        );
-    }
+        default:
+          return (
+            <Card
+              user={item.userdata}
+              postData={item}
+              navigation={navigation}
+              reloadPosts={loadNews}
+              postType={item.allPostsType}
+              // onPress={() => {
+              //   navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
+              // }}
+            />
+          );
+      }
   };
 
   const hideActivityIndicator = () => {

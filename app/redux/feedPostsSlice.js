@@ -8,7 +8,10 @@ const feedPostsSlice = createSlice({
       return (previousState = newFeedPost.payload);
     },
     addFeedPost: (previousFeedPosts, newFeedPost) => {
-      let allFeedPosts = [newFeedPost.payload, ...previousFeedPosts];
+      let allFeedPosts = [
+        {...newFeedPost.payload, likedType: 'false'},
+        ...previousFeedPosts,
+      ];
       return (previousFeedPosts = allFeedPosts);
     },
     removeFeedPost: (previousFeedPosts, key) => {
