@@ -10,6 +10,7 @@ class PostService {
     });
   getPostByEmail = (email, config) =>
     AuthAxios.get(`posts/email/${email}`, config);
+  getPostByUserID = (uid, config) => AuthAxios.get(`user/posts/${uid}`, config);
   getPostByPostId = pid => AuthAxios.get(`posts/post-by-id/${pid}`);
   getSavedPost = uid => AuthAxios.get(`${uid}/getSavedPosts`);
   deletePost = postId => AuthAxios.delete(`posts/${postId}`);
@@ -17,7 +18,6 @@ class PostService {
   getPosts = () => AuthAxios.get(`posts`);
   likePost = (uid, pid, emoji) =>
     AuthAxios.put(`${uid}/like-unlike/${pid}`, {emoji: emoji});
-  
 
   sharePost = (uid, pid, data) => AuthAxios.post(`share/${uid}/${pid}`, data);
   getSharedPostById = id => AuthAxios.get(`share/${id}`);

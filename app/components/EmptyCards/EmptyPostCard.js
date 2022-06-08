@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react';
-import {Animated, StyleSheet, View, } from 'react-native';
+import {Animated, StyleSheet, View} from 'react-native';
 
 export default React.memo(function EmptyPostCard({count = 3}) {
   const array = Array(count).fill(0, 0, count);
@@ -32,23 +32,53 @@ export default React.memo(function EmptyPostCard({count = 3}) {
   return (
     <View style={styles.container}>
       {array.map((ele, i) => (
-        <View View style={[styles.card]}>
-          <Animated.View style={[styles.img,{opacity:fadeAnim}]} />
+        <View key={i} View style={[styles.card]}>
+          <Animated.View style={[styles.img, {opacity: fadeAnim}]} />
           <View style={styles.bottomCard}>
             <View style={styles.profileContainer}>
-              <Animated.View style={[styles.profile,{opacity:fadeAnim}]} />
+              <Animated.View style={[styles.profile, {opacity: fadeAnim}]} />
               <View>
-                <Animated.View style={[styles.name, {height: 15,opacity:fadeAnim, width: 80}]} />
-                <Animated.View style={[styles.name, {height: 10,opacity:fadeAnim, width: 110}]} />
+                <Animated.View
+                  style={[
+                    styles.name,
+                    {height: 15, opacity: fadeAnim, width: 80},
+                  ]}
+                />
+                <Animated.View
+                  style={[
+                    styles.name,
+                    {height: 10, opacity: fadeAnim, width: 110},
+                  ]}
+                />
               </View>
             </View>
             <View style={styles.row}>
-              <Animated.View style={[styles.name, {height: 12,opacity:fadeAnim, width: 40}]} />
-              <Animated.View style={[styles.name, {height: 10,opacity:fadeAnim, width: 100}]} />
+              <Animated.View
+                style={[
+                  styles.name,
+                  {height: 12, opacity: fadeAnim, width: 40},
+                ]}
+              />
+              <Animated.View
+                style={[
+                  styles.name,
+                  {height: 10, opacity: fadeAnim, width: 100},
+                ]}
+              />
             </View>
             <View style={styles.row}>
-              <Animated.View style={[styles.name, {height: 10,opacity:fadeAnim, width: 120}]} />
-              <Animated.View style={[styles.name, {height: 10,opacity:fadeAnim, width: 30}]} />
+              <Animated.View
+                style={[
+                  styles.name,
+                  {height: 10, opacity: fadeAnim, width: 120},
+                ]}
+              />
+              <Animated.View
+                style={[
+                  styles.name,
+                  {height: 10, opacity: fadeAnim, width: 30},
+                ]}
+              />
             </View>
           </View>
         </View>
@@ -76,7 +106,7 @@ const styles = StyleSheet.create({
   profileContainer: {
     flexDirection: 'row',
     marginHorizontal: 10,
-    marginTop:10
+    marginTop: 10,
   },
   profile: {
     height: 55,
