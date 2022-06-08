@@ -33,7 +33,9 @@ function Card({
   noActionBar,
   noOptions,
 }) {
-  const {userState} = useContext(authContext);
+  const {
+    userState: {userData},
+  } = useContext(authContext);
   const [numberOfReactions, setNumberOfReactions] = useState(
     postData.numberOfReaction,
   );
@@ -49,6 +51,15 @@ function Card({
   );
 
   const dispatch = useDispatch();
+
+  const navigateToShare = () => {
+    dispatch(postDataSliceAction.setPostData(postData));
+    navigation.navigate(routes.ADD_POST, {
+      postType: constants.postTypes.SHARE_POST,
+      // postData,
+    });
+  };
+
   const options = [
     {
       title: 'Save post',
@@ -69,7 +80,7 @@ function Card({
       },
     },
     {
-      title: userState?.userData?.id === user?.id ? 'Edit' : '',
+      title: userData?.id === user?.id ? 'Edit' : '',
       icon: {image: require('../../assets/post-options-icons/swap-icon.png')},
       onPress: () => {
         dispatch(postDataSliceAction.setEditPost(true));
@@ -91,11 +102,7 @@ function Card({
         image: require('../../assets/post-options-icons/share-friends-icon.png'),
       },
       onPress: () => {
-        dispatch(postDataSliceAction.setPostData(postData));
-        navigation.navigate(routes.ADD_POST, {
-          postType: constants.postTypes.SHARE_POST,
-          // postData,
-        });
+        navigateToShare();
         setIsOptionsVisible(false);
       },
     },
@@ -109,7 +116,7 @@ function Card({
       },
     },
     {
-      title: userState?.userData?.id !== user?.id ? 'Unfollow' : '',
+      title: userData?.id !== user?.id ? 'Unfollow' : '',
       icon: {
         image: require('../../assets/post-options-icons/unfollow-icon.png'),
       },
@@ -119,21 +126,19 @@ function Card({
     },
     {
       title:
-        userState?.userData?.id !== user?.id ? (
+        userData?.id !== user?.id ? (
           <Text style={{color: colors.dark}}>Report</Text>
         ) : (
           <Text style={{color: colors.red}}>Delete</Text>
         ),
       icon: {
         image:
-          userState?.userData?.id !== user?.id
+          userData?.id !== user?.id
             ? require('../../assets/post-options-icons/report-icon.png')
             : require('../../assets/post-options-icons/delete-red-icon.png'),
       },
       onPress: () => {
-        userState?.userData?.id !== user?.id
-          ? alert('Report')
-          : showDeleteAlert();
+        userData?.id !== user?.id ? alert('Report') : showDeleteAlert();
       },
     },
   ];
@@ -202,7 +207,7 @@ function Card({
   const handleReactions = emoji => {
     setReactionType(isUserLiked ? 'star' : emoji);
     setIsUserLiked(prev => !prev);
-    PostService.likePost(user.id, postData.id, emoji)
+    PostService.likePost(userData.id, postData.id, emoji)
       .then(res => {
         setNumberOfReactions(res.data.numberOfReaction);
       }) //need to get likePostIds
@@ -279,6 +284,7 @@ function Card({
           noOptions={noOptions}
           reactionType={reactionType}
           setReactionType={setReactionType}
+          navigateToShare={navigateToShare}
         />
 
         {!noOptions && (

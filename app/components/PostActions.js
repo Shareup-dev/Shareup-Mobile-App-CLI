@@ -36,6 +36,7 @@ const PostActions = ({
   noActionBar,
   noOptions,
   setReactionType,
+  navigateToShare,
   reactionType,
 }) => {
   const fromReply = false;
@@ -47,7 +48,7 @@ const PostActions = ({
     moment(postData.published, 'DD MMMM YYYY hh:mm:ss').fromNow(),
     // null
   );
-
+  const actionsTabSizeRatio = 0.5;
   const [openModal, setOpenModal] = useState(false);
   const [topThreeReactions, setTopThreeReactions] = useState([]);
 
@@ -79,6 +80,16 @@ const PostActions = ({
         .slice(0, 2),
     );
   };
+
+  const navigateToComments = () =>
+    navigation.navigate(routes.COMMENTS, {
+      postId,
+      userId,
+      //comments,
+      postType,
+      swapId,
+      fromReply,
+    });
 
   return (
     <View style={styles.content}>
@@ -152,18 +163,35 @@ const PostActions = ({
         </View>
 
         <View style={styles.actionsContainer}>
-          {/* <Tab
-            title={numberOfReactions}
-            iconName="star"
+          <Tab
+            textFontSize={17}
+            iconName={!isUserLiked && 'star'}
             iconType="FontAwesome5"
+            title={
+              isUserLiked
+                ? `${findEmoji(reactionType)} ${numberOfReactions}`
+                : ` ${numberOfReactions}`
+            }
             sizeRatio={actionsTabSizeRatio}
-            style={styles.actionTab}
+            style={[
+              styles.actionTab,
+              isUserLiked && {backgroundColor: colors.iondigoDye},
+            ]}
             color={colors.mediumGray}
             fontColor={colors.white}
+            onLongPress={() =>
+              !isUserLiked
+                ? setOpenModal(true)
+                : increaseReactionCount(reactionType)
+            }
+            onPress={() => {
+              increaseReactionCount(reactionType);
+            }}
           />
 
           <Tab
             title={numberOfComments}
+            onPress={navigateToComments}
             iconName="comment"
             iconType="Octicons"
             sizeRatio={actionsTabSizeRatio}
@@ -178,26 +206,10 @@ const PostActions = ({
             sizeRatio={actionsTabSizeRatio}
             style={styles.actionTab}
             color={colors.mediumGray}
+            onPress={navigateToShare}
             fontColor={colors.white}
             iconSize={10}
-          /> */}
-          <TouchableWithoutFeedback
-            onPress={() =>
-              navigation.navigate(routes.COMMENTS, {
-                postId,
-                userId,
-                //comments,
-                postType,
-                swapId,
-                fromReply,
-              })
-            }>
-            <>
-              {topThreeReactions.map(item => (
-                <Texts size={16}>{` ${findEmoji(item[0])} ${item[1]}`}</Texts>
-              ))}
-            </>
-          </TouchableWithoutFeedback>
+          />
         </View>
       </View>
       <Reaction
@@ -207,7 +219,7 @@ const PostActions = ({
       />
       {!noActionBar && (
         <View style={styles.actionsBar}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onLongPress={() =>
               !isUserLiked
                 ? setOpenModal(true)
@@ -216,11 +228,7 @@ const PostActions = ({
             onPress={() => {
               increaseReactionCount(reactionType);
             }}>
-            <View
-              style={[
-                styles.likes,
-                {backgroundColor: isUserLiked ? '#cacaca60' : null},
-              ]}>
+            <View style={[styles.likes]}>
               {isUserLiked ? (
                 <Texts style={styles.star} size={20}>
                   {findEmoji(reactionType)}
@@ -242,9 +250,8 @@ const PostActions = ({
                 {reactionType}
               </Texts>
             </View>
-          </TouchableOpacity>
-
-          <View style={styles.commentsShares}>
+          </TouchableOpacity> */}
+          <View style={styles.row}>
             <TouchableWithoutFeedback
               onPress={() =>
                 navigation.navigate(routes.COMMENTS, {
@@ -256,6 +263,30 @@ const PostActions = ({
                   fromReply,
                 })
               }>
+              <>
+                {topThreeReactions.map(item => (
+                  <View
+                    style={{
+                      backgroundColor: '#fff',
+                      borderRadius: 30,
+                      alignItems: 'center',
+                      marginLeft: -6,
+                    }}>
+                    <Texts size={16}>{` ${findEmoji(item[0])}`}</Texts>
+                  </View>
+                ))}
+                {/* <Texts size={14} style={{marginLeft: 5, fontWeight: '600'}}>
+                  {numberOfReactions > 0 ? numberOfReactions : null}
+                </Texts> */}
+                <Texts size={12} style={{fontWeight: '700'}}>
+                  {numberOfReactions > 0 && ` ${numberOfReactions}`}
+                </Texts>
+              </>
+            </TouchableWithoutFeedback>
+          </View>
+
+          <View style={styles.commentsShares}>
+            <TouchableWithoutFeedback onPress={navigateToComments}>
               <Texts
                 style={
                   styles.bold
@@ -355,7 +386,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 3,
-    paddingHorizontal: 10,
     borderRadius: 20,
   },
   actionsText: {

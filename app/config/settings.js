@@ -21,8 +21,6 @@ const settings = {
   },
 };
 
-const getCurrentSettings = () => {
-  return settings.dev;
-};
+const getCurrentSettings = () => settings.dev;
 
 export default getCurrentSettings();

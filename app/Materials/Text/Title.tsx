@@ -18,7 +18,15 @@ const Title: React.FC<Props> = ({
   return (
     <Text
       {...rest}
-      style={[style, {fontSize: size, color: color, fontWeight: '700'}]}>
+      style={[
+        style,
+        {
+          fontSize: size,
+          color: color,
+          fontWeight: '700',
+          textTransform: 'capitalize',
+        },
+      ]}>
       {children}
     </Text>
   );

@@ -12,7 +12,7 @@ export default function AppButton({
   width,
   height = 40 * sizeRatio,
   style,
-  iconName= "",
+  iconName = '',
   user,
   iconType,
   iconImage,
@@ -23,7 +23,7 @@ export default function AppButton({
   fontWeight = 'normal',
   titleStyle,
   disabled = false,
-  
+  ...rest
 }) {
   const renderIcon = () => {
     if (iconName)
@@ -35,6 +35,7 @@ export default function AppButton({
           color={fontColor}
           backgroundColor={color}
           style={styles.icon}
+          noBackground
           backgroundSizeRatio={0.9}
         />
       );
@@ -53,6 +54,7 @@ export default function AppButton({
 
   return (
     <TouchableOpacity
+      {...rest}
       style={[
         styles.button,
         {
@@ -101,12 +103,11 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft:5,
-    marginRight:5,
+    marginLeft: 5,
+    marginRight: 5,
     // paddingHorizontal: 20 / sizeRatio,
   },
   title: {
-    // fontSize: 13 / sizeRatio,
     // marginLeft: 5 / sizeRatio,
   },
 });

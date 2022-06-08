@@ -594,7 +594,7 @@ export default function AddPostScreen({navigation, route}) {
         <View style={styles.row}>
           <UserProfilePicture style={styles.userProfile} />
           <View style={styles.column}>
-            <Title size={14}>
+            <Title>
               {user.firstName} {user.lastName}
             </Title>
             <View style={[styles.row]}>
