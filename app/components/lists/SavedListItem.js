@@ -115,7 +115,7 @@ export default function SavedListItem({
           <Image source={{ uri: images[0] }} style={styles.image} />
         )}
         <View style={styles.contentView}>
-          {postData.content !== "" && <Text numberOfLines={2} ellipsizeMode='tail' style={styles.postText}>{postData.content}</Text>}
+          {postData.content !== "" && <Texts size={15} truncate={true} style={styles.postText}>{postData.content}</Texts>}
           <View style={{
             flexDirection: 'row',
             marginTop: 5,
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
   postText: {
     fontSize: 13,
     fontWeight: '700',
-    marginTop: 10,
+    marginTop: 25,
     marginLeft: 10,
   },
   optionsIcon: {

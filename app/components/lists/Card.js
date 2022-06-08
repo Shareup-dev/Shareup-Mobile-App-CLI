@@ -55,9 +55,8 @@ function Card({
       icon: {
         image: require('../../assets/post-options-icons/save-post-icon.png'),
       },
-      onPress: () => {
-        savePost(postData.id);
-      },
+      onPress: () => {savePost(postData.id)}
+      ,
     },
     {
       title: 'Hide my profile',
@@ -65,7 +64,7 @@ function Card({
         image: require('../../assets/post-options-icons/hide-profile-icon.png'),
       },
       onPress: () => {
-        savePost(postData.id);
+       alert("hide my profile")
       },
     },
     {
@@ -184,7 +183,12 @@ function Card({
   //.................... POST ACTION METHOD .............................//
   const savePost = itemId => {
     PostService.savePost(userState?.userData?.id, itemId).then(res => {
-      alert('Post saved...');
+      if (res.status === 200){
+        alert('post saved...');
+      }else if (res.status === 201){
+        alert('Removed...');
+      }
+      
     });
   };
   const loadImages = () => {

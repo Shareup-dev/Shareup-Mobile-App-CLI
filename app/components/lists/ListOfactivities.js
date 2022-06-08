@@ -21,7 +21,7 @@ export default function ListOfActivities(props) {
         activeOpacity={0.6}
         onPress={() => {
           dispatch(
-            postFeelingsActions.setFeel({feeling: name, icon, color, type}),
+            postFeelingsActions.setFeel({feeling: name, icon, color, type:'Activity'}),
           );
           props.navigation.goBack();
         }}>

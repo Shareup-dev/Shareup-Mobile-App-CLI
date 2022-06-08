@@ -141,7 +141,7 @@ export default function SharedPostCard(props) {
       },
     ]);
     const deletePost = async () => {
-      console.log("here");
+    
       postService
         .deletePost(item.id)
         .then(res => {

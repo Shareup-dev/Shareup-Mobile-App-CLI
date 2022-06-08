@@ -63,7 +63,7 @@ const SwapCard = ({
   };
 
   useEffect(() => {
-    console.log(userState?.userData?.id , user?.id);
+    
     loadImages();
     checkIfLiked();
   }, []);
@@ -82,7 +82,7 @@ const SwapCard = ({
         image: require('../../assets/post-options-icons/save-post-icon.png'),
       },
       onPress: () => {
-        alert('Save post');
+        savePost(item.id);
       },
     },
     {
@@ -199,6 +199,16 @@ const SwapCard = ({
       .catch(e => alert(e));
 
    
+  };
+  const savePost = itemId => {
+    postService.savePost(userState?.userData?.id, itemId).then(res => {
+      if (res.status === 200){
+        alert('Post saved...');
+      }else if (res.status === 201){
+        alert('Removed...');
+      }
+      
+    });
   };
   const onLayout = e => {
     setSliderWidth(e.nativeEvent.layout.width);

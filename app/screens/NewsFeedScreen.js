@@ -44,7 +44,7 @@ export default function NewsFeedScreen({navigation, route}) {
   const ref = useRef();
 
   useEffect(() => {
-    console.log(refresh);
+    
     loadNews();
 
     dispatch(postRefreshAction.clearPostRefresh())

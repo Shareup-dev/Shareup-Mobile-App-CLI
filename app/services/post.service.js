@@ -11,13 +11,13 @@ class PostService {
   getPostByEmail = (email, config) =>
     AuthAxios.get(`posts/email/${email}`, config);
   getPostByPostId = pid => AuthAxios.get(`posts/post-by-id/${pid}`);
-  getSavedPost = email => AuthAxios.get(`posts/${email}/saved_posts`);
+  getSavedPost = uid => AuthAxios.get(`${uid}/getSavedPosts`);
   deletePost = postId => AuthAxios.delete(`posts/${postId}`);
   editPost = (postId, data) => AuthAxios.put(`posts/${postId}`, data);
   getPosts = () => AuthAxios.get(`posts`);
   likePost = (uid, pid, emoji) =>
     AuthAxios.put(`${uid}/like-unlike/${pid}`, {emoji: emoji});
-  savePost = (uid, pid) => AuthAxios.put(`posts/${uid}/save-unsave/${pid}`);
+  
 
   sharePost = (uid, pid, data) => AuthAxios.post(`share/${uid}/${pid}`, data);
   getSharedPostById = id => AuthAxios.get(`share/${id}`);
@@ -27,7 +27,7 @@ class PostService {
   likePost = (uid, pid, emoji) =>
     AuthAxios.put(`${uid}/like-unlike/${pid}`, {emoji: emoji});
   deletePost = postId => AuthAxios.delete(`allpost/${postId}`);
-
+  savePost = (uid, pid) => AuthAxios.put(`allposts/${uid}/save-unsave/${pid}`);
   /******************** COMMENT *******************/
   addComment = (userid, postid, comment) =>
     AuthAxios.post(`comment/${userid}/${postid}`, comment);

@@ -17,6 +17,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import authContext from '../Contexts/authContext';
 import postService from '../services/post.service';
 import constants from '../config/constants';
+import swapService from '../services/swap.service';
 
 export default function SavedPostsScreen({navigation, route}) {
   const {params} = route;
@@ -25,16 +26,18 @@ export default function SavedPostsScreen({navigation, route}) {
  
   useFocusEffect(
     useCallback(() => {
-      getSavedPost(userState.userData.email);
+      getSavedPost(userState.userData.id);
     }, []),
   );
-  const getSavedPost = userEmail => {
+  const getSavedPost = id => {
     if (params.category === constants.postTypes.SWAP){
-
+      swapService.getSavedPost(id).then(res => {
+        setSavedData(res.data);
+      });
     }else if (params.category === constants.postTypes.HANG_SHARE){
 
     }else{
-    postService.getSavedPost(userEmail).then(res => {
+    postService.getSavedPost(id).then(res => {
       setSavedData(res.data);
     });
   }
@@ -95,11 +98,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   listItem: {
-    // borderRadius: 10,
-    // backgroundColor: colors.white,
-    // flexDirection: 'row',
-    // justifyContent: 'space-between',
-    // alignItems: 'center',
+    borderRadius: 10,
+    backgroundColor: colors.white,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     
   },
   
