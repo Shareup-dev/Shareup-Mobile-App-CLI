@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, TouchableWithoutFeedback, Text} from 'react-native';
+import { View, StyleSheet, TouchableWithoutFeedback, Text } from 'react-native';
 import colors from '../../config/colors';
 import { Header, Texts } from '../../Materials/Text';
 
@@ -19,8 +19,8 @@ export default function HeaderWithBackArrow({
         <Icon
           name="chevron-back"
           type="Ionicons"
-          size={45}
-          backgroundSizeRatio={0.8}
+          size={25}
+          backgroundSizeRatio={1}
         />
       </TouchableWithoutFeedback>
       {leftComponent}
@@ -39,14 +39,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     //paddingVertical: 10,
-    paddingHorizontal: 0,
+    paddingHorizontal: 10,
     height: 60,
     backgroundColor: '#FFF',
-    zIndex:100
+    zIndex: 100
   },
   title: {
     fontSize: 22,
     fontWeight: 'bold',
+    paddingLeft:10,
   },
   rightComponent: {
     position: 'absolute',

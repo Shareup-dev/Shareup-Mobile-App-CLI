@@ -1,4 +1,4 @@
-import React, {useContext, useState, useRef, useEffect, useMemo} from 'react';
+import React, { useContext, useState, useRef, useEffect, useMemo } from 'react';
 import {
   StyleSheet,
   View,
@@ -10,7 +10,7 @@ import {
   Keyboard,
 } from 'react-native';
 import Icon from '../components/Icon';
-import {groupPostsActions} from '../redux/groupPosts';
+import { groupPostsActions } from '../redux/groupPosts';
 import EnhancedOptionsDrawer from '../components/drawers/EnhancedOptionsDrawer';
 import IconButton from '../components/buttons/IconButton';
 import Text from '../components/Text';
@@ -31,40 +31,39 @@ import {
 import OptionsDrawer from '../components/drawers/OptionsDrawer';
 import store from '../redux/store';
 import ImageInputList from '../components/ImageInputList';
-import {feedPostsAction} from '../redux/feedPostsSlice';
+import { feedPostsAction } from '../redux/feedPostsSlice';
 import RadioOptionDrawer from '../components/drawers/RadioOptionDrawer';
 import OptionBox from '../components/posts/OptionBox';
-import {useDispatch, useSelector} from 'react-redux';
-import {postFeelingsActions} from '../redux/postFeelings';
+import { useDispatch, useSelector } from 'react-redux';
+import { postFeelingsActions } from '../redux/postFeelings';
 import UserProfilePicture from '../components/UserProfilePicture';
 import hangShareService from '../services/hangShare.service';
 import postService from '../services/post.service';
 import common from '../config/common';
 import BetterImage from '../components/betterImage/BetterImage';
 import CustomImageSlider from '../components/ImageSlider/CustomImageSlider';
-import {postDataSliceAction} from '../redux/postDataSlice';
-import {Texts, Title} from '../Materials/Text';
-import {ProgressBar} from 'react-native-paper';
+import { postDataSliceAction } from '../redux/postDataSlice';
+import { Texts, Title } from '../Materials/Text';
+import { ProgressBar } from 'react-native-paper';
 
-export default function AddPostScreen({navigation, route}) {
-  const {groupId, postType} = route.params;
-  const {userData: user} = useContext(authContext)?.userState;
+export default function AddPostScreen({ navigation, route }) {
+  const { groupId, postType } = route.params;
+  const { userData: user } = useContext(authContext)?.userState;
   const [loading, setLoading] = useState(false);
 
   const [tagedUserData, setTagedUserData] = useState([]);
   const [placeholder, setPlaceHolder] = useState('We Share, Do you?');
   const dispatch = useDispatch();
   const postFeel = useSelector(state => state.postFeel);
-  const {postTypes} = constants;
+  const { postTypes } = constants;
   const DEFAULT_TEXT = 'We Share, Do You ?';
-  const SWAP_DEFAULT_TEXT = 'Hi all \n I want to Swap ...';
-  const HANG_SHARE_TEXT = 'Please anyone want this,can have it';
+  const SWAP_DEFAULT_TEXT = 'We Share, Do You ?';
+  const HANG_SHARE_TEXT = 'We Share, Do You ?';
   const isEdit = useSelector(state => state.updatePostMode);
   //const postData = useSelector(state => state.updatePostData)
   const groupid = useSelector(state => state.groupIdSlice);
   const postData = useSelector(state => state.postDataSlice);
   const textInputRef = useRef();
-  const [tagedPeople, setTagedPeople] = useState([postData.tagedList]);
   const sharePostDrawerRef = useRef(null); // reference for the enhanced drawer.
   const createPostDrawerRef = useRef(null); // reference for the enhanced drawer.
   const privacyOptions = useMemo(() => common.privacyOptions, []);
@@ -84,35 +83,35 @@ export default function AddPostScreen({navigation, route}) {
     [
       {
         title: 'Share Feed',
-        icon: {image: require('../assets/icons/gray-feed-icon.png')},
+        icon: { image: require('../assets/icons/gray-feed-icon.png') },
         onPress: () => {
           alert('Share Feed');
         },
       },
       {
         title: 'Share time',
-        icon: {image: require('../assets/icons/gray-share-time-icon.png')},
+        icon: { image: require('../assets/icons/gray-share-time-icon.png') },
         onPress: () => {
           alert('Share time');
         },
       },
       {
         title: 'Share Friends',
-        icon: {image: require('../assets/icons/gray-share-friends-icon.png')},
+        icon: { image: require('../assets/icons/gray-share-friends-icon.png') },
         onPress: () => {
           alert('Share Friends');
         },
       },
       {
         title: 'Share Point',
-        icon: {image: require('../assets/icons/gray-share-point-icon.png')},
+        icon: { image: require('../assets/icons/gray-share-point-icon.png') },
         onPress: () => {
           alert('Share Point');
         },
       },
       {
         title: 'Share Groups',
-        icon: {image: require('../assets/icons/gray-share-groups-icon.png')},
+        icon: { image: require('../assets/icons/gray-share-groups-icon.png') },
         onPress: () => {
           alert('Share Groups');
         },
@@ -260,6 +259,15 @@ export default function AddPostScreen({navigation, route}) {
     if (content.groupId) {
       formData.append('groupid', content.groupId);
     }
+    if (content.activity) {
+      formData.append('activity', content.activity);
+    }
+    if (content.feelings) {
+      formData.append('feelings', content.feelings);
+    }
+    if (content.tag) {
+      formData.append('tag', content.tag);
+    }
     if (content.category) {
       formData.append('category', content.category);
     }
@@ -309,7 +317,9 @@ export default function AddPostScreen({navigation, route}) {
         text: text,
         images: images,
         groupId: postData['groupId'],
-        tagedList: postData.tagedList,
+        tag: postData.tagedList.names,
+        feeling: '',
+        activity: '',
       };
       const formData = createPostFormData(postContent);
       PostService.createPost(user.id, formData)
@@ -338,7 +348,7 @@ export default function AddPostScreen({navigation, route}) {
     const swapContent = {
       text: text === '' ? placeholder : text,
       images: images,
-      tagedList: postData.tagedList,
+      tagedList: postData.tagedList.names,
     };
 
     const formData = createPostFormData(swapContent);
@@ -377,7 +387,7 @@ export default function AddPostScreen({navigation, route}) {
       text: text === '' ? placeholder : text,
       category: 'gifts',
       images: images,
-      tagedList: postData.tagedList,
+      tagedList: postData.tagedList.names,
     };
     const formData = createPostFormData(swapContent);
     if (postData['EditPost']) {
@@ -435,12 +445,15 @@ export default function AddPostScreen({navigation, route}) {
     if (text === '' && images.length === 0) {
       setError("Can't Create empty post");
     } else {
+     
+      console.log(postFeel,postData.tagedList.emails);
       const postContent = {
         text: text === '' ? placeholder : text,
         images: images,
         feeling: postFeel.feeling ? postFeel.feeling : null,
         groupId: postData['groupId'],
-        tagedList: postData.tagedList,
+        tag: postData.tagedList.emails,
+        activity: '',
       };
       const formData = createPostFormData(postContent);
       if (postData['EditPost']) {
@@ -518,6 +531,7 @@ export default function AddPostScreen({navigation, route}) {
     dispatch(postDataSliceAction.removeEditPost());
     dispatch(postDataSliceAction.removePostData());
     dispatch(postDataSliceAction.removeGroupId());
+    dispatch(postDataSliceAction.clearTagList());
   };
 
   const handelPrivacySetting = value => {
@@ -527,7 +541,7 @@ export default function AddPostScreen({navigation, route}) {
     setIsPrivacyOptionsVisible(!isPrivacyOptionsVisible);
   };
 
-  useEffect(() => {}, [postPrivacyOption]);
+  useEffect(() => { }, [postPrivacyOption]);
 
   const renderHeader = () => {
     if (postType === postTypes.HANG_SHARE && images.length === 0)
@@ -579,7 +593,7 @@ export default function AddPostScreen({navigation, route}) {
       );
   };
 
-  const {width, height} = Dimensions.get('window');
+  const { width, height } = Dimensions.get('window');
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
@@ -587,16 +601,69 @@ export default function AddPostScreen({navigation, route}) {
       {renderHeader()}
       <ProgressBar
         indeterminate={loading}
-        style={{height: 1.5}}
+        style={{ height: 1.5 }}
         color={colors.iondigoDye}
       />
       <View style={[styles.topContainer]}>
         <View style={styles.row}>
           <UserProfilePicture style={styles.userProfile} />
           <View style={styles.column}>
-            <Title>
-              {user.firstName} {user.lastName}
-            </Title>
+            <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
+              <Title size={14}>
+                {user.firstName} {user.lastName}
+              </Title>
+              {/**Content */}
+              {postFeel.feeling ? (
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  onPress={() => navigation.navigate(routes.FEELING_ACTIVITY)}>
+                  <View style={styles.feelingContainer}>
+                    <Texts size={14} light style={{ fontWeight: '600' }} > --is feeling</Texts>
+                    {postFeel.img ? (
+                      <BetterImage
+                        noBackground
+                        source={postFeel.img}
+                        style={styles.feelImg}
+                      />
+                    ) : (
+                      <Icon name={postFeel.icon} color={postFeel.color} />
+                    )}
+                    <View style={styles.row}>
+                      <Texts size={14} style={{ fontWeight: '700' }}>{postFeel.feeling}</Texts>
+                      {postFeel.type === 'activity' && (
+                        <>
+                          <Text>{' - '}</Text>
+                          <TextInput
+                            placeholder={
+                              (postFeel.feeling !== 'Travelling to'
+                                ? `What do you `
+                                : `Where do you `) + postFeel.feeling
+                            }
+                          />
+                        </>
+                      )}
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ) : null}
+              {postData.tagedList.emails.length ? (
+                <View style={styles.row} >
+                  <Texts size={14} light style={{ fontWeight: '600' }} > with </Texts>
+                  <FlatList
+                    horizontal
+                    data={postData.tagedList.names}
+                    keyExtractor={item => item}
+                    renderItem={({ item }) => <TouchableOpacity onPress={() => { }}>
+                      <Texts size={14} style={{ fontWeight: '700' }} truncate={true}>{item}
+                      </Texts>
+                    </TouchableOpacity>
+                    }
+                  />
+                </View>
+              ): null}
+
+            </View>
+
             <View style={[styles.row]}>
               <OptionBox
                 currentOption={postPrivacyOption}
@@ -612,7 +679,7 @@ export default function AddPostScreen({navigation, route}) {
                   size={12}
                   color={colors.dimGray}
                   backgroundSizeRatio={1}
-                  style={{marginLeft: 5}}
+                  style={{ marginLeft: 5 }}
                 />
                 <Texts style={styles.headerTabText}>Albums</Texts>
                 <Icon
@@ -621,7 +688,7 @@ export default function AddPostScreen({navigation, route}) {
                   size={15}
                   color={colors.dimGray}
                   backgroundSizeRatio={1}
-                  style={{marginRight: 2}}
+                  style={{ marginRight: 2 }}
                 />
               </View>
               {/* ))} */}
@@ -631,64 +698,19 @@ export default function AddPostScreen({navigation, route}) {
 
           {(postType === postTypes.HANG_SHARE ||
             postType === postTypes.SHARE_UP) && (
-            <IconButton
-              onPress={() => navigation.navigate(routes.KEEP_HANG, postType)}
-              IconComponent={
-                <Icon
-                  image={require('../assets/icons/squared-add-icon.png')}
-                  color={colors.iondigoDye}
-                  backgroundSizeRatio={0.8}
-                />
-              }
-              style={styles.plusIcon}
-            />
-          )}
+              <IconButton
+                onPress={() => navigation.navigate(routes.KEEP_HANG, postType)}
+                IconComponent={
+                  <Icon
+                    image={require('../assets/icons/squared-add-icon.png')}
+                    color={colors.iondigoDye}
+                    backgroundSizeRatio={0.8}
+                  />
+                }
+                style={styles.plusIcon}
+              />
+            )}
         </View>
-
-        {/**Content */}
-        {postFeel.feeling ? (
-          <TouchableOpacity
-            activeOpacity={0.5}
-            onPress={() => navigation.navigate(routes.FEELING_ACTIVITY)}>
-            <View style={styles.feelingContainer}>
-              {postFeel.img ? (
-                <BetterImage
-                  noBackground
-                  source={postFeel.img}
-                  style={styles.feelImg}
-                />
-              ) : (
-                <Icon name={postFeel.icon} color={postFeel.color} />
-              )}
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Texts style={{fontWeight: '700'}}>{postFeel.feeling}</Texts>
-                {postFeel.type === 'activity' && (
-                  <>
-                    <Text>{' - '}</Text>
-                    <TextInput
-                      placeholder={
-                        (postFeel.feeling !== 'Travelling to'
-                          ? `What do you `
-                          : `Where do you `) + postFeel.feeling
-                      }
-                    />
-                  </>
-                )}
-              </View>
-            </View>
-          </TouchableOpacity>
-        ) : null}
-        {postData.tagedList.length !== 0 && (
-          <View>
-            <Text>--</Text>
-            <FlatList
-              horizontal
-              data={postData.tagedList}
-              keyExtractor={item => item}
-              renderItem={({item}) => <Text>{item}</Text>}
-            />
-          </View>
-        )}
 
         <TextInput
           //value={isEdit?text:placeholder}
@@ -728,13 +750,13 @@ export default function AddPostScreen({navigation, route}) {
                 }
                 size={35}
               />
-              <Title size={14} style={{marginHorizontal: 10}}>
+              <Title size={14} style={{ marginHorizontal: 10 }}>
                 {!postData['EditPost']
                   ? `${postData.postDetail?.userdata?.firstName} ${postData.postDetail?.userdata?.lastName}`
                   : `${postData.postDetail?.post?.userdata?.firstName} ${postData.postDetail?.post?.userdata?.lastName}`}
               </Title>
             </View>
-            <View style={{margin: 10}}>
+            <View style={{ margin: 10 }}>
               {!postData['EditPost'] && postData.postDetail?.content !== '' && (
                 <Texts truncate>{postData.postDetail?.content}</Texts>
               )}
@@ -743,7 +765,7 @@ export default function AddPostScreen({navigation, route}) {
                   <Texts truncate>{postData.postDetail?.post?.content}</Texts>
                 )}
             </View>
-            <View style={{alignItems: 'center', marginBottom: 15}}>
+            <View style={{ alignItems: 'center', marginBottom: 15 }}>
               <CustomImageSlider
                 width={width - 42}
                 postType={'share'}
@@ -835,8 +857,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   userProfile: {
-    width: 45,
-    height: 45,
+    marginTop:10,
+    width: 50,
+    height: 50,
   },
   column: {
     width: '70%',
@@ -846,7 +869,7 @@ const styles = StyleSheet.create({
   row: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   userName: {
     fontWeight: 'bold',
@@ -857,9 +880,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: colors.dimGray,
-    margin: 5,
+    margin: 10,
     borderRadius: 5,
-    padding: 2,
+    padding:5,
   },
   headerTabText: {
     fontSize: 14,
@@ -897,7 +920,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
-  textInput: {height: '15%', textAlignVertical: 'top', marginTop: 10},
+  textInput: { height: '15%', textAlignVertical: 'top' },
   image: {
     width: '100%',
     height: 250,

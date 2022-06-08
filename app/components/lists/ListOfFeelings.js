@@ -19,7 +19,7 @@ export default function ListOfFeelings(props) {
       <TouchableOpacity
         activeOpacity={0.6}
         onPress={() => {
-          dispatch(postFeelingsActions.setFeel({feeling: name, img, type}));
+          dispatch(postFeelingsActions.setFeel({feeling: name, img, type:'Feeling'}));
           props.navigation.goBack();
         }}>
         <View style={styles.card}>

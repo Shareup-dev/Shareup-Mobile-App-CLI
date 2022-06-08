@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
-import { StyleSheet, View, TouchableWithoutFeedback, Alert, Image,Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TouchableWithoutFeedback, Alert, Image, Text, TouchableOpacity } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import colors from '../../config/colors';
 import Icon from '../Icon';
@@ -8,6 +8,8 @@ import PostService from '../../services/post.service';
 //import Text from "../../components/Text";
 import PostOptionDrawer from '../drawers/PostOptionsDrawer';
 import ImageView from 'react-native-image-viewing';
+import UserProfilePicture from '../UserProfilePicture';
+import { Texts } from '../../Materials/Text';
 
 export default function SavedListItem({
   user,
@@ -23,7 +25,7 @@ export default function SavedListItem({
   const [images, setImages] = useState([]);
   const [currentImage, setCurrentImage] = useState();
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
- 
+
 
   const options = [
     {
@@ -41,10 +43,10 @@ export default function SavedListItem({
         image: require('../../assets/post-options-icons/delete-red-icon.png'),
       },
       onPress: () => {
-         showDeleteAlert();
+        showDeleteAlert();
       },
     },
-  ];  
+  ];
   useEffect(() => {
     loadImages();
   }, []);
@@ -56,11 +58,11 @@ export default function SavedListItem({
   );
   const loadImages = () => {
     if (postData.media?.length !== 0) {
-      setImages(postData.media?.map(image =>  image.mediaPath));
+      setImages(postData.media?.map(image => image.mediaPath));
     }
 
   };
-  
+
   // rerenders the post when interaction
   const reloadPost = async () => {
     PostService.getPostByPostId(postData.id)
@@ -86,7 +88,7 @@ export default function SavedListItem({
       },
     ]);
 
-  
+
 
   //.................... POST ACTION METHOD .............................//
 
@@ -113,23 +115,33 @@ export default function SavedListItem({
           <Image source={{ uri: images[0] }} style={styles.image} />
         )}
         <View style={styles.contentView}>
-          {postData.content !== "" && <Text numberOfLines={2} ellipsizeMode='tail' style={styles.postText}>{postData.content}</Text>}
-          <Text style={styles.content}>{postData.allPostsType} . {postData.userdata.firstName}</Text>
-          <Text style={styles.content}>{postData.published}</Text>
-          <TouchableOpacity
-          style={styles.menuButton}
-          onPress={() => {
-            setIsOptionsVisible(true);
+          {postData.content !== "" && <Texts size={15} truncate={true} style={styles.postText}>{postData.content}</Texts>}
+          <View style={{
+            flexDirection: 'row',
+            marginTop: 5,
+            marginLeft: 10,
+            alignItems:'center'
           }}>
+            <UserProfilePicture size={20} />
+            <Texts style={{color:colors.dimGray,marginLeft:5}}>{postData.userdata.firstName}</Texts>
+          </View>
+          <Texts style={styles.content}>{postData.allPostsType} . {postData.published}</Texts>
+
+          <TouchableOpacity
+            style={styles.menuButton}
+            onPress={() => {
+              setIsOptionsVisible(true);
+            }}>
             <Icon
-            name="options"
-            type="SimpleLineIcons"
-            style={styles.optionsIcon}
-            size={20}
-            backgroundSizeRatio={1}
-          />
-        </TouchableOpacity>
+              name="options"
+              type="SimpleLineIcons"
+              style={styles.optionsIcon}
+              size={20}
+              backgroundSizeRatio={1}
+            />
+          </TouchableOpacity>
         </View>
+        <View style={{paddingEnd:10}}>
         <PostOptionDrawer
           source={'card'}
           postId={postData.id}
@@ -138,6 +150,7 @@ export default function SavedListItem({
           isVisible={isOptionsVisible}
           setIsVisible={setIsOptionsVisible}
         />
+        </View>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -147,22 +160,29 @@ const borderRadius = 10;
 const styles = StyleSheet.create({
   card: {
     height: 100,
-    width: "94%",
-    flexDirection: "row",
+    // width: "94%",
+    flexDirection: "column",
     backgroundColor: colors.white,
-    marginTop: 5,
+    marginTop: 15,
     overflow: 'hidden',
-    alignSelf: "center",
     padding: 7,
-    marginLeft:10,
-   // marginRight:10,
+    marginLeft: 15,
+    borderColor: colors.LightGray,
+    borderWidth: 1,
+    borderRadius: borderRadius,
+    marginRight:15,
+    // alignItems:'center',
+    // alignContent:'center',
+    //  justifyContent:'space-evenly'
+
+    // marginRight:10,
   },
   image: {
     width: "35%",
     height: "100%",
     borderRadius: borderRadius,
     resizeMode: 'cover',
-    
+
   },
   contentView: {
     flexDirection: "column",
@@ -172,7 +192,7 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius,
     width: "65%"
   },
-  
+
   content: {
     fontSize: 12,
     marginTop: 3,
@@ -182,12 +202,12 @@ const styles = StyleSheet.create({
   postText: {
     fontSize: 13,
     fontWeight: '700',
-    marginTop: 10,
+    marginTop: 25,
     marginLeft: 10,
   },
   optionsIcon: {
     alignSelf: 'flex-end',
-    paddingBottom:5,
+    paddingBottom: 5,
   },
   menuButton: {
     padding: 3,

@@ -126,7 +126,7 @@ export default function UserProfileScreen({navigation, route}) {
             name="lock"
             type="Feather"
             backgroundSizeRatio={0.8}
-            size={30}
+            size={25}
             style={styles.headerLockIcon}
           />
         }
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headerLockIcon: {
-    marginRight: 5,
+    margin: 5,
   },
   listEmptyText: {
     marginVertical: 30,

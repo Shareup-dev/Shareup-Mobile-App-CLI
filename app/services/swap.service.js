@@ -25,5 +25,6 @@ class SwapService {
         AuthAxios.get(`comment/swap/${sid}`)
     likePost = (uid, pid, emoji) =>
         AuthAxios.put(`swaps/${uid}/like-unlike/${pid}`, { emoji: emoji });
+    getSavedPost = uid => AuthAxios.get(`${uid}/getSavedSwaps`);
 }
 export default new SwapService();

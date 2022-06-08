@@ -1,31 +1,31 @@
 export const feelings = [
   {
-    name: 'Feeling Happy',
+    name: 'Happy',
     img: require('../../assets/feelings/smiley.gif'),
   },
   {
-    name: 'Feeling In Love',
+    name: 'In Love',
     img: require('../../assets/feelings/love.gif'),
   },
   {
-    name: 'Feeling Sad',
+    name: 'Sad',
     img: require('../../assets/feelings/crying.gif'),
   },
   {
-    name: 'Feeling Blessed',
+    name: 'Blessed',
     img: require('../../assets/feelings/angel.gif'),
   },
 
   {
-    name: 'Feeling Angry',
+    name: 'Angry',
     img: require('../../assets/feelings/angry.gif'),
   },
   {
-    name: 'Feeling Cool',
+    name: 'Cool',
     img: require('../../assets/feelings/cool.gif'),
   },
   {
-    name: 'Feeling Funny',
+    name: 'Funny',
     img: require('../../assets/feelings/laughing.gif'),
   },
 ];

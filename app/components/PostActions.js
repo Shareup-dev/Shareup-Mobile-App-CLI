@@ -40,6 +40,11 @@ const PostActions = ({
   reactionType,
 }) => {
   const fromReply = false;
+  const actionsTabSizeRatio = 0.5;
+
+  const ref = useRef();
+
+  
 
   const {
     userState: {userData},

@@ -22,7 +22,8 @@ export default function TagPeople({navigation, TagedUserData}) {
 
   useEffect(() => {
     UserService.getFriends(loggedInUser.email).then(resp => {
-      resp.data.forEach(dost => dost.email);
+      // resp.data.forEach(dost => dost.email);
+      // console.log(resp.data.forEach(dost => dost.email));
       setFriends(resp.data);
     });
   }, []);
@@ -39,11 +40,12 @@ export default function TagPeople({navigation, TagedUserData}) {
     return;
   };
   const TagUserCard = props => {
-    const name = props.data.firstName + props.data?.lastName;
+    const fullname = props.data.firstName + props.data?.lastName;
     const img = props.data?.profilePicturePath;
+    const id = props.data.id;
 
-    const CheckIfChecked = name => {
-      return tagPeople.find(item => item === name);
+    const CheckIfChecked = id => {
+      return tagPeople.find(item => item.id === id);
     };
 
     return (
@@ -51,17 +53,17 @@ export default function TagPeople({navigation, TagedUserData}) {
         activeOpacity={0.8}
         style={styles.card}
         onPress={e => {
-          CheckIfChecked(name)
-            ? setTagPeople(prev => prev.filter(item => item !== name))
-            : setTagPeople(prev => [...prev, name]);
+          CheckIfChecked(id)
+            ? setTagPeople(prev => prev.filter(item => item.id !== id))
+            : setTagPeople(prev => [...prev, props.data]);
         }}>
         <View style={styles.usersInfo}>
           <Image style={styles.img} source={{uri: img}} />
-          <Text style={{marginLeft: 15}}>{name}</Text>
+          <Text style={{marginLeft: 15}}>{fullname}</Text>
         </View>
         <Checkbox
           color={colors.iondigoDye}
-          status={CheckIfChecked(name) ? 'checked' : 'unchecked'}
+          status={CheckIfChecked(id) ? 'checked' : 'unchecked'}
         />
         {tagPeople.length ? setIsButtonActive(true) : setIsButtonActive(false)}
       </TouchableOpacity>
@@ -77,7 +79,9 @@ export default function TagPeople({navigation, TagedUserData}) {
             title="Done"
             isActive={isButtonActive}
             onPress={() => {
-              dispatch(postDataSliceAction.setTagList(tagPeople))
+              const emails = tagPeople.map(item => item.email)
+              const names = tagPeople.map(item => item.firstName + item.lastName)
+              dispatch(postDataSliceAction.setTagList({emails,names}))
               navigation.goBack();
             }}
           />

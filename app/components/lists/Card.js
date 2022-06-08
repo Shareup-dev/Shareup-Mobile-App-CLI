@@ -66,9 +66,8 @@ function Card({
       icon: {
         image: require('../../assets/post-options-icons/save-post-icon.png'),
       },
-      onPress: () => {
-        savePost(postData.id);
-      },
+      onPress: () => {savePost(postData.id)}
+      ,
     },
     {
       title: 'Hide my profile',
@@ -76,7 +75,7 @@ function Card({
         image: require('../../assets/post-options-icons/hide-profile-icon.png'),
       },
       onPress: () => {
-        savePost(postData.id);
+       alert("hide my profile")
       },
     },
     {
@@ -159,12 +158,13 @@ function Card({
     const arrDate = postData?.lastEdited?.split(' ');
     const monthShort = arrDate[1].slice(0, 3);
 
-    setFormattedDate({
-      day: arrDate[0],
-      month: monthShort,
-      year: arrDate[2],
-      time: arrDate[3],
-    });
+
+    // setFormattedDate({
+    //   day: arrDate[0],
+    //   month: monthShort,
+    //   year: arrDate[2],
+    //   time: arrDate[3],
+    // });
   };
   const formateNumber = number => {
     if (number > 1000) {
@@ -188,7 +188,12 @@ function Card({
   //.................... POST ACTION METHOD .............................//
   const savePost = itemId => {
     PostService.savePost(userState?.userData?.id, itemId).then(res => {
-      alert('Post saved...');
+      if (res.status === 200){
+        alert('post saved...');
+      }else if (res.status === 201){
+        alert('Removed...');
+      }
+      
     });
   };
   const loadImages = () => {
