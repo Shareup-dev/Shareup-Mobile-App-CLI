@@ -1,4 +1,4 @@
-import React, {useContext, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
   View,
   TouchableWithoutFeedback,
@@ -18,6 +18,8 @@ import AuthContext from '../Contexts/authContext';
 import {Title, Texts} from '../Materials/Text';
 
 import Reaction from './Reactions/Reaction';
+import reactions, {findEmoji} from '../Constants/reactions';
+import BetterImage from './betterImage/BetterImage';
 
 const PostActions = ({
   postId,
@@ -33,13 +35,10 @@ const PostActions = ({
   onInteraction,
   noActionBar,
   noOptions,
+  setReactionType,
+  reactionType,
 }) => {
   const fromReply = false;
-  const actionsTabSizeRatio = 0.5;
-
-  const ref = useRef();
-
-  console.log('postdata', postData);
 
   const {
     userState: {userData},
@@ -50,12 +49,36 @@ const PostActions = ({
   );
 
   const [openModal, setOpenModal] = useState(false);
+  const [topThreeReactions, setTopThreeReactions] = useState([]);
 
   const closeReactionOnBlur = e => {
     setOpenModal(false);
   };
 
-  const {width, height} = Dimensions.get('window');
+  const [listOfReactions, setListOfReactions] = useState(
+    postData.countOfEachReaction,
+  );
+
+  const increaseReactionCount = async type => {
+    await onInteraction(type);
+
+    await setListOfReactions(prev => ({
+      ...prev,
+      [type]: isUserLiked ? prev[type] - 1 : prev[type] + 1,
+    }));
+  };
+
+  useEffect(() => {
+    topReactions();
+  }, [listOfReactions]);
+
+  const topReactions = _ => {
+    setTopThreeReactions(
+      Object.entries(listOfReactions)
+        .filter(item => item[1] > 0)
+        .slice(0, 2),
+    );
+  };
 
   return (
     <View style={styles.content}>
@@ -158,29 +181,66 @@ const PostActions = ({
             fontColor={colors.white}
             iconSize={10}
           /> */}
+          <TouchableWithoutFeedback
+            onPress={() =>
+              navigation.navigate(routes.COMMENTS, {
+                postId,
+                userId,
+                //comments,
+                postType,
+                swapId,
+                fromReply,
+              })
+            }>
+            <>
+              {topThreeReactions.map(item => (
+                <Texts size={16}>{` ${findEmoji(item[0])} ${item[1]}`}</Texts>
+              ))}
+            </>
+          </TouchableWithoutFeedback>
         </View>
       </View>
-      <Reaction visible={openModal} setVisible={setOpenModal} />
+      <Reaction
+        visible={openModal}
+        setVisible={setOpenModal}
+        onInteraction={increaseReactionCount}
+      />
       {!noActionBar && (
         <View style={styles.actionsBar}>
           <TouchableOpacity
-            onLongPress={() => setOpenModal(true)}
-            // onPressOut={() => setOpenModal(false)}
-            onPress={onInteraction}>
-            <View style={styles.likes}>
-              <Icon
-                name={isUserLiked ? `star` : `star-o`}
-                type="FontAwesome"
-                size={18}
-                color="#FFC107"
-                backgroundSizeRatio={1}
-                style={styles.star}
-              />
-              <Texts style={styles.bold}>{`${
-                numberOfReactions > 1
-                  ? `${numberOfReactions} Stars`
-                  : `${numberOfReactions} Star`
-              }`}</Texts>
+            onLongPress={() =>
+              !isUserLiked
+                ? setOpenModal(true)
+                : increaseReactionCount(reactionType)
+            }
+            onPress={() => {
+              increaseReactionCount(reactionType);
+            }}>
+            <View
+              style={[
+                styles.likes,
+                {backgroundColor: isUserLiked ? '#cacaca60' : null},
+              ]}>
+              {isUserLiked ? (
+                <Texts style={styles.star} size={20}>
+                  {findEmoji(reactionType)}
+                </Texts>
+              ) : (
+                <Icon
+                  name={`star-o`}
+                  type="FontAwesome"
+                  size={26}
+                  color="#FFC107"
+                  backgroundSizeRatio={1}
+                  style={styles.star}
+                  noBackground
+                />
+              )}
+              <Texts
+                size={14}
+                style={{textTransform: 'capitalize', fontWeight: '600'}}>
+                {reactionType}
+              </Texts>
             </View>
           </TouchableOpacity>
 
@@ -294,6 +354,9 @@ const styles = StyleSheet.create({
   likes: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingVertical: 3,
+    paddingHorizontal: 10,
+    borderRadius: 20,
   },
   actionsText: {
     fontSize: 12,

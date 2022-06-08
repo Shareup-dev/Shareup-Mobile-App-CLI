@@ -1,12 +1,12 @@
 import React from 'react';
 import {View, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
 import reactions from '../../Constants/reactions';
+import {Texts} from '../../Materials/Text';
 import BetterImage from '../betterImage/BetterImage';
 import LinkButton from '../buttons/LinkButton';
 
-const ReactionModal = ({visible, setVisible}) => {
+const ReactionModal = ({visible, setVisible, onInteraction}) => {
   const hideReactions = () => setVisible(false);
-
   if (visible)
     return (
       <View>
@@ -14,12 +14,17 @@ const ReactionModal = ({visible, setVisible}) => {
         <View style={styles.reactionContainer}>
           <View style={styles.row}>
             {reactions.map((feeling, index) => (
-              <TouchableOpacity>
-                <BetterImage
+              <TouchableOpacity
+                onPress={() => {
+                  onInteraction(feeling.name);
+                  hideReactions();
+                }}>
+                {/* <BetterImage
                   noBackground
                   source={feeling.img}
                   style={styles.imgSize}
-                />
+                /> */}
+                <Texts size={25}> {feeling.emoji} </Texts>
               </TouchableOpacity>
             ))}
           </View>
@@ -39,6 +44,10 @@ export default React.memo(ReactionModal);
 const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+  imgSize: {
+    width: 45,
+    height: 45,
+  },
   container: {
     position: 'absolute',
     width: width,
