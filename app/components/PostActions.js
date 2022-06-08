@@ -44,8 +44,6 @@ const PostActions = ({
 
   const ref = useRef();
 
-  
-
   const {
     userState: {userData},
   } = useContext(AuthContext);
@@ -53,7 +51,6 @@ const PostActions = ({
     moment(postData.published, 'DD MMMM YYYY hh:mm:ss').fromNow(),
     // null
   );
-  const actionsTabSizeRatio = 0.5;
   const [openModal, setOpenModal] = useState(false);
   const [topThreeReactions, setTopThreeReactions] = useState([]);
 
