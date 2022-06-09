@@ -2,6 +2,8 @@ import AuthAxios from './authAxios';
 
 class PostService {
   getNewsFeed = email => AuthAxios.get(`new_newsFeed/${email}`);
+  newsFeedWithPagination = (email, pageNo, pageSize = 5) =>
+    AuthAxios.get(`newsFeed_pagination/${email}/${pageNo}/${pageSize}`);
   createPost = (uid, data, onUploadProgress, onDownloadProgress) =>
     AuthAxios({
       method: 'post',

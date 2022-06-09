@@ -12,7 +12,7 @@ import {Texts, Title} from '../Materials/Text';
 
 const {postTypes} = constants;
 
-export default function WritePost({navigation, style, groupPost, groupId}) {
+function WritePost({navigation, style, groupPost, groupId}) {
   return (
     <View style={[styles.container, style]}>
       <TouchableOpacity
@@ -87,6 +87,8 @@ export default function WritePost({navigation, style, groupPost, groupId}) {
     </View>
   );
 }
+
+export default React.memo(WritePost);
 
 const styles = StyleSheet.create({
   container: {

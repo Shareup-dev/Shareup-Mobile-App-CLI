@@ -8,7 +8,6 @@ import {
   Dimensions,
   FlatList,
   Platform,
-  KeyboardAvoidingView,
 } from 'react-native';
 import Modal from 'react-native-modal';
 

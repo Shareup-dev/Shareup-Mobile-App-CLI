@@ -28,102 +28,110 @@ import {feedPostsAction} from '../redux/feedPostsSlice';
 import SharedPostCard from '../components/lists/SharedPostCard';
 import EmptyPostCard from '../components/EmptyCards/EmptyPostCard';
 
-import { postRefreshAction } from '../redux/postRefreshSlice';
-
-import {useFocusEffect} from '@react-navigation/native';
-
-
 export default function NewsFeedScreen({navigation, route}) {
-  const posts = useSelector(state => state.feedPosts);
   const dispatch = useDispatch();
-  const refresh = useSelector(state => state.postRefresh)
-  const {userState} = useContext(authContext);
-  const [activityIndicator, setActivityIndicator] = useState(true);
-
-
   const ref = useRef();
+  const pageSize = 10;
 
-  useEffect(() => {
-    
-    loadNews();
+  const posts = useSelector(state => state.feedPosts);
+  const refresh = useSelector(state => state.postRefresh);
+  const {
+    userState: {username},
+  } = useContext(authContext);
 
-    dispatch(postRefreshAction.clearPostRefresh())
-  }, [refresh]);
+  const [activityIndicator, setActivityIndicator] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [pageNo, setPageNo] = useState(0);
+  const [endReached, setEndReached] = useState(false);
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     ref.current.scrollToOffset({animated: true, offset: 0});
-  //   }, []),
-  // );
-
-  const loadNews = () => {
+  const loadNews = (pNo = 0) => {
     setActivityIndicator(true);
     postService
-      .getNewsFeed(userState?.userData?.email)
+      .newsFeedWithPagination(username, pNo, pageSize)
       .then(({data}) => {
-        dispatch(feedPostsAction.setFeedPosts(data));
+        if (pNo === 0) dispatch(feedPostsAction.firstFeed(data));
+        else dispatch(feedPostsAction.setFeedPosts(data));
+
+        if (data.length === pageSize) setEndReached(false);
+        else setEndReached(true);
       })
       .catch(e => console.error(e))
       .finally(hideActivityIndicator);
   };
 
-  const renderItem = ({item}) => {
-    if (activityIndicator) {
-      return <EmptyPostCard />;
-    } else
-      switch (item.allPostsType) {
-        case constants.postTypes.SWAP:
-          return (
-            <SwapCard
-              navigation={navigation}
-              route={route}
-              item={item}
-              userId={item.userdata.id}
-              // onPress={() => {
-              //   navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
-              // }}
-            />
-          );
-        case 'share':
-          return (
-            <SharedPostCard
-              user={item.userdata}
-              postData={item}
-              navigation={navigation}
-              reloadPosts={loadNews}
-              postType={item.allPostsType}
-            />
-          );
-        case constants.postTypes.HANG_SHARE:
-          return (
-            <SwapCard
-              navigation={navigation}
-              route={route}
-              item={item}
-              userId={item.userdata.id}
-              // onPress={() => {
-              //   navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
-              // }}
-            />
-          );
+  useEffect(() => {
+    loadNews(pageNo);
+  }, []);
 
-        default:
-          return (
-            <Card
-              user={item.userdata}
-              postData={item}
-              navigation={navigation}
-              reloadPosts={loadNews}
-              postType={item.allPostsType}
-              // onPress={() => {
-              //   navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
-              // }}
-            />
-          );
-      }
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    setPageNo(0);
+    loadNews();
+  };
+
+  const onBeforeReachEnd = () => {
+    if (endReached) return;
+    else {
+      loadNews(pageNo + 1);
+      setPageNo(prev => prev + 1);
+    }
+  };
+
+  const renderItem = ({item}) => {
+    switch (item.allPostsType) {
+      case constants.postTypes.SWAP:
+        return (
+          <SwapCard
+            navigation={navigation}
+            route={route}
+            item={item}
+            userId={item.userdata.id}
+            // onPress={() => {
+            //   navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
+            // }}
+          />
+        );
+      case 'share':
+        return (
+          <SharedPostCard
+            user={item.userdata}
+            postData={item}
+            navigation={navigation}
+            reloadPosts={loadNews}
+            postType={item.allPostsType}
+          />
+        );
+      case constants.postTypes.HANG_SHARE:
+        return (
+          <SwapCard
+            navigation={navigation}
+            route={route}
+            item={item}
+            userId={item.userdata.id}
+            // onPress={() => {
+            //   navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
+            // }}
+          />
+        );
+
+      default:
+        return (
+          <Card
+            user={item.userdata}
+            postData={item}
+            navigation={navigation}
+            reloadPosts={loadNews}
+            postType={item.allPostsType}
+            // onPress={() => {
+            //   navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
+            // }}
+          />
+        );
+    }
   };
 
   const hideActivityIndicator = () => {
+    setRefreshing(false);
     setActivityIndicator(false);
   };
 
@@ -144,26 +152,41 @@ export default function NewsFeedScreen({navigation, route}) {
   return (
     <Screen style={styles.container} statusPadding={false}>
       <FlatList
+        initialNumToRender={pageSize}
         ref={ref}
         data={posts}
         ListHeaderComponent={ListHeader}
         keyExtractor={(post, i) => i.toString()}
         showsVerticalScrollIndicator={false}
         extraData={posts}
-        onRefresh={() => loadNews()}
-        refreshing={activityIndicator}
+        onRefresh={handleRefresh}
+        refreshing={refreshing}
         renderItem={renderItem}
-        ListEmptyComponent={() => (
-          <>
-            {activityIndicator ? (
-              <EmptyPostCard />
-            ) : (
+        onEndReached={onBeforeReachEnd}
+        onEndReachedThreshold={4}
+        scrollEventThrottle={150}
+        ListFooterComponent={() =>
+          activityIndicator ? (
+            <EmptyPostCard count={2} />
+          ) : (
+            endReached && (
               <Text style={{alignSelf: 'center', marginVertical: 50}}>
                 No posts Available
               </Text>
-            )}
-          </>
-        )}
+            )
+          )
+        }
+        // ListEmptyComponent={() => (
+        //   <>
+        //     {refreshing ? (
+        //       <EmptyPostCard />
+        //     ) : (
+        //       <Text style={{alignSelf: 'center', marginVertical: 50}}>
+        //         No posts Available
+        //       </Text>
+        //     )}
+        //   </>
+        // )}
       />
     </Screen>
   );

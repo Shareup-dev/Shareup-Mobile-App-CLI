@@ -10,11 +10,9 @@ import StoriesList from './lists/StoriesList';
 export default function FeedTop({navigation}) {
   return (
     <View>
-      <StoriesList navigation={navigation} style={styles.storiesList} />
+      {/* <StoriesList navigation={navigation} style={styles.storiesList} /> */}
 
       <WritePost navigation={navigation} />
-
-     
     </View>
   );
 }
@@ -49,7 +47,7 @@ const styles = StyleSheet.create({
   tabsTitle: {
     fontWeight: '500',
   },
- 
+
   storiesList: {
     marginTop: 15,
   },
