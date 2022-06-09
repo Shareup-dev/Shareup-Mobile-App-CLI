@@ -4,8 +4,12 @@ const feedPostsSlice = createSlice({
   name: 'feedPosts',
   initialState: [],
   reducers: {
-    setFeedPosts: (previousState, newFeedPost) => {
+    firstFeed: (previousState, newFeedPost) => {
       return (previousState = newFeedPost.payload);
+    },
+    setFeedPosts: (previousState, newFeedPost) => {
+      let allPosts = [...previousState, ...newFeedPost.payload];
+      return (previousState = allPosts);
     },
     addFeedPost: (previousFeedPosts, newFeedPost) => {
       let allFeedPosts = [
