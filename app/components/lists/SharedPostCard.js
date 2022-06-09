@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -26,14 +26,27 @@ import {useDispatch} from 'react-redux';
 
 import SwapCard from './SwapCard';
 import {Texts, Title} from '../../Materials/Text';
+import PostActions from '../PostActions';
+import {findEmoji} from '../../Constants/reactions';
+import Tab from '../buttons/Tab';
+import Reaction from '../Reactions/Reaction';
 
 export default function SharedPostCard(props) {
   const {postData, navigation, user, ...rest} = props;
   const dispatch = useDispatch();
-  const [isUserLiked, setIsUserLiked] = useState(postData.likedType);
+  const [isUserLiked, setIsUserLiked] = useState(
+    postData.likedType === 'false' ? false : true,
+  );
 
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
-  const [numberOfReactions, setNumberOfReactions] = useState(0);
+  const [numberOfReactions, setNumberOfReactions] = useState(
+    postData.numberOfReaction,
+  );
+  const [reactionType, setReactionType] = useState(
+    postData.likedType === 'false' ? 'star' : postData.likedType,
+  );
+  const actionsTabSizeRatio = 0.5;
+
   const {
     userState: {userData},
   } = React.useContext(AuthContext);
@@ -42,6 +55,14 @@ export default function SharedPostCard(props) {
     moment(postData.published, 'DD MMMM YYYY hh:mm:ss').fromNow(),
     // null
   );
+
+  const navigateToShare = () => {
+    dispatch(postDataSliceAction.setPostData(postData.post));
+    navigation.navigate(routes.ADD_POST, {
+      postType: constants.postTypes.SHARE_POST,
+      // postData,
+    });
+  };
 
   const options = [
     {
@@ -79,15 +100,7 @@ export default function SharedPostCard(props) {
       icon: {
         image: require('../../assets/post-options-icons/share-friends-icon.png'),
       },
-      onPress: () => {
-        dispatch(postDataSliceAction.setPostData(postData.post));
-
-        navigation.navigate(routes.ADD_POST, {
-          postType: constants.postTypes.SHARE_POST,
-          // postData: postData.post,
-        });
-        setIsOptionsVisible(false);
-      },
+      onPress: navigateToShare,
     },
     {
       title: 'Share via',
@@ -128,6 +141,20 @@ export default function SharedPostCard(props) {
     },
   ];
 
+  const handleReactions = emoji => {
+    setReactionType(isUserLiked ? 'star' : emoji);
+    setIsUserLiked(prev => !prev);
+    postService
+      .likePost(userData.id, postData.id, emoji)
+      .then(res => {
+        setNumberOfReactions(res.data.numberOfReaction);
+      }) //need to get likePostIds
+      .catch(e => {
+        console.error(e);
+        setIsUserLiked(prev => !prev);
+        setReactionType(postData.likedType);
+      });
+  };
   const showDeleteAlert = () =>
     Alert.alert('Delete', 'Are you sure to delete this post', [
       {
@@ -140,6 +167,46 @@ export default function SharedPostCard(props) {
         style: 'cancel',
       },
     ]);
+
+  const [openModal, setOpenModal] = useState(false);
+  const [topThreeReactions, setTopThreeReactions] = useState([]);
+
+  const closeReactionOnBlur = e => {
+    setOpenModal(false);
+  };
+
+  const [listOfReactions, setListOfReactions] = useState(
+    postData.countOfEachReaction,
+  );
+
+  const increaseReactionCount = async type => {
+    await handleReactions(type);
+
+    await setListOfReactions(prev => ({
+      ...prev,
+      [type]: isUserLiked ? prev[type] - 1 : prev[type] + 1,
+    }));
+  };
+
+  useEffect(() => {
+    topReactions();
+  }, [listOfReactions]);
+
+  const topReactions = _ => {
+    setTopThreeReactions(
+      Object.entries(listOfReactions)
+        .filter(item => item[1] > 0)
+        .slice(0, 2),
+    );
+  };
+
+  const navigateToComments = () =>
+    navigation.navigate(routes.COMMENTS, {
+      postId: postData.id,
+      userId: postData.userdata.id,
+      //comments,
+      postType: postData.allPostsType,
+    });
   const deletePost = async () => {
     postService
       .deletePost(item.id)
@@ -154,49 +221,98 @@ export default function SharedPostCard(props) {
 
   const HeaderComponent = () => {
     return (
-      <View style={{paddingTop: 10, paddingHorizontal: 15}}>
-        <View style={styles.userInfo}>
-          <TouchableOpacity
-            onPress={() =>
-              postData.userdata?.id === userData.id
-                ? navigation.navigate(routes.USER_PROFILE, {
-                    user: postData.userdata,
-                  })
-                : navigation.navigate(routes.FRIEND_PROFILE, {
-                    user: postData.userdata,
-                  })
-            }>
-            <Image
-              source={{
-                uri: postData.userdata.profilePicturePath,
-              }}
-              style={styles.profilePicture}
-            />
-          </TouchableOpacity>
-
-          <View style={styles.userNameContainer}>
-            <TouchableOpacity>
-              <Title style={styles.userName}>
-                {postData.userdata.firstName}
-              </Title>
+      <>
+        <View
+          style={{
+            paddingTop: 10,
+            paddingHorizontal: 15,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <View style={styles.userInfo}>
+            <TouchableOpacity
+              onPress={() =>
+                postData.userdata?.id === userData.id
+                  ? navigation.navigate(routes.USER_PROFILE, {
+                      user: postData.userdata,
+                    })
+                  : navigation.navigate(routes.FRIEND_PROFILE, {
+                      user: postData.userdata,
+                    })
+              }>
+              <Image
+                source={{
+                  uri: postData.userdata.profilePicturePath,
+                }}
+                style={styles.profilePicture}
+              />
             </TouchableOpacity>
 
-            <Texts light>{date}</Texts>
+            <View style={styles.userNameContainer}>
+              <TouchableOpacity>
+                <Title style={styles.userName}>
+                  {postData.userdata.firstName}
+                </Title>
+              </TouchableOpacity>
+
+              <Texts light>{date}</Texts>
+            </View>
+          </View>
+          <View style={styles.actionsContainer}>
+            <Tab
+              textFontSize={17}
+              iconName={!isUserLiked && 'star'}
+              iconType="FontAwesome5"
+              title={
+                isUserLiked
+                  ? `${findEmoji(reactionType)} ${numberOfReactions}`
+                  : ` ${numberOfReactions}`
+              }
+              sizeRatio={actionsTabSizeRatio}
+              style={[
+                styles.actionTab,
+                isUserLiked && {backgroundColor: colors.iondigoDye},
+              ]}
+              color={colors.mediumGray}
+              fontColor={colors.white}
+              onLongPress={() =>
+                !isUserLiked
+                  ? setOpenModal(true)
+                  : increaseReactionCount(reactionType)
+              }
+              onPress={() => {
+                increaseReactionCount(reactionType);
+              }}
+            />
+
+            <Tab
+              title={`${postData.numberOfComments}`}
+              onPress={navigateToComments}
+              iconName="comment"
+              iconType="Octicons"
+              sizeRatio={actionsTabSizeRatio}
+              style={styles.actionTab}
+              color={colors.mediumGray}
+              fontColor={colors.white}
+            />
+
+            <Tab
+              title={'0'}
+              iconImage={require('../../assets/icons/share-icon.png')}
+              sizeRatio={actionsTabSizeRatio}
+              style={styles.actionTab}
+              color={colors.mediumGray}
+              onPress={navigateToShare}
+              fontColor={colors.white}
+              iconSize={10}
+            />
           </View>
         </View>
-      </View>
+      </>
     );
   };
-  const handleReactions = async () => {
-    postService
-      .likePost(userData.id, postData.id, 'star')
-      .then(res => {
-        setIsUserLiked(!isUserLiked);
-        setNumberOfReactions(res.data.numberOfReaction);
-      }) //need to get likePostIds
-      .catch(e => console.error(e));
-    //reloadPost();
-  };
+
   const renderCard = item => {
     switch (item.post.allPostsType) {
       case constants.postTypes.SWAP:
@@ -251,86 +367,83 @@ export default function SharedPostCard(props) {
   };
   const FooterComponent = () => {
     return (
-      <View style={{paddingHorizontal: 15, paddingTop: 15}}>
-        <View style={styles.actionsBar}>
-          <View style={styles.likes}>
-            {isUserLiked ? (
-              <TouchableWithoutFeedback onPress={handleReactions}>
-                <Icon
-                  name="star"
-                  type="FontAwesome"
-                  size={17}
-                  color="#FFC107"
-                  backgroundSizeRatio={1}
-                  style={styles.star}
-                />
-              </TouchableWithoutFeedback>
-            ) : (
-              <TouchableWithoutFeedback onPress={handleReactions}>
-                <Icon
-                  name="star-o"
-                  type="FontAwesome"
-                  size={17}
-                  color="#FFC107"
-                  backgroundSizeRatio={1}
-                  style={styles.star}
-                />
-              </TouchableWithoutFeedback>
-            )}
-
-            <Texts style={styles.bold}>{`${
-              numberOfReactions > 1
-                ? `${numberOfReactions} Stars`
-                : `${numberOfReactions} Star`
-            }`}</Texts>
-          </View>
-
-          <View style={styles.commentsShares}>
-            <TouchableWithoutFeedback
-              onPress={() =>
-                navigation.navigate(routes.COMMENTS, {
-                  postId: postData.id,
-                  userId: userData.id,
-                  //comments,
-                  postType: postData.allPostsType,
-                  // swapId,
-                  fromReply: false,
-                })
-              }>
-              <Texts style={styles.bold}>{`${
-                postData.numberOfComments
-              } Comments  ${0} Shares`}</Texts>
-            </TouchableWithoutFeedback>
-          </View>
-        </View>
-
-        {postData.content !== '' && (
-          <Texts truncate style={{marginTop: 10}} color={'#333'}>
-            {postData.content}
-          </Texts>
-        )}
-        <TouchableOpacity
-          style={styles.menuButton}
-          onPress={() => {
-            setIsOptionsVisible(true);
-          }}>
-          <Icon
-            name="options"
-            type="SimpleLineIcons"
-            style={styles.optionsIcon}
-            size={20}
-            backgroundSizeRatio={1}
-          />
-        </TouchableOpacity>
-        <PostOptionDrawer
-          source={'card'}
-          postId={postData.id}
-          postText={postData.content}
-          options={options}
-          isVisible={isOptionsVisible}
-          setIsVisible={setIsOptionsVisible}
+      <>
+        <Reaction
+          visible={openModal}
+          setVisible={setOpenModal}
+          onInteraction={increaseReactionCount}
         />
-      </View>
+        <View style={{paddingHorizontal: 15, paddingTop: 15}}>
+          <View style={styles.actionsBar}>
+            <View style={styles.row}>
+              <TouchableWithoutFeedback
+                onPress={() =>
+                  navigation.navigate(routes.COMMENTS, {
+                    postId,
+                    userId,
+                    //comments,
+                    postType,
+                    swapId,
+                    fromReply,
+                  })
+                }>
+                <>
+                  {topThreeReactions.map((item, i) => (
+                    <View
+                      key={i}
+                      style={{
+                        backgroundColor: '#fff',
+                        borderRadius: 30,
+                        alignItems: 'center',
+                        marginLeft: -6,
+                      }}>
+                      <Texts size={16}>{` ${findEmoji(item[0])}`}</Texts>
+                    </View>
+                  ))}
+
+                  <Texts size={12} style={{fontWeight: '700'}}>
+                    {numberOfReactions > 0 && ` ${numberOfReactions}`}
+                  </Texts>
+                </>
+              </TouchableWithoutFeedback>
+            </View>
+
+            <View style={styles.commentsShares}>
+              <TouchableWithoutFeedback onPress={navigateToComments}>
+                <Texts style={styles.bold}>{`${
+                  postData.numberOfComments
+                } Comments  ${0} Shares`}</Texts>
+              </TouchableWithoutFeedback>
+            </View>
+          </View>
+          {postData.content !== '' && (
+            <Texts truncate style={{marginTop: 10}} color={'#333'}>
+              {postData.content}
+            </Texts>
+          )}
+          <TouchableOpacity
+            style={styles.menuButton}
+            onPress={() => {
+              setIsOptionsVisible(true);
+            }}>
+            <Icon
+              name="options"
+              type="SimpleLineIcons"
+              style={styles.optionsIcon}
+              size={20}
+              backgroundSizeRatio={1}
+            />
+          </TouchableOpacity>
+          <PostOptionDrawer
+            source={'card'}
+            postId={postData.id}
+            postText={postData.content}
+            options={options}
+            isVisible={isOptionsVisible}
+            setIsVisible={setIsOptionsVisible}
+          />
+        </View>
+      </>
     );
   };
 
@@ -372,6 +485,20 @@ const styles = StyleSheet.create({
   userNameContainer: {
     width: '40%',
   },
+  actionsContainer: {
+    flexDirection: 'row',
+  },
+  actionTab: {
+    paddingHorizontal: 5,
+    marginHorizontal: 5,
+    borderRadius: 10,
+  },
+  actionsBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 15,
+  },
   postText: {
     fontSize: 11,
     marginVertical: 5,
@@ -394,6 +521,10 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     // padding: 7,
     // paddingHorizontal: 6,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   actionsBar: {
     flexDirection: 'row',

@@ -270,8 +270,9 @@ const PostActions = ({
                 })
               }>
               <>
-                {topThreeReactions.map(item => (
+                {topThreeReactions.map((item, i) => (
                   <View
+                    key={i}
                     style={{
                       backgroundColor: '#fff',
                       borderRadius: 30,
