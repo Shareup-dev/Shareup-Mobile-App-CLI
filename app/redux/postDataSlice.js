@@ -58,8 +58,8 @@ const postDataSlice = createSlice({
     //.................TAGED_LIST....................
     setTagList: (previousState, newState) => {
       console.log(newState.payload.names)
-      previousState.tagedList.emails = [...previousState.tagedList.emails, ...newState.payload.emails];
-     previousState.tagedList.names = [...previousState.tagedList.names, ...newState.payload.names];
+      previousState.tagedList.emails = newState.payload.emails;
+     previousState.tagedList.names = newState.payload.names;
     return (previousState);
     },
     clearTagList: previousState => {

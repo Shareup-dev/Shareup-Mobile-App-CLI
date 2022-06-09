@@ -1,32 +1,42 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {TouchableOpacity, View, StyleSheet, Text, Image} from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { TouchableOpacity, View, StyleSheet, Text, Image } from 'react-native';
 
 import Screen from '../components/Screen';
 import TextField from '../components/TextField';
 import colors from '../config/colors';
-import {HeaderButton, HeaderWithBackArrow} from '../components/headers';
-import {Checkbox} from 'react-native-paper';
+import { HeaderButton, HeaderWithBackArrow } from '../components/headers';
+import { Checkbox } from 'react-native-paper';
 import UserService from '../services/user.service';
 import authContext from '../Contexts/authContext';
 import { postDataSliceAction } from '../redux/postDataSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-export default function TagPeople({navigation, TagedUserData}) {
+export default function TagPeople({ navigation, TagedUserEmail }) {
   const [tagPeople, setTagPeople] = useState([]);
   const [friends, setFriends] = useState([]);
-  const {userData: loggedInUser} = useContext(authContext).userState;
+  const { userData: loggedInUser } = useContext(authContext).userState;
   const [isButtonActive, setIsButtonActive] = useState(false);
   const [searchResult, setSearchResult] = useState([]);
   const [isSearch, setIsSearch] = useState(false);
   const dispatch = useDispatch();
+  const postData = useSelector(state => state.postDataSlice);
+  const tags = postData.tagedList.emails;
 
   useEffect(() => {
     UserService.getFriends(loggedInUser.email).then(resp => {
-      // resp.data.forEach(dost => dost.email);
-      // console.log(resp.data.forEach(dost => dost.email));
       setFriends(resp.data);
+      const tagedPeoples = [];
+      console.log("tags",tags);
+      tags.forEach((tag) => {
+        resp.data.forEach((friend) => {
+          if (tag === friend.email)
+            tagedPeoples.push(friend);
+        });
+      });
+      setTagPeople(tagedPeoples)
     });
   }, []);
+
   const onSearchFriend = searchKey => {
     if (searchKey == '') {
       setIsSearch(false);
@@ -39,13 +49,19 @@ export default function TagPeople({navigation, TagedUserData}) {
     }
     return;
   };
-  const TagUserCard = props => {
-    const fullname = props.data.firstName + props.data?.lastName;
-    const img = props.data?.profilePicturePath;
-    const id = props.data.id;
+  const removeTag = () => {
 
-    const CheckIfChecked = id => {
-      return tagPeople.find(item => item.id === id);
+  }
+  const addTag = () => {
+    
+  }
+  const TagUserCard = props => {
+    const fullname = `${props.data.firstName} ${props.data?.lastName}`;
+    const img = props.data?.profilePicturePath;
+    const email = props.data.email;
+
+    const CheckIfChecked = email => {
+      return tagPeople.find(item => item.email === email);
     };
 
     return (
@@ -53,17 +69,17 @@ export default function TagPeople({navigation, TagedUserData}) {
         activeOpacity={0.8}
         style={styles.card}
         onPress={e => {
-          CheckIfChecked(id)
-            ? setTagPeople(prev => prev.filter(item => item.id !== id))
+          CheckIfChecked(email)
+            ? setTagPeople(prev => prev.filter(item => item.email !== email))
             : setTagPeople(prev => [...prev, props.data]);
         }}>
         <View style={styles.usersInfo}>
-          <Image style={styles.img} source={{uri: img}} />
-          <Text style={{marginLeft: 15}}>{fullname}</Text>
+          <Image style={styles.img} source={{ uri: img }} />
+          <Text style={{ marginLeft: 15 }}>{fullname}</Text>
         </View>
         <Checkbox
           color={colors.iondigoDye}
-          status={CheckIfChecked(id) ? 'checked' : 'unchecked'}
+          status={CheckIfChecked(email) ? 'checked' : 'unchecked'}
         />
         {tagPeople.length ? setIsButtonActive(true) : setIsButtonActive(false)}
       </TouchableOpacity>
@@ -79,9 +95,10 @@ export default function TagPeople({navigation, TagedUserData}) {
             title="Done"
             isActive={isButtonActive}
             onPress={() => {
+              console.log("tagPeople",tagPeople);
               const emails = tagPeople.map(item => item.email)
               const names = tagPeople.map(item => item.firstName + item.lastName)
-              dispatch(postDataSliceAction.setTagList({emails,names}))
+              dispatch(postDataSliceAction.setTagList({ emails, names }))
               navigation.goBack();
             }}
           />

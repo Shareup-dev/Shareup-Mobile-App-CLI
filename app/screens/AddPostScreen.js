@@ -609,7 +609,7 @@ export default function AddPostScreen({ navigation, route }) {
           <UserProfilePicture style={styles.userProfile} />
           <View style={styles.column}>
             <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
-              <Title size={14}>
+              <Title size={15}>
                 {user.firstName} {user.lastName}
               </Title>
               {/**Content */}
@@ -618,7 +618,7 @@ export default function AddPostScreen({ navigation, route }) {
                   activeOpacity={0.5}
                   onPress={() => navigation.navigate(routes.FEELING_ACTIVITY)}>
                   <View style={styles.feelingContainer}>
-                    <Texts size={14} light style={{ fontWeight: '600' }} > --is feeling</Texts>
+                    <Texts size={14} light style={{ fontWeight: '600' }} > --is</Texts>
                     {postFeel.img ? (
                       <BetterImage
                         noBackground
@@ -654,7 +654,7 @@ export default function AddPostScreen({ navigation, route }) {
                     data={postData.tagedList.names}
                     keyExtractor={item => item}
                     renderItem={({ item }) => <TouchableOpacity onPress={() => { }}>
-                      <Texts size={14} style={{ fontWeight: '700' }} truncate={true}>{item}
+                      <Texts size={14} style={{ fontWeight: '700' }} truncate={true}>  {item}
                       </Texts>
                     </TouchableOpacity>
                     }

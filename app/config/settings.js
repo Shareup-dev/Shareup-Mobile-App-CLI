@@ -26,7 +26,7 @@ const getCurrentSettings = () => {
 
   //return settings.secureProd;
 
-  return settings.dev;
+  return settings.prod;
 };
 
 export default getCurrentSettings();
