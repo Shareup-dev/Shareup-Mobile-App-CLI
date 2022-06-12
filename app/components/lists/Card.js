@@ -174,7 +174,7 @@ function Card({
   };
 
   useEffect(() => {
-    formateDate();
+    // formateDate();
     checkIfLiked();
     //loadImages();
   }, []);
@@ -187,7 +187,7 @@ function Card({
   );
   //.................... POST ACTION METHOD .............................//
   const savePost = itemId => {
-    PostService.savePost(userState?.userData?.id, itemId).then(res => {
+    PostService.savePost(userData?.id, itemId).then(res => {
       if (res.status === 200){
         alert('post saved...');
       }else if (res.status === 201){

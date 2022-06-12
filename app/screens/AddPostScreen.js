@@ -260,15 +260,15 @@ export default function AddPostScreen({navigation, route}) {
     if (content.groupId) {
       formData.append('groupid', content.groupId);
     }
-    if (content.activity) {
-      formData.append('activity', content.activity);
-    }
-    if (content.feelings) {
-      formData.append('feelings', content.feelings);
-    }
-    if (content.tag) {
-      formData.append('tag', content.tag);
-    }
+    // if (content.activity) {
+    //   formData.append('activity', content.activity);
+    // }
+    // if (content.feelings) {
+    //   formData.append('feelings', content.feelings);
+    // }
+    // if (content.tag) {
+    //   formData.append('tag', content.tag);
+    // }
     if (content.category) {
       formData.append('category', content.category);
     }
@@ -451,10 +451,10 @@ export default function AddPostScreen({navigation, route}) {
       const postContent = {
         text: text === '' ? placeholder : text,
         images: images,
-        feeling: postFeel.feeling ? postFeel.feeling : null,
+        //feeling: postFeel.feeling ? postFeel.feeling : null,
         groupId: postData['groupId'],
-        tag: postData.tagedList.emails,
-        activity: '',
+        //tag: postData.tagedList.emails,
+        //activity: '',
       };
       const formData = createPostFormData(postContent);
       if (postData['EditPost']) {
@@ -498,7 +498,6 @@ export default function AddPostScreen({navigation, route}) {
         return swap();
       case postTypes.HANG_SHARE:
         return hangShare();
-
       case postTypes.SHARE_POST:
         return sharePost();
       case postTypes.CREATE_POST:
@@ -626,7 +625,7 @@ export default function AddPostScreen({navigation, route}) {
                   <View style={styles.feelingContainer}>
                     <Texts size={14} light style={{fontWeight: '600'}}>
                       {' '}
-                      --is feeling
+                      --is
                     </Texts>
                     {postFeel.img ? (
                       <BetterImage
@@ -673,6 +672,7 @@ export default function AddPostScreen({navigation, route}) {
                           size={14}
                           style={{fontWeight: '700'}}
                           truncate={true}>
+                          {' '}
                           {item}
                         </Texts>
                       </TouchableOpacity>
