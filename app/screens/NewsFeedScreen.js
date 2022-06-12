@@ -140,14 +140,9 @@ export default function NewsFeedScreen({navigation, route}) {
       <ActivityIndicator size="large" color={colors.iondigoDye} />
     </View>
   );
-  const ListHeader = () => {
-    return (
-      <>
-        <FeedTop navigation={navigation} />
-        <TrendingComponent />
-      </>
-    );
-  };
+  const ListHeader = React.useMemo(() => {
+    return <FeedTop navigation={navigation} refreshing={refreshing} />;
+  });
 
   return (
     <Screen style={styles.container} statusPadding={false}>
@@ -164,29 +159,30 @@ export default function NewsFeedScreen({navigation, route}) {
         renderItem={renderItem}
         onEndReached={onBeforeReachEnd}
         onEndReachedThreshold={4}
-        scrollEventThrottle={150}
         ListFooterComponent={() =>
           activityIndicator ? (
-            <EmptyPostCard count={2} />
+            <View style={{marginVertical: 20}}>
+              <ActivityIndicator size={18} />
+            </View>
           ) : (
             endReached && (
               <Text style={{alignSelf: 'center', marginVertical: 50}}>
-                No posts Available
+                No more posts Available
               </Text>
             )
           )
         }
-        // ListEmptyComponent={() => (
-        //   <>
-        //     {refreshing ? (
-        //       <EmptyPostCard />
-        //     ) : (
-        //       <Text style={{alignSelf: 'center', marginVertical: 50}}>
-        //         No posts Available
-        //       </Text>
-        //     )}
-        //   </>
-        // )}
+        ListEmptyComponent={() => (
+          <>
+            {activityIndicator ? (
+              <EmptyPostCard />
+            ) : (
+              <Text style={{alignSelf: 'center', marginVertical: 50}}>
+                No posts Available
+              </Text>
+            )}
+          </>
+        )}
       />
     </Screen>
   );

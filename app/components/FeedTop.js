@@ -7,10 +7,14 @@ import WritePost from './WritePost';
 
 import StoriesList from './lists/StoriesList';
 
-export default function FeedTop({navigation}) {
+export default function FeedTop({navigation, ...rest}) {
   return (
     <View>
-      {/* <StoriesList navigation={navigation} style={styles.storiesList} /> */}
+      <StoriesList
+        navigation={navigation}
+        style={styles.storiesList}
+        {...rest}
+      />
 
       <WritePost navigation={navigation} />
     </View>

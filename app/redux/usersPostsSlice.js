@@ -7,6 +7,10 @@ const usersPostSlice = createSlice({
     getPosts: (previousState, newPost) => {
       return (previousState = newPost.payload);
     },
+    addPost: (previousStates, newPost) => {
+      const allPost = [previousStates, newPost.payload];
+      return (previousStates = allPost);
+    },
   },
 });
 

@@ -8,8 +8,8 @@ import {HeaderButton, HeaderWithBackArrow} from '../components/headers';
 import {Checkbox} from 'react-native-paper';
 import UserService from '../services/user.service';
 import authContext from '../Contexts/authContext';
-import { postDataSliceAction } from '../redux/postDataSlice';
-import { useDispatch } from 'react-redux';
+import {postDataSliceAction} from '../redux/postDataSlice';
+import {useDispatch} from 'react-redux';
 
 export default function TagPeople({navigation, TagedUserData}) {
   const [tagPeople, setTagPeople] = useState([]);
@@ -23,7 +23,6 @@ export default function TagPeople({navigation, TagedUserData}) {
   useEffect(() => {
     UserService.getFriends(loggedInUser.email).then(resp => {
       // resp.data.forEach(dost => dost.email);
-      // console.log(resp.data.forEach(dost => dost.email));
       setFriends(resp.data);
     });
   }, []);
@@ -79,9 +78,11 @@ export default function TagPeople({navigation, TagedUserData}) {
             title="Done"
             isActive={isButtonActive}
             onPress={() => {
-              const emails = tagPeople.map(item => item.email)
-              const names = tagPeople.map(item => item.firstName + item.lastName)
-              dispatch(postDataSliceAction.setTagList({emails,names}))
+              const emails = tagPeople.map(item => item.email);
+              const names = tagPeople.map(
+                item => item.firstName + item.lastName,
+              );
+              dispatch(postDataSliceAction.setTagList({emails, names}));
               navigation.goBack();
             }}
           />

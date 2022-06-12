@@ -1,5 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native';
-import React, {useCallback, useContext, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {FlatList, View, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import AuthContext from '../../Contexts/authContext';
@@ -9,7 +9,7 @@ import CreateStoryCard from './CreateStoryCard';
 import StoryCard from './StoryCard';
 import EmptyStoryCard from '../EmptyCards/EmptyStoryCard';
 
-export default function StoriesList({navigation, style}) {
+function StoriesList({navigation, style, refreshing}) {
   const {
     userState: {userData, username},
   } = useContext(AuthContext);
@@ -18,66 +18,22 @@ export default function StoriesList({navigation, style}) {
 
   const dispatch = useDispatch();
   const stories = useSelector(state => state.stories);
-
-  // useEffect(() => {
-  //   const fetchStories = () => {
-  //     setLoading(1);
-  //     Promise.all([
-  //       storiesService.getStoriesByEmail(username),
-  //       storiesService.getStoriesOfFriends(userData.id),
-  //     ])
-  //       .then(res => {
-  //         // getting user info from first element. and i spread it with list of stories - this is only for login user
-  //         const myStories = {
-  //           ...res[0]?.data[0]?.user,
-  //           stories_List: res[0]?.data,
-  //         };
-  //         const friendsStories = res[1]?.data;
-
-  //         const array = friendsStories;
-
-  //         if (res[0].data.length) {
-  //           array.unshift(myStories); // merging (login user stories + his friends stories) #### first index should be login user stories
-  //         }
-
-  //         dispatch(storiesAction.setStories(array));
-  //       })
-  //       .catch(e => console.error(e.message))
-  //       .finally(_ => {
-  //         setLoading(2);
-  //       });
-  //   };
-  //   let mount = true;
-
-  //   if (mount) {
-  //     fetchStories();
-  //   }
-  //   return () => {
-  //     mount = false;
-  //   };
-  // }, []);
-
   const fetchStories = () => {
     setLoading(1);
     Promise.all([
-      storiesService.getStoriesByEmail(username),
-      storiesService.getStoriesOfFriends(userData.id),
+      storiesService.getStoriesByEmail(username).then(({data}) => data),
+      storiesService.getStoriesOfFriends(userData.id).then(({data}) => data),
     ])
-      .then(res => {
-        // getting user info from first element. and i spread it with list of stories - this is only for login user
-        const myStories = {
-          ...res[0]?.data[0]?.user,
-          stories_List: res[0]?.data,
-        };
-        const friendsStories = res[1]?.data;
-
-        const array = friendsStories;
-
-        if (res[0].data.length) {
-          array.unshift(myStories); // merging (login user stories + his friends stories) #### first index should be login user stories
-        }
-
-        dispatch(storiesAction.setStories(array));
+      .then(([myStories, friendsStories]) => {
+        if (myStories.length)
+          dispatch(
+            storiesAction.setMyStories({
+              ...myStories[0].user,
+              stories_List: myStories,
+            }),
+          );
+        if (friendsStories.length)
+          dispatch(storiesAction.setFriendsStories(friendsStories));
       })
       .catch(e => console.error(e.message))
       .finally(_ => {
@@ -85,17 +41,27 @@ export default function StoriesList({navigation, style}) {
       });
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchStories();
-    }, []),
-  );
+  useEffect(() => {
+    if (refreshing) fetchStories();
+  }, [refreshing]);
+
+  useEffect(() => {
+    fetchStories();
+  }, []);
 
   return (
     <View style={[styles.container, style]}>
       <CreateStoryCard navigation={navigation} />
+
+      {/* this flatList for friends stories */}
       <FlatList
-        data={stories}
+        ListHeaderComponent={
+          // this  will display only login user stories
+          stories.myStories?.stories_List?.length > 0 && (
+            <StoryCard data={stories.myStories} navigation={navigation} />
+          )
+        }
+        data={stories.friendsStories}
         horizontal
         showsHorizontalScrollIndicator={false}
         style={styles.list}
@@ -108,6 +74,8 @@ export default function StoriesList({navigation, style}) {
     </View>
   );
 }
+
+export default StoriesList;
 
 const styles = StyleSheet.create({
   container: {

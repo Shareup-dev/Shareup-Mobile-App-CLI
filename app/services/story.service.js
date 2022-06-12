@@ -7,7 +7,8 @@ class Story {
   updateStory = sid => AuthAxios.put(`stories/${sid}`, data);
   deleteStory = sid => AuthAxios.delete(`stories/${sid}`);
   // getStoriesOfFriends = (uid) => AuthAxios.get(`stories/friends_stories/${uid}`)
-  getStoriesOfFriends = uid => AuthAxios.get(`stories/friends_stories_new/${uid}`);
+  getStoriesOfFriends = uid =>
+    AuthAxios.get(`stories/friends_stories_new/${uid}`);
 
   // Get all story’s viewers
   getStoryViewers = (sid, pageno = 1, pagesize = 10) =>
@@ -20,6 +21,7 @@ class Story {
       },
     });
   getViewsCount = sid => AuthAxios.get(`stories/views_count/${sid}`);
-  AddViews = (sid, uid) => AuthAxios.put(`stories/get_story_add_views/${sid}/${uid}`);
+  AddViews = (sid, uid) =>
+    AuthAxios.put(`stories/get_story_add_views/${sid}/${uid}`);
 }
 export default new Story();

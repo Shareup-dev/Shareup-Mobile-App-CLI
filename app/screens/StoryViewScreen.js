@@ -31,12 +31,16 @@ import UserProfilePicture from '../components/UserProfilePicture';
 import moment from 'moment';
 import {Texts, Title} from '../Materials/Text';
 import feelings from '../Constants/reactions';
-import BetterImage from '../components/betterImage/BetterImage';
 import Screen from '../components/Screen';
+import {storiesAction} from '../redux/stories';
+import {useDispatch} from 'react-redux';
+import {PanGestureHandler} from 'react-native-gesture-handler';
+import Reanimated, {useAnimatedGestureHandler} from 'react-native-reanimated';
 
 const {width: windowWidth, height: windowHeight} = Dimensions.get('screen');
 
 function StoryViewScreen({navigation, route}) {
+  const reduxDispatch = useDispatch();
   const {
     data: {stories_List: data, firstName, lastName, id: userID},
   } = route.params;
@@ -107,16 +111,21 @@ function StoryViewScreen({navigation, route}) {
       duration: timerState.duration,
     }).start(({finished}) => {
       if (finished) {
-        if (activeIndex !== data.length - 1) {
-          dispatch({type: actions.RESET_TIMER});
-          setLoaded(false);
-          setActiveIndex(prev => prev + 1);
-        } else {
-          navigation.popToTop();
-        }
+        nextSlideHandler();
       }
     });
   };
+
+  const nextSlideHandler = () => {
+    if (activeIndex !== data.length - 1) {
+      dispatch({type: actions.RESET_TIMER});
+      setLoaded(false);
+      setActiveIndex(prev => prev + 1);
+    } else {
+      navigation.popToTop();
+    }
+  };
+
   // Pause progress animations
   const pauseProgress = () => {
     let pausedTime = new Date().valueOf();
@@ -150,7 +159,12 @@ function StoryViewScreen({navigation, route}) {
   const deleteStory = () => {
     storyService
       .deleteStory(data[activeIndex].id)
-      .then(({status}) => status === 200 && navigation.goBack())
+      .then(({status}) => {
+        if (status === 200) {
+          reduxDispatch(storiesAction.deleteStories(data[activeIndex].id));
+          navigation.goBack();
+        }
+      })
       .catch(e => console.error(e.message));
   };
 
@@ -334,38 +348,50 @@ function StoryViewScreen({navigation, route}) {
     );
   }, []);
 
+  const panGestureEvent = useAnimatedGestureHandler({
+    onActive: e => {},
+    onEnd: e => {
+      console.log(e);
+    },
+  });
+
   return (
     <Screen>
       <TouchableOpacity
         activeOpacity={1}
-        onPressIn={() => {
-          setPaused(true);
-          pauseProgress();
-        }}
-        onPressOut={() => {
-          setPaused(false);
-          startProgress();
-        }}
+        // onPress={() => nextSlideHandler()}
+        // onPressIn={() => {
+        //   setPaused(true);
+        //   pauseProgress();
+        // }}
+        // onPressOut={() => {
+        //   setPaused(false);
+        //   startProgress();
+        // }}
         style={styles.mediaContainer}>
-        {data[activeIndex]?.video ? (
-          <Video
-            ref={ref => (this.player = ref)}
-            paused={paused}
-            onLoad={_ => setLoaded(true)}
-            resizeMode={'contain'}
-            style={styles.media}
-            source={{
-              uri: data[activeIndex].storiesMediaPath,
-            }}
-          />
-        ) : (
-          <Image
-            style={styles.media}
-            resizeMode={'contain'}
-            onLoadEnd={_ => setLoaded(true)}
-            source={{uri: data[activeIndex].storiesMediaPath}}
-          />
-        )}
+        <PanGestureHandler onGestureEvent={panGestureEvent}>
+          <Reanimated.View>
+            {data[activeIndex]?.video ? (
+              <Video
+                ref={ref => (this.player = ref)}
+                paused={paused}
+                onLoad={_ => setLoaded(true)}
+                resizeMode={'contain'}
+                style={styles.media}
+                source={{
+                  uri: data[activeIndex].storiesMediaPath,
+                }}
+              />
+            ) : (
+              <Image
+                style={styles.media}
+                resizeMode={'contain'}
+                onLoadEnd={_ => setLoaded(true)}
+                source={{uri: data[activeIndex].storiesMediaPath}}
+              />
+            )}
+          </Reanimated.View>
+        </PanGestureHandler>
       </TouchableOpacity>
       <DownModal isVisible={modelOpen} setIsVisible={handleCloseModel}>
         <View style={[styles.menuContainer, styles.customDownModel]}>

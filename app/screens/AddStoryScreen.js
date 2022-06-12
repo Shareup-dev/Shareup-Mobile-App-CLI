@@ -29,6 +29,7 @@ import storyService from '../services/story.service';
 import {ProgressBar} from 'react-native-paper';
 import {storiesAction} from '../redux/stories';
 import Screen from '../components/Screen';
+import store from '../redux/store';
 
 const {width, height} = Dimensions.get('window');
 
@@ -161,7 +162,9 @@ export default function AddStoryScreen({navigation}) {
 
     storyService
       .addStory(userData.id, storyData)
-      .then(({data}) => storiesAction.addNewStory(data))
+      .then(async ({data}) => {
+        await store.dispatch(storiesAction.addNewStory(data));
+      })
       .catch(e => console.error(e.message))
       .finally(_ => {
         setIsUploading(false);
