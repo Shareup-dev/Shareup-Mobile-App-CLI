@@ -22,6 +22,7 @@ import onShareHandler from '../Share';
 import {useDispatch} from 'react-redux';
 import {feedPostsAction} from '../../redux/feedPostsSlice';
 import {postDataSliceAction} from '../../redux/postDataSlice';
+import useReactions from '../Reactions/Reactions';
 
 function Card({
   user,
@@ -66,8 +67,9 @@ function Card({
       icon: {
         image: require('../../assets/post-options-icons/save-post-icon.png'),
       },
-      onPress: () => {savePost(postData.id)}
-      ,
+      onPress: () => {
+        savePost(postData.id);
+      },
     },
     {
       title: 'Hide my profile',
@@ -75,7 +77,7 @@ function Card({
         image: require('../../assets/post-options-icons/hide-profile-icon.png'),
       },
       onPress: () => {
-       alert("hide my profile")
+        alert('hide my profile');
       },
     },
     {
@@ -158,7 +160,6 @@ function Card({
     const arrDate = postData?.lastEdited?.split(' ');
     const monthShort = arrDate[1].slice(0, 3);
 
-
     // setFormattedDate({
     //   day: arrDate[0],
     //   month: monthShort,
@@ -188,12 +189,11 @@ function Card({
   //.................... POST ACTION METHOD .............................//
   const savePost = itemId => {
     PostService.savePost(userData?.id, itemId).then(res => {
-      if (res.status === 200){
+      if (res.status === 200) {
         alert('post saved...');
-      }else if (res.status === 201){
+      } else if (res.status === 201) {
         alert('Removed...');
       }
-      
     });
   };
   const loadImages = () => {

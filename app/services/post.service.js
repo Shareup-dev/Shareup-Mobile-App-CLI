@@ -34,8 +34,8 @@ class PostService {
   addComment = (userid, postid, comment) =>
     AuthAxios.post(`comment/${userid}/${postid}`, comment);
   deleteComment = commentid => AuthAxios.delete(`comment/delete/${commentid}`);
-  likeUnlikeComment = (uid, cid, params) =>
-    AuthAxios.put(`comment/${uid}/like-unlike/${cid}`, params);
+  likeUnlikeComment = (uid, cid, emoji) =>
+    AuthAxios.put(`comment/${uid}/like-unlike/${cid}`, {emoji});
   editComment = (cid, comment) =>
     AuthAxios({
       method: 'PUT',

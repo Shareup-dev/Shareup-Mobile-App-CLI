@@ -350,9 +350,7 @@ function StoryViewScreen({navigation, route}) {
 
   const panGestureEvent = useAnimatedGestureHandler({
     onActive: e => {},
-    onEnd: e => {
-      console.log(e);
-    },
+    onEnd: e => {},
   });
 
   return (

@@ -119,7 +119,7 @@ export default function UserProfileScreen({navigation, route}) {
   return (
     <Screen style={styles.container}>
       <HeaderWithBackArrow
-        title={user.firstName}
+        title={`${user.firstName} ${user.lastName}`}
         onBackButton={() => navigation.goBack()}
         leftComponent={
           <Icon

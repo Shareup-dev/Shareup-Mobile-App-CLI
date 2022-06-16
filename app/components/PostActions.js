@@ -52,8 +52,6 @@ const PostActions = ({
     // null
   );
 
-
-
   const [openModal, setOpenModal] = useState(false);
   const [topThreeReactions, setTopThreeReactions] = useState([]);
 
@@ -75,11 +73,10 @@ const PostActions = ({
   };
 
   useEffect(() => {
-     topReactions();
+    topReactions();
   }, [listOfReactions]);
 
   const topReactions = _ => {
-    console.log(listOfReactions);
     setTopThreeReactions(
       Object.entries(listOfReactions)
         .filter(item => item[1] > 0)
