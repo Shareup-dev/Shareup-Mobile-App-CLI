@@ -49,6 +49,9 @@ function StoriesList({navigation, style, refreshing}) {
     fetchStories();
   }, []);
 
+  const IsUserHasStories = () =>
+    stories.myStories?.stories_List?.length > 0 ? true : false;
+
   return (
     <View style={[styles.container, style]}>
       <CreateStoryCard navigation={navigation} />
@@ -57,7 +60,7 @@ function StoriesList({navigation, style, refreshing}) {
       <FlatList
         ListHeaderComponent={
           // this  will display only login user stories
-          stories.myStories?.stories_List?.length > 0 && (
+          IsUserHasStories() && (
             <StoryCard data={stories.myStories} navigation={navigation} />
           )
         }
@@ -65,7 +68,9 @@ function StoriesList({navigation, style, refreshing}) {
         horizontal
         showsHorizontalScrollIndicator={false}
         style={styles.list}
-        ListEmptyComponent={() => <EmptyStoryCard />}
+        ListEmptyComponent={() =>
+          IsUserHasStories() ? null : <EmptyStoryCard />
+        }
         keyExtractor={(item, i) => i.toString()}
         renderItem={({item}) => {
           return <StoryCard data={item} navigation={navigation} />;

@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   Dimensions,
-  TouchableWithoutFeedback,
   Text,
   TouchableOpacity,
   Keyboard,
@@ -23,6 +22,8 @@ import Separator from '../Separator';
 import CommentsList from './CommentsList';
 import CommentsContext from '../../Contexts/commentsContext';
 import DownModal from '../drawers/DownModal';
+import {ReactionBar, TopReactions} from '../Reactions';
+import {Texts, Title} from '../../Materials/Text';
 
 const {width} = Dimensions.get('window');
 
@@ -32,15 +33,17 @@ export default function CommentCard(props) {
   } = useContext(AuthContext);
   const {setSelectedComment, setIsReply, focusTextField, isReplied} =
     useContext(CommentsContext);
-  const {comment, commentLiked, replyComment, onRefreshing} = props;
+  const {comment, replyComment, onRefreshing} = props;
   const time = moment(comment.published, 'DD MMMM YYYY hh:mm:ss').fromNow();
 
   const [openMedal, setOpenMedal] = useState(false);
   const [editable, setEditable] = useState(false);
   const [content, setContent] = useState(comment.content);
-  const [isLiked, setIsLiked] = useState(
-    replyComment ? comment.replyLiked : comment.commentLiked,
+  const [reactionCount, setReactionCount] = useState(comment.numberOfReaction);
+  const [listOfReaction, setlistOfReaction] = useState(
+    comment.countOfEachReaction,
   );
+
   const [collapseReply, setCollapseReply] = useState(false);
   const [replies, setReplies] = useState({
     loading: false,
@@ -52,29 +55,6 @@ export default function CommentCard(props) {
       getAllReplies();
     }
   }, [isReplied]);
-
-  const handleReaction = () => {
-    const params = {reaction: 'null'};
-
-    setIsLiked(prev => !prev);
-    if (replyComment) {
-      postService
-        .likeUnlikeReply(userData.id, comment.id, params)
-        .then(({status}) => status === 200)
-        .catch(e => {
-          setIsLiked(prev => !prev);
-          console.error(e);
-        });
-    } else {
-      postService
-        .likeUnlikeComment(userData.id, comment.id, params)
-        .then(({status}) => status === 200)
-        .catch(e => {
-          console.error(e.message);
-          setIsLiked(prev => !prev);
-        });
-    }
-  };
 
   const getAllReplies = () => {
     setReplies(prev => ({...prev, loading: true}));
@@ -172,15 +152,8 @@ export default function CommentCard(props) {
   };
 
   return (
-    <>
-      <View
-        style={[
-          styles.commentContainer,
-          {
-            marginLeft: replyCommentMargin,
-            width: width - replyCommentMargin,
-          },
-        ]}>
+    <View style={{marginHorizontal: 25}}>
+      <View style={[styles.commentContainer]}>
         {/** Left */}
         <TouchableOpacity activeOpacity={1} onLongPress={openMedalHandler}>
           <View style={{flexDirection: 'row'}}>
@@ -190,7 +163,7 @@ export default function CommentCard(props) {
             />
 
             <View style={styles.medialContainer}>
-              <Text style={styles.userName}>{comment.user.firstName}</Text>
+              <Title color={'#585858'}>{comment.user.firstName}</Title>
 
               <View style={styles.commentBody}>
                 {editable ? (
@@ -233,55 +206,39 @@ export default function CommentCard(props) {
                   <CommentText>{comment.content}</CommentText>
                 )}
               </View>
-
-              <View style={[styles.commentDetailsContainer]}>
-                <Text style={styles.time}>{time}</Text>
-                <Text style={styles.stars}>
-                  {comment.numberOfReaction
-                    ? `${comment.numberOfReaction} ${
-                        comment.numberOfReaction < 2 ? `Star` : `Stars`
-                      }`
-                    : null}
-                </Text>
-                <View>
-                  {replyComment ? null : (
-                    <LinkButton
-                      title="Reply"
-                      style={styles.reply}
-                      onPress={() => addReplyHandler(comment)}
-                    />
-                  )}
-                </View>
-              </View>
             </View>
           </View>
         </TouchableOpacity>
+      </View>
 
-        {/** Right */}
-        <View style={styles.reactionContainer}>
-          {isLiked ? (
-            <TouchableWithoutFeedback onPress={() => handleReaction()}>
-              <Icon
-                name="star"
-                type="AntDesign"
-                size={20}
-                color={colors.iondigoDye}
-                backgroundSizeRatio={1}
-              />
-            </TouchableWithoutFeedback>
-          ) : (
-            <TouchableWithoutFeedback onPress={() => handleReaction()}>
-              <Icon
-                name="staro"
-                type="AntDesign"
-                size={20}
-                color={colors.iondigoDye}
-                backgroundSizeRatio={1}
-              />
-            </TouchableWithoutFeedback>
+      <View style={[styles.commentDetailsContainer]}>
+        <ReactionBar
+          contentType={'comment'}
+          emojiSize={14}
+          isLiked={comment.commentLiked}
+          contentId={comment.id}
+          setListOfReaction={setlistOfReaction}
+        />
+
+        <Text style={styles.time}>{time}</Text>
+        <TopReactions
+          emojiSize={12}
+          style={{marginHorizontal: 10}}
+          reactionsList={listOfReaction}
+          numberOfReaction={reactionCount}
+        />
+
+        <View>
+          {replyComment ? null : (
+            <LinkButton
+              title="Reply"
+              style={styles.reply}
+              onPress={() => addReplyHandler(comment)}
+            />
           )}
         </View>
       </View>
+
       {comment.numberOfReplies > 0 && (
         <View style={{marginLeft: 25}}>
           <LinkButton
@@ -292,6 +249,7 @@ export default function CommentCard(props) {
           />
         </View>
       )}
+
       {collapseReply ? (
         <>
           <CommentsList
@@ -336,7 +294,7 @@ export default function CommentCard(props) {
           </TouchableOpacity>
         </View>
       </DownModal>
-    </>
+    </View>
   );
 }
 
@@ -361,7 +319,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingTop: 25,
     paddingBottom: 6,
-    paddingHorizontal: 25,
     justifyContent: 'space-between',
   },
   replyContainer: {
@@ -373,21 +330,21 @@ const styles = StyleSheet.create({
 
   medialContainer: {
     marginLeft: 10,
-    paddingTop: 5,
-    justifyContent: 'space-between',
   },
   userName: {
     fontWeight: 'bold',
   },
   commentDetailsContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
+    // backgroundColor: '#333',
   },
   comment: {
     color: colors.mediumGray,
     fontSize: 13,
   },
   commentBody: {
-    marginVertical: 6,
+    marginTop: 6,
   },
   time: {
     fontSize: 9,

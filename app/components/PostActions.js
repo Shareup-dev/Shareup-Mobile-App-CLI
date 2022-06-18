@@ -52,8 +52,6 @@ const PostActions = ({
     // null
   );
 
-
-
   const [openModal, setOpenModal] = useState(false);
   const [topThreeReactions, setTopThreeReactions] = useState([]);
 
@@ -75,7 +73,7 @@ const PostActions = ({
   };
 
   useEffect(() => {
-     topReactions();
+    topReactions();
   }, [listOfReactions]);
 
   const topReactions = _ => {

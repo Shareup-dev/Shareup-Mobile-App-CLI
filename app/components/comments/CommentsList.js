@@ -14,26 +14,26 @@ export default function CommentsList({
     commentsListRef.current.scrollToEnd({animated: true});
   };
 
-
-
   return (
-    <View>
-      <FlatList
-        data={data}
-        keyExtractor={(item, index) => index.toString()}
-        ref={commentsListRef}
-        onContentSizeChange={scrollToListBottom}
-        refreshing={refreshing}
-        onRefresh={onRefreshing}
-        renderItem={({item}) => (
-          <CommentCard comment={item} replyComment={replyComment} onRefreshing={onRefreshing} />
-        )}
-        ListEmptyComponent={
-          <View style={{alignItems:'center',marginTop:5,minHeight:200}} >
-            <Text>{refreshing ? `Loading...`: `No comments found`}</Text>
-          </View>
-        }
-      />
-    </View>
+    <FlatList
+      data={data}
+      keyExtractor={(item, index) => index.toString()}
+      ref={commentsListRef}
+      onContentSizeChange={scrollToListBottom}
+      refreshing={refreshing}
+      onRefresh={onRefreshing}
+      renderItem={({item}) => (
+        <CommentCard
+          comment={item}
+          replyComment={replyComment}
+          onRefreshing={onRefreshing}
+        />
+      )}
+      ListEmptyComponent={
+        <View style={{alignItems: 'center', marginTop: 5, minHeight: 200}}>
+          <Text>{refreshing ? `Loading...` : `No comments found`}</Text>
+        </View>
+      }
+    />
   );
 }

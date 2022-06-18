@@ -1,5 +1,10 @@
 export default [
   {
+    name: 'star',
+    emoji: '⭐',
+    img: require('../assets/emoji/star.gif'),
+  },
+  {
     name: 'laugh',
     emoji: '😂',
     img: require('../assets/emoji/laughing.gif'),
@@ -19,21 +24,16 @@ export default [
     img: require('../assets/emoji/angry.gif'),
     emoji: '😡',
   },
-  {
-    name: 'celebrate',
-    img: require('../assets/emoji/celebrate.gif'),
-    emoji: '🥳',
-  },
-  {
-    name: 'smiley',
-    img: require('../assets/emoji/smiley.gif'),
-    emoji: '☺️',
-  },
-  {
-    name: 'star',
-    emoji: '⭐',
-    img: require('../assets/emoji/star.gif'),
-  },
+  // {
+  //   name: 'celebrate',
+  //   img: require('../assets/emoji/celebrate.gif'),
+  //   emoji: '🥳',
+  // },
+  // {
+  //   name: 'smiley',
+  //   img: require('../assets/emoji/smiley.gif'),
+  //   emoji: '☺️',
+  // },
   {
     name: 'wow',
     img: require('../assets/emoji/wow.gif'),

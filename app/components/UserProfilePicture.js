@@ -1,5 +1,5 @@
-import React, { useContext }  from 'react';
-import { View, StyleSheet, } from 'react-native';
+import React, {useContext} from 'react';
+import {View, StyleSheet} from 'react-native';
 
 import Icon from './Icon';
 import colors from '../config/colors';
@@ -7,8 +7,9 @@ import BetterImage from './betterImage/BetterImage';
 import AuthContext from '../Contexts/authContext';
 
 export default function UserProfilePicture(props) {
-
-  const {userState:{userData}} = useContext(AuthContext)
+  const {
+    userState: {userData},
+  } = useContext(AuthContext);
 
   const {
     size = 100,

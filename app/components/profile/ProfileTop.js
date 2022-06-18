@@ -7,10 +7,9 @@ import Tab from '../buttons/Tab';
 import IconBar from '../tab-bar/IconBar';
 import routes from '../../navigation/routes';
 import Posts from './Posts';
-import StoriesList from '../lists/StoriesList';
 import AuthContext from '../../Contexts/authContext';
 import FriendService from '../../services/friends.service';
-import { Texts } from '../../Materials/Text';
+import {Texts, Title, Header} from '../../Materials/Text';
 
 const profilePictureSize = 70;
 
@@ -22,7 +21,7 @@ export default function ProfileTop({
   user,
   numberOfPosts,
   userStatus,
-  setUserStatus
+  setUserStatus,
 }) {
   console.log(user);
   const {
@@ -31,22 +30,37 @@ export default function ProfileTop({
 
   const sendFriendRequest = () => {
     FriendService.sendRequest(userData.id, user.id)
-      .then(({status}) => status === 200 && setUserStatus(prev => ({...prev,state:"FriendRequested"})))
+      .then(
+        ({status}) =>
+          status === 200 &&
+          setUserStatus(prev => ({...prev, state: 'FriendRequested'})),
+      )
       .catch(e => console.error(e.message));
   };
   const acceptRequest = () => {
     FriendService.acceptRequest(userData.id, user.id)
-      .then(({status}) => status === 200 && setUserStatus(prev => ({...prev,state:"Friend"})))
+      .then(
+        ({status}) =>
+          status === 200 && setUserStatus(prev => ({...prev, state: 'Friend'})),
+      )
       .catch(e => console.error(e.message));
   };
   const declineRequest = () => {
     FriendService.declineRequest(userData.id, user.id)
-      .then(({status}) => status === 200 && setUserStatus(prev => ({...prev,state:"Unfriend"})))
+      .then(
+        ({status}) =>
+          status === 200 &&
+          setUserStatus(prev => ({...prev, state: 'Unfriend'})),
+      )
       .catch(e => console.error(e.message));
   };
   const Unfriend = () => {
     FriendService.removeFriends(userData.id, user.id)
-      .then(({status}) => status === 200 && setUserStatus(prev => ({...prev,state:"Unfriend"})))
+      .then(
+        ({status}) =>
+          status === 200 &&
+          setUserStatus(prev => ({...prev, state: 'Unfriend'})),
+      )
       .catch(e => console.error(e.message));
   };
 
@@ -85,20 +99,20 @@ export default function ProfileTop({
         );
       case 'FriendResponse':
         return (
-          <View style={{flexDirection:'row'}}>
-          <Tab
-            title="Accept"
-            color={colors.iondigoDye}
-            style={styles.editProfileButton}
-            titleStyle={[styles.editProfileButtonTitle, {color: '#fff'}]}
-            onPress={Unfriend}
-          />
-          <Tab
-            title="Reject"
-            color={colors.LightGray}
-            style={styles.editProfileButton}
-            titleStyle={styles.editProfileButtonTitle}
-          />
+          <View style={{flexDirection: 'row'}}>
+            <Tab
+              title="Accept"
+              color={colors.iondigoDye}
+              style={styles.editProfileButton}
+              titleStyle={[styles.editProfileButtonTitle, {color: '#fff'}]}
+              onPress={Unfriend}
+            />
+            <Tab
+              title="Reject"
+              color={colors.LightGray}
+              style={styles.editProfileButton}
+              titleStyle={styles.editProfileButtonTitle}
+            />
           </View>
         );
 
@@ -136,18 +150,36 @@ export default function ProfileTop({
             /> */}
           </View>
           <View style={styles.counterWrapper}>
-            <Texts size={20} color={colors.dark} style={{fontWeight:"600"}}>
+            <Texts size={14} color={colors.dimGray} style={styles.bold}>
               {user.numberOfPosts ? user.numberOfPosts : numberOfPosts}
             </Texts>
-            <Texts size={15} color={colors.dark} style={{fontWeight:"400",marginTop:5}}>Posts</Texts>
+            <Texts size={14} color={colors.dimGray} style={styles.bold}>
+              Posts
+            </Texts>
           </View>
           <View style={styles.counterWrapper}>
-            <Texts size={20} color={colors.dark} style={{fontWeight:"600"}}>{user.numberOfFriends}</Texts>
-            <Texts size={15} color={colors.dark} style={{fontWeight:"400",marginTop:5}}>Friends </Texts>
+            <Texts size={14} color={colors.dimGray} style={styles.bold}>
+              {user.numberOfFriends}
+            </Texts>
+            <Texts size={14} color={colors.dimGray} style={styles.bold}>
+              Friends{' '}
+            </Texts>
           </View>
           <View style={styles.counterWrapper}>
-            <Texts size={20} color={colors.dark} style={{fontWeight:"600"}}>{user.numberOfFollowers}</Texts>
-            <Texts size={15} color={colors.dark} style={{fontWeight:"400",marginTop:5}}>Followers </Texts>
+            <Texts size={14} color={colors.dimGray} style={styles.bold}>
+              {user.numberOfFollowers}
+            </Texts>
+            <Texts size={14} color={colors.dimGray} style={styles.bold}>
+              Followers{' '}
+            </Texts>
+          </View>
+          <View style={styles.counterWrapper}>
+            <Texts size={14} color={colors.dimGray} style={styles.bold}>
+              {user.numberOfFollowing}
+            </Texts>
+            <Texts size={14} color={colors.dimGray} style={styles.bold}>
+              Following
+            </Texts>
           </View>
           {/* <View style={styles.counterWrapper}>
             <Texts size={20} color={colors.dark} style={{fontWeight:"600"}}>{user.numberOfFollowing}</Texts>
@@ -157,13 +189,14 @@ export default function ProfileTop({
 
         {/** Row 2 */}
         <View style={styles.row2}>
-          <Texts size={20} color={colors.dark} 
-            style={
-              styles.username
-            }>{`${user.firstName} ${user.lastName}`}</Texts>
+          <Header
+            style={styles.bold}
+            color={colors.dark}>{`${user.firstName} ${user.lastName}`}</Header>
+          {/* <Texts size={20} color={colors.dark} style={styles.username}></Texts> */}
 
-          <Texts size={13} color={colors.dimGray} 
-            >{user.aboutme}</Texts>
+          <Texts size={13} color={colors.dimGray}>
+            {user.aboutme}
+          </Texts>
 
           {user.id === userData.id ? (
             <Tab
@@ -192,12 +225,15 @@ export default function ProfileTop({
 }
 
 const styles = StyleSheet.create({
+  bold: {
+    fontWeight: 'bold',
+  },
   container: {
     marginBottom: 10,
   },
   padding: {
     paddingHorizontal: 20,
-    paddingVertical:10,
+    paddingVertical: 10,
   },
   row1: {
     justifyContent:'space-between',
@@ -217,7 +253,7 @@ const styles = StyleSheet.create({
   counterWrapper: {
     justifyContent: 'space-between',
     alignItems: 'center',
-    alignSelf:'center',
+    alignSelf: 'center',
     marginHorizontal: 5,
   },
   row2: {
@@ -225,7 +261,7 @@ const styles = StyleSheet.create({
   },
   username: {
     fontWeight: '600',
-    marginBottom:10,
+    marginBottom: 5,
   },
   editProfileButton: {
     marginTop: 20,
@@ -236,7 +272,6 @@ const styles = StyleSheet.create({
   editProfileButtonTitle: {
     fontSize: 14,
     fontWeight: '500',
-
   },
   storyCard: {
     marginVertical: 10,
