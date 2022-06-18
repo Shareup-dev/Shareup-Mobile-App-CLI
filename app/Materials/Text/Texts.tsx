@@ -57,6 +57,7 @@ const Texts: React.FC<Props> = ({
       <View>
         <Text
           ellipsizeMode="tail"
+          allowFontScaling={false}
           onTextLayout={checkNumOfLines}
           numberOfLines={numberOfLines}
           {...rest}
@@ -67,7 +68,10 @@ const Texts: React.FC<Props> = ({
           <TouchableOpacity
             style={{marginVertical: 5}}
             onPress={toggleBtnHandler}>
-            <Text style={{fontSize: 12, color: color}}>
+            <Text style={{fontSize: 12, color: color}}
+            allowFontScaling={false}
+            numberOfLines={numberOfLines}>
+              
               {textCollapse ? `Show Less..` : `Show more..`}
             </Text>
           </TouchableOpacity>

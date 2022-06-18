@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import { View, StyleSheet, FlatList, StatusBar } from 'react-native';
 import Modal from 'react-native-modal';
-
+import { useFocusEffect } from '@react-navigation/native';
 import colors from '../../config/colors';
 import DropDownListItem from '../lists/DropDownListItem';
-import { useFocusEffect } from '@react-navigation/native';
+import {  } from '@react-navigation/native';
 import hangShareService from '../../services/hangShare.service';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

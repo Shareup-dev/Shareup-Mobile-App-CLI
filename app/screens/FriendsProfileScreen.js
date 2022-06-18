@@ -27,6 +27,7 @@ import SwapCard from '../components/lists/SwapCard';
 import postService from '../services/post.service';
 import profileService from '../services/profile.service';
 import FriendService from '../services/friends.service';
+import userService from '../services/user.service';
 
 const POSTS = 'posts';
 const IMAGE_VIDEOS = 'images&videos';
@@ -60,7 +61,7 @@ export default function UserProfileScreen({navigation, route}) {
     };
     fetchUserProfile();
   }, []);
-
+  const [userDetails,setUserDetails] = useState({});
   const [posts, setPosts] = useState([]);
   const [media, setMedia] = useState([]);
   const [loading, setLoading] = useState(0);
@@ -80,10 +81,13 @@ export default function UserProfileScreen({navigation, route}) {
     Promise.all([
       postService.getPostByEmail(user.email),
       profileService.getAllMedia(user.id),
+      userService.getUserByEmail(user.email),
+
     ])
       .then(res => {
         setPosts(res[0].data);
         setMedia(res[1].data);
+        setUserDetails(res[2].data);
       })
       .catch(e => console.error(e.message))
       .finally(_ => {
@@ -93,7 +97,7 @@ export default function UserProfileScreen({navigation, route}) {
 
   const ListHeader = () => (
     <ProfileTop
-      user={user}
+      user={userDetails}
       currentTab={currentTab}
       numberOfPosts={posts.length}
       navigation={navigation}

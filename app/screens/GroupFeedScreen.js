@@ -17,7 +17,7 @@ import WritePost from '../components/WritePost';
 import colors from '../config/colors';
 import GroupService from '../services/group.service';
 import routes from '../navigation/routes';
-
+import store from '../redux/store';
 import {HeaderWithBackArrow} from '../components/headers';
 import Tab from '../components/buttons/Tab';
 

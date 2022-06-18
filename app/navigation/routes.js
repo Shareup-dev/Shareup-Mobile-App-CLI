@@ -1,3 +1,5 @@
+import AlbumListScreen from "../screens/AlbumListScreen";
+
 export default Object.freeze({
   LOGIN: 'Login',
   SIGNUP: 'SignUp',
@@ -72,4 +74,7 @@ export default Object.freeze({
   MAP_VIEW: 'MapViewScreen',
   ARCHIVED_CHAT: 'ARCHIVED_CHAT',
   LIST_OF_REACTIONS: 'LIST_OF_REACTIONS',
+  ALBUMLIST_SCREEN:'AlbumListScreen',
+  CREATE_ALBUM:'CreateAlbumScreen',
+  SHARE_LIST:'ShareListScreen'
 });

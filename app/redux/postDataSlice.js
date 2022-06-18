@@ -6,6 +6,7 @@ const initialState = {
   postDetail: [],
   EditPost: false,
   tagedList: {emails: [], names: []},
+  Album:{}
 };
 
 const postDataSlice = createSlice({
@@ -80,6 +81,15 @@ const postDataSlice = createSlice({
       previousState.tagedList = previousState.tagedList.filter(
         item => item !== key.payload,
       );
+      return previousState;
+    },
+
+    //...................ALBUM...........................
+    addAlbum: (previousState, newState) => {
+      previousState.Album = newState.payload;
+    },
+    removeAlbum: (previousState, key) => {
+      previousState.Album = {}
       return previousState;
     },
   },

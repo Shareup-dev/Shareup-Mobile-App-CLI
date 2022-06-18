@@ -14,6 +14,7 @@ export default function UserProfilePicture(props) {
   const {
     size = 100,
     style,
+    userProfilePicture,
     profilePicture = userData.profilePicturePath,
     showActiveStatus = false,
     bottomOffsite = 3,
@@ -23,7 +24,9 @@ export default function UserProfilePicture(props) {
   return (
     <View>
       <BetterImage
-        source={{uri: profilePicture}}
+        source={ 
+          {uri:userProfilePicture?userProfilePicture:profilePicture}
+        }
         style={[{width: size, height: size, borderRadius: size / 2}, style]}
       />
 

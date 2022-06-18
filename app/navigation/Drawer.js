@@ -7,6 +7,8 @@ import {
   TouchableWithoutFeedback,
   Platform,
   PixelRatio,
+  Dimensions,
+ 
 } from 'react-native';
 import Modal from 'react-native-modal';
 
@@ -22,6 +24,8 @@ import {useNavigation} from '@react-navigation/native';
 import UserProfilePicture from '../components/UserProfilePicture';
 import { Texts } from '../Materials/Text';
 import { useDispatch } from 'react-redux';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 
@@ -59,7 +63,8 @@ export default function Drawer({isVisible, setIsVisible}) {
       title: 'Share Point',
       icon: require('../assets/icons/share-point-icon.png'),
       onPress: () => {
-        alert("share point")
+        navigation.navigate(routes.HANG_FLOW_SCREEN,constants.postTypes.HANG_SHARE)
+        setIsVisible(false)
        },
     },
     {
@@ -129,6 +134,7 @@ export default function Drawer({isVisible, setIsVisible}) {
     },
   ];
   return (
+    
     <Modal
       isVisible={isVisible}
       swipeDirection={['right']}
@@ -138,6 +144,7 @@ export default function Drawer({isVisible, setIsVisible}) {
       animationIn="slideInRight"
       animationOut="slideOutRight">
       <View style={styles.container}>
+     {/* <ScrollView> */}
         <View style={styles.header}>
         <UserProfilePicture size={40} />
           {/* <Icon
@@ -149,6 +156,7 @@ export default function Drawer({isVisible, setIsVisible}) {
         <View style={styles.separator} />
 
         <View style={[styles.innerContainer, defaultStyles.lightShadow]}>
+        
           <View>
             <FlatList
               data={listItems}
@@ -160,7 +168,7 @@ export default function Drawer({isVisible, setIsVisible}) {
               )}
             />
           </View>
-
+          
           <View style={styles.footer}>
             <View style={styles.separator} />
             <View style={styles.LinkButtonWrapper}>
@@ -211,8 +219,11 @@ export default function Drawer({isVisible, setIsVisible}) {
             />
           </View>
         </View>
+        {/* </ScrollView> */}
       </View>
+      
     </Modal>
+    
   );
 }
 
@@ -233,7 +244,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     padding: 15,
     backgroundColor: colors.white,
-    height: PixelRatio.get() < 3 ? '100%' : '90%',
+    height: PixelRatio.get() < 3 ? '99%' : '90%',
   },
   userName: {
     fontSize: 23,

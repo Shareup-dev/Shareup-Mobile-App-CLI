@@ -30,6 +30,7 @@ class PostService {
     AuthAxios.put(`${uid}/like-unlike/${pid}`, {emoji: emoji});
   deletePost = postId => AuthAxios.delete(`allpost/${postId}`);
   savePost = (uid, pid) => AuthAxios.put(`allposts/${uid}/save-unsave/${pid}`);
+ 
   /******************** COMMENT *******************/
   addComment = (userid, postid, comment) =>
     AuthAxios.post(`comment/${userid}/${postid}`, comment);
@@ -64,6 +65,16 @@ class PostService {
     });
   getAllReply = (uid, cid) =>
     AuthAxios.get(`comment/${uid}/get_replies/${cid}`);
+
+  /******************** ALBUM *******************/
+  createAlbum = (name,uid) =>AuthAxios({
+    method: 'POST',
+    url: `album/createAlbum/${uid}`,
+    params: {album_name :name},
+  })
+  getAlbums = (uid) => AuthAxios.get(`album/all/${uid}`)
+  getAlbumContents = (aid) =>
+    AuthAxios.get(`album/${aid}`)
 }
 const config = {
   onUploadProgress: progressEvent => {
@@ -73,4 +84,5 @@ const config = {
     progress = 50 + (progressEvent.loaded / progressEvent.total) * 50;
   },
 };
+
 export default new PostService();

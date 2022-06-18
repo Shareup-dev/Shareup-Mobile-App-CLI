@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, Text} from 'react-native';
 
 import colors from '../../config/colors';
+import { Texts } from '../../Materials/Text';
 import Icon from '../Icon';
 
 export default function OptionBox({currentOption, onPress}) {
@@ -18,7 +19,7 @@ export default function OptionBox({currentOption, onPress}) {
         />
       )}
 
-      <Text style={styles.text}>{currentOption.value}</Text>
+      <Texts size={14} style={styles.text}>{currentOption.value}</Texts>
       <Icon
         type="MaterialIcons"
         name="keyboard-arrow-down"
