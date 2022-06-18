@@ -52,8 +52,8 @@ class PostService {
   deleteReply = rid => AuthAxios.delete(`reply/delete/${rid}`);
   replay = (uid, commentId, data) =>
     AuthAxios.post(`comment/reply/${uid}/${commentId}`, data);
-  likeUnlikeReply = (uid, rid, params) =>
-    AuthAxios.put(`reply/${uid}/like-unlike/${rid}`, params);
+  likeUnlikeReply = (uid, rid, emoji) =>
+    AuthAxios.put(`reply/${uid}/like-unlike/${rid}`, {emoji});
   editReply = (rid, reply) =>
     AuthAxios({
       method: 'PUT',

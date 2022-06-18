@@ -1,12 +1,10 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   TouchableWithoutFeedback,
   Image,
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
-  Button,
 } from 'react-native';
 import moment from 'moment';
 import colors from '../config/colors';
@@ -17,32 +15,24 @@ import routes from '../navigation/routes';
 import AuthContext from '../Contexts/authContext';
 import {Title, Texts} from '../Materials/Text';
 
-import Reaction from './Reactions/Reaction';
-import reactions, {findEmoji} from '../Constants/reactions';
-import BetterImage from './betterImage/BetterImage';
+import {ReactionBar, TopReactions} from './Reactions';
 
 const PostActions = ({
   postId,
   postData,
   userId,
   navigation,
-  isUserLiked,
-  numberOfReactions,
+
   numberOfComments,
   setIsOptionsVisible,
   postType,
   swapId,
-  onInteraction,
   noActionBar,
   noOptions,
-  setReactionType,
   navigateToShare,
-  reactionType,
 }) => {
   const fromReply = false;
   const actionsTabSizeRatio = 0.5;
-
-  const ref = useRef();
 
   const {
     userState: {userData},
@@ -52,37 +42,9 @@ const PostActions = ({
     // null
   );
 
-  const [openModal, setOpenModal] = useState(false);
-  const [topThreeReactions, setTopThreeReactions] = useState([]);
-
-  const closeReactionOnBlur = e => {
-    setOpenModal(false);
-  };
-
   const [listOfReactions, setListOfReactions] = useState(
     postData.countOfEachReaction,
   );
-
-  const increaseReactionCount = async type => {
-    await onInteraction(type);
-
-    await setListOfReactions(prev => ({
-      ...prev,
-      [type]: isUserLiked ? prev[type] - 1 : prev[type] + 1,
-    }));
-  };
-
-  useEffect(() => {
-    topReactions();
-  }, [listOfReactions]);
-
-  const topReactions = _ => {
-    setTopThreeReactions(
-      Object.entries(listOfReactions)
-        .filter(item => item[1] > 0)
-        .slice(0, 2),
-    );
-  };
 
   const navigateToComments = () =>
     navigation.navigate(routes.COMMENTS, {
@@ -168,28 +130,19 @@ const PostActions = ({
           <View style={styles.actionsContainer}>
             <Tab
               textFontSize={17}
-              iconName={!isUserLiked && 'star'}
               iconType="FontAwesome5"
               title={
-                isUserLiked
-                  ? `${findEmoji(reactionType)} ${numberOfReactions}`
-                  : ` ${numberOfReactions}`
+                <TopReactions
+                  reactionsList={listOfReactions}
+                  emojiSize={10}
+                  overlayColor={colors.mediumGray}
+                  allowNagativeVal={true}
+                />
               }
               sizeRatio={actionsTabSizeRatio}
-              style={[
-                styles.actionTab,
-                isUserLiked && {backgroundColor: colors.iondigoDye},
-              ]}
+              // style={[styles.actionTab]}
               color={colors.mediumGray}
               fontColor={colors.white}
-              onLongPress={() =>
-                !isUserLiked
-                  ? setOpenModal(true)
-                  : increaseReactionCount(reactionType)
-              }
-              onPress={() => {
-                increaseReactionCount(reactionType);
-              }}
             />
 
             <Tab
@@ -216,11 +169,7 @@ const PostActions = ({
           </View>
         )}
       </View>
-      <Reaction
-        visible={openModal}
-        setVisible={setOpenModal}
-        onInteraction={increaseReactionCount}
-      />
+      {/* <Reaction visible={openModal} setVisible={setOpenModal} /> */}
       {!noActionBar && (
         <View style={styles.actionsBar}>
           {/* <TouchableOpacity
@@ -268,24 +217,13 @@ const PostActions = ({
                 })
               }>
               <>
-                {topThreeReactions.map((item, i) => (
-                  <View
-                    key={i}
-                    style={{
-                      backgroundColor: '#fff',
-                      borderRadius: 30,
-                      alignItems: 'center',
-                      marginLeft: -6,
-                    }}>
-                    <Texts size={16}>{` ${findEmoji(item[0])}`}</Texts>
-                  </View>
-                ))}
-                {/* <Texts size={14} style={{marginLeft: 5, fontWeight: '600'}}>
-                  {numberOfReactions > 0 ? numberOfReactions : null}
-                </Texts> */}
-                <Texts size={12} style={{fontWeight: '700'}}>
-                  {numberOfReactions > 0 && ` ${numberOfReactions}`}
-                </Texts>
+                <ReactionBar
+                  contentId={postId}
+                  emojiSize={14}
+                  contentType={'post'}
+                  isLiked={postData.likedType}
+                  setListOfReaction={setListOfReactions}
+                />
               </>
             </TouchableWithoutFeedback>
           </View>
