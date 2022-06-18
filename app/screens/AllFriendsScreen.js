@@ -27,7 +27,7 @@ import { useDispatch } from 'react-redux';
 export default function AllFriendsScreen({navigation}) {
   const [friends, setFriends] = useState([]);
   const [removed, setremoved] = useState([]);
-  const {userData: loggedInUser} = useContext(authContext).userState;
+  const {userState:{userData: loggedInUser},authActions} = useContext(authContext);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export default function AllFriendsScreen({navigation}) {
             // })
             UserService.deleteFriend(loggedInUser.id, friend.id).then(
               removeResp => {
-                dispatch(postRefreshAction.setPostRefresh(true))
+                authActions.updateUserInfo({...loggedInUser,numberOfFriends: loggedInUser.numberOfFriends - 1})
                 setFriends(previousFriends => {
                   return previousFriends.filter(
                     dost => dost.email !== friend.email,

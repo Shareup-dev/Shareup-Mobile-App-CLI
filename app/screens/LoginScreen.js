@@ -109,7 +109,8 @@ export default function LoginScreen({navigation}) {
       {loading && (
         <Loading modal text="Logging in..." />
         )}
-          <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={{flex:1,backgroundColor:colors.white}}>
+        <ScrollView showsVerticalScrollIndicator={false}>
         <LoginContainer>
 
           <Form
@@ -162,7 +163,7 @@ export default function LoginScreen({navigation}) {
 
         </LoginContainer>
           </ScrollView>
-     
+          </View>
     </>
   );
 }

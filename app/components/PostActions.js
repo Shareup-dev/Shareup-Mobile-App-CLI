@@ -79,7 +79,6 @@ const PostActions = ({
   }, [listOfReactions]);
 
   const topReactions = _ => {
-    console.log(listOfReactions);
     setTopThreeReactions(
       Object.entries(listOfReactions)
         .filter(item => item[1] > 0)
@@ -95,6 +94,10 @@ const PostActions = ({
       postType,
       swapId,
       fromReply,
+    });
+    const showShareList = () =>
+    navigation.navigate(routes.SHARE_LIST, {
+      postData,
     });
 
   return (
@@ -207,7 +210,7 @@ const PostActions = ({
             />
 
             <Tab
-              title={'0'}
+              title={`${postData.numberOfshares}`}
               iconImage={require('../assets/icons/share-icon.png')}
               sizeRatio={actionsTabSizeRatio}
               style={styles.actionTab}
@@ -294,12 +297,19 @@ const PostActions = ({
           </View>
 
           <View style={styles.commentsShares}>
-            <TouchableWithoutFeedback onPress={navigateToComments}>
+            <TouchableOpacity onPress={navigateToComments}>
               <Texts
                 style={
                   styles.bold
-                }>{`${numberOfComments} Comments  ${0} Shares`}</Texts>
-            </TouchableWithoutFeedback>
+                }>{`${numberOfComments} Comments  `}</Texts>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={showShareList}>
+              <Texts
+                style={
+                  styles.bold
+                }>{`${postData.numberOfshares} Shares`}</Texts>
+            </TouchableOpacity>
+            
           </View>
         </View>
       )}

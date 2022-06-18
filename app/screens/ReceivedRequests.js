@@ -25,7 +25,7 @@ import { postRefreshAction } from '../redux/postRefreshSlice';
 import { useDispatch } from 'react-redux';
 
 export default function ReceivedRequests({navigation}) {
-  const {userData: user} = useContext(authContext).userState;
+  const {userState:{userData: user},authActions} = useContext(authContext);
   const [requests, setRequests] = useState([]);
   const [acceptedFrom, setAcceptedFrom] = useState([]);
   const [rejectedFrom, setRejectedFrom] = useState([]);
@@ -48,7 +48,8 @@ export default function ReceivedRequests({navigation}) {
  
     UserService.acceptFriendRequest(user.id, friend.id).then(resp => {
 
-     dispatch(postRefreshAction.setPostRefresh(true))
+authActions.updateUserInfo({...user,numberOfFriends: user.numberOfFriends + 1})
+     
     });
 
     setAcceptedFrom(previousState => {

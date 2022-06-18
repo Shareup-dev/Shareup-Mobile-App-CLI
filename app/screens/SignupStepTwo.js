@@ -25,10 +25,11 @@ const SignupStepTwo = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
 
   const {isReachable, checkIfReachable} = useIsReachable();
-
+  const strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
   const validationSchema = Yup.object().shape({
+    
     gender: Yup.string().required(),
-    password: Yup.string().required().min(3).label('Password'),
+    password: Yup.string().required().matches(strongRegex,'password must contain minimum 8 characters,including upper case lower case number and special character').label('Password'),
     confirmPassword: Yup.string()
       .required()
       .label('Re-Enter Password')

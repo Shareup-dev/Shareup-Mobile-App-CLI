@@ -29,6 +29,8 @@ export default function AppTextInput({
         )}
         <TextInput
           placeholderTextColor={colors.dimGray}
+          returnKeyType={'done'}
+          returnKeyLabel={'Done'}
           style={[
             defaultStyles.text,
             {

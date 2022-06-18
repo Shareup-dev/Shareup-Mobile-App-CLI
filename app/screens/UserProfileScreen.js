@@ -28,6 +28,7 @@ import profileService from '../services/profile.service';
 import EmptyPostCard from '../components/EmptyCards/EmptyPostCard';
 import {useDispatch, useSelector} from 'react-redux';
 import {usersPostActions} from '../redux/usersPostsSlice';
+import userService from '../services/user.service';
 
 const POSTS = 'posts';
 const IMAGE_VIDEOS = 'images&videos';
@@ -53,7 +54,7 @@ export default function UserProfileScreen({navigation, route}) {
     state: false,
     index: 0,
   });
-
+  
   const [tags, setTags] = useState([]);
 
   const handleTapped = name => {
@@ -69,6 +70,7 @@ export default function UserProfileScreen({navigation, route}) {
       .then(res => {
         dispatch(usersPostActions.getPosts(res[0].data));
         setMedia(res[1].data);
+
       })
       .catch(e => console.error(e.message))
       .finally(_ => {

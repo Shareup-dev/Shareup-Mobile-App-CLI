@@ -24,6 +24,7 @@ export default function ProfileTop({
   userStatus,
   setUserStatus
 }) {
+  console.log(user);
   const {
     userState: {userData},
   } = useContext(AuthContext);
@@ -107,6 +108,7 @@ export default function ProfileTop({
             title={null}
             disabled={true}
             color={colors.LightGray}
+            fontColor={colors.LightGray}
             style={styles.editProfileButton}
             titleStyle={styles.editProfileButtonTitle}
           />
@@ -134,23 +136,23 @@ export default function ProfileTop({
             /> */}
           </View>
           <View style={styles.counterWrapper}>
-            <Texts size={15} color={colors.dark} style={{fontWeight:"500"}}>
+            <Texts size={20} color={colors.dark} style={{fontWeight:"600"}}>
               {user.numberOfPosts ? user.numberOfPosts : numberOfPosts}
             </Texts>
-            <Texts size={15} color={colors.dark} style={{fontWeight:"500"}}>Posts</Texts>
+            <Texts size={15} color={colors.dark} style={{fontWeight:"400",marginTop:5}}>Posts</Texts>
           </View>
           <View style={styles.counterWrapper}>
-            <Texts size={15} color={colors.dark} style={{fontWeight:"500"}}>{user.numberOfFriends}</Texts>
-            <Texts size={15} color={colors.dark} style={{fontWeight:"500"}}>Friends </Texts>
+            <Texts size={20} color={colors.dark} style={{fontWeight:"600"}}>{user.numberOfFriends}</Texts>
+            <Texts size={15} color={colors.dark} style={{fontWeight:"400",marginTop:5}}>Friends </Texts>
           </View>
           <View style={styles.counterWrapper}>
-            <Texts size={15} color={colors.dark} style={{fontWeight:"500"}}>{user.numberOfFollowers}</Texts>
-            <Texts size={15} color={colors.dark} style={{fontWeight:"500"}}>Followers </Texts>
+            <Texts size={20} color={colors.dark} style={{fontWeight:"600"}}>{user.numberOfFollowers}</Texts>
+            <Texts size={15} color={colors.dark} style={{fontWeight:"400",marginTop:5}}>Followers </Texts>
           </View>
-          <View style={styles.counterWrapper}>
-            <Texts size={15} color={colors.dark} style={{fontWeight:"500"}}>{user.numberOfFollowing}</Texts>
-            <Texts size={15} color={colors.dark} style={{fontWeight:"500"}}>Following</Texts>
-          </View>
+          {/* <View style={styles.counterWrapper}>
+            <Texts size={20} color={colors.dark} style={{fontWeight:"600"}}>{user.numberOfFollowing}</Texts>
+            <Texts size={15} color={colors.dark} style={{fontWeight:"400",marginTop:5}}>Following</Texts>
+          </View> */}
         </View>
 
         {/** Row 2 */}
@@ -198,8 +200,9 @@ const styles = StyleSheet.create({
     paddingVertical:10,
   },
   row1: {
+    justifyContent:'space-between',
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    
   },
   profilePicture: {
     width: profilePictureSize,
@@ -212,17 +215,17 @@ const styles = StyleSheet.create({
     right: 0,
   },
   counterWrapper: {
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
     alignSelf:'center',
     marginHorizontal: 5,
   },
   row2: {
-    marginTop: 15,
+    marginTop: 20,
   },
   username: {
     fontWeight: '600',
-    marginBottom:5,
+    marginBottom:10,
   },
   editProfileButton: {
     marginTop: 20,

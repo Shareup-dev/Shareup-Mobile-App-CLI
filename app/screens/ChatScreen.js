@@ -234,7 +234,7 @@ function ChatScreen({navigation, route}) {
         <View
           style={{
             position: 'absolute',
-            bottom: Platform.OS === 'ios' ? 45 : 0,
+            bottom:0,
             flexDirection: 'row',
             alignItems: 'center',
             paddingHorizontal: 10,

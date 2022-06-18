@@ -26,7 +26,7 @@ export default function TagPeople({navigation, TagedUserEmail}) {
     UserService.getFriends(loggedInUser.email).then(resp => {
       setFriends(resp.data);
       const tagedPeoples = [];
-      console.log('tags', tags);
+      
       tags.forEach(tag => {
         resp.data.forEach(friend => {
           if (tag === friend.email) tagedPeoples.push(friend);
@@ -90,7 +90,7 @@ export default function TagPeople({navigation, TagedUserEmail}) {
             title="Done"
             isActive={isButtonActive}
             onPress={() => {
-              console.log('tagPeople', tagPeople);
+              
               const emails = tagPeople.map(item => item.email);
               const names = tagPeople.map(
                 item => item.firstName + item.lastName,

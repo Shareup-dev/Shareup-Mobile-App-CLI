@@ -2,6 +2,7 @@ import { StyleSheet, Text, TouchableWithoutFeedback } from "react-native";
 
 import React from "react";
 import colors from "../../config/colors";
+import { Texts } from "../../Materials/Text";
 
 export default function LinkButton({ title, fontSize = 20, style, onPress, ...rest }) {
   return (

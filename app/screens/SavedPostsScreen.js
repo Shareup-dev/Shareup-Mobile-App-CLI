@@ -18,6 +18,7 @@ import authContext from '../Contexts/authContext';
 import postService from '../services/post.service';
 import constants from '../config/constants';
 import swapService from '../services/swap.service';
+import { Texts } from '../Materials/Text';
 
 export default function SavedPostsScreen({navigation, route}) {
   const {params} = route;
@@ -78,9 +79,9 @@ export default function SavedPostsScreen({navigation, route}) {
         renderItem={renderItem}
         onEndReached={hideActivityIndicator}
         ListEmptyComponent={() => (
-          <Text style={{alignSelf: 'center', marginVertical: 50}}>
+          <Texts style={{alignSelf: 'center', marginVertical: 50}}>
             No posts Available
-          </Text>
+          </Texts>
         )}
       />
     </Screen>
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   listItem: {
-    borderRadius: 10,
+    // borderRadius: 10,
     backgroundColor: colors.white,
     flexDirection: 'row',
     justifyContent: 'space-between',
