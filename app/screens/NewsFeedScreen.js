@@ -158,7 +158,7 @@ export default function NewsFeedScreen({navigation, route}) {
         refreshing={refreshing}
         renderItem={renderItem}
         onEndReached={onBeforeReachEnd}
-        onEndReachedThreshold={4}
+        onEndReachedThreshold={0.5}
         ListFooterComponent={() =>
           activityIndicator ? (
             <View style={{marginVertical: 20}}>
@@ -167,7 +167,7 @@ export default function NewsFeedScreen({navigation, route}) {
           ) : (
             endReached && (
               <Text style={{alignSelf: 'center', marginVertical: 50}}>
-                No more posts Available
+                No posts Available
               </Text>
             )
           )
@@ -176,11 +176,10 @@ export default function NewsFeedScreen({navigation, route}) {
           <>
             {activityIndicator ? (
               <EmptyPostCard />
-            ) : (
-              <Text style={{alignSelf: 'center', marginVertical: 50}}>
-                No posts Available
-              </Text>
-            )}
+            ) : // <Text style={{alignSelf: 'center', marginVertical: 50}}>
+            //   No posts Available
+            // </Text>
+            null}
           </>
         )}
       />

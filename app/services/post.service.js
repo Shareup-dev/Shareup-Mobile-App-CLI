@@ -20,7 +20,7 @@ class PostService {
   getPosts = () => AuthAxios.get(`posts`);
   likePost = (uid, pid, emoji) =>
     AuthAxios.put(`${uid}/like-unlike/${pid}`, {emoji: emoji});
-
+  listOfReactions = postid => AuthAxios.get(`reactions/${postid}`);
   sharePost = (uid, pid, data) => AuthAxios.post(`share/${uid}/${pid}`, data);
   getSharedPostById = id => AuthAxios.get(`share/${id}`);
 
@@ -30,7 +30,7 @@ class PostService {
     AuthAxios.put(`${uid}/like-unlike/${pid}`, {emoji: emoji});
   deletePost = postId => AuthAxios.delete(`allpost/${postId}`);
   savePost = (uid, pid) => AuthAxios.put(`allposts/${uid}/save-unsave/${pid}`);
- 
+
   /******************** COMMENT *******************/
   addComment = (userid, postid, comment) =>
     AuthAxios.post(`comment/${userid}/${postid}`, comment);
@@ -53,8 +53,8 @@ class PostService {
   deleteReply = rid => AuthAxios.delete(`reply/delete/${rid}`);
   replay = (uid, commentId, data) =>
     AuthAxios.post(`comment/reply/${uid}/${commentId}`, data);
-  likeUnlikeReply = (uid, rid, params) =>
-    AuthAxios.put(`reply/${uid}/like-unlike/${rid}`, params);
+  likeUnlikeReply = (uid, rid, emoji) =>
+    AuthAxios.put(`reply/${uid}/like-unlike/${rid}`, {emoji});
   editReply = (rid, reply) =>
     AuthAxios({
       method: 'PUT',
@@ -67,14 +67,14 @@ class PostService {
     AuthAxios.get(`comment/${uid}/get_replies/${cid}`);
 
   /******************** ALBUM *******************/
-  createAlbum = (name,uid) =>AuthAxios({
-    method: 'POST',
-    url: `album/createAlbum/${uid}`,
-    params: {album_name :name},
-  })
-  getAlbums = (uid) => AuthAxios.get(`album/all/${uid}`)
-  getAlbumContents = (aid) =>
-    AuthAxios.get(`album/${aid}`)
+  createAlbum = (name, uid) =>
+    AuthAxios({
+      method: 'POST',
+      url: `album/createAlbum/${uid}`,
+      params: {album_name: name},
+    });
+  getAlbums = uid => AuthAxios.get(`album/all/${uid}`);
+  getAlbumContents = aid => AuthAxios.get(`album/${aid}`);
 }
 const config = {
   onUploadProgress: progressEvent => {

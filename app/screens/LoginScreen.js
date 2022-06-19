@@ -24,7 +24,8 @@ import defaultStyles from '../config/GlobalStyles';
 import LoginContainer from '../components/forms/LoginContainer';
 import Loading from '../components/Loading';
 import authService from '../services/auth.service';
-import { ScrollView } from 'react-native';
+import {ScrollView} from 'react-native';
+import Screen from '../components/Screen';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label('Email'),
@@ -65,7 +66,7 @@ export default function LoginScreen({navigation}) {
       })
       .catch(async e => {
         let message;
-  
+
         if (e.message === 'Request failed with status code 401') {
           // if the user not verified
           await authService
@@ -105,14 +106,10 @@ export default function LoginScreen({navigation}) {
 
   // ToDO: Fix the layout
   return (
-    <>
-      {loading && (
-        <Loading modal text="Logging in..." />
-        )}
-        <View style={{flex:1,backgroundColor:colors.white}}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+    <Screen>
+      {loading && <Loading modal text="Logging in..." />}
+      <ScrollView showsVerticalScrollIndicator={false}>
         <LoginContainer>
-
           <Form
             initialValues={{email: '', password: ''}}
             onSubmit={handleSubmit}
@@ -160,11 +157,9 @@ export default function LoginScreen({navigation}) {
               />
             </View>
           </Form>
-
         </LoginContainer>
-          </ScrollView>
-          </View>
-    </>
+      </ScrollView>
+    </Screen>
   );
 }
 

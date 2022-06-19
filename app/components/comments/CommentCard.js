@@ -152,7 +152,7 @@ export default function CommentCard(props) {
   };
 
   return (
-    <View style={{marginHorizontal: 25}}>
+    <View style={{paddingHorizontal: 25}}>
       <View style={[styles.commentContainer]}>
         {/** Left */}
         <TouchableOpacity activeOpacity={1} onLongPress={openMedalHandler}>
@@ -213,9 +213,9 @@ export default function CommentCard(props) {
 
       <View style={[styles.commentDetailsContainer]}>
         <ReactionBar
-          contentType={'comment'}
-          emojiSize={14}
-          isLiked={comment.commentLiked}
+          style={{flex: 1}}
+          contentType={replyComment ? 'reply' : 'comment'}
+          isLiked={replyComment ? comment.replyLiked : comment.commentLiked}
           contentId={comment.id}
           setListOfReaction={setlistOfReaction}
         />
@@ -317,6 +317,7 @@ const styles = StyleSheet.create({
   },
   commentContainer: {
     flexDirection: 'row',
+
     paddingTop: 25,
     paddingBottom: 6,
     justifyContent: 'space-between',

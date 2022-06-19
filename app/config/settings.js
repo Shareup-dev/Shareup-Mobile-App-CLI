@@ -22,7 +22,6 @@ const settings = {
 };
 
 const getCurrentSettings = () => {
-  
   return settings.dev;
 };
 
