@@ -134,7 +134,8 @@ const PostActions = ({
           <View style={styles.actionsContainer}>
             <Tab
               textFontSize={17}
-              iconType="FontAwesome5"
+              // iconName="star"
+              // iconType="FontAwesome5"
               title={
                 <TopReactions
                   reactionsList={listOfReactions}
@@ -144,6 +145,7 @@ const PostActions = ({
                 />
               }
               sizeRatio={actionsTabSizeRatio}
+              style={styles.actionTab}
               onPress={() => {
                 navigation.navigate(routes.LIST_OF_REACTIONS, postData.id);
               }}
