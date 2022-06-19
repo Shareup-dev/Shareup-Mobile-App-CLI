@@ -219,6 +219,10 @@ export default function SharedPostCard(props) {
       .catch(e => alert(e));
   };
 
+  const showShareList = () =>
+    navigation.navigate(routes.SHARE_LIST, {
+      postData,
+    });
   const HeaderComponent = () => {
     return (
       <>
@@ -298,7 +302,7 @@ export default function SharedPostCard(props) {
             />
 
             <Tab
-              title={'0'}
+              title={`${postData.numberOfshares}`}
               iconImage={require('../../assets/icons/share-icon.png')}
               sizeRatio={actionsTabSizeRatio}
               style={styles.actionTab}
@@ -408,12 +412,20 @@ export default function SharedPostCard(props) {
               </TouchableWithoutFeedback>
             </View>
 
+
             <View style={styles.commentsShares}>
-              <TouchableWithoutFeedback onPress={navigateToComments}>
-                <Texts style={styles.bold}>{`${
-                  postData.numberOfComments
-                } Comments  ${0} Shares`}</Texts>
-              </TouchableWithoutFeedback>
+            <TouchableOpacity onPress={navigateToComments}>
+              <Texts
+                style={
+                  styles.bold
+                }>{`${postData.numberOfComments} Comments  `}</Texts>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={showShareList}>
+              <Texts
+                style={
+                  styles.bold
+                }>{`${postData.numberOfshares} Shares`}</Texts>
+            </TouchableOpacity>
             </View>
           </View>
           {postData.content !== '' && (

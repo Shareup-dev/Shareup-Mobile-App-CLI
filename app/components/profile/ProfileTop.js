@@ -150,34 +150,34 @@ export default function ProfileTop({
             /> */}
           </View>
           <View style={styles.counterWrapper}>
-            <Texts size={14} color={colors.dimGray} style={styles.bold}>
+            <Texts size={14} color={colors.dark} style={styles.bold}>
               {user.numberOfPosts ? user.numberOfPosts : numberOfPosts}
             </Texts>
-            <Texts size={14} color={colors.dimGray} style={styles.bold}>
+            <Texts size={14} color={colors.dark} style={styles.bold}>
               Posts
             </Texts>
           </View>
           <View style={styles.counterWrapper}>
-            <Texts size={14} color={colors.dimGray} style={styles.bold}>
+            <Texts size={14} color={colors.dark} style={styles.bold}>
               {user.numberOfFriends}
             </Texts>
-            <Texts size={14} color={colors.dimGray} style={styles.bold}>
+            <Texts size={14} color={colors.dark} style={styles.bold}>
               Friends{' '}
             </Texts>
           </View>
           <View style={styles.counterWrapper}>
-            <Texts size={14} color={colors.dimGray} style={styles.bold}>
+            <Texts size={14} color={colors.dark} style={styles.bold}>
               {user.numberOfFollowers}
             </Texts>
-            <Texts size={14} color={colors.dimGray} style={styles.bold}>
+            <Texts size={14} color={colors.dark} style={styles.bold}>
               Followers{' '}
             </Texts>
           </View>
           <View style={styles.counterWrapper}>
-            <Texts size={14} color={colors.dimGray} style={styles.bold}>
+            <Texts size={14} color={colors.dark} style={styles.bold}>
               {user.numberOfFollowing}
             </Texts>
-            <Texts size={14} color={colors.dimGray} style={styles.bold}>
+            <Texts size={14} color={colors.dark} style={styles.bold}>
               Following
             </Texts>
           </View>
@@ -227,6 +227,7 @@ export default function ProfileTop({
 const styles = StyleSheet.create({
   bold: {
     fontWeight: 'bold',
+    marginTop:5,
   },
   container: {
     marginBottom: 10,
