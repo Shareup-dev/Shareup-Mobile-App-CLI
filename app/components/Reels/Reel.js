@@ -22,7 +22,6 @@ const RenderReels = ({item, index, navigation}) => {
     userdata: user,
     content,
     published,
-    thumbnail_name,
     numberOfComments,
     numberOfReaction,
     reelLiked,

@@ -2,6 +2,7 @@ import {ColorValue, StyleSheet, View, ViewStyle} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Texts} from '../../Materials/Text';
 import {findEmoji} from '../../Constants/reactions';
+import Icon from '../Icon';
 
 interface Props {
   style?: ViewStyle;
@@ -47,18 +48,30 @@ const TopThreeReactions: React.FC<Props> = props => {
 
   return (
     <View style={[style, styles.row]}>
-      {topReactions.map((item, i) => (
-        <View
-          key={i}
-          style={[styles.container, {backgroundColor: overlayColor}]}>
-          <Texts size={emojiSize}>{` ${findEmoji(item[0])}`}</Texts>
-        </View>
-      ))}
+      {topReactions.length ? (
+        topReactions.map((item, i) => (
+          <View
+            key={i}
+            style={[styles.container, {backgroundColor: overlayColor}]}>
+            <Texts size={emojiSize}>{` ${findEmoji(item[0])}`}</Texts>
+          </View>
+        ))
+      ) : (
+        <Icon
+          name={'star'}
+          type={'FontAwesome5'}
+          color={'#fff'}
+          style={styles.icon}
+          size={emojiSize}
+          noBackground
+          backgroundSizeRatio={0.9}
+        />
+      )}
 
       <Texts
         size={emojiSize}
         color={overlayColor === '#fff' ? '#333' : '#fff'}>{` ${
-        getTotalCount() ? getTotalCount() : allowNagativeVal ? '0 Star' : ''
+        getTotalCount() ? getTotalCount() : allowNagativeVal ? '0' : ''
       }`}</Texts>
     </View>
   );
@@ -75,4 +88,5 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
   },
+  icon: {},
 });
