@@ -32,14 +32,8 @@ function StoriesList({navigation, style, refreshing}) {
               stories_List: myStories,
             }),
           );
-        else {
-          dispatch(
-            storiesAction.setMyStories({
-              stories_List: [],
-            }),
-          );
-        }
-        dispatch(storiesAction.setFriendsStories(friendsStories));
+        if (friendsStories.length)
+          dispatch(storiesAction.setFriendsStories(friendsStories));
       })
       .catch(e => console.error(e.message))
       .finally(_ => {

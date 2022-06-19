@@ -223,7 +223,7 @@ export default function SharedPostCard(props) {
                 />
               }
               sizeRatio={actionsTabSizeRatio}
-              style={[styles.actionTab]}
+              // style={[styles.actionTab]}
               color={colors.mediumGray}
               fontColor={colors.white}
             />

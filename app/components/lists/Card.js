@@ -209,6 +209,20 @@ function Card({
     }
   };
 
+  const handleReactions = emoji => {
+    setReactionType(isUserLiked ? 'star' : emoji);
+    setIsUserLiked(prev => !prev);
+    PostService.likePost(userData.id, postData.id, emoji)
+      .then(res => {
+        setNumberOfReactions(res.data.numberOfReaction);
+      }) //need to get likePostIds
+      .catch(e => {
+        console.error(e);
+        setIsUserLiked(prev => !prev);
+        setReactionType(postData.likedType);
+      });
+  };
+
   const showDeleteAlert = () =>
     Alert.alert('Delete', 'Are you sure to delete this post', [
       {
@@ -269,6 +283,7 @@ function Card({
           isVisible={isOptionsVisible}
           setIsVisible={setIsOptionsVisible}
           setIsOptionsVisible={setIsOptionsVisible}
+          onInteraction={handleReactions}
           postType={postType}
           noActionBar={noActionBar}
           noOptions={noOptions}
