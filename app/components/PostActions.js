@@ -55,7 +55,7 @@ const PostActions = ({
       swapId,
       fromReply,
     });
-    const showShareList = () =>
+  const showShareList = () =>
     navigation.navigate(routes.SHARE_LIST, {
       postData,
     });
@@ -144,7 +144,9 @@ const PostActions = ({
                 />
               }
               sizeRatio={actionsTabSizeRatio}
-              // style={[styles.actionTab]}
+              onPress={() => {
+                navigation.navigate(routes.LIST_OF_REACTIONS, postData.id);
+              }}
               color={colors.mediumGray}
               fontColor={colors.white}
             />
@@ -235,9 +237,7 @@ const PostActions = ({
           <View style={styles.commentsShares}>
             <TouchableOpacity onPress={navigateToComments}>
               <Texts
-                style={
-                  styles.bold
-                }>{`${numberOfComments} Comments  `}</Texts>
+                style={styles.bold}>{`${numberOfComments} Comments  `}</Texts>
             </TouchableOpacity>
             <TouchableOpacity onPress={showShareList}>
               <Texts
@@ -245,7 +245,6 @@ const PostActions = ({
                   styles.bold
                 }>{`${postData.numberOfshares} Shares`}</Texts>
             </TouchableOpacity>
-            
           </View>
         </View>
       )}

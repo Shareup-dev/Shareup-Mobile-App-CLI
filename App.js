@@ -5,7 +5,7 @@ import OfflineNotice from './app/components/OfflineNotice';
 import Toast from 'react-native-toast-message';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import ShareupAuthentication from './app/util/ShareupAuthentication';
-import Reactions from './app/components/Reactions/Reactions';
+import ListOfReactions from './app/screens/ListOfReactions.screen';
 
 export default function App() {
   console.disableYellowBox = true;
@@ -33,7 +33,7 @@ export default function App() {
         <GestureHandlerRootView style={{flex: 1}}>
           <NavigationContainer linking={linking}>
             <ShareupAuthentication />
-            {/* <Reactions /> */}
+            {/* <ListOfReactions /> */}
           </NavigationContainer>
         </GestureHandlerRootView>
         <Toast />

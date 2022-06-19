@@ -172,17 +172,16 @@ export default function NewsFeedScreen({navigation, route}) {
             )
           )
         }
-        // ListEmptyComponent={() => (
-        //   <>
-        //     {activityIndicator ? (
-        //       <EmptyPostCard />
-        //     ) : (
-        //       <Text style={{alignSelf: 'center', marginVertical: 50}}>
-        //         No posts Available
-        //       </Text>
-        //     )}
-        //   </>
-        // )}
+        ListEmptyComponent={() => (
+          <>
+            {activityIndicator ? (
+              <EmptyPostCard />
+            ) : // <Text style={{alignSelf: 'center', marginVertical: 50}}>
+            //   No posts Available
+            // </Text>
+            null}
+          </>
+        )}
       />
     </Screen>
   );

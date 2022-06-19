@@ -1,11 +1,11 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {StyleSheet} from 'react-native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import routes from './routes';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 import CommentsScreen from '../screens/CommentsScreen';
-import { AppNavigator } from '.';
+import {AppNavigator} from '.';
 import AddNewReel from '../screens/AddNewReel';
 import AddStoryScreen from '../screens/AddStoryScreen';
 import MessagesNavigator from './MessagesNavigator';
@@ -14,8 +14,8 @@ import ReelPlayer from '../screens/ReelPlayer';
 import AddPostScreen from '../screens/AddPostScreen';
 import TagPeople from '../screens/tagPeople';
 import FeelingAndActivity from '../screens/feelingAndActivity';
-import { getStatusBarHeight } from 'react-native-iphone-x-helper';
-import { useHeaderHeight } from '@react-navigation/stack';
+import {getStatusBarHeight} from 'react-native-iphone-x-helper';
+import {useHeaderHeight} from '@react-navigation/stack';
 import GroupFeedScreen from '../screens/GroupFeedScreen';
 import AddCommentsOnReels from '../screens/addCommentsOnReels';
 import SavedPostsScreen from '../screens/SavedPostsScreen';
@@ -33,6 +33,7 @@ import ArchivedChatScreen from '../screens/ArchivedChatScreen';
 import AlbumListScreen from '../screens/AlbumListScreen';
 import CreateAlbumScreen from '../screens/CreateAlbumScreen';
 import ShareListScreen from '../screens/ShareListScreen';
+import ListOfReactions from '../screens/ListOfReactions.screen';
 
 const Stack = createNativeStackNavigator();
 const headerHeight = useHeaderHeight;
@@ -60,6 +61,10 @@ export default function HomeNavigator(props) {
         options={{
           headerShown: false,
         }}
+      />
+      <Stack.Screen
+        name={routes.LIST_OF_REACTIONS}
+        component={ListOfReactions}
       />
       <Stack.Screen name={routes.TAG_PEOPLE} component={TagPeople} />
       <Stack.Screen name={routes.COMMENTS} component={CommentsScreen} />
@@ -100,16 +105,15 @@ export default function HomeNavigator(props) {
         name={routes.ACCOUNT_SETTINGS}
         component={AccountSettingsScreen}
       />
-      <Stack.Screen name={routes.MAP_VIEW}
-        component={MapViewScreen} />
+      <Stack.Screen name={routes.MAP_VIEW} component={MapViewScreen} />
 
-      <Stack.Screen name={routes.ALBUMLIST_SCREEN}
-        component={AlbumListScreen} />
+      <Stack.Screen
+        name={routes.ALBUMLIST_SCREEN}
+        component={AlbumListScreen}
+      />
 
-      <Stack.Screen name={routes.CREATE_ALBUM}
-        component={CreateAlbumScreen} />
-      <Stack.Screen name={routes.SHARE_LIST}
-        component={ShareListScreen} />
+      <Stack.Screen name={routes.CREATE_ALBUM} component={CreateAlbumScreen} />
+      <Stack.Screen name={routes.SHARE_LIST} component={ShareListScreen} />
     </Stack.Navigator>
   );
 }
