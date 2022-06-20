@@ -33,6 +33,7 @@ function Card({
   postType,
   noActionBar,
   noOptions,
+  insideGroup = false
 }) {
   const {
     userState: {userData},
@@ -91,9 +92,16 @@ function Card({
             postData.media?.map(image => image.mediaPath),
           ),
         );
-        navigation.navigate(routes.ADD_POST, {
-          postType: constants.postTypes.CREATE_POST,
-        });
+        if (postData.group){
+          navigation.navigate(routes.ADD_POST, {
+            postType: constants.postTypes.GROUP_POST,
+          });
+        }else{
+          navigation.navigate(routes.ADD_POST, {
+            postType: constants.postTypes.CREATE_POST,
+          });
+        }
+        
         setIsOptionsVisible(false);
       },
     },
@@ -275,6 +283,7 @@ function Card({
           reactionType={reactionType}
           setReactionType={setReactionType}
           navigateToShare={navigateToShare}
+          insideGroup = {insideGroup}
         />
 
         {!noOptions && (

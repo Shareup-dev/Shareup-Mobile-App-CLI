@@ -64,14 +64,14 @@ export default function KeepHangScreen({navigation, route}) {
   const handleImagePicker = async () => {
     ImagePicker.launchImageLibrary({
       mediaType: 'photo',
-     selectionLimit: 5,
+     selectionLimit: 1,
     }).then(image => {
      
       const uris = image.assets.map(item => {
         return item.uri;
       });
       
-      dispatch(postDataSliceAction.setImages(uris)) ,
+      dispatch(postDataSliceAction.addNewImage(uris)) ,
           navigation.navigate(routes.ADD_POST, {
              postType: postType,
           });
@@ -88,7 +88,7 @@ export default function KeepHangScreen({navigation, route}) {
         return item.uri;
       });
       
-      dispatch(postDataSliceAction.setImages(uris)),
+      dispatch(postDataSliceAction.addNewImage(uris)),
       
           navigation.navigate(routes.ADD_POST, {
              postType: postType,

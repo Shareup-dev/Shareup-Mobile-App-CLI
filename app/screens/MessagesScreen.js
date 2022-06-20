@@ -13,6 +13,7 @@ import FriendsList from '../components/messages/FriendsList';
 import userService from '../services/user.service';
 import chatService from '../services/chat.service';
 import { useFocusEffect } from '@react-navigation/native';
+import { Texts } from '../Materials/Text';
 
 const tabes = [
   {name: 'Chat'},
@@ -86,7 +87,7 @@ export default function MessagesScreen({navigation}) {
         onBackButton={() => navigation.goBack()}
       />
       <View style={styles.containerTop}>
-        <Text style={styles.bigFontBlack}>Messages</Text>
+        <Texts style={styles.bigFontBlack}>Messages</Texts>
         <TextField
           placeholder="Search"
           iconName="search1"

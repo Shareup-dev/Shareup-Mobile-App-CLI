@@ -46,7 +46,7 @@ export default function CreateAlbumScreen({ navigation, route }) {
                 </TouchableOpacity>}
                 middle={<HeaderTitle>Create Albums</HeaderTitle>}
                 right={<TouchableOpacity onPress={() => {
-                    postService.createAlbum(albumName, user.id).then(res => {
+                    postService.createAlbum(albumName,false, user.id).then(res => {
                         dispatch(postDataSliceAction.addAlbum(res.data))
                     })
                     navigation.goBack();

@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text,TouchableOpacity} from 'react-native';
 
 import colors from '../../config/colors';
 import UserProfilePicture from '../UserProfilePicture';
@@ -24,6 +24,13 @@ export default function ProfileTop({
   setUserStatus,
 }) {
   console.log(user);
+
+  const tabes = [
+    { name: 'Friends' },
+    { name: 'Followers' },
+    { name: "Following" },
+    // {name: FAVORITES},
+];
   const {
     userState: {userData},
   } = useContext(AuthContext);
@@ -157,30 +164,35 @@ export default function ProfileTop({
               Posts
             </Texts>
           </View>
-          <View style={styles.counterWrapper}>
+
+          <TouchableOpacity style={styles.counterWrapper} onPress={()=>{navigation.navigate(routes.LIST_FRIENDS_FOLLOWERS,{SelectedTab:"Friends",user:user,tabes:tabes,showHeader:true})}}>
             <Texts size={14} color={colors.dark} style={styles.bold}>
               {user.numberOfFriends}
             </Texts>
             <Texts size={14} color={colors.dark} style={styles.bold}>
               Friends{' '}
             </Texts>
-          </View>
-          <View style={styles.counterWrapper}>
+          </TouchableOpacity>
+
+
+          <TouchableOpacity style={styles.counterWrapper} onPress={()=>{navigation.navigate(routes.LIST_FRIENDS_FOLLOWERS,{SelectedTab:"Followers",user:user,tabes:tabes,showHeader:true})}}>
             <Texts size={14} color={colors.dark} style={styles.bold}>
               {user.numberOfFollowers}
             </Texts>
             <Texts size={14} color={colors.dark} style={styles.bold}>
               Followers{' '}
             </Texts>
-          </View>
-          <View style={styles.counterWrapper}>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.counterWrapper} onPress={()=>{navigation.navigate(routes.LIST_FRIENDS_FOLLOWERS,{SelectedTab:"Following",user:user,tabes:tabes,showHeader:true})}}>
             <Texts size={14} color={colors.dark} style={styles.bold}>
               {user.numberOfFollowing}
             </Texts>
             <Texts size={14} color={colors.dark} style={styles.bold}>
               Following
             </Texts>
-          </View>
+          </TouchableOpacity>
+
           {/* <View style={styles.counterWrapper}>
             <Texts size={20} color={colors.dark} style={{fontWeight:"600"}}>{user.numberOfFollowing}</Texts>
             <Texts size={15} color={colors.dark} style={{fontWeight:"400",marginTop:5}}>Following</Texts>
@@ -194,7 +206,7 @@ export default function ProfileTop({
             color={colors.dark}>{`${user.firstName} ${user.lastName}`}</Header>
           {/* <Texts size={20} color={colors.dark} style={styles.username}></Texts> */}
 
-          <Texts size={13} color={colors.dimGray}>
+          <Texts size={13} color={colors.dimGray} style={{marginTop:5}}>
             {user.aboutme}
           </Texts>
 

@@ -20,16 +20,15 @@ export default function TagPeople({navigation, TagedUserEmail}) {
   const [isSearch, setIsSearch] = useState(false);
   const dispatch = useDispatch();
   const postData = useSelector(state => state.postDataSlice);
-  const tags = postData.tagedList.emails;
+  const tags = postData.tagedList.ids;
 
   useEffect(() => {
     UserService.getFriends(loggedInUser.email).then(resp => {
       setFriends(resp.data);
       const tagedPeoples = [];
-      
       tags.forEach(tag => {
         resp.data.forEach(friend => {
-          if (tag === friend.email) tagedPeoples.push(friend);
+          if (tag === friend.id) tagedPeoples.push(friend);
         });
       });
       setTagPeople(tagedPeoples);
@@ -53,10 +52,10 @@ export default function TagPeople({navigation, TagedUserEmail}) {
   const TagUserCard = props => {
     const fullname = `${props.data.firstName} ${props.data?.lastName}`;
     const img = props.data?.profilePicturePath;
-    const email = props.data.email;
+    const id = props.data.id;
 
-    const CheckIfChecked = email => {
-      return tagPeople.find(item => item.email === email);
+    const CheckIfChecked = id => {
+      return tagPeople.find(item => item.id === id);
     };
 
     return (
@@ -64,8 +63,8 @@ export default function TagPeople({navigation, TagedUserEmail}) {
         activeOpacity={0.8}
         style={styles.card}
         onPress={e => {
-          CheckIfChecked(email)
-            ? setTagPeople(prev => prev.filter(item => item.email !== email))
+          CheckIfChecked(id)
+            ? setTagPeople(prev => prev.filter(item => item.id !== id))
             : setTagPeople(prev => [...prev, props.data]);
         }}>
         <View style={styles.usersInfo}>
@@ -74,7 +73,7 @@ export default function TagPeople({navigation, TagedUserEmail}) {
         </View>
         <Checkbox
           color={colors.iondigoDye}
-          status={CheckIfChecked(email) ? 'checked' : 'unchecked'}
+          status={CheckIfChecked(id) ? 'checked' : 'unchecked'}
         />
         {tagPeople.length ? setIsButtonActive(true) : setIsButtonActive(false)}
       </TouchableOpacity>
@@ -91,11 +90,11 @@ export default function TagPeople({navigation, TagedUserEmail}) {
             isActive={isButtonActive}
             onPress={() => {
               
-              const emails = tagPeople.map(item => item.email);
+              const ids = tagPeople.map(item => item.id);
               const names = tagPeople.map(
                 item => item.firstName + item.lastName,
               );
-              dispatch(postDataSliceAction.setTagList({emails, names}));
+              dispatch(postDataSliceAction.setTagList({ids, names}));
               navigation.goBack();
             }}
           />

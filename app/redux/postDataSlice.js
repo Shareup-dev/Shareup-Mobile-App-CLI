@@ -5,7 +5,7 @@ const initialState = {
   groupId: null,
   postDetail: [],
   EditPost: false,
-  tagedList: {emails: [], names: []},
+  tagedList: {ids: [], names: []},
   Album:{}
 };
 
@@ -30,7 +30,7 @@ const postDataSlice = createSlice({
       );
       return previousState;
     },
-    addNewImages: (previousState, newState) => {
+    addNewImage: (previousState, newState) => {
       previousState.postImages = newState.payload;
       return previousState;
     },
@@ -63,9 +63,9 @@ const postDataSlice = createSlice({
     },
     //.................TAGED_LIST....................
     setTagList: (previousState, newState) => {
-      previousState.tagedList.emails = [
-        ...previousState.tagedList.emails,
-        ...newState.payload.emails,
+      previousState.tagedList.ids = [
+        ...previousState.tagedList.ids,
+        ...newState.payload.ids,
       ];
       previousState.tagedList.names = [
         ...previousState.tagedList.names,
@@ -74,7 +74,7 @@ const postDataSlice = createSlice({
       return previousState;
     },
     clearTagList: previousState => {
-      previousState.tagedList = {emails: [], names: []};
+      previousState.tagedList = {ids: [], names: []};
       return previousState;
     },
     removeFromTagList: (previousState, key) => {

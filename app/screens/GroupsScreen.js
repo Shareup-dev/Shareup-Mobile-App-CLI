@@ -384,4 +384,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     height: 70,
   },
+  suggestedGroupsWrapper:{
+    marginLeft: 10,
+  }
 });

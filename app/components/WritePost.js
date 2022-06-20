@@ -9,20 +9,26 @@ import routes from '../navigation/routes';
 import constants from '../config/constants';
 import colors from '../config/colors';
 import {Texts, Title} from '../Materials/Text';
+import { useDispatch } from 'react-redux';
+import { postDataSliceAction } from '../redux/postDataSlice';
 
 const {postTypes} = constants;
 
 function WritePost({navigation, style, groupPost, groupId}) {
+  const dispatch = useDispatch()
   return (
     <View style={[styles.container, style]}>
       <TouchableOpacity
         onPress={() => {
           groupPost
-            ? navigation.navigate(routes.ADD_POST, {
+            ? (
+              dispatch(postDataSliceAction.setGroupId(groupId)),
+              navigation.navigate(routes.ADD_POST, {
                 postType: postTypes.GROUP_POST,
                 groupPost: groupPost,
                 groupId: groupId,
               })
+              )
             : navigation.navigate(routes.ADD_POST, {
                 postType: postTypes.CREATE_POST,
                 groupPost,

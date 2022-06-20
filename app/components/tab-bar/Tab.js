@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 
 import colors from '../../config/colors';
+import { Texts } from '../../Materials/Text';
 
 export default function Tab({
   text,
@@ -15,7 +16,8 @@ export default function Tab({
   return (
     <TouchableOpacity style={[styles.container]} onPress={onPress}>
       <View>
-        <Text
+        <Texts
+          size={15}
           style={[
             tabbed ? styles.active : styles.inactive,
             {
@@ -24,7 +26,7 @@ export default function Tab({
             },
           ]}>
           {text}
-        </Text>
+        </Texts>
 
         {tabbed && (
           <View
@@ -45,18 +47,18 @@ export default function Tab({
 
 const styles = StyleSheet.create({
   container: {
-    margin: 5,
+    margin: 10,
   },
   active: {
     color: colors.dark,
   },
   inactive: {
-    color: colors.mediumGray,
+    color: colors.dimGray,
   },
 
   underLine: {
     alignSelf: 'center',
     borderRadius: 15,
-    marginTop: 3,
+    marginTop: 5,
   },
 });

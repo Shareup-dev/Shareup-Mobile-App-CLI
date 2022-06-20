@@ -34,6 +34,7 @@ import AlbumListScreen from '../screens/AlbumListScreen';
 import CreateAlbumScreen from '../screens/CreateAlbumScreen';
 import ShareListScreen from '../screens/ShareListScreen';
 import ListOfReactions from '../screens/ListOfReactions.screen';
+import ListOfFriendsAndFollowers from '../screens/ListOfFriendsAndFollowers';
 
 const Stack = createNativeStackNavigator();
 const headerHeight = useHeaderHeight;
@@ -114,6 +115,7 @@ export default function HomeNavigator(props) {
 
       <Stack.Screen name={routes.CREATE_ALBUM} component={CreateAlbumScreen} />
       <Stack.Screen name={routes.SHARE_LIST} component={ShareListScreen} />
+      <Stack.Screen name={routes.LIST_FRIENDS_FOLLOWERS} component={ListOfFriendsAndFollowers} />
     </Stack.Navigator>
   );
 }

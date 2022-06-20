@@ -16,7 +16,7 @@ import AuthContext from '../../Contexts/authContext';
 
 const resizeRatio = 0.7;
 export default function GroupJoinCard({item, navigation}) {
-  const {image, name, description, privacySetting, id} = item;
+  const {groupImagePath, name, description, privacySetting, id} = item;
 
   const [joinBackGroundColor, setJoinBackGroundColor] = useState(
     colors.iondigoDye,
@@ -27,11 +27,11 @@ export default function GroupJoinCard({item, navigation}) {
   const [joinTitleColor, setJoinTitleColor] = useState(colors.white);
 
   const handleJoin = () => {
-    GroupService.joinGroup(loggedInUser.id, id).then(resp => resp.data);
+    GroupService.joinRequest(loggedInUser.id, item.id).then(resp => resp.data);
     if (joinTitle == 'Join') {
-      setJoinBackGroundColor(colors.lighterGray);
-      setJoinTitle('Leave');
-      setJoinTitleColor('#DD482E');
+      setJoinBackGroundColor(colors.iondigoDye);
+      setJoinTitle('cancel');
+      setJoinTitleColor(colors.white);
     }
     if (joinTitle == 'Leave') {
       setJoinBackGroundColor(colors.iondigoDye);
@@ -42,9 +42,9 @@ export default function GroupJoinCard({item, navigation}) {
 
   return (
     <View style={[styles.container, defaultStyle.cardBorder]}>
-      {image ? (
+      {groupImagePath ? (
         <Image
-          source={{uri: image}}
+          source={{uri: groupImagePath}}
           style={styles.image}
         />
       ) : (
@@ -95,7 +95,7 @@ export default function GroupJoinCard({item, navigation}) {
 
 const styles = StyleSheet.create({
   container: {
-    width: Dimensions.get('window').width / 3.4,
+    width: Dimensions.get('window').width / 3,
     height: 190,
     overflow: 'hidden',
     marginRight: 7,
@@ -108,8 +108,9 @@ const styles = StyleSheet.create({
   },
   tabsContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     top: 15,
+    marginHorizontal:5,
   },
   tab: {
     borderRadius: 4,

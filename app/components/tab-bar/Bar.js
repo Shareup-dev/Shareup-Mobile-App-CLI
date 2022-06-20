@@ -32,5 +32,6 @@ export default function Bar({
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
+    justifyContent:"space-between",
   },
 });

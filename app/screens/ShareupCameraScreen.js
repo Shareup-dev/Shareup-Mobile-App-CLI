@@ -27,6 +27,7 @@ import storyService from '../services/story.service';
 import {ProgressBar} from 'react-native-paper';
 import routes from '../navigation/routes';
 import {postDataSliceAction} from '../redux/postDataSlice';
+import constants from '../config/constants';
 
 export default function ShareupCameraScreen({navigation, route}) {
   let cameraRef;
@@ -93,7 +94,9 @@ export default function ShareupCameraScreen({navigation, route}) {
             return item.uri;
           });
 
-          dispatch(postDataSliceAction.setImages(uris));
+          
+            dispatch(postDataSliceAction.setImages(uris));
+          
 
           navigation.navigate(routes.ADD_POST, {
             postType: postType,
@@ -147,7 +150,10 @@ export default function ShareupCameraScreen({navigation, route}) {
           const uris = res.assets.map(item => {
             return item.uri;
           });
-          dispatch(postDataSliceAction.setImages(uris));
+          
+           
+            dispatch(postDataSliceAction.setImages(uris));
+          
           navigation.navigate(routes.ADD_POST, {
             postType: postType,
           });

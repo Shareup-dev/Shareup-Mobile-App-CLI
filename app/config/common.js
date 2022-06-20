@@ -2,6 +2,7 @@ import React,{useContext} from 'react';
 import { Text } from 'react-native-paper';
 //const {userData: loggedInUser} = useContext(AuthContext).userState;
 
+
 const common = {
   //...............Privacy Options.................//
     privacyOptions : [

@@ -102,6 +102,8 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+    alignItems:'center',
+    
   },
   icon: {},
 });

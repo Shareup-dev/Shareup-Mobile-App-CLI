@@ -1,4 +1,5 @@
 import AlbumListScreen from '../screens/AlbumListScreen';
+import LostOfFriendsAndFollowers from '../screens/ListOfFriendsAndFollowers';
 
 export default Object.freeze({
   LOGIN: 'Login',
@@ -77,4 +78,5 @@ export default Object.freeze({
   ALBUMLIST_SCREEN: 'AlbumListScreen',
   CREATE_ALBUM: 'CreateAlbumScreen',
   SHARE_LIST: 'ShareListScreen',
+  LIST_FRIENDS_FOLLOWERS:'LostOfFriendsAndFollowers',
 });

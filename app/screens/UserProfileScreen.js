@@ -16,6 +16,7 @@ import colors from '../config/colors';
 import authContext from '../Contexts/authContext';
 import Card from '../components/lists/Card';
 import ImageView from 'react-native-image-viewing';
+import ListOfFriendsAndFollowers from './ListOfFriendsAndFollowers';
 
 import {
   ImagesAndVideosEmpty,
@@ -40,12 +41,21 @@ const tabs = [
   {name: TAGS, icon: {image: require('../assets/icons/tag-icon.png')}},
 ];
 
+
 export default function UserProfileScreen({navigation, route}) {
   const dispatch = useDispatch();
   const posts = useSelector(state => state.usersPost);
+  const tabes = [
+    { name: 'Friends' },
+    { name: 'Followers' },
+    { name: "Following" },
+    // {name: FAVORITES},
+  ];
   const {
     userState: {userData: user},
   } = useContext(authContext);
+  const routeObj = {params:{SelectedTab:"Friends","user":user,"tabes":tabes}}
+  
 
   const [currentTab, setCurrentTab] = useState(POSTS);
   const [media, setMedia] = useState([]);
@@ -165,19 +175,22 @@ export default function UserProfileScreen({navigation, route}) {
       )}
 
       {currentTab == IMAGE_VIDEOS && (
-        <View style={{marginHorizontal: 5, marginBottom: 50}}>
-          <FlatList
-            data={media}
-            numColumns={3}
-            showsVerticalScrollIndicator={false}
-            renderItem={({item, index}) => (
-              <ImagesAndVideosItem item={item} index={index} />
-            )}
-            keyExtractor={(item, index) => index.toString()}
-            ListHeaderComponent={ListHeader}
-            ListEmptyComponent={ImagesAndVideosEmpty}
-          />
-        </View>
+        
+        <FlatList
+          data={media}
+         numColumns={3}
+          showsVerticalScrollIndicator={false}
+          renderItem={({item, index}) => (
+        //     <ListOfFriendsAndFollowers 
+        // navigation={navigation}
+        // route={routeObj}
+        // showHeader={false}> </ListOfFriendsAndFollowers>
+            <ImagesAndVideosItem item={item} index={index} />
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          ListHeaderComponent={ListHeader}
+          ListEmptyComponent={ImagesAndVideosEmpty}
+        />
       )}
 
       {currentTab == TAGS && (

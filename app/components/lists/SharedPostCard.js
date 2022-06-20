@@ -80,12 +80,17 @@ export default function SharedPostCard(props) {
       title: userData?.id !== postData.userdata?.id ? '' : 'Edit',
       icon: {image: require('../../assets/post-options-icons/swap-icon.png')},
       onPress: () => {
-        // dispatch(updatePostModeAction.setState(true))
-        // dispatch(updatePostDataAction.setState(postData))
-        // navigation.navigate(routes.ADD_POST, {
-        //   postType: constants.postTypes.SHARE_POST,
-        // });
-        // setIsOptionsVisible(false);
+        dispatch(postDataSliceAction.setEditPost(true));
+        dispatch(postDataSliceAction.setPostData(postData));
+        // dispatch(
+        //   postDataSliceAction.setImages(
+        //     postData.media?.map(image => image.mediaPath),
+        //   ),
+        // );
+        navigation.navigate(routes.ADD_POST, {
+          postType: constants.postTypes.SHARE_POST,
+        });
+        setIsOptionsVisible(false);
       },
     },
     {
@@ -337,6 +342,34 @@ export default function SharedPostCard(props) {
             </TouchableWithoutFeedback>
           </View>
         </View>
+
+        {/********************************* Post Feelings and tags ****************************************/}
+      <View style={{ flexDirection: "row", alignItems: 'center', flexWrap: 'wrap' }}>
+        {postData?.feelings && (
+        <View style={styles.row}>
+          <BetterImage
+            noBackground
+            source={feel.img}
+            style={styles.feelImg}
+          />
+          <Texts size={13} color={'#333'} style={{fontWeight:'bold'}}>{feel.name}</Texts>
+        </View>)}
+        {postData?.activity && (
+        <View style={styles.row}>
+          <Icon name={feel.icon} color={feel.color} />
+          <Texts size={13} color={'#333'} style={{fontWeight:'bold'}}>{feel.name}</Texts>
+          </View>)}
+        {postData?.taggedList.length !== 0 && (
+          <View style={{ flexDirection: 'row' }}>
+            <Texts size={14} color={colors.dimGray}  > -with </Texts>
+            <TouchableOpacity onPress={()=> showShareList(constants.constant.SHOW_TAGLIST)}>
+              <Texts size={14} color={'#333'} style={{fontWeight:'bold'}} > 
+              {postData.taggedList[0]?.firstName}{postData.taggedList[0]?.lastName} and {(postData.taggedList.length - 1 === 1) ? postData.taggedList[1]?.firstName + postData.taggedList[1]?.lastName : `${postData.taggedList.length - 1} others`} 
+              </Texts>
+              </TouchableOpacity>
+          </View>)}
+      </View>
+      
         {postData.content !== '' && (
           <Texts truncate style={{marginTop: 10}} color={'#333'}>
             {postData.content}
@@ -388,7 +421,8 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   userNameContainer: {
-    width: '40%',
+    
+     alignItems: 'flex-start', 
   },
   actionsContainer: {
     flexDirection: 'row',

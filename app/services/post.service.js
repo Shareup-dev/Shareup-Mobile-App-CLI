@@ -25,6 +25,7 @@ class PostService {
   listOfReactions = postid => AuthAxios.get(`reactions/${postid}`);
   sharePost = (uid, pid, data) => AuthAxios.post(`share/${uid}/${pid}`, data);
   getSharedPostById = id => AuthAxios.get(`share/${id}`);
+  getShareList = (pid) => AuthAxios.get(`who_shared/${pid}`)
 
   /*********************** COMMON FOR ALL POST ************************/
 
@@ -71,11 +72,11 @@ class PostService {
     AuthAxios.get(`comment/${uid}/get_replies/${cid}`);
 
   /******************** ALBUM *******************/
-  createAlbum = (name, uid) =>
+  createAlbum = (name,privacy, uid) =>
     AuthAxios({
       method: 'POST',
       url: `album/createAlbum/${uid}`,
-      params: {album_name: name},
+      params: {album_name: name,privacy:privacy},
     });
   getAlbums = uid => AuthAxios.get(`album/all/${uid}`);
   getAlbumContents = aid => AuthAxios.get(`album/${aid}`);

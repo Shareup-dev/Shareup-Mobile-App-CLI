@@ -210,12 +210,14 @@ export default function AddPostScreen({ navigation, route }) {
   ];
 
   useEffect(() => {
+    console.log("here", postType, postData['groupId']);
 
-    if (postType === postTypes.GROUP_POST) {
-      dispatch(postDataSliceAction.setGroupId(groupId));
-    }
-
+    // if (postType === postTypes.GROUP_POST) {
+    //   console.log("group");
+    //   dispatch(postDataSliceAction.setGroupId(groupId));
+    // }
     if (postData.postDetail.group) {
+      console.log("group2");
       dispatch(postDataSliceAction.setGroupId(postData.postDetail.group.id));
     }
 
@@ -270,7 +272,10 @@ export default function AddPostScreen({ navigation, route }) {
       formData.append('feelings', content.feelings);
     }
     if (content.tag) {
-      formData.append('tag', content.tag);
+      content.tag.forEach(tag => {
+        formData.append(`tag`, tag)
+      })
+      //formData.append('tag', content.tag);
     }
     if (content.category) {
       formData.append('category', content.category);
@@ -320,6 +325,7 @@ export default function AddPostScreen({ navigation, route }) {
 
   //........GROUP POST................//
   const group = () => {
+    console.log("inside posting", postData['groupId']);
     if (text === '' && images.length === 0) {
       setError("Can't Create empty post");
     } else {
@@ -327,11 +333,12 @@ export default function AddPostScreen({ navigation, route }) {
         text: text,
         images: images,
         groupId: postData['groupId'],
-        tag: postData.tagedList.names,
-        feeling: '',
-        activity: '',
+        feelings: postFeel.type === "Feeling" ? postFeel.feeling : null,
+        tag: postData.tagedList.ids,
+        activity: postFeel.type === "Activity" ? postFeel.feeling : null,
       };
       const formData = createPostFormData(postContent);
+      console.log("formData", formData);
       PostService.createPost(user.id, formData)
         .then(resp => {
           let existingPosts = store.getState().groupPosts;
@@ -358,7 +365,9 @@ export default function AddPostScreen({ navigation, route }) {
     const swapContent = {
       text: text === '' ? placeholder : text,
       images: images,
-      tagedList: postData.tagedList.names,
+      // feelings: postFeel.type === "Feeling" ? postFeel.feeling : null,
+      // tag: postData.tagedList.ids,
+      // activity: postFeel.type === "Activity" ? postFeel.feeling : null,
     };
 
     const formData = createPostFormData(swapContent);
@@ -397,7 +406,9 @@ export default function AddPostScreen({ navigation, route }) {
       text: text === '' ? placeholder : text,
       category: 'gifts',
       images: images,
-      tagedList: postData.tagedList.names,
+      // feelings: postFeel.type === "Feeling" ? postFeel.feeling : null,
+      // tag: postData.tagedList.ids,
+      // activity: postFeel.type === "Activity" ? postFeel.feeling : null,
     };
     const formData = createPostFormData(swapContent);
     if (postData['EditPost']) {
@@ -430,13 +441,14 @@ export default function AddPostScreen({ navigation, route }) {
   };
   //........SHARE POST................//
   const sharePost = () => {
-    // const postContent = {
-    //   content: text,
-    // };
+    const postContent = {
+      content: text,
+      feelings: postFeel.type === "Feeling" ? postFeel.feeling : null,
+      tag: postData.tagedList.ids,
+      activity: postFeel.type === "Activity" ? postFeel.feeling : null,
+    };
 
-    const formData = new FormData();
-    formData.append('content', text);
-
+    const formData = createPostFormData(postContent);
     postService
       .sharePost(user.id, postData.postDetail.id, formData)
       .then(res => {
@@ -460,12 +472,12 @@ export default function AddPostScreen({ navigation, route }) {
       const postContent = {
         text: text === '' ? placeholder : text,
         images: images,
-        feeling: postFeel.type === "Feeling" ? postFeel.feeling : null,
-        groupId: postData['groupId'],
-        tag: postData.tagedList.emails,
+        feelings: postFeel.type === "Feeling" ? postFeel.feeling : null,
+        tag: postData.tagedList.ids,
         activity: postFeel.type === "Activity" ? postFeel.feeling : null,
       };
       const formData = createPostFormData(postContent);
+      console.log(formData, postContent);
       if (postData['EditPost']) {
         console.log(formData, postContent);
         PostService.editPost(postData.postDetail.id, formData)
@@ -664,13 +676,16 @@ export default function AddPostScreen({ navigation, route }) {
                   </View>
                 </TouchableOpacity>
               ) : null}
-              {postData.tagedList.emails.length ? (
+              {postData.tagedList.ids.length ? (
                 <View style={styles.row}>
                   <Texts size={14} light style={{ fontWeight: '600' }}>
                     {' '}
                     with{' '}
                   </Texts>
-                  <FlatList
+                  <TouchableOpacity onPress={() => { navigation.navigate(routes.TAG_PEOPLE); }}>
+                    <Texts size={14} color={'#333'} style={{ fontWeight: 'bold' }} > {postData.tagedList.names[0]} and {(postData.tagedList.names.length - 1 === 1) ? postData.tagedList.names[1] : `${postData.tagedList.names.length - 1} others`} </Texts>
+                  </TouchableOpacity>
+                  {/* <FlatList
                     horizontal
                     data={postData.tagedList.names}
                     keyExtractor={item => item}
@@ -685,7 +700,7 @@ export default function AddPostScreen({ navigation, route }) {
                         </Texts>
                       </TouchableOpacity>
                     )}
-                  />
+                  /> */}
                 </View>
               ) : null}
             </View>
@@ -860,7 +875,7 @@ export default function AddPostScreen({ navigation, route }) {
       )}
       {postType === postTypes.GROUP_POST && (
         <EnhancedOptionsDrawer
-          options={createPostoptions}
+          options={createPostoptions.filter(item => item.title !== 'Tag People')}
           forwardedRef={createPostDrawerRef}
         />
       )}

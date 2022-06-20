@@ -8,5 +8,9 @@ export default {
     GROUP_POST: "Group Post",
     SHARE_POST: "Share post",
   },
+  constant: {
+    SHOW_TAGLIST:'TagList',
+    SHOW_SHARELIST:'ShareList',
+  }
    
 };

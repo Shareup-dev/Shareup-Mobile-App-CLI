@@ -330,6 +330,7 @@ const GroupFeedScreen = ({navigation, route}) => {
             comments={item.comments}
             navigation={navigation}
             postImages={item.media}
+            insideGroup = {true}
           />
         )}
       />

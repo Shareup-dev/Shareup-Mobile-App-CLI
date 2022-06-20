@@ -79,9 +79,9 @@ export default function UserProfileScreen({navigation, route}) {
   useEffect(() => {
     setLoading(1);
     Promise.all([
-      postService.getPostByEmail(user.email),
+      postService.getPostByUserID(user.id),
       profileService.getAllMedia(user.id),
-      userService.getUserByEmail(user.email),
+      userService.getUserById(user.id),
 
     ])
       .then(res => {
