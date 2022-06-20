@@ -2,8 +2,10 @@ import AuthAxios from './authAxios';
 
 class PostService {
   getNewsFeed = email => AuthAxios.get(`new_newsFeed/${email}`);
+
   newsFeedWithPagination = (email, pageNo, pageSize = 5) =>
     AuthAxios.get(`newsFeed_pagination/${email}/${pageNo}/${pageSize}`);
+
   createPost = (uid, data, onUploadProgress, onDownloadProgress) =>
     AuthAxios({
       method: 'post',
@@ -32,6 +34,8 @@ class PostService {
   savePost = (uid, pid) => AuthAxios.put(`allposts/${uid}/save-unsave/${pid}`);
 
   /******************** COMMENT *******************/
+  listOfCommentReactions = cid => AuthAxios.get(`comment/reactions/${cid}`);
+
   addComment = (userid, postid, comment) =>
     AuthAxios.post(`comment/${userid}/${postid}`, comment);
   deleteComment = commentid => AuthAxios.delete(`comment/delete/${commentid}`);

@@ -3,6 +3,8 @@ import React, {useEffect, useState} from 'react';
 import {Texts} from '../../Materials/Text';
 import {findEmoji} from '../../Constants/reactions';
 import Icon from '../Icon';
+import {TouchableOpacity} from 'react-native';
+import routes from '../../navigation/routes';
 
 interface Props {
   style?: ViewStyle;
@@ -10,6 +12,7 @@ interface Props {
   topReactionsCount?: number;
   overlayColor: ColorValue;
   allowNagativeVal?: boolean;
+  navigation: any;
   reactionsList: {
     angry: number;
     cry: number;
@@ -18,6 +21,8 @@ interface Props {
     star: number;
     wow: number;
   };
+  contentId: number;
+  contentType: string;
 }
 
 const TopThreeReactions: React.FC<Props> = props => {
@@ -28,6 +33,9 @@ const TopThreeReactions: React.FC<Props> = props => {
     style,
     overlayColor = '#fff',
     allowNagativeVal = false,
+    contentId,
+    navigation,
+    contentType = 'post',
   } = props;
 
   const [topReactions, setTopReactions] = useState<[]>([]);
@@ -47,7 +55,14 @@ const TopThreeReactions: React.FC<Props> = props => {
     Object.values(reactionsList).reduce((prev, crnt) => prev + crnt, 0);
 
   return (
-    <View style={[style, styles.row]}>
+    <TouchableOpacity
+      style={[style, styles.row]}
+      onPress={() =>
+        navigation.navigate(routes.LIST_OF_REACTIONS, {
+          id: contentId,
+          contentType,
+        })
+      }>
       {topReactions.length ? (
         topReactions.map((item, i) => (
           <View
@@ -73,11 +88,11 @@ const TopThreeReactions: React.FC<Props> = props => {
         color={overlayColor === '#fff' ? '#333' : '#fff'}>{` ${
         getTotalCount() ? getTotalCount() : allowNagativeVal ? '0' : ''
       }`}</Texts>
-    </View>
+    </TouchableOpacity>
   );
 };
 
-export default TopThreeReactions;
+export default React.memo(TopThreeReactions);
 
 const styles = StyleSheet.create({
   container: {

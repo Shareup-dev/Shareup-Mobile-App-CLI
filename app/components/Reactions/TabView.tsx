@@ -77,7 +77,7 @@ export default TabView;
 const styles = StyleSheet.create({
   name: {
     marginHorizontal: 10,
-    fontWeight: '600',
+    fontWeight: '500',
   },
   img: {
     width: 40,
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     backgroundColor: '#fff',
-    marginVertical: 1,
+    marginTop: 0.5,
   },
   container: {
     paddingHorizontal: 10,

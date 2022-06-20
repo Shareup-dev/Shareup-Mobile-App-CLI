@@ -16,6 +16,7 @@ import AuthContext from '../Contexts/authContext';
 import {Title, Texts} from '../Materials/Text';
 
 import {ReactionBar, TopReactions} from './Reactions';
+import BetterImage from './betterImage/BetterImage';
 
 const PostActions = ({
   postId,
@@ -132,46 +133,44 @@ const PostActions = ({
         </View>
         {!noActionBar && (
           <View style={styles.actionsContainer}>
-            <Tab
-              textFontSize={17}
-              iconType="FontAwesome5"
-              title={
-                <TopReactions
-                  reactionsList={listOfReactions}
-                  emojiSize={10}
-                  overlayColor={colors.mediumGray}
-                  allowNagativeVal={true}
-                />
-              }
-              sizeRatio={actionsTabSizeRatio}
-              onPress={() => {
-                navigation.navigate(routes.LIST_OF_REACTIONS, postData.id);
-              }}
-              color={colors.mediumGray}
-              fontColor={colors.white}
-            />
+            <View style={styles.actionTab}>
+              <TopReactions
+                contentId={postData.id}
+                navigation={navigation}
+                reactionsList={listOfReactions}
+                emojiSize={10}
+                overlayColor={colors.mediumGray}
+                allowNagativeVal={true}
+              />
+            </View>
 
-            <Tab
-              title={numberOfComments}
-              onPress={navigateToComments}
-              iconName="comment"
-              iconType="Octicons"
-              sizeRatio={actionsTabSizeRatio}
+            <TouchableOpacity
               style={styles.actionTab}
-              color={colors.mediumGray}
-              fontColor={colors.white}
-            />
-
-            <Tab
-              title={`${postData.numberOfshares}`}
-              iconImage={require('../assets/icons/share-icon.png')}
-              sizeRatio={actionsTabSizeRatio}
+              onPress={navigateToComments}>
+              <Icon
+                noBackground
+                color="#fff"
+                size={20}
+                style={styles.actionTabIcon}
+                name="comment"
+                type="Octicons"
+              />
+              <Texts size={10} color={'#fff'}>
+                {numberOfComments}
+              </Texts>
+            </TouchableOpacity>
+            <TouchableOpacity
               style={styles.actionTab}
-              color={colors.mediumGray}
-              onPress={navigateToShare}
-              fontColor={colors.white}
-              iconSize={10}
-            />
+              onPress={navigateToShare}>
+              <BetterImage
+                style={{width: 10, height: 10, marginHorizontal: 2}}
+                noBackground
+                source={require('../assets/icons/share-icon.png')}
+              />
+              <Texts size={10} color={'#fff'}>
+                {postData.numberOfshares}
+              </Texts>
+            </TouchableOpacity>
           </View>
         )}
       </View>
@@ -317,12 +316,19 @@ const styles = StyleSheet.create({
     fontSize: 13,
     //marginTop:10,
   },
+  actionTabIcon: {
+    marginHorizontal: -2,
+  },
 
   actionsContainer: {
     flexDirection: 'row',
   },
   actionTab: {
-    paddingHorizontal: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#24242490',
+    paddingHorizontal: 6,
     marginHorizontal: 5,
     borderRadius: 10,
   },

@@ -5,7 +5,6 @@ import OfflineNotice from './app/components/OfflineNotice';
 import Toast from 'react-native-toast-message';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import ShareupAuthentication from './app/util/ShareupAuthentication';
-import ListOfReactions from './app/screens/ListOfReactions.screen';
 
 export default function App() {
   console.disableYellowBox = true;

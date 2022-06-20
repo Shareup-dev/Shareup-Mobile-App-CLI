@@ -27,6 +27,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {feedPostsAction} from '../redux/feedPostsSlice';
 import SharedPostCard from '../components/lists/SharedPostCard';
 import EmptyPostCard from '../components/EmptyCards/EmptyPostCard';
+import {usePagination} from '../hooks';
 
 export default function NewsFeedScreen({navigation, route}) {
   const dispatch = useDispatch();
@@ -39,43 +40,19 @@ export default function NewsFeedScreen({navigation, route}) {
     userState: {username},
   } = useContext(authContext);
 
-  const [activityIndicator, setActivityIndicator] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [pageNo, setPageNo] = useState(0);
-  const [endReached, setEndReached] = useState(false);
 
-  const loadNews = (pNo = 0) => {
-    setActivityIndicator(true);
-    postService
-      .newsFeedWithPagination(username, pNo, pageSize)
-      .then(({data}) => {
-        if (pNo === 0) dispatch(feedPostsAction.firstFeed(data));
-        else dispatch(feedPostsAction.setFeedPosts(data));
-
-        if (data.length === pageSize) setEndReached(false);
-        else setEndReached(true);
-      })
-      .catch(e => console.error(e))
-      .finally(hideActivityIndicator);
-  };
+  const {data, endReached, loading, onBeforeReachEnd} = usePagination(
+    pageSize,
+    0,
+    (no, size) => postService.newsFeedWithPagination(username, no, size),
+  );
 
   useEffect(() => {
-    loadNews(pageNo);
-  }, []);
-
-  const handleRefresh = async () => {
-    setRefreshing(true);
-    setPageNo(0);
-    loadNews();
-  };
-
-  const onBeforeReachEnd = () => {
-    if (endReached) return;
-    else {
-      loadNews(pageNo + 1);
-      setPageNo(prev => prev + 1);
+    if (!loading) {
+      dispatch(feedPostsAction.setFeedPosts(data));
     }
-  };
+  }, [loading]);
 
   const renderItem = ({item}) => {
     switch (item.allPostsType) {
@@ -97,7 +74,7 @@ export default function NewsFeedScreen({navigation, route}) {
             user={item.userdata}
             postData={item}
             navigation={navigation}
-            reloadPosts={loadNews}
+            // reloadPosts={loadNews}
             postType={item.allPostsType}
           />
         );
@@ -120,7 +97,7 @@ export default function NewsFeedScreen({navigation, route}) {
             user={item.userdata}
             postData={item}
             navigation={navigation}
-            reloadPosts={loadNews}
+            // reloadPosts={loadNews}
             postType={item.allPostsType}
             // onPress={() => {
             //   navigation.navigate(routes.POST_DETAILS_SCREEN, {postData: item});
@@ -130,10 +107,10 @@ export default function NewsFeedScreen({navigation, route}) {
     }
   };
 
-  const hideActivityIndicator = () => {
-    setRefreshing(false);
-    setActivityIndicator(false);
-  };
+  // const hideActivityIndicator = () => {
+  //   setRefreshing(false);
+  //   setActivityIndicator(false);
+  // };
 
   const ActivityIndicatorComponent = ({style}) => (
     <View style={[styles.listFooter, style]}>
@@ -154,13 +131,13 @@ export default function NewsFeedScreen({navigation, route}) {
         keyExtractor={(post, i) => i.toString()}
         showsVerticalScrollIndicator={false}
         extraData={posts}
-        onRefresh={handleRefresh}
-        refreshing={refreshing}
+        // onRefresh={handleRefresh}
+        // refreshing={refreshing}
         renderItem={renderItem}
         onEndReached={onBeforeReachEnd}
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={0.2}
         ListFooterComponent={() =>
-          activityIndicator ? (
+          loading ? (
             <View style={{marginVertical: 20}}>
               <ActivityIndicator size={18} />
             </View>
@@ -174,7 +151,7 @@ export default function NewsFeedScreen({navigation, route}) {
         }
         ListEmptyComponent={() => (
           <>
-            {activityIndicator ? (
+            {loading ? (
               <EmptyPostCard />
             ) : // <Text style={{alignSelf: 'center', marginVertical: 50}}>
             //   No posts Available

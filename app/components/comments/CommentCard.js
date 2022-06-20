@@ -33,7 +33,7 @@ export default function CommentCard(props) {
   } = useContext(AuthContext);
   const {setSelectedComment, setIsReply, focusTextField, isReplied} =
     useContext(CommentsContext);
-  const {comment, replyComment, onRefreshing} = props;
+  const {comment, replyComment, onRefreshing, navigation} = props;
   const time = moment(comment.published, 'DD MMMM YYYY hh:mm:ss').fromNow();
 
   const [openMedal, setOpenMedal] = useState(false);
@@ -222,9 +222,12 @@ export default function CommentCard(props) {
 
         <Text style={styles.time}>{time}</Text>
         <TopReactions
+          contentType={replyComment ? 'reply' : 'comment'}
           emojiSize={12}
           style={{marginHorizontal: 10}}
           reactionsList={listOfReaction}
+          navigation={navigation}
+          contentId={comment.id}
           numberOfReaction={reactionCount}
         />
 

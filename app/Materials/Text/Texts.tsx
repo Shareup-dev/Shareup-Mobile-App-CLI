@@ -68,10 +68,10 @@ const Texts: React.FC<Props> = ({
           <TouchableOpacity
             style={{marginVertical: 5}}
             onPress={toggleBtnHandler}>
-            <Text style={{fontSize: 12, color: color}}
-            allowFontScaling={false}
-            numberOfLines={numberOfLines}>
-              
+            <Text
+              style={{fontSize: 12, color: color}}
+              allowFontScaling={false}
+              numberOfLines={numberOfLines}>
               {textCollapse ? `Show Less..` : `Show more..`}
             </Text>
           </TouchableOpacity>
@@ -87,4 +87,4 @@ const Texts: React.FC<Props> = ({
   }
 };
 
-export default Texts;
+export default React.memo(Texts);

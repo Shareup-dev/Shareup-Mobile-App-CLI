@@ -23,8 +23,8 @@ import {CommentsList} from '../components/comments';
 import CommentsContext from '../Contexts/commentsContext';
 import colors from '../config/colors';
 import {CommentText} from '../components/comments';
-import { feedPostsAction } from '../redux/feedPostsSlice';
-import { useDispatch } from 'react-redux';
+import {feedPostsAction} from '../redux/feedPostsSlice';
+import {useDispatch} from 'react-redux';
 
 export default function CommentsScreen({navigation, route}) {
   const {postTypes} = constants;
@@ -77,10 +77,9 @@ export default function CommentsScreen({navigation, route}) {
       postService
         .getAllComments(userState?.userData?.id, postId)
         .then(({data}) => {
-          
-          const newData = {"commentCount" :data.length,"key":postId}
+          const newData = {commentCount: data.length, key: postId};
           setComments(prev => ({...prev, state: data}));
-          dispatch(feedPostsAction.updateCommentCount(newData))
+          dispatch(feedPostsAction.updateCommentCount(newData));
         })
         .catch(e => console.error(e.message))
         .finally(_ => setComments(prev => ({...prev, loading: false})));
@@ -90,32 +89,32 @@ export default function CommentsScreen({navigation, route}) {
   const handleCancel = () => navigation.goBack();
   const handleAddComment = async () => {
     if (isReply) {
-        const comment = {content: commentContent};
-        if (commentContent !== '') {
-          await postService
-            .replay(userState?.userData?.id, selectedComment.id, comment)
-            .then(res => {
-              setCommentContent('');
-              commentTextFieldRef.current.clear();
-              Keyboard.dismiss();
-            })
-            .catch(e => console.error('1', e))
-            .finally(() => setIsReplied(true));
-        }
+      const comment = {content: commentContent};
+      if (commentContent !== '') {
+        await postService
+          .replay(userState?.userData?.id, selectedComment.id, comment)
+          .then(res => {
+            setCommentContent('');
+            commentTextFieldRef.current.clear();
+            Keyboard.dismiss();
+          })
+          .catch(e => console.error('1', e))
+          .finally(() => setIsReplied(true));
+      }
       cancelReplyComment();
     } else {
-        const comment = {content: commentContent};
-        if (commentContent !== '') {
-          await postService
-            .addComment(userState?.userData?.id, postId, comment)
-            .then(({data}) => {
-              commentTextFieldRef.current.clear();
-              Keyboard.dismiss();
-            })
-            .catch(e => console.error(e));
-        }
+      const comment = {content: commentContent};
+      if (commentContent !== '') {
+        await postService
+          .addComment(userState?.userData?.id, postId, comment)
+          .then(({data}) => {
+            commentTextFieldRef.current.clear();
+            Keyboard.dismiss();
+          })
+          .catch(e => console.error(e));
       }
-     loadComments();
+    }
+    loadComments();
   };
 
   const cancelReplyComment = () => {
@@ -140,11 +139,12 @@ export default function CommentsScreen({navigation, route}) {
           />
         )}
         <View style={styles.commentContainer}>
-            <CommentsList
-              data={comments.state}
-              refreshing={comments.loading}
-              onRefreshing={loadComments}
-            />
+          <CommentsList
+            navigation={navigation}
+            data={comments.state}
+            refreshing={comments.loading}
+            onRefreshing={loadComments}
+          />
         </View>
 
         <View style={styles.textFieldContainer}>
@@ -180,7 +180,6 @@ export default function CommentsScreen({navigation, route}) {
             onChangeText={handleOnChangeText}
           />
         </View>
-        
       </Screen>
     </CommentsContext.Provider>
   );

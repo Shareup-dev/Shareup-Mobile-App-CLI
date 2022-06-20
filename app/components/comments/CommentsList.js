@@ -7,6 +7,7 @@ export default function CommentsList({
   refreshing,
   replyComment = false,
   onRefreshing,
+  navigation,
 }) {
   const commentsListRef = useRef();
 
@@ -24,6 +25,7 @@ export default function CommentsList({
       onRefresh={onRefreshing}
       renderItem={({item}) => (
         <CommentCard
+          navigation={navigation}
           comment={item}
           replyComment={replyComment}
           onRefreshing={onRefreshing}
