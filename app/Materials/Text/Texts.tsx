@@ -54,7 +54,7 @@ const Texts: React.FC<Props> = ({
   
   if (truncate) {
     return (
-      <View>
+      <>
         <Text
           ellipsizeMode="tail"
           allowFontScaling={true}
@@ -66,7 +66,7 @@ const Texts: React.FC<Props> = ({
         </Text>
         {isTruncatedText && children !== '' && (
           <TouchableOpacity
-            style={{marginVertical: 5}}
+            style={{paddingVertical: 5}}
             onPress={toggleBtnHandler}>
             <Text
               style={{fontSize: 12, color: color}}
@@ -76,7 +76,7 @@ const Texts: React.FC<Props> = ({
             </Text>
           </TouchableOpacity>
         )}
-      </View>
+      </>
     );
   } else {
     return (
@@ -87,4 +87,4 @@ const Texts: React.FC<Props> = ({
   }
 };
 
-export default React.memo(Texts);
+export default Texts;

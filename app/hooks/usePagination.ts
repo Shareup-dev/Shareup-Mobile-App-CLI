@@ -5,7 +5,7 @@ const usePagination = (
   initPageNumber: number,
   paginationService: Function,
 ) => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [pageNo, setPageNo] = useState<number>(initPageNumber);
   const [endReached, setEndReached] = useState<boolean>(false);
   const [data, setData] = useState<Array<{}>>([]);

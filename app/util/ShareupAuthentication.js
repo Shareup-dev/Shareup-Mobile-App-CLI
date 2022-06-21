@@ -4,7 +4,7 @@ import colors from '../config/colors';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {setAxiosToken} from '../services/authHeader';
 import store from '../redux/store';
-import {Provider} from 'react-redux';
+import {Provider, useDispatch} from 'react-redux';
 import AuthContext from '../Contexts/authContext';
 import {AuthNavigator} from '../navigation';
 import userService from '../services/user.service';
@@ -107,6 +107,7 @@ export default function ShareupAuthentication() {
       logout: async () => {
         await EncryptedStorage.removeItem('auth_session');
         setAxiosToken(null);
+
         dispatch({type: actions.CLEAR_STATE});
       },
       // signup

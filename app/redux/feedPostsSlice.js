@@ -4,6 +4,9 @@ const feedPostsSlice = createSlice({
   name: 'feedPosts',
   initialState: [],
   reducers: {
+    reset: prev => {
+      return (prev = []);
+    },
     firstFeed: (previousState, newFeedPost) => {
       return (previousState = newFeedPost.payload);
     },

@@ -42,17 +42,19 @@ export default function NewsFeedScreen({navigation, route}) {
 
   const [refreshing, setRefreshing] = useState(false);
 
-  const {data, endReached, loading, onBeforeReachEnd} = usePagination(
+  const {data, endReached, loading, onBeforeReachEnd, pageNo} = usePagination(
     pageSize,
     0,
     (no, size) => postService.newsFeedWithPagination(username, no, size),
   );
 
   useEffect(() => {
-    if (!loading) {
+    if (pageNo === 0) {
+      dispatch(feedPostsAction.firstFeed(data));
+    } else {
       dispatch(feedPostsAction.setFeedPosts(data));
     }
-  }, [loading]);
+  }, [data]);
 
   const renderItem = ({item}) => {
     switch (item.allPostsType) {

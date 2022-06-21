@@ -36,7 +36,7 @@ export default function CommentCard(props) {
   const {comment, replyComment, onRefreshing, navigation} = props;
   const time = moment(comment.published, 'DD MMMM YYYY hh:mm:ss').fromNow();
 
-  const [openMedal, setOpenMedal] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [editable, setEditable] = useState(false);
   const [content, setContent] = useState(comment.content);
   const [reactionCount, setReactionCount] = useState(comment.numberOfReaction);
@@ -83,9 +83,9 @@ export default function CommentCard(props) {
 
   const replyCommentMargin = replyComment ? 40 : 0;
 
-  const openMedalHandler = () => {
+  const openModalHandler = () => {
     if (userData.id === comment.user.id) {
-      setOpenMedal(true);
+      setOpenModal(true);
     }
   };
 
@@ -111,7 +111,7 @@ export default function CommentCard(props) {
   };
 
   const deleteCommentHandler = () => {
-    setOpenMedal(false);
+    setOpenModal(false);
     Alert.alert('Delete Comment', 'Do you want to delete this comment?', [
       {
         text: 'Confirm',
@@ -155,58 +155,59 @@ export default function CommentCard(props) {
     <View style={{paddingHorizontal: 25}}>
       <View style={[styles.commentContainer]}>
         {/** Left */}
-        <TouchableOpacity activeOpacity={1} onLongPress={openMedalHandler}>
-          <View style={{flexDirection: 'row'}}>
-            <UserProfilePicture
-              size={replyComment ? 30 : 40}
-              profilePicture={comment.user.profilePicturePath}
-            />
 
-            <View style={styles.medialContainer}>
-              <Title color={'#585858'}>{comment.user.firstName}</Title>
+        <UserProfilePicture
+          size={replyComment ? 25 : 35}
+          profilePicture={comment.user.profilePicturePath}
+        />
 
-              <View style={styles.commentBody}>
-                {editable ? (
-                  <>
-                    <TextInput
-                      style={{
-                        borderWidth: 1,
-                        borderColor: '#cacaca',
-                        borderRadius: 5,
-                        marginVertical: 3,
-                        paddingVertical: 3,
-                        minWidth: width / 1.6,
-                        maxWidth: width / 1.6,
-                      }}
-                      multiline
-                      value={content}
-                      onChangeText={val => setContent(val)}
-                    />
-                    <View
-                      style={{
-                        minWidth: width / 1.6,
-                        maxWidth: width / 1.6,
-                        flexDirection: 'row',
-                        justifyContent: 'flex-end',
-                      }}>
-                      <LinkButton
-                        onPress={editCommentHandler}
-                        title={'Update'}
-                        fontSize={14}
-                        style={{marginHorizontal: 15}}
-                      />
-                      <LinkButton
-                        title={'Cancel'}
-                        fontSize={14}
-                        onPress={_ => setEditable(false)}
-                      />
-                    </View>
-                  </>
-                ) : (
-                  <CommentText>{comment.content}</CommentText>
-                )}
-              </View>
-            </View>
+        <TouchableOpacity
+          style={styles.contentContainer}
+          onLongPress={() => openModalHandler()}>
+          <Title color={'#585858'} size={15}>
+            {comment.user.firstName}
+          </Title>
+
+          <View style={styles.commentBody}>
+            {editable ? (
+              <>
+                <TextInput
+                  style={{
+                    borderWidth: 1,
+                    borderColor: '#cacaca',
+                    borderRadius: 5,
+                    marginVertical: 3,
+                    paddingVertical: 3,
+                    minWidth: width / 1.6,
+                    maxWidth: width / 1.6,
+                  }}
+                  multiline
+                  value={content}
+                  onChangeText={val => setContent(val)}
+                />
+                <View
+                  style={{
+                    minWidth: width / 1.6,
+                    maxWidth: width / 1.6,
+                    flexDirection: 'row',
+                    justifyContent: 'flex-end',
+                  }}>
+                  <LinkButton
+                    onPress={editCommentHandler}
+                    title={'Update'}
+                    fontSize={14}
+                    style={{marginHorizontal: 15}}
+                  />
+                  <LinkButton
+                    title={'Cancel'}
+                    fontSize={14}
+                    onPress={_ => setEditable(false)}
+                  />
+                </View>
+              </>
+            ) : (
+              <CommentText>{comment.content}</CommentText>
+            )}
           </View>
         </TouchableOpacity>
       </View>
@@ -264,7 +265,7 @@ export default function CommentCard(props) {
         </>
       ) : null}
       <Separator style={[styles.separator, {marginLeft: replyCommentMargin}]} />
-      <DownModal isVisible={openMedal} setIsVisible={_ => setOpenMedal(false)}>
+      <DownModal isVisible={openModal} setIsVisible={_ => setOpenModal(false)}>
         <View style={styles.menuContainer}>
           <View style={{alignItems: 'center'}}>
             <View
@@ -280,7 +281,7 @@ export default function CommentCard(props) {
             style={styles.menu}
             onPress={_ => {
               setEditable(true);
-              setOpenMedal(false);
+              setOpenModal(false);
             }}>
             <View>
               <Text style={styles.menuText}>Edit</Text>
@@ -321,8 +322,7 @@ const styles = StyleSheet.create({
   commentContainer: {
     flexDirection: 'row',
 
-    paddingTop: 25,
-    paddingBottom: 6,
+    paddingTop: 20,
     justifyContent: 'space-between',
   },
   replyContainer: {
@@ -332,8 +332,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 
-  medialContainer: {
-    marginLeft: 10,
+  contentContainer: {
+    flex: 1,
+    marginLeft: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    backgroundColor: '#33333315',
+    borderRadius: 10,
   },
   userName: {
     fontWeight: 'bold',
@@ -348,7 +353,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   commentBody: {
-    marginTop: 6,
+    marginTop: 5,
   },
   time: {
     fontSize: 9,

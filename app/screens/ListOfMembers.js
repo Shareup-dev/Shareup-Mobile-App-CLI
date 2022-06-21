@@ -72,7 +72,7 @@ export default function ListOfMembers({navigation, route}) {
         setMembers(prev => ({
           ...prev,
           sections: [
-            {title: 'Admin', data: [groupData?.owner, ...res[0].data]},
+            {title: 'Admin', data: res[0].data},
             {title: 'Members', data: res[1].data},
           ],
         })),
@@ -239,7 +239,6 @@ export default function ListOfMembers({navigation, route}) {
         />
       </View>
       <View style={styles.listContainer}>
-
         <SectionList
           showsVerticalScrollIndicator={false}
           sections={members.sections}

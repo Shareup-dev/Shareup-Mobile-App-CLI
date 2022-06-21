@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useContext, useState } from 'react';
+import React, {useContext, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import AuthContext from '../../Contexts/authContext';
 import routes from '../../navigation/routes';
@@ -17,13 +17,12 @@ const BottomCard = React.memo(
     numberOfComments,
     numberOfReaction,
     reelLiked,
-    navigation
+    navigation,
   }) => {
-
     const {
       userState: {userData},
     } = useContext(AuthContext);
-    const {firstName, lastName} = user;
+    const {firstName, lastName, id: userID} = user;
 
     const [date, setDate] = useState(
       moment(publishedDate, 'DD MMMM YYYY hh:mm:ss').fromNow(),
@@ -48,6 +47,14 @@ const BottomCard = React.memo(
         })
         .catch(e => console.error(e.message));
     };
+
+    const navigateToComments = () =>
+      navigation.navigate(routes.COMMENTS, {
+        postId: rid,
+        userId: userID,
+        //comments,
+        postType: 'reel',
+      });
 
     return (
       <View style={styles.card}>
@@ -128,9 +135,10 @@ const BottomCard = React.memo(
             />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={_ =>
-              navigation.navigate(routes.ADD_COMMENT_REEL, {reelId: rid})
-            }>
+            // onPress={_ =>
+            //   navigation.navigate(routes.ADD_COMMENT_REEL, {reelId: rid})
+            // }
+            onPress={navigateToComments}>
             <Icon
               color="#fff"
               style={{marginVertical: 5}}

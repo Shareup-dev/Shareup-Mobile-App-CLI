@@ -71,7 +71,12 @@ const InviteGroupMembers = ({navigation, route}) => {
         middle={<HeaderTitle>Invite People</HeaderTitle>}
         right={
           <TouchableOpacity
-            onPress={() => navigation.navigate(routes.GROUP_FEED, groupData)}>
+            onPress={() =>
+              navigation.navigate(routes.GROUP_FEED, {
+                ...groupData.data,
+                ...groupData,
+              })
+            }>
             <Text>Done</Text>
           </TouchableOpacity>
         }

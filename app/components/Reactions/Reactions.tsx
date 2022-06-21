@@ -215,9 +215,7 @@ const Reactions: React.FC<Props> = props => {
         <View>
           <Animated.View
             style={[
-              styles.reactions,
               {
-                opacity: displayReactions,
                 transform: [
                   {
                     translateX: translationX,
@@ -225,7 +223,19 @@ const Reactions: React.FC<Props> = props => {
                 ],
               },
             ]}>
-            {mapReactionsIcons()}
+            <Animated.View
+              style={[
+                styles.reactions,
+                {
+                  transform: [
+                    {
+                      scale: displayReactions,
+                    },
+                  ],
+                },
+              ]}>
+              {mapReactionsIcons()}
+            </Animated.View>
           </Animated.View>
           <View
             style={styles.row}

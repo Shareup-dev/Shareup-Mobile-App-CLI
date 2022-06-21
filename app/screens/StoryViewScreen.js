@@ -369,7 +369,7 @@ function StoryViewScreen({navigation, route}) {
         style={styles.mediaContainer}>
         <PanGestureHandler onGestureEvent={panGestureEvent}>
           <Reanimated.View>
-            {data[activeIndex]?.video ? (
+            {data[activeIndex]?.storyType === 'video' ? (
               <Video
                 ref={ref => (this.player = ref)}
                 paused={paused}

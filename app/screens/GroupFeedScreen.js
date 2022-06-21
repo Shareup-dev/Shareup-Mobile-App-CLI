@@ -27,7 +27,7 @@ import groupScreenDetector from '../redux/groupScreenDetector';
 import {postTypeSliceAction} from '../redux/groupIdSlice';
 import {useDispatch} from 'react-redux';
 import constants from '../config/constants';
-import { Texts } from '../Materials/Text';
+import {Texts} from '../Materials/Text';
 
 const windowWidth = Dimensions.get('screen').width;
 const GroupFeedScreen = ({navigation, route}) => {
@@ -40,7 +40,9 @@ const GroupFeedScreen = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [posts, setPosts] = useState([]);
-  const dispatch = useDispatch();
+
+  const isAdmin = () =>
+    !!groupData.admins.filter(admin => admin.id === userData.id).length;
 
   useEffect(() => {
     const getGroupInfo = async () => {
@@ -104,14 +106,7 @@ const GroupFeedScreen = ({navigation, route}) => {
     setMenuOpen(false);
   };
 
-  const checkOwner = () => {
-
-   
-
-    if (userData.id === groupData?.owner?.id) return true;
-    else return false;
-
-  };
+  const checkOwner = () => userData.id === groupData?.owner?.id;
   const DropDownMenu = () => {
     return (
       <View style={styles.menuContainer}>
@@ -197,21 +192,22 @@ const GroupFeedScreen = ({navigation, route}) => {
               />
               <View style={styles.detailContainer}>
                 <View style={{marginHorizontal: 10}}>
-                  <Texts size={25} style={styles.title}>{group.name}</Texts>
-                  <Texts size={15} style={styles.subTitle}>{group.description}</Texts>
+                  <Texts size={25} style={styles.title}>
+                    {group.name}
+                  </Texts>
+                  <Texts size={15} style={styles.subTitle}>
+                    {group.description}
+                  </Texts>
                   <View
                     style={{
-                      
                       flexDirection: 'row',
                       alignItems: 'center',
                       justifyContent: 'space-between',
                     }}>
                     <View
                       style={{
-                        
                         flexDirection: 'row',
                         alignItems: 'center',
-                        
                       }}>
                       <Icon name={group.privacySetting ? 'lock' : 'earth'} />
                       <Texts size={12} style={styles.subTitle}>
@@ -224,13 +220,15 @@ const GroupFeedScreen = ({navigation, route}) => {
                       onPress={() => {
                         navigation.navigate(routes.LIST_OF_MEMBERS, groupData);
                       }}>
-                      <Texts size={14} style={{fontWeight: '600', fontSize: 15}}>
+                      <Texts
+                        size={14}
+                        style={{fontWeight: '600', fontSize: 15}}>
                         Members
                       </Texts>
                     </TouchableOpacity>
                   </View>
 
-                  {checkOwner() ? (
+                  {isAdmin() ? (
                     <Tab
                       iconName="add-circle"
                       iconType="Ionicons"
@@ -241,6 +239,7 @@ const GroupFeedScreen = ({navigation, route}) => {
                         navigation.navigate(routes.INVITE_GROUP_MEMBERS, {
                           id: group.id,
                           newGroup: false,
+                          data: groupData,
                         });
                       }}
                     />
@@ -330,7 +329,7 @@ const GroupFeedScreen = ({navigation, route}) => {
             comments={item.comments}
             navigation={navigation}
             postImages={item.media}
-            insideGroup = {true}
+            insideGroup={true}
           />
         )}
       />

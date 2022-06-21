@@ -61,10 +61,11 @@ export default function UserProfileScreen({navigation, route}) {
     };
     fetchUserProfile();
   }, []);
-  const [userDetails,setUserDetails] = useState({});
+
+  const [userDetails, setUserDetails] = useState(user);
   const [posts, setPosts] = useState([]);
   const [media, setMedia] = useState([]);
-  const [loading, setLoading] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [imageSlider, setImageSlider] = useState({
     state: false,
     index: 0,
@@ -77,12 +78,11 @@ export default function UserProfileScreen({navigation, route}) {
   };
 
   useEffect(() => {
-    setLoading(1);
+    setLoading(true);
     Promise.all([
       postService.getPostByUserID(user.id),
       profileService.getAllMedia(user.id),
       userService.getUserById(user.id),
-
     ])
       .then(res => {
         setPosts(res[0].data);
@@ -91,12 +91,13 @@ export default function UserProfileScreen({navigation, route}) {
       })
       .catch(e => console.error(e.message))
       .finally(_ => {
-        setLoading(2);
+        setLoading(false);
       });
   }, []);
 
   const ListHeader = () => (
     <ProfileTop
+      loading={loading}
       user={userDetails}
       currentTab={currentTab}
       numberOfPosts={posts.length}
@@ -126,10 +127,10 @@ export default function UserProfileScreen({navigation, route}) {
       <Image
         source={{uri: item.mediaPath}}
         style={{
-          width: (width - 30) / 3,
+          width: (width - 28) / 3,
           borderRadius: 3,
           height: 150,
-          margin: 5,
+          margin: 4,
           backgroundColor: '#eee',
         }}
       />
@@ -174,9 +175,8 @@ export default function UserProfileScreen({navigation, route}) {
           ListHeaderComponent={ListHeader}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={() =>
-            loading === 2 ? (
-              <Text
-                style={styles.listEmptyText}>{`There is no posts!`}</Text>
+            !loading && posts.length === 0 ? (
+              <Text style={styles.listEmptyText}>{`There is no posts!`}</Text>
             ) : (
               <>
                 <ActivityIndicator size={30} />
@@ -196,6 +196,7 @@ export default function UserProfileScreen({navigation, route}) {
         <FlatList
           data={media}
           numColumns={3}
+          style={{marginHorizontal: 2}}
           showsVerticalScrollIndicator={false}
           renderItem={({item, index}) => (
             <ImagesAndVideosItem item={item} index={index} />

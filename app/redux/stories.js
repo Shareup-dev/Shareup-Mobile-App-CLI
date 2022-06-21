@@ -9,6 +9,7 @@ const stories = createSlice({
     friendsStories: [],
   },
   reducers: {
+    reset: prev => (prev = []),
     setMyStories: (previousState, newStories) => {
       const allStories = {...previousState, myStories: newStories.payload};
       return (previousState = allStories);

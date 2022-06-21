@@ -2,13 +2,9 @@ import React, {useContext} from 'react';
 import {
   View,
   StyleSheet,
-  Text,
   FlatList,
   TouchableWithoutFeedback,
-  Platform,
   PixelRatio,
-  Dimensions,
- 
 } from 'react-native';
 import Modal from 'react-native-modal';
 
@@ -22,119 +18,122 @@ import constants from '../config/constants';
 import routes from './routes';
 import {useNavigation} from '@react-navigation/native';
 import UserProfilePicture from '../components/UserProfilePicture';
-import { Texts } from '../Materials/Text';
-import { useDispatch } from 'react-redux';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { ScrollView } from 'react-native-gesture-handler';
-
-
+import {Texts} from '../Materials/Text';
+import {useDispatch} from 'react-redux';
+import {feedPostsAction} from '../redux/feedPostsSlice';
+import {storiesAction} from '../redux/stories';
 
 export default function Drawer({isVisible, setIsVisible}) {
-  const {userState, authActions} = useContext(authContext);
-  const dispatch = useDispatch();
+  const {userState} = useContext(authContext);
   const navigation = useNavigation();
-  
+
   const listItems = [
     {
       title: 'Share Feed',
       icon: require('../assets/icons/share-feed-icon.png'),
       onPress: () => {
-        navigation.navigate(routes.FEED)
-        setIsVisible(false)
-       },
+        navigation.navigate(routes.FEED);
+        setIsVisible(false);
+      },
     },
     {
       title: 'Swap Point',
       icon: require('../assets/icons/swap-point-icon.png'),
       onPress: () => {
-        navigation.navigate(routes.HANG_FLOW_SCREEN,constants.postTypes.SWAP)
-        setIsVisible(false)
-       },
+        navigation.navigate(routes.HANG_FLOW_SCREEN, constants.postTypes.SWAP);
+        setIsVisible(false);
+      },
     },
     {
       title: 'Share Time',
       icon: require('../assets/icons/share-time-icon.png'),
       onPress: () => {
-        setIsVisible(false)
-        navigation.navigate(routes.USER_PROFILE,userState.userData.email)
-       },
+        setIsVisible(false);
+        navigation.navigate(routes.USER_PROFILE, userState.userData.email);
+      },
     },
     {
       title: 'Share Point',
       icon: require('../assets/icons/share-point-icon.png'),
       onPress: () => {
-        navigation.navigate(routes.HANG_FLOW_SCREEN,constants.postTypes.HANG_SHARE)
-        setIsVisible(false)
-       },
+        navigation.navigate(
+          routes.HANG_FLOW_SCREEN,
+          constants.postTypes.HANG_SHARE,
+        );
+        setIsVisible(false);
+      },
     },
     {
       title: 'Share Friends',
       icon: require('../assets/icons/share-feed-icon.png'),
       onPress: () => {
-        navigation.navigate(routes.ALL_FRIENDS)
-        setIsVisible(false)
-       },
+        navigation.navigate(routes.ALL_FRIENDS);
+        setIsVisible(false);
+      },
     },
     {
       title: 'Add Friends',
       icon: require('../assets/icons/add-friends-icon.png'),
       onPress: () => {
-        navigation.navigate(routes.Add_NEW_FRIEND)
-        setIsVisible(false)
-       },
+        navigation.navigate(routes.Add_NEW_FRIEND);
+        setIsVisible(false);
+      },
     },
     {
       title: 'Share Groups',
       icon: require('../assets/icons/foundation_social-skillshare.png'),
       onPress: () => {
-        navigation.navigate(routes.MY_GROUPS)
-        setIsVisible(false)
-       },
+        navigation.navigate(routes.MY_GROUPS);
+        setIsVisible(false);
+      },
     },
     {
       title: 'Message',
       icon: require('../assets/icons/message.png'),
       onPress: () => {
-        navigation.navigate(routes.MESSAGES_NAVIGATOR)
-        setIsVisible(false)
-       },
+        navigation.navigate(routes.MESSAGES_NAVIGATOR);
+        setIsVisible(false);
+      },
     },
-  
+
     {
       title: 'Reels',
       icon: require('../assets/icons/reels-colored-icon.png'),
       onPress: () => {
-        navigation.navigate(routes.MY_REELS)
-        setIsVisible(false)
-       },
+        navigation.navigate(routes.MY_REELS);
+        setIsVisible(false);
+      },
     },
     {
       title: 'Saved Posts',
       icon: require('../assets/post-options-icons/save-post-icon.png'),
       onPress: () => {
-        navigation.navigate(routes.SAVED_POST_SCREEN,{category:constants.postTypes.CREATE_POST})
-        setIsVisible(false)
-       },
+        navigation.navigate(routes.SAVED_POST_SCREEN, {
+          category: constants.postTypes.CREATE_POST,
+        });
+        setIsVisible(false);
+      },
     },
     {
       title: 'Discover',
       icon: require('../assets/icons/search-icon-colored2.png'),
       onPress: () => {
-        navigation.navigate(routes.SEARCH_SCREEN)
-        setIsVisible(false)
-       },
+        navigation.navigate(routes.SEARCH_SCREEN);
+        setIsVisible(false);
+      },
     },
     {
       title: 'Saved Swaps',
       icon: require('../assets/icons/saved-swap-colored-icon.png'),
       onPress: () => {
-        navigation.navigate(routes.SAVED_POST_SCREEN,{category:constants.postTypes.SWAP})
-        setIsVisible(false)
-       },
+        navigation.navigate(routes.SAVED_POST_SCREEN, {
+          category: constants.postTypes.SWAP,
+        });
+        setIsVisible(false);
+      },
     },
   ];
   return (
-    
     <Modal
       isVisible={isVisible}
       swipeDirection={['right']}
@@ -144,19 +143,20 @@ export default function Drawer({isVisible, setIsVisible}) {
       animationIn="slideInRight"
       animationOut="slideOutRight">
       <View style={styles.container}>
-     {/* <ScrollView> */}
+        {/* <ScrollView> */}
         <View style={styles.header}>
-        <UserProfilePicture size={40} />
+          <UserProfilePicture size={40} />
           {/* <Icon
             backgroundSizeRatio={1}
             image={require('../assets/tab-navigation-icons/user-icon.png')}
           /> */}
-          <Texts style={styles.userName} size={25} color={colors.iondigoDye}>{userState?.userData?.firstName}</Texts>
+          <Texts style={styles.userName} size={25} color={colors.iondigoDye}>
+            {userState?.userData?.firstName}
+          </Texts>
         </View>
         <View style={styles.separator} />
 
         <View style={[styles.innerContainer, defaultStyles.lightShadow]}>
-        
           <View>
             <FlatList
               data={listItems}
@@ -164,11 +164,15 @@ export default function Drawer({isVisible, setIsVisible}) {
               keyExtractor={item => item.title}
               numColumns={2}
               renderItem={({item}) => (
-                <DrawerButtons title={item.title} iconImage={item.icon} onPress={item.onPress}/>
+                <DrawerButtons
+                  title={item.title}
+                  iconImage={item.icon}
+                  onPress={item.onPress}
+                />
               )}
             />
           </View>
-          
+
           <View style={styles.footer}>
             <View style={styles.separator} />
             <View style={styles.LinkButtonWrapper}>
@@ -183,9 +187,10 @@ export default function Drawer({isVisible, setIsVisible}) {
                 <LinkButton
                   title={'Help & Support'}
                   style={styles.linkButton}
-                  onPress={()=>{navigation.navigate(routes.HELP_SUPPORT) 
-                    setIsVisible(false)}}
-
+                  onPress={() => {
+                    navigation.navigate(routes.HELP_SUPPORT);
+                    setIsVisible(false);
+                  }}
                 />
               </View>
             </View>
@@ -211,27 +216,30 @@ export default function Drawer({isVisible, setIsVisible}) {
               </View>
             </View>
             <View style={styles.separator} />
-            <LogoutButton
-              onPress={() => {
-                authActions.logout();
-               
-              }}
-            />
+            <LogoutButton />
           </View>
         </View>
         {/* </ScrollView> */}
       </View>
-      
     </Modal>
-    
   );
 }
 
-function LogoutButton({onPress}) {
+function LogoutButton() {
+  const dispatch = useDispatch();
+  const {authActions} = useContext(authContext);
+
   return (
-    <TouchableWithoutFeedback onPress={onPress}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        dispatch(feedPostsAction.reset());
+        dispatch(storiesAction.reset());
+        authActions.logout();
+      }}>
       <View style={styles.logoutButton}>
-        <Texts size={15} style={{fontWeight:'600'}}>Logout</Texts>
+        <Texts size={15} style={{fontWeight: '600'}}>
+          Logout
+        </Texts>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -250,7 +258,7 @@ const styles = StyleSheet.create({
     fontSize: 23,
     color: colors.iondigoDye,
     fontWeight: '500',
-    paddingHorizontal:15,
+    paddingHorizontal: 15,
   },
   header: {
     flexDirection: 'row',
