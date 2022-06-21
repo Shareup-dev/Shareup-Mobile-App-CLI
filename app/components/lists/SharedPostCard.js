@@ -32,7 +32,7 @@ import {ReactionBar, TopReactions} from '../Reactions';
 export default function SharedPostCard(props) {
   const {postData, navigation, user, ...rest} = props;
   const dispatch = useDispatch();
-
+  const [feel,setFeel] = useState(postData.feelings)
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [listOfReactions, setListOfReactions] = useState(
     postData.countOfEachReaction,

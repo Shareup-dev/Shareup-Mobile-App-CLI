@@ -166,11 +166,18 @@ const GroupFeedScreen = ({navigation, route}) => {
         rightComponent={
           <>
             {checkOwner() && (
+              <View style={{flexDirection:"row"}}>
+                {/* <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={_ => setMenuOpen(prev => !prev)}>
+                <Icon type="MaterialIcons" name="group-add" />
+              </TouchableOpacity> */}
               <TouchableOpacity
                 activeOpacity={0.6}
                 onPress={_ => setMenuOpen(prev => !prev)}>
                 <Icon type="SimpleLineIcons" name="options" />
               </TouchableOpacity>
+              </View>
             )}
           </>
         }

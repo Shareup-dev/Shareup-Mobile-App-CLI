@@ -54,10 +54,12 @@ export default function SentRequests({navigation}) {
   const onCancelRequest = friend => {
     setSentto(prev => prev.filter(dost => dost.email !== friend.email));
     //store.dispatch(sentRequestsActions.setList(sentto));
-    UserService.declineFriendRequest(userState?.userData?.id, friend.id).then(
-      resp => {},
+    UserService.cancelFriendRequest(userState?.userData?.id, friend.id).then(
+      resp => {
+        sentto.filter(user => user.email !== friend.email)[0]
+      },
     );
-    setFetch(true);
+   // setFetch(true);
     //setSentto(alreadySentTo);
   };
 
