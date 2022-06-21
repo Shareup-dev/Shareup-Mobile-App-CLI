@@ -51,13 +51,13 @@ const Texts: React.FC<Props> = ({
       opacity: opacity,
     },
   });
-
+  
   if (truncate) {
     return (
       <View>
         <Text
           ellipsizeMode="tail"
-          allowFontScaling={false}
+          allowFontScaling={true}
           onTextLayout={checkNumOfLines}
           numberOfLines={numberOfLines}
           {...rest}
