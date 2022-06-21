@@ -556,6 +556,7 @@ export default function AddPostScreen({ navigation, route }) {
     dispatch(postDataSliceAction.removeGroupId());
     dispatch(postDataSliceAction.clearTagList());
     dispatch(postDataSliceAction.removeAlbum());
+    dispatch(postFeelingsActions.setDefault());
   };
 
   const handelPrivacySetting = value => {

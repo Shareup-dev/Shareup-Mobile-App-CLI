@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   TouchableWithoutFeedback,
@@ -14,7 +14,7 @@ import routes from '../navigation/routes';
 
 import AuthContext from '../Contexts/authContext';
 import {Title, Texts} from '../Materials/Text';
-
+import {feelings,activities} from '../components/Data/activitiesAndFeelings';
 import {ReactionBar, TopReactions} from './Reactions';
 import BetterImage from './betterImage/BetterImage';
 
@@ -23,7 +23,6 @@ const PostActions = ({
   postData,
   userId,
   navigation,
-
   numberOfComments,
   setIsOptionsVisible,
   postType,
@@ -34,7 +33,7 @@ const PostActions = ({
 }) => {
   const fromReply = false;
   const actionsTabSizeRatio = 0.5;
-
+  const [feel,setFeel] = useState({})
   const {
     userState: {userData},
   } = useContext(AuthContext);
@@ -42,6 +41,20 @@ const PostActions = ({
     moment(postData.published, 'DD MMMM YYYY hh:mm:ss').fromNow(),
     // null
   );
+
+  useEffect(()=>{
+    
+    if (postData?.feelings){
+      console.log(postData.feelings,);
+      const item = feelings.filter(item => postData.feelings === item.name)
+      console.log(postData.feelings,item[0]);
+      setFeel(item[0])
+    }else if (postData?.activity){
+      if (activities.filter(item => postData.activity === item.name)){
+        setFeel(item)
+      }
+    }
+  },[])
 
   const [listOfReactions, setListOfReactions] = useState(
     postData.countOfEachReaction,
@@ -248,6 +261,34 @@ const PostActions = ({
         </View>
       )}
 
+
+        {/********************************* Post Feelings and tags ****************************************/}
+        <View style={{ flexDirection: "row", alignItems: 'center', flexWrap: 'wrap' }}>
+        {postData?.feelings && (
+        <View style={styles.row}>
+          <BetterImage
+            noBackground
+            source={feel.img}
+            style={styles.feelImg}
+          />
+          <Texts size={13} color={'#333'} style={{fontWeight:'bold'}}>{feel.name}</Texts>
+        </View>)}
+        {postData?.activity && (
+        <View style={styles.row}>
+          <Icon name={feel.icon} color={feel.color} />
+          <Texts size={13} color={'#333'} style={{fontWeight:'bold'}}>{feel.name}</Texts>
+          </View>)}
+        {postData?.taggedList.length !== 0 && (
+          <View style={{ flexDirection: 'row' }}>
+            <Texts size={14} color={colors.dimGray}  > with </Texts>
+            <TouchableOpacity onPress={()=> showShareList(constants.constant.SHOW_TAGLIST)}>
+              <Texts size={14} color={'#333'} style={{fontWeight:'bold'}} > 
+              {postData.taggedList[0]?.firstName}{postData.taggedList[0]?.lastName} and {(postData.taggedList.length - 1 === 1) ? postData.taggedList[1]?.firstName + postData.taggedList[1]?.lastName : `${postData.taggedList.length - 1} others`} 
+              </Texts>
+              </TouchableOpacity>
+          </View>)}
+      </View>
+
       {postData.content !== '' && (
         <Texts truncate style={{marginTop: 10}} color={'#333'}>
           {postData.content}
@@ -366,6 +407,11 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     width: 60,
     marginTop: -5,
+  },
+  feelImg: {
+    width: 25,
+    height: 25,
+    marginRight: 5,
   },
 });
 

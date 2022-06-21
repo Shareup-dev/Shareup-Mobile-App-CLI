@@ -35,6 +35,7 @@ class UserService {
   getFriendsOfFriend = fid => AuthAxios.get(`friends/${fid}`);
   getPostOfFriend = fid => AuthAxios.get(`getpostfriends/${fid}`);
   getAllFriendRequest = email => AuthAxios.get(`friendsWithRequests/${email}`);
+  cancelFriendRequest = (uid,fid) => AuthAxios.post(`${uid}/cancel_friend_request/${fid}`)
 
   /*..............Flowers..............*/
   getFollowers = email => AuthAxios.get(`${email}/followers`);
